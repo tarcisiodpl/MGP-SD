@@ -1,0 +1,697 @@
+################################
+BASE DE DADOS ##################
+################################
+Nome: arXiv_resumoTitulo
+Total Colunas (atributos): 579
+Total de Linhas (exemplos/amostras): 372
+CLASSES: 104, 116, 134, 145, 151, 153, 156, 256, 6, 80
+
+################################
+INFORMAÇÕES TÉCNICAS ###########
+################################
+Métrica de avaliação: Qg
+Operador entre características: OR
+k: 10, ks: 5
+Simularidade: 0.1
+
+
+
+################################
+INVESTIGANDO: CLASSE = 6
+################################
+CLASSE = 6: 41 linhas (11,02%)
+DEMAIS CLASSES: 331 linhas (88,98%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 6: 90,24%
+{consist=alto,partial observ=alto,substanti=alto}->6 (6=22, outros=8)
+	[Qualidade=1,6923|Size=3]
+{appropri=alto,partial observ=alto}->6 (6=9, outros=7)
+	[Qualidade=0,75|Size=2]
+{local=alto,substanti=alto}->6 (6=13, outros=15)
+	[Qualidade=0,65|Size=2]
+{collect=alto,comput complex=alto}->6 (6=7, outros=6)
+	[Qualidade=0,6364|Size=2]
+{local=alto,pomdp=alto}->6 (6=12, outros=17)
+	[Qualidade=0,5455|Size=2]
+{gain=alto,speed=alto}->6 (6=7, outros=8)
+	[Qualidade=0,5385|Size=2]
+{handl=alto,maintain=alto}->6 (6=9, outros=12)
+	[Qualidade=0,5294|Size=2]
+{gain=alto,rate=alto}->6 (6=6, outros=9)
+	[Qualidade=0,4286|Size=2]
+{analyz=alto,connect=alto}->6 (6=9, outros=16)
+	[Qualidade=0,4286|Size=2]
+{collect=alto,global=alto}->6 (6=5, outros=7)
+	[Qualidade=0,4167|Size=2]
+
+
+OBS: Características utilizadas nos grupos:
+{consist=alto}->6 (6=13, outros=4)
+	[Qualidade=1,4444|Size=1]
+{partial observ=alto}->6 (6=5, outros=2)
+	[Qualidade=0,7143|Size=1]
+{substanti=alto}->6 (6=4, outros=2)
+	[Qualidade=0,5714|Size=1]
+{local=alto}->6 (6=9, outros=13)
+	[Qualidade=0,5|Size=1]
+{maintain=alto}->6 (6=4, outros=3)
+	[Qualidade=0,5|Size=1]
+{comput complex=alto}->6 (6=4, outros=3)
+	[Qualidade=0,5|Size=1]
+{speed=alto}->6 (6=4, outros=5)
+	[Qualidade=0,4|Size=1]
+{appropri=alto}->6 (6=4, outros=5)
+	[Qualidade=0,4|Size=1]
+{collect=alto}->6 (6=3, outros=3)
+	[Qualidade=0,375|Size=1]
+{gain=alto}->6 (6=3, outros=3)
+	[Qualidade=0,375|Size=1]
+{handl=alto}->6 (6=5, outros=9)
+	[Qualidade=0,3571|Size=1]
+{connect=alto}->6 (6=5, outros=9)
+	[Qualidade=0,3571|Size=1]
+{pomdp=alto}->6 (6=3, outros=4)
+	[Qualidade=0,3333|Size=1]
+{analyz=alto}->6 (6=5, outros=10)
+	[Qualidade=0,3333|Size=1]
+{rate=alto}->6 (6=3, outros=6)
+	[Qualidade=0,2727|Size=1]
+{global=alto}->6 (6=2, outros=4)
+	[Qualidade=0,2222|Size=1]
+
+
+
+################################
+INVESTIGANDO: CLASSE = 80
+################################
+CLASSE = 80: 28 linhas (7,53%)
+DEMAIS CLASSES: 344 linhas (92,47%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 80: 96,43%
+{analyt=alto,comparison=alto,improv perform=alto}->80 (80=12, outros=8)
+	[Qualidade=0,9231|Size=3]
+{engin=alto,evid=alto}->80 (80=15, outros=16)
+	[Qualidade=0,7143|Size=2]
+{analyt=alto}->80 (80=5, outros=3)
+	[Qualidade=0,625|Size=1]
+{exact infer=alto,infer bayesian=alto}->80 (80=7, outros=8)
+	[Qualidade=0,5385|Size=2]
+{engin=alto}->80 (80=5, outros=5)
+	[Qualidade=0,5|Size=1]
+{feasibl=alto,intract=alto}->80 (80=8, outros=13)
+	[Qualidade=0,4444|Size=2]
+{robust=alto}->80 (80=4, outros=5)
+	[Qualidade=0,4|Size=1]
+{infer bayesian=alto}->80 (80=3, outros=3)
+	[Qualidade=0,375|Size=1]
+{assess=alto,equat=alto}->80 (80=6, outros=11)
+	[Qualidade=0,375|Size=2]
+{practic=alto}->80 (80=8, outros=17)
+	[Qualidade=0,3636|Size=1]
+
+
+OBS: Características utilizadas nos grupos:
+{comparison=alto}->80 (80=5, outros=2)
+	[Qualidade=0,7143|Size=1]
+{analyt=alto}->80 (80=5, outros=3)
+	[Qualidade=0,625|Size=1]
+{evid=alto}->80 (80=10, outros=11)
+	[Qualidade=0,625|Size=1]
+{engin=alto}->80 (80=5, outros=5)
+	[Qualidade=0,5|Size=1]
+{exact infer=alto}->80 (80=4, outros=5)
+	[Qualidade=0,4|Size=1]
+{robust=alto}->80 (80=4, outros=5)
+	[Qualidade=0,4|Size=1]
+{improv perform=alto}->80 (80=3, outros=3)
+	[Qualidade=0,375|Size=1]
+{infer bayesian=alto}->80 (80=3, outros=3)
+	[Qualidade=0,375|Size=1]
+{practic=alto}->80 (80=8, outros=17)
+	[Qualidade=0,3636|Size=1]
+{intract=alto}->80 (80=5, outros=9)
+	[Qualidade=0,3571|Size=1]
+{feasibl=alto}->80 (80=3, outros=4)
+	[Qualidade=0,3333|Size=1]
+{equat=alto}->80 (80=3, outros=5)
+	[Qualidade=0,3|Size=1]
+{assess=alto}->80 (80=3, outros=6)
+	[Qualidade=0,2727|Size=1]
+
+
+
+################################
+INVESTIGANDO: CLASSE = 104
+################################
+CLASSE = 104: 68 linhas (18,28%)
+DEMAIS CLASSES: 304 linhas (81,72%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 104: 79,41%
+{aspect=alto,game=alto,method learn=alto,subject=alto}->104 (104=24, outros=7)
+	[Qualidade=2|Size=4]
+{aspect=alto,method learn=alto}->104 (104=12, outros=4)
+	[Qualidade=1,3333|Size=2]
+{activ=alto,messag=alto,transit=alto}->104 (104=16, outros=9)
+	[Qualidade=1,1429|Size=3]
+{game=alto}->104 (104=7, outros=2)
+	[Qualidade=1|Size=1]
+{argu=alto,robot=alto,transit=alto}->104 (104=14, outros=10)
+	[Qualidade=0,9333|Size=3]
+{partit=alto,refer=alto}->104 (104=9, outros=5)
+	[Qualidade=0,9|Size=2]
+{method learn=alto}->104 (104=6, outros=2)
+	[Qualidade=0,8571|Size=1]
+{argu=alto,robot=alto}->104 (104=10, outros=7)
+	[Qualidade=0,8333|Size=2]
+{provid algorithm=alto,refer=alto,true=alto}->104 (104=12, outros=12)
+	[Qualidade=0,7059|Size=3]
+{accuraci=alto,discoveri=alto,previous=alto}->104 (104=22, outros=31)
+	[Qualidade=0,6111|Size=3]
+
+
+OBS: Características utilizadas nos grupos:
+{game=alto}->104 (104=7, outros=2)
+	[Qualidade=1|Size=1]
+{activ=alto}->104 (104=8, outros=3)
+	[Qualidade=1|Size=1]
+{method learn=alto}->104 (104=6, outros=2)
+	[Qualidade=0,8571|Size=1]
+{aspect=alto}->104 (104=6, outros=2)
+	[Qualidade=0,8571|Size=1]
+{partit=alto}->104 (104=6, outros=2)
+	[Qualidade=0,8571|Size=1]
+{subject=alto}->104 (104=5, outros=1)
+	[Qualidade=0,8333|Size=1]
+{argu=alto}->104 (104=6, outros=4)
+	[Qualidade=0,6667|Size=1]
+{discoveri=alto}->104 (104=6, outros=5)
+	[Qualidade=0,6|Size=1]
+{true=alto}->104 (104=6, outros=6)
+	[Qualidade=0,5455|Size=1]
+{transit=alto}->104 (104=4, outros=3)
+	[Qualidade=0,5|Size=1]
+{robot=alto}->104 (104=4, outros=3)
+	[Qualidade=0,5|Size=1]
+{messag=alto}->104 (104=4, outros=3)
+	[Qualidade=0,5|Size=1]
+{previous=alto}->104 (104=11, outros=17)
+	[Qualidade=0,5|Size=1]
+{accuraci=alto}->104 (104=6, outros=9)
+	[Qualidade=0,4286|Size=1]
+{refer=alto}->104 (104=3, outros=3)
+	[Qualidade=0,375|Size=1]
+{provid algorithm=alto}->104 (104=3, outros=3)
+	[Qualidade=0,375|Size=1]
+
+
+
+################################
+INVESTIGANDO: CLASSE = 116
+################################
+CLASSE = 116: 28 linhas (7,53%)
+DEMAIS CLASSES: 344 linhas (92,47%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 116: 100%
+{possibilist=alto,possibl=alto}->116 (116=14, outros=4)
+	[Qualidade=1,5556|Size=2]
+{possibl=alto,threshold=alto}->116 (116=10, outros=7)
+	[Qualidade=0,8333|Size=2]
+{aim=alto,posterior probabl=alto}->116 (116=7, outros=7)
+	[Qualidade=0,5833|Size=2]
+{degre=alto,quantifi=alto}->116 (116=6, outros=8)
+	[Qualidade=0,4615|Size=2]
+{hand=alto,match=alto,posterior probabl=alto}->116 (116=7, outros=12)
+	[Qualidade=0,4118|Size=3]
+{interpret=alto,refer=alto}->116 (116=6, outros=11)
+	[Qualidade=0,375|Size=2]
+{artifici=alto,qualit=alto,refer=alto}->116 (116=9, outros=23)
+	[Qualidade=0,3214|Size=3]
+{analyt=alto,usual=alto}->116 (116=6, outros=14)
+	[Qualidade=0,3158|Size=2]
+{exhibit=alto,paper=alto,possibilist=alto}->116 (116=23, outros=68)
+	[Qualidade=0,3151|Size=3]
+{rule=alto}->116 (116=5, outros=11)
+	[Qualidade=0,3125|Size=1]
+
+
+OBS: Características utilizadas nos grupos:
+{possibilist=alto}->116 (116=7, outros=0)
+	[Qualidade=1,4|Size=1]
+{possibl=alto}->116 (116=7, outros=4)
+	[Qualidade=0,7778|Size=1]
+{threshold=alto}->116 (116=4, outros=3)
+	[Qualidade=0,5|Size=1]
+{aim=alto}->116 (116=4, outros=3)
+	[Qualidade=0,5|Size=1]
+{quantifi=alto}->116 (116=3, outros=3)
+	[Qualidade=0,375|Size=1]
+{qualit=alto}->116 (116=6, outros=12)
+	[Qualidade=0,3529|Size=1]
+{interpret=alto}->116 (116=4, outros=7)
+	[Qualidade=0,3333|Size=1]
+{posterior probabl=alto}->116 (116=3, outros=4)
+	[Qualidade=0,3333|Size=1]
+{rule=alto}->116 (116=5, outros=11)
+	[Qualidade=0,3125|Size=1]
+{usual=alto}->116 (116=4, outros=8)
+	[Qualidade=0,3077|Size=1]
+{degre=alto}->116 (116=3, outros=5)
+	[Qualidade=0,3|Size=1]
+{hand=alto}->116 (116=2, outros=3)
+	[Qualidade=0,25|Size=1]
+{paper=alto}->116 (116=16, outros=62)
+	[Qualidade=0,2388|Size=1]
+{refer=alto}->116 (116=2, outros=4)
+	[Qualidade=0,2222|Size=1]
+{match=alto}->116 (116=2, outros=5)
+	[Qualidade=0,2|Size=1]
+{analyt=alto}->116 (116=2, outros=6)
+	[Qualidade=0,1818|Size=1]
+{exhibit=alto}->116 (116=1, outros=7)
+	[Qualidade=0,0833|Size=1]
+{artifici=alto}->116 (116=1, outros=7)
+	[Qualidade=0,0833|Size=1]
+
+
+
+################################
+INVESTIGANDO: CLASSE = 134
+################################
+CLASSE = 134: 60 linhas (16,13%)
+DEMAIS CLASSES: 312 linhas (83,87%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 134: 83,33%
+{classifi=alto,larger=alto,onlin=alto,regret=alto,resourc=alto,yield=alto}->134 (134=32, outros=15)
+	[Qualidade=1,6|Size=6]
+{classifi=alto,onlin=alto}->134 (134=10, outros=4)
+	[Qualidade=1,1111|Size=2]
+{explan=alto,plan=alto}->134 (134=21, outros=18)
+	[Qualidade=0,913|Size=2]
+{benefit=alto,exponenti=alto}->134 (134=14, outros=12)
+	[Qualidade=0,8235|Size=2]
+{classifi=alto,parameter=alto}->134 (134=8, outros=5)
+	[Qualidade=0,8|Size=2]
+{speedup=alto,state-of-the-art=alto}->134 (134=11, outros=9)
+	[Qualidade=0,7857|Size=2]
+{intuit=alto,larger=alto}->134 (134=10, outros=8)
+	[Qualidade=0,7692|Size=2]
+{explan=alto,model structur=alto}->134 (134=9, outros=8)
+	[Qualidade=0,6923|Size=2]
+{exponenti=alto,regret=alto}->134 (134=12, outros=14)
+	[Qualidade=0,6316|Size=2]
+{benefit=alto}->134 (134=5, outros=3)
+	[Qualidade=0,625|Size=1]
+
+
+OBS: Características utilizadas nos grupos:
+{yield=alto}->134 (134=9, outros=4)
+	[Qualidade=1|Size=1]
+{classifi=alto}->134 (134=5, outros=1)
+	[Qualidade=0,8333|Size=1]
+{plan=alto}->134 (134=15, outros=13)
+	[Qualidade=0,8333|Size=1]
+{speedup=alto}->134 (134=7, outros=4)
+	[Qualidade=0,7778|Size=1]
+{resourc=alto}->134 (134=7, outros=4)
+	[Qualidade=0,7778|Size=1]
+{onlin=alto}->134 (134=6, outros=3)
+	[Qualidade=0,75|Size=1]
+{benefit=alto}->134 (134=5, outros=3)
+	[Qualidade=0,625|Size=1]
+{explan=alto}->134 (134=6, outros=5)
+	[Qualidade=0,6|Size=1]
+{larger=alto}->134 (134=4, outros=2)
+	[Qualidade=0,5714|Size=1]
+{exponenti=alto}->134 (134=9, outros=11)
+	[Qualidade=0,5625|Size=1]
+{intuit=alto}->134 (134=6, outros=6)
+	[Qualidade=0,5455|Size=1]
+{state-of-the-art=alto}->134 (134=6, outros=6)
+	[Qualidade=0,5455|Size=1]
+{model structur=alto}->134 (134=3, outros=3)
+	[Qualidade=0,375|Size=1]
+{regret=alto}->134 (134=3, outros=3)
+	[Qualidade=0,375|Size=1]
+{parameter=alto}->134 (134=3, outros=4)
+	[Qualidade=0,3333|Size=1]
+
+
+
+################################
+INVESTIGANDO: CLASSE = 145
+################################
+CLASSE = 145: 14 linhas (3,76%)
+DEMAIS CLASSES: 358 linhas (96,24%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 145: 100%
+{respons=alto,return=alto}->145 (145=8, outros=3)
+	[Qualidade=1|Size=2]
+{quantifi=alto,reinforc=alto}->145 (145=7, outros=8)
+	[Qualidade=0,5385|Size=2]
+{consequ=alto,return=alto}->145 (145=7, outros=10)
+	[Qualidade=0,4667|Size=2]
+{accur=alto,main=alto,quantifi=alto}->145 (145=8, outros=21)
+	[Qualidade=0,3077|Size=3]
+{correct=alto,learn algorithm=alto}->145 (145=6, outros=16)
+	[Qualidade=0,2857|Size=2]
+{asymptot=alto,paper introduc=alto}->145 (145=5, outros=15)
+	[Qualidade=0,25|Size=2]
+{correct=alto,level=alto}->145 (145=6, outros=22)
+	[Qualidade=0,2222|Size=2]
+{markov decis=alto,paper investig=alto}->145 (145=5, outros=19)
+	[Qualidade=0,2083|Size=2]
+{featur=alto}->145 (145=3, outros=10)
+	[Qualidade=0,2|Size=1]
+{propos approach=alto}->145 (145=2, outros=5)
+	[Qualidade=0,2|Size=1]
+
+
+OBS: Características utilizadas nos grupos:
+{respons=alto}->145 (145=5, outros=1)
+	[Qualidade=0,8333|Size=1]
+{return=alto}->145 (145=5, outros=2)
+	[Qualidade=0,7143|Size=1]
+{reinforc=alto}->145 (145=4, outros=5)
+	[Qualidade=0,4|Size=1]
+{quantifi=alto}->145 (145=3, outros=3)
+	[Qualidade=0,375|Size=1]
+{main=alto}->145 (145=4, outros=8)
+	[Qualidade=0,3077|Size=1]
+{correct=alto}->145 (145=4, outros=11)
+	[Qualidade=0,25|Size=1]
+{paper introduc=alto}->145 (145=3, outros=8)
+	[Qualidade=0,2308|Size=1]
+{paper investig=alto}->145 (145=2, outros=5)
+	[Qualidade=0,2|Size=1]
+{propos approach=alto}->145 (145=2, outros=5)
+	[Qualidade=0,2|Size=1]
+{featur=alto}->145 (145=3, outros=10)
+	[Qualidade=0,2|Size=1]
+{learn algorithm=alto}->145 (145=2, outros=6)
+	[Qualidade=0,1818|Size=1]
+{asymptot=alto}->145 (145=2, outros=7)
+	[Qualidade=0,1667|Size=1]
+{markov decis=alto}->145 (145=3, outros=14)
+	[Qualidade=0,1579|Size=1]
+{consequ=alto}->145 (145=2, outros=8)
+	[Qualidade=0,1538|Size=1]
+{accur=alto}->145 (145=2, outros=10)
+	[Qualidade=0,1333|Size=1]
+{level=alto}->145 (145=2, outros=13)
+	[Qualidade=0,1111|Size=1]
+
+
+
+################################
+INVESTIGANDO: CLASSE = 151
+################################
+CLASSE = 151: 18 linhas (4,84%)
+DEMAIS CLASSES: 354 linhas (95,16%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 151: 100%
+{approxim infer=alto,elimin=alto,fault=alto}->151 (151=13, outros=12)
+	[Qualidade=0,7647|Size=3]
+{graphic model=alto,outcom=alto}->151 (151=9, outros=13)
+	[Qualidade=0,5|Size=2]
+{outcom=alto,variant=alto}->151 (151=7, outros=11)
+	[Qualidade=0,4375|Size=2]
+{averag=alto,fault=alto}->151 (151=5, outros=8)
+	[Qualidade=0,3846|Size=2]
+{individu=alto,scheme=alto}->151 (151=9, outros=20)
+	[Qualidade=0,36|Size=2]
+{exploit structur=alto,paper extend=alto,variant=alto}->151 (151=7, outros=17)
+	[Qualidade=0,3182|Size=3]
+{empir evalu=alto,magnitud=alto}->151 (151=5, outros=12)
+	[Qualidade=0,2941|Size=2]
+{approxim infer=alto,help=alto}->151 (151=5, outros=14)
+	[Qualidade=0,2632|Size=2]
+{inspir=alto,lower bound=alto}->151 (151=4, outros=11)
+	[Qualidade=0,25|Size=2]
+{elimin=alto,interact=alto}->151 (151=5, outros=17)
+	[Qualidade=0,2273|Size=2]
+
+
+OBS: Características utilizadas nos grupos:
+{elimin=alto}->151 (151=5, outros=4)
+	[Qualidade=0,5556|Size=1]
+{empir evalu=alto}->151 (151=4, outros=3)
+	[Qualidade=0,5|Size=1]
+{approxim infer=alto}->151 (151=5, outros=6)
+	[Qualidade=0,4545|Size=1]
+{graphic model=alto}->151 (151=6, outros=9)
+	[Qualidade=0,4286|Size=1]
+{fault=alto}->151 (151=3, outros=3)
+	[Qualidade=0,375|Size=1]
+{scheme=alto}->151 (151=6, outros=12)
+	[Qualidade=0,3529|Size=1]
+{variant=alto}->151 (151=4, outros=7)
+	[Qualidade=0,3333|Size=1]
+{outcom=alto}->151 (151=3, outros=5)
+	[Qualidade=0,3|Size=1]
+{averag=alto}->151 (151=3, outros=5)
+	[Qualidade=0,3|Size=1]
+{individu=alto}->151 (151=3, outros=8)
+	[Qualidade=0,2308|Size=1]
+{inspir=alto}->151 (151=2, outros=4)
+	[Qualidade=0,2222|Size=1]
+{paper extend=alto}->151 (151=2, outros=5)
+	[Qualidade=0,2|Size=1]
+{lower bound=alto}->151 (151=2, outros=7)
+	[Qualidade=0,1667|Size=1]
+{exploit structur=alto}->151 (151=1, outros=6)
+	[Qualidade=0,0909|Size=1]
+{magnitud=alto}->151 (151=1, outros=9)
+	[Qualidade=0,0714|Size=1]
+{help=alto}->151 (151=0, outros=8)
+	[Qualidade=0|Size=1]
+{interact=alto}->151 (151=0, outros=13)
+	[Qualidade=0|Size=1]
+
+
+
+################################
+INVESTIGANDO: CLASSE = 153
+################################
+CLASSE = 153: 53 linhas (14,25%)
+DEMAIS CLASSES: 319 linhas (85,75%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 153: 90,57%
+{acycl=alto,attempt=alto,probabilist infer=alto}->153 (153=22, outros=7)
+	[Qualidade=1,8333|Size=3]
+{attempt=alto,illustr=alto,output=alto}->153 (153=17, outros=12)
+	[Qualidade=1|Size=3]
+{bayesian belief network=alto,learn bayesian=alto,tractabl=alto}->153 (153=13, outros=10)
+	[Qualidade=0,8667|Size=3]
+{illustr=alto,insight=alto}->153 (153=13, outros=11)
+	[Qualidade=0,8125|Size=2]
+{attempt=alto}->153 (153=5, outros=2)
+	[Qualidade=0,7143|Size=1]
+{acycl=alto,resourc=alto}->153 (153=9, outros=9)
+	[Qualidade=0,6429|Size=2]
+{model allow=alto,tractabl=alto}->153 (153=7, outros=6)
+	[Qualidade=0,6364|Size=2]
+{bayesian belief network=alto}->153 (153=5, outros=3)
+	[Qualidade=0,625|Size=1]
+{attent=alto,employ=alto}->153 (153=8, outros=9)
+	[Qualidade=0,5714|Size=2]
+{employ=alto,examin=alto}->153 (153=10, outros=14)
+	[Qualidade=0,5263|Size=2]
+
+
+OBS: Características utilizadas nos grupos:
+{probabilist infer=alto}->153 (153=12, outros=3)
+	[Qualidade=1,5|Size=1]
+{illustr=alto}->153 (153=8, outros=6)
+	[Qualidade=0,7273|Size=1]
+{attempt=alto}->153 (153=5, outros=2)
+	[Qualidade=0,7143|Size=1]
+{acycl=alto}->153 (153=5, outros=2)
+	[Qualidade=0,7143|Size=1]
+{bayesian belief network=alto}->153 (153=5, outros=3)
+	[Qualidade=0,625|Size=1]
+{output=alto}->153 (153=5, outros=4)
+	[Qualidade=0,5556|Size=1]
+{insight=alto}->153 (153=5, outros=5)
+	[Qualidade=0,5|Size=1]
+{tractabl=alto}->153 (153=4, outros=3)
+	[Qualidade=0,5|Size=1]
+{employ=alto}->153 (153=5, outros=6)
+	[Qualidade=0,4545|Size=1]
+{learn bayesian=alto}->153 (153=4, outros=5)
+	[Qualidade=0,4|Size=1]
+{examin=alto}->153 (153=5, outros=8)
+	[Qualidade=0,3846|Size=1]
+{attent=alto}->153 (153=3, outros=3)
+	[Qualidade=0,375|Size=1]
+{resourc=alto}->153 (153=4, outros=7)
+	[Qualidade=0,3333|Size=1]
+{model allow=alto}->153 (153=3, outros=4)
+	[Qualidade=0,3333|Size=1]
+
+
+
+################################
+INVESTIGANDO: CLASSE = 156
+################################
+CLASSE = 156: 29 linhas (7,8%)
+DEMAIS CLASSES: 343 linhas (92,2%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 156: 93,1%
+{convex=alto,model algorithm=alto}->156 (156=10, outros=3)
+	[Qualidade=1,25|Size=2]
+{convex=alto,dag=alto}->156 (156=7, outros=6)
+	[Qualidade=0,6364|Size=2]
+{suffici=alto,treat=alto,variat=alto}->156 (156=11, outros=13)
+	[Qualidade=0,6111|Size=3]
+{condit independ=alto,suffici=alto}->156 (156=7, outros=9)
+	[Qualidade=0,5|Size=2]
+{belief propag=alto,criterion=alto}->156 (156=7, outros=14)
+	[Qualidade=0,3684|Size=2]
+{paper develop=alto,polynomi=alto,relax=alto}->156 (156=7, outros=14)
+	[Qualidade=0,3684|Size=3]
+{causal=alto,deal=alto,speedup=alto,valid=alto}->156 (156=15, outros=36)
+	[Qualidade=0,3659|Size=4]
+{variat=alto}->156 (156=4, outros=6)
+	[Qualidade=0,3636|Size=1]
+{dag=alto}->156 (156=3, outros=4)
+	[Qualidade=0,3333|Size=1]
+{suffici=alto}->156 (156=3, outros=4)
+	[Qualidade=0,3333|Size=1]
+
+
+OBS: Características utilizadas nos grupos:
+{model algorithm=alto}->156 (156=6, outros=1)
+	[Qualidade=1|Size=1]
+{valid=alto}->156 (156=6, outros=2)
+	[Qualidade=0,8571|Size=1]
+{convex=alto}->156 (156=4, outros=2)
+	[Qualidade=0,5714|Size=1]
+{treat=alto}->156 (156=4, outros=3)
+	[Qualidade=0,5|Size=1]
+{condit independ=alto}->156 (156=4, outros=5)
+	[Qualidade=0,4|Size=1]
+{variat=alto}->156 (156=4, outros=6)
+	[Qualidade=0,3636|Size=1]
+{dag=alto}->156 (156=3, outros=4)
+	[Qualidade=0,3333|Size=1]
+{polynomi=alto}->156 (156=3, outros=4)
+	[Qualidade=0,3333|Size=1]
+{suffici=alto}->156 (156=3, outros=4)
+	[Qualidade=0,3333|Size=1]
+{relax=alto}->156 (156=3, outros=4)
+	[Qualidade=0,3333|Size=1]
+{criterion=alto}->156 (156=3, outros=5)
+	[Qualidade=0,3|Size=1]
+{belief propag=alto}->156 (156=4, outros=9)
+	[Qualidade=0,2857|Size=1]
+{causal=alto}->156 (156=6, outros=16)
+	[Qualidade=0,2857|Size=1]
+{deal=alto}->156 (156=2, outros=9)
+	[Qualidade=0,1429|Size=1]
+{paper develop=alto}->156 (156=1, outros=7)
+	[Qualidade=0,0833|Size=1]
+{speedup=alto}->156 (156=1, outros=10)
+	[Qualidade=0,0667|Size=1]
+
+
+
+################################
+INVESTIGANDO: CLASSE = 256
+################################
+CLASSE = 256: 33 linhas (8,87%)
+DEMAIS CLASSES: 339 linhas (91,13%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 256: 96,97%
+{junction tree=alto,probabilist network=alto}->256 (256=17, outros=3)
+	[Qualidade=2,125|Size=2]
+{effici algorithm=alto,junction tree=alto}->256 (256=10, outros=3)
+	[Qualidade=1,25|Size=2]
+{major=alto,report=alto}->256 (256=8, outros=9)
+	[Qualidade=0,5714|Size=2]
+{algorithm comput=alto,calcul=alto,exist method=alto}->256 (256=10, outros=15)
+	[Qualidade=0,5|Size=3]
+{product=alto,qualit=alto}->256 (256=10, outros=16)
+	[Qualidade=0,4762|Size=2]
+{exampl=alto,sensit=alto}->256 (256=9, outros=18)
+	[Qualidade=0,3913|Size=2]
+{influenc=alto}->256 (256=6, outros=13)
+	[Qualidade=0,3333|Size=1]
+{calcul=alto,idea=alto,yield=alto}->256 (256=10, outros=26)
+	[Qualidade=0,3226|Size=3]
+{distinguish=alto,various=alto}->256 (256=7, outros=19)
+	[Qualidade=0,2917|Size=2]
+{paper explor=alto,scale=alto,size=alto}->256 (256=9, outros=28)
+	[Qualidade=0,2727|Size=3]
+
+
+OBS: Características utilizadas nos grupos:
+{probabilist network=alto}->256 (256=10, outros=1)
+	[Qualidade=1,6667|Size=1]
+{junction tree=alto}->256 (256=7, outros=2)
+	[Qualidade=1|Size=1]
+{effici algorithm=alto}->256 (256=5, outros=1)
+	[Qualidade=0,8333|Size=1]
+{sensit=alto}->256 (256=5, outros=3)
+	[Qualidade=0,625|Size=1]
+{major=alto}->256 (256=5, outros=4)
+	[Qualidade=0,5556|Size=1]
+{calcul=alto}->256 (256=5, outros=6)
+	[Qualidade=0,4545|Size=1]
+{qualit=alto}->256 (256=7, outros=11)
+	[Qualidade=0,4375|Size=1]
+{idea=alto}->256 (256=5, outros=9)
+	[Qualidade=0,3571|Size=1]
+{influenc=alto}->256 (256=6, outros=13)
+	[Qualidade=0,3333|Size=1]
+{exist method=alto}->256 (256=3, outros=5)
+	[Qualidade=0,3|Size=1]
+{report=alto}->256 (256=3, outros=5)
+	[Qualidade=0,3|Size=1]
+{distinguish=alto}->256 (256=3, outros=7)
+	[Qualidade=0,25|Size=1]
+{size=alto}->256 (256=5, outros=15)
+	[Qualidade=0,25|Size=1]
+{product=alto}->256 (256=3, outros=7)
+	[Qualidade=0,25|Size=1]
+{various=alto}->256 (256=4, outros=12)
+	[Qualidade=0,2353|Size=1]
+{algorithm comput=alto}->256 (256=2, outros=4)
+	[Qualidade=0,2222|Size=1]
+{scale=alto}->256 (256=3, outros=9)
+	[Qualidade=0,2143|Size=1]
+{exampl=alto}->256 (256=4, outros=15)
+	[Qualidade=0,2|Size=1]
+{yield=alto}->256 (256=2, outros=11)
+	[Qualidade=0,125|Size=1]
+{paper explor=alto}->256 (256=1, outros=5)
+	[Qualidade=0,1|Size=1]
