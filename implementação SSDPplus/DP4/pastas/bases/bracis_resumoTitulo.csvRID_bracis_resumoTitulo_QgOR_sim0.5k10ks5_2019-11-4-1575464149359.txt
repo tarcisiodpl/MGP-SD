@@ -1,0 +1,340 @@
+################################
+BASE DE DADOS ##################
+################################
+Nome: bracis_resumoTitulo
+Total Colunas (atributos): 376
+Total de Linhas (exemplos/amostras): 404
+CLASSES: 112, 118, 19, 24, 36, 37, 45, 50, 75, 90
+
+################################
+INFORMAÇÕES TÉCNICAS ###########
+################################
+Métrica de avaliação: Qg
+Operador entre características: OR
+k: 10, ks: 5
+Simularidade: 0.5
+
+
+
+################################
+INVESTIGANDO: CLASSE = 90
+################################
+CLASSE = 90: 35 linhas (8,66%)
+DEMAIS CLASSES: 369 linhas (91,34%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 90: 88,57%
+{enabl,execut,label,learn algorithm}->90 (90=12, outros=12)
+	[Qualidade=0,7059|Size=4]
+{distribut,enabl,execut,label}->90 (90=17, outros=21)
+	[Qualidade=0,6538|Size=4]
+{collect,execut,label}->90 (90=10, outros=11)
+	[Qualidade=0,625|Size=3]
+{collect,detect,enabl,execut,label}->90 (90=20, outros=27)
+	[Qualidade=0,625|Size=5]
+{label,learn algorithm}->90 (90=8, outros=8)
+	[Qualidade=0,6154|Size=2]
+{behavior,data set,enabl,execut,label}->90 (90=16, outros=21)
+	[Qualidade=0,6154|Size=5]
+{behavior,collect,label,learn algorithm,random}->90 (90=16, outros=22)
+	[Qualidade=0,5926|Size=5]
+{collect,enabl,execut,label,techniqu}->90 (90=25, outros=39)
+	[Qualidade=0,5682|Size=5]
+{chang,enabl,execut,label,random}->90 (90=17, outros=25)
+	[Qualidade=0,5667|Size=5]
+{detect,distribut,enabl}->90 (90=18, outros=27)
+	[Qualidade=0,5625|Size=3]
+
+
+
+################################
+INVESTIGANDO: CLASSE = 112
+################################
+CLASSE = 112: 48 linhas (11,88%)
+DEMAIS CLASSES: 356 linhas (88,12%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 112: 75%
+{activ,human,involv,usual}->112 (112=14, outros=1)
+	[Qualidade=2,3333|Size=4]
+{activ,involv,level,understand,usual}->112 (112=15, outros=3)
+	[Qualidade=1,875|Size=5]
+{deep,human,involv,level,social,usual}->112 (112=23, outros=8)
+	[Qualidade=1,7692|Size=6]
+{activ,express,involv,level,usual}->112 (112=14, outros=3)
+	[Qualidade=1,75|Size=5]
+{express,human,involv,social,understand,usual}->112 (112=21, outros=7)
+	[Qualidade=1,75|Size=6]
+{human,involv}->112 (112=10, outros=1)
+	[Qualidade=1,6667|Size=2]
+{activ,human,level,social}->112 (112=15, outros=4)
+	[Qualidade=1,6667|Size=4]
+{activ,human,involv,mani,usual}->112 (112=24, outros=10)
+	[Qualidade=1,6|Size=5]
+{involv,level,understand}->112 (112=12, outros=3)
+	[Qualidade=1,5|Size=3]
+{deep,express,involv,social,understand,usual}->112 (112=22, outros=10)
+	[Qualidade=1,4667|Size=6]
+
+
+
+################################
+INVESTIGANDO: CLASSE = 118
+################################
+CLASSE = 118: 72 linhas (17,82%)
+DEMAIS CLASSES: 332 linhas (82,18%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 118: 63,89%
+{assess,cluster algorithm,databas,ensembl,great,monitor,size}->118 (118=44, outros=7)
+	[Qualidade=3,6667|Size=7]
+{ani,assess,databas,ensembl,monitor}->118 (118=23, outros=2)
+	[Qualidade=3,2857|Size=5]
+{ani,assess,databas,individu,monitor,size}->118 (118=25, outros=3)
+	[Qualidade=3,125|Size=6]
+{cluster algorithm,databas,ensembl}->118 (118=31, outros=5)
+	[Qualidade=3,1|Size=3]
+{assess,ensembl,individu,monitor,size}->118 (118=23, outros=3)
+	[Qualidade=2,875|Size=5]
+{databas,ensembl,monitor}->118 (118=20, outros=2)
+	[Qualidade=2,8571|Size=3]
+{assess,cluster algorithm,individu,monitor}->118 (118=24, outros=4)
+	[Qualidade=2,6667|Size=4]
+{ani,assess,ensembl,great}->118 (118=18, outros=2)
+	[Qualidade=2,5714|Size=4]
+{assess,cluster algorithm,monitor}->118 (118=19, outros=3)
+	[Qualidade=2,375|Size=3]
+{assess,great,monitor,size}->118 (118=16, outros=2)
+	[Qualidade=2,2857|Size=4]
+
+
+################################
+INVESTIGANDO: CLASSE = 45
+################################
+CLASSE = 45: 60 linhas (14,85%)
+DEMAIS CLASSES: 344 linhas (85,15%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 45: 93,33%
+{local,multi-object,natur,product,result obtain,swarm}->45 (45=35, outros=2)
+	[Qualidade=5|Size=6]
+{compos,multi-object,optim problem}->45 (45=30, outros=4)
+	[Qualidade=3,3333|Size=3]
+{local,natur,oper,swarm}->45 (45=30, outros=5)
+	[Qualidade=3|Size=4]
+{local,optim problem,product,swarm}->45 (45=21, outros=3)
+	[Qualidade=2,625|Size=4]
+{adapt,heurist,local,multi-object,natur,product}->45 (45=41, outros=11)
+	[Qualidade=2,5625|Size=6]
+{compos,heurist,local,swarm}->45 (45=23, outros=4)
+	[Qualidade=2,5556|Size=4]
+{heurist,local,natur,optim problem,product}->45 (45=21, outros=4)
+	[Qualidade=2,3333|Size=5]
+{analyz,heurist,multi-object}->45 (45=30, outros=9)
+	[Qualidade=2,1429|Size=3]
+{multi-object,product,test}->45 (45=39, outros=14)
+	[Qualidade=2,0526|Size=3]
+{compos,optim problem,swarm}->45 (45=18, outros=4)
+	[Qualidade=2|Size=3]
+
+
+################################
+INVESTIGANDO: CLASSE = 19
+################################
+CLASSE = 19: 22 linhas (5,45%)
+DEMAIS CLASSES: 382 linhas (94,55%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 19: 90,91%
+{averag,construct,observ}->19 (19=9, outros=5)
+	[Qualidade=0,9|Size=3]
+{construct,observ,tree}->19 (19=13, outros=12)
+	[Qualidade=0,7647|Size=3]
+{construct,effect,observ}->19 (19=12, outros=12)
+	[Qualidade=0,7059|Size=3]
+{construct,experiment result,observ}->19 (19=12, outros=12)
+	[Qualidade=0,7059|Size=3]
+{construct,observ,time}->19 (19=14, outros=15)
+	[Qualidade=0,7|Size=3]
+{averag,construct,intellig}->19 (19=7, outros=5)
+	[Qualidade=0,7|Size=3]
+{construct}->19 (19=4, outros=1)
+	[Qualidade=0,6667|Size=1]
+{averag,construct,observ,represent}->19 (19=14, outros=16)
+	[Qualidade=0,6667|Size=4]
+{construct,exampl,observ}->19 (19=11, outros=12)
+	[Qualidade=0,6471|Size=3]
+{construct,observ,relev}->19 (19=11, outros=12)
+	[Qualidade=0,6471|Size=3]
+
+
+################################
+INVESTIGANDO: CLASSE = 36
+################################
+CLASSE = 36: 43 linhas (10,64%)
+DEMAIS CLASSES: 361 linhas (89,36%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 36: 97,67%
+{common,extend,tool}->36 (36=13, outros=2)
+	[Qualidade=1,8571|Size=3]
+{common,extend,program,tool}->36 (36=22, outros=9)
+	[Qualidade=1,5714|Size=4]
+{addit,common,extend,general}->36 (36=20, outros=8)
+	[Qualidade=1,5385|Size=4]
+{common,extend,filter,state,tool}->36 (36=24, outros=11)
+	[Qualidade=1,5|Size=5]
+{common,extend,real}->36 (36=22, outros=10)
+	[Qualidade=1,4667|Size=3]
+{common,extend,filter,probabl}->36 (36=19, outros=8)
+	[Qualidade=1,4615|Size=4]
+{common,decis,extend,filter}->36 (36=22, outros=11)
+	[Qualidade=1,375|Size=4]
+{common,tool}->36 (36=8, outros=1)
+	[Qualidade=1,3333|Size=2]
+{common,extend,process,state,tool,understand}->36 (36=34, outros=21)
+	[Qualidade=1,3077|Size=6]
+{extend,filter,tool}->36 (36=10, outros=3)
+	[Qualidade=1,25|Size=3]
+
+
+
+################################
+INVESTIGANDO: CLASSE = 50
+################################
+CLASSE = 50: 24 linhas (5,94%)
+DEMAIS CLASSES: 380 linhas (94,06%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 50: 100%
+{agent,approach use}->50 (50=10, outros=0)
+	[Qualidade=2|Size=2]
+{agent,architectur,extens}->50 (50=15, outros=4)
+	[Qualidade=1,6667|Size=3]
+{agent,algorithm use,goal,logic}->50 (50=16, outros=6)
+	[Qualidade=1,4545|Size=4]
+{agent,extens,reason}->50 (50=14, outros=5)
+	[Qualidade=1,4|Size=3]
+{agent,direct,extens}->50 (50=18, outros=8)
+	[Qualidade=1,3846|Size=3]
+{architectur,logic}->50 (50=10, outros=3)
+	[Qualidade=1,25|Size=2]
+{agent,practic}->50 (50=15, outros=7)
+	[Qualidade=1,25|Size=2]
+{architectur,goal}->50 (50=12, outros=5)
+	[Qualidade=1,2|Size=2]
+{agent,impact,pattern}->50 (50=15, outros=8)
+	[Qualidade=1,1538|Size=3]
+{goal,logic}->50 (50=10, outros=4)
+	[Qualidade=1,1111|Size=2]
+
+
+
+################################
+INVESTIGANDO: CLASSE = 24
+################################
+CLASSE = 24: 30 linhas (7,43%)
+DEMAIS CLASSES: 374 linhas (92,57%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 24: 90%
+{accur,like,small,word}->24 (24=13, outros=2)
+	[Qualidade=1,8571|Size=4]
+{accur,collect,recommend,small}->24 (24=17, outros=6)
+	[Qualidade=1,5455|Size=4]
+{accur,evolut,small,word}->24 (24=16, outros=6)
+	[Qualidade=1,4545|Size=4]
+{accur,collect,graph,moreov}->24 (24=17, outros=7)
+	[Qualidade=1,4167|Size=4]
+{accur,like}->24 (24=9, outros=2)
+	[Qualidade=1,2857|Size=2]
+{accur,associ,semant,small,word}->24 (24=18, outros=9)
+	[Qualidade=1,2857|Size=5]
+{accur,graph,like,recommend}->24 (24=16, outros=8)
+	[Qualidade=1,2308|Size=4]
+{accur,associ,collect}->24 (24=14, outros=7)
+	[Qualidade=1,1667|Size=3]
+{like,recommend,small,word}->24 (24=10, outros=4)
+	[Qualidade=1,1111|Size=4]
+{accur,evolut,like,recommend,semant}->24 (24=21, outros=14)
+	[Qualidade=1,1053|Size=5]
+
+
+################################
+INVESTIGANDO: CLASSE = 37
+################################
+CLASSE = 37: 39 linhas (9,65%)
+DEMAIS CLASSES: 365 linhas (90,35%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 37: 94,87%
+{hard,map,minim}->37 (37=28, outros=0)
+	[Qualidade=5,6|Size=3]
+{lead,map,year}->37 (37=24, outros=3)
+	[Qualidade=3|Size=3]
+{lead,year}->37 (37=22, outros=3)
+	[Qualidade=2,75|Size=2]
+{consequ,hard,issu,supervis}->37 (37=24, outros=4)
+	[Qualidade=2,6667|Size=4]
+{minim}->37 (37=13, outros=0)
+	[Qualidade=2,6|Size=1]
+{consequ,issu}->37 (37=15, outros=1)
+	[Qualidade=2,5|Size=2]
+{hard,word}->37 (37=14, outros=1)
+	[Qualidade=2,3333|Size=2]
+{hard,small,work propos}->37 (37=31, outros=9)
+	[Qualidade=2,2143|Size=3]
+{issu,year}->37 (37=16, outros=3)
+	[Qualidade=2|Size=2]
+{consequ,map}->37 (37=9, outros=0)
+	[Qualidade=1,8|Size=2]
+
+
+################################
+INVESTIGANDO: CLASSE = 75
+################################
+CLASSE = 75: 31 linhas (7,67%)
+DEMAIS CLASSES: 373 linhas (92,33%)
+
+
+### TOP-10 grupos
+Valores filtrados: {zero, medio, baixo}
+Cobertura total CLASSE = 75: 74,19%
+{face,genet algorithm,identif,verifi}->75 (75=15, outros=1)
+	[Qualidade=2,5|Size=4]
+{action,face,genet algorithm,organ,verifi}->75 (75=17, outros=4)
+	[Qualidade=1,8889|Size=5]
+{genet algorithm,identif,verifi}->75 (75=10, outros=1)
+	[Qualidade=1,6667|Size=3]
+{face,verifi}->75 (75=8, outros=0)
+	[Qualidade=1,6|Size=2]
+{action,face,genet algorithm}->75 (75=11, outros=2)
+	[Qualidade=1,5714|Size=3]
+{genet algorithm,organ,verifi}->75 (75=10, outros=2)
+	[Qualidade=1,4286|Size=3]
+{genet algorithm,train,verifi}->75 (75=14, outros=5)
+	[Qualidade=1,4|Size=3]
+{artifici,face,organ,verifi}->75 (75=13, outros=5)
+	[Qualidade=1,3|Size=4]
+{action,genet algorithm,verifi}->75 (75=9, outros=2)
+	[Qualidade=1,2857|Size=3]
+{face,identif,implement,organ}->75 (75=14, outros=6)
+	[Qualidade=1,2727|Size=4]
