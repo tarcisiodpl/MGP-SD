@@ -1,0 +1,1 @@
+Bounding Search Space Size Hyper tree Decompositions paper develops measure bounding performance AND/OR search algorithms solving variety queries graphical models drawing connection notion hypertree decompositions allows exploit determinism specification produce tighter bounds demonstrate variety practical instances improve existing bounds magnitude

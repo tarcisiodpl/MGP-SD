@@ -1,0 +1,1 @@
+Region-Based Approximations Planning Stochastic Domains paper concerned planning stochastic domains partially observable Markov decision processes POMDPs POMDPs difficult solve paper identifies subclass POMDPs called region observable POMDPs easier solve approximate POMDPs arbitrary accuracy

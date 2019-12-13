@@ -1,0 +1,4 @@
+CLASSE = 90  , 35 linhas (8,66%) ou 10 linhas (10%)
+Algoritmos
+
+

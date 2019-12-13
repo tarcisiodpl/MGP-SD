@@ -1,0 +1,1 @@
+aHUGIN System Creating Adaptive Causal Probabilistic Networks paper describes aHUGIN tool creating adaptive systems aHUGIN extension HUGIN based methods reported Spiegelhalter Lauritzen 1990a adaptive systems aHUGIN adjust C011ditional probabilities model short analysis adaptation task features aHUGIN described Finally session experiments reported discussed

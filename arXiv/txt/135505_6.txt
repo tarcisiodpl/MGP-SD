@@ -1,0 +1,1 @@
+Complexity Plan Existence Evaluation Probabilistic Domains examine computational complexity testing finding plans probabilistic planning domains succinct representations complete variety complexity classes NP co-NP NP co-NP PSPACE probabilistic classes NP special field uncertainty artificial intelligence deserving additional study fruitful direction future algorithmic development

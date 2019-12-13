@@ -1,0 +1,101 @@
+Id,Label,0,modularity_class,degree
+"Miranda, P. B. C.","Miranda, P. B. C.",1;219;264;279,90,5
+"Prudencio, R. B. C.","Prudencio, R. B. C.",1;87;154;166;219;264;277;316,90,10
+"Carvalho, A. C. P. L. F.","Carvalho, A. C. P. L. F.",1;2;3;7;46,90,9
+"Soares, C.","Soares, C.",1;2;319;368,90,8
+"Rossi, A. L. D.","Rossi, A. L. D.",2;352,90,5
+"Lorena, A. C.","Lorena, A. C.",3;4;118;141;208;210;234;314;410,112,13
+"Vallim, R. M. M.","Vallim, R. M. M.",7,90,3
+"Gama, J.","Gama, J.",7;46,90,5
+"Coelho, A. L. V.","Coelho, A. L. V.",9;86,118,7
+"Faceli, K.","Faceli, K.",9;294;401,118,7
+"Sakata, T. C.","Sakata, T. C.",9;294;401,118,7
+"Costa, I. G.","Costa, I. G.",9;11,118,8
+"Macario, V.","Macario, V.",11;252;335;347,118,13
+"Ludermir, T. B.","Ludermir, T. B.",18;31;33;51;88;98;142;155;186;201;212;265;275;283;324;348;376;411;424,118,20
+"Pozo, A.","Pozo, A.",29;30;99;195;200;216;300;328;358;443,45,12
+"Delgado, M. R.","Delgado, M. R.",32;39;85;137;138;159;161;326;380,45,18
+"Canuto, A. M. P.","Canuto, A. M. P.",35;36;57;86;101;257;404,118,11
+"Goldbarg, M. C.","Goldbarg, M. C.",36;100;137;267;441,45,10
+"Pavelski, L. M.","Pavelski, L. M.",38;138;159;245;326,45,8
+"Goncalves, R. A.","Goncalves, R. A.",38;39;85;137;138;159;160;245;459;460;461,45,21
+"Spolaor, N.","Spolaor, N.",44;126,19,5
+"Monard, M. C.","Monard, M. C.",44;80;126,19,6
+"Lee, H. D.","Lee, H. D.",44;58,19,7
+"Faria, E. R.","Faria, E. R.",46;451,90,6
+"Naldi, M. C.","Naldi, M. C.",54;157;170;449;451,90,8
+"Batista, G. E. A. P. A.","Batista, G. E. A. P. A.",55;56;167;402,19,6
+"Zalewski, W.","Zalewski, W.",58,19,4
+"Silva, F.","Silva, F.",58;75;117,19,9
+"Maletzke, A. G.","Maletzke, A. G.",58;402,19,6
+"Wu, F. C.","Wu, F. C.",58,19,4
+"Cerri, R.","Cerri, R.",63;221;369;398,112,11
+"Barros, R. C.","Barros, R. C.",63;191;215;427,112,12
+"d. Carvalho, A. C. P. L. F.","d. Carvalho, A. C. P. L. F.",63;208;210;221;224;255,112,10
+"Cozman, F. G.","Cozman, F. G.",68;72;78;149;238;271,36,13
+"Santos, P. E.","Santos, P. E.",68;179;420,36,9
+"d. Barros, L. N.","d. Barros, L. N.",71;77;107;108;226;271,36,11
+"Souza, M.","Souza, M.",73;360;417,50,5
+"Ribas, B. C.","Ribas, B. C.",75,19,4
+"Suguimoto, R. M.","Suguimoto, R. M.",75,19,4
+"Costa, A. H. R.","Costa, A. H. R.",78;218;230;320;420;431,36,10
+"Rodrigues, E.","Rodrigues, E.",81,24,4
+"Assuncao, R.","Assuncao, R.",81,24,4
+"Pappa, G. L.","Pappa, G. L.",81;130;222;242;261;343;405,24,16
+"Meira, W.","Meira, W.",81;130;222;405;467,24,14
+"Pozo, A. T. R.","Pozo, A. T. R.",84;139;156;158;160;172;440;460,45,12
+"Delgado, K. V.","Delgado, K. V.",107;228;413,36,5
+"Maua, D. D.","Maua, D. D.",116;271;399;466,36,7
+"d. L. F. d. Carvalho, A. C. P.","d. L. F. d. Carvalho, A. C. P.",118;141;379;390,112,8
+"Alencar, A. S. C.","Alencar, A. S. C.",121;209,37,12
+"Gomes, J. P. P.","Gomes, J. P. P.",121;209;213;229;231;239;280;281;286;287;333;432;433,37,38
+"Andrade, R. M. C.","Andrade, R. M. C.",121;209,37,12
+"Barbon, S.","Barbon, S.",132;296;365;379;398,112,13
+"Lacerda, A.","Lacerda, A.",169;194;261;353,24,9
+"Panisson, A. R.","Panisson, A. R.",174;217;220;362,50,8
+"Meneguzzi, F.","Meneguzzi, F.",174;249,50,6
+"Vieira, R.","Vieira, R.",174;182;183;360;417,50,10
+"Bordin, R. H.","Bordin, R. H.",174,50,3
+"Lopes, L.","Lopes, L.",182,50,3
+"Cavalcanti, G. D. C.","Cavalcanti, G. D. C.",185;203;235;258,75,10
+"Santana, R.","Santana, R.",195;216;459,45,9
+"Caldas, W. L.","Caldas, W. L.",209;231,37,10
+"d. Souza, A. H.","d. Souza, A. H.",209;281,37,10
+"Aguilar, P. A. C.","Aguilar, P. A. C.",209,37,8
+"Rodrigues, C.","Rodrigues, C.",209,37,8
+"Franco, W.","Franco, W.",209,37,8
+"d. Castro, M. F.","d. Castro, M. F.",209,37,8
+"Silva, R.","Silva, R.",211;370,75,6
+"Queiroz, L. P.","Queiroz, L. P.",213;239;286,37,8
+"Wehrmann, J.","Wehrmann, J.",215,112,4
+"Simoes, G. S.","Simoes, G. S.",215,112,4
+"Paula, T. S.","Paula, T. S.",215,112,4
+"Bordini, R. H.","Bordini, R. H.",217;220;248;249;362;421,50,12
+"Glatt, R.","Glatt, R.",218;230;317,36,6
+"d. Carvalho, T. B. A.","d. Carvalho, T. B. A.",235,75,5
+"Sibaldo, M. A. A.","Sibaldo, M. A. A.",235,75,5
+"Tsang, I. R.","Tsang, I. R.",235,75,5
+"Tsang, I. J.","Tsang, I. J.",235,75,5
+"Pozo, A. T.","Pozo, A. T.",245;461,45,8
+"Souza, E.","Souza, E.",259;266,75,6
+"Oliveira, A. L. I.","Oliveira, A. L. I.",266;332;334,75,8
+"Oliveira, G.","Oliveira, G.",266;370,75,7
+"Silva, A.","Silva, A.",266;331,75,7
+"Ferreira, R.","Ferreira, R.",307;452,118,6
+"Bonini, R.","Bonini, R.",317,36,4
+"Leno Da Silva, F.","Leno Da Silva, F.",317,36,4
+"d. C. Bianchi, R. A.","d. C. Bianchi, R. A.",320;420;431,36,5
+"Delgado, M.","Delgado, M.",322;459,45,9
+"Freitas, A. A.","Freitas, A. A.",327;376,118,7
+"C. P. L. F. de Carvalho, A.","C. P. L. F. de Carvalho, A.",352;368,90,5
+"d. O. Gabriel, V.","d. O. Gabriel, V.",362,50,4
+"Adamatti, D. F.","Adamatti, D. F.",362,50,4
+"Billa, C. Z.","Billa, C. Z.",362,50,4
+"Xavier-Junior, J. C.","Xavier-Junior, J. C.",376;377;404,118,9
+"Mastelini, S. M.","Mastelini, S. M.",379;398,112,5
+"Santos, R.","Santos, R.",389;467,24,8
+"de Almeida, C. P.","de Almeida, C. P.",459;460;461,45,10
+"Franciscani, G. R.","Franciscani, G. R.",467,24,5
+"Boaventura, M.","Boaventura, M.",467,24,5
+"Bernardina, P. D.","Bernardina, P. D.",467,24,5
+"d. M. Minardi, R. C.","d. M. Minardi, R. C.",467,24,5

@@ -1,0 +1,6 @@
+Disjunctive covers: OR
+k= 10,
+ks= 5,
+similarity= 0.1
+Qg(g= 5)
+(value(f) =high)
