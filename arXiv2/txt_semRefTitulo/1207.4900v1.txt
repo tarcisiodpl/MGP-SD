@@ -1,0 +1,533 @@
+. Assuming the AND-distillation conjecture, the Pathwidth
+problem of determining whether a given graph G has pathwidth at most k
+admits no polynomial kernelization with respect to k. The present work
+studies the existence of polynomial kernels for Pathwidth with respect
+to other, structural, parameters.
+Our main result is that, unless NP ⊆ coNP/poly, Pathwidth admits no
+polynomial kernelization even when parameterized by the vertex deletion
+distance to a clique, by giving a cross-composition from Cutwidth. The
+cross-composition works also for Treewidth, improving over previous
+lower bounds by the present authors. For Pathwidth, our result rules
+out polynomial kernels with respect to the distance to various classes of
+polynomial-time solvable inputs, like interval or cluster graphs.
+This leads to the question whether there are nontrivial structural parameters for which Pathwidth does admit a polynomial kernelization. To
+answer this, we give a collection of graph reduction rules that are safe for
+Pathwidth. We analyze the success of these results and obtain polynomial kernelizations with respect to the following parameters: the size of a
+vertex cover of the graph, the vertex deletion distance to a graph where
+each connected component is a star, and the vertex deletion distance to
+a graph where each connected component has at most c vertices.
+
+1
+
+Introduction
+
+The notion of kernelization provides a systematic way to mathematically analyze what can be achieved by (polynomial-time) preprocessing of combinatorial
+problems [12]. This paper discusses kernelization for the problem to determine
+the pathwidth of a graph. The notion of pathwidth was introduced by Robertson
+and Seymour in their fundamental work on graph minors [16], and is strongly
+related to the notion of treewidth. There are several notions that are equivalent
+to pathwidth including interval thickness, vertex separation number, and node
+search number (see [3] for an overview). The problem to determine the pathwidth
+of a graph is well studied, also under the different names of the problem.
+It is well known that the decision problem corresponding to pathwidth is
+NP-complete, even on restricted graph classes such as bipartite graphs and
+?
+
+This work was supported by the Netherlands Organization for Scientific Research
+(N.W.O.), project “KERNELS: Combinatorial Analysis of Data Reduction”.
+
+2
+
+Hans L. Bodlaender, Bart M. P. Jansen, and Stefan Kratsch
+
+chordal graphs [1,13]. A commonly employed practical technique is therefore
+to preprocess the input before trying to compute the pathwidth, by employing
+a set of (reversible) data reduction rules. Similar preprocessing techniques for
+the Treewidth problem have been studied in detail [7,17], and their practical use has been verified in experiments [8]. Using the concept of kernelization we may analyze the quality of such preprocessing procedures within
+the framework of parameterized complexity. A parameterized problem is a language Q ⊆ Σ ∗ × N, and such a problem is (strongly uniform) fixed-parameter
+tractable (FPT) if there is an algorithm that decides membership of an instance (x, k) in time f (k)|x|O(1) for some computable function f . A kernelization
+(or kernel ) for Q is a polynomial-time algorithm that transforms each input (x, k)
+into an equivalent instance (x0 , k 0 ) such that |x0 |, k 0 ≤ g(k) for some computable
+function g, which is the size of the kernel. Kernels of polynomial size are of
+particular interest due to their practical applications. To analyze the quality
+of preprocessing rules for Pathwidth we therefore study whether they yield
+polynomial kernels for suitable parameterizations of the Pathwidth problem.
+As the pathwidth of a graph equals the maximum of the pathwidth of its
+connected components, the Pathwidth problem with standard parameterization is AND-compositional and thus has no polynomial kernel unless the ANDdistillation conjecture does not hold [4]. We thus do not expect to have kernels
+for Pathwidth of size polynomial in the target value for pathwidth k, and
+we consider whether polynomial kernels can be obtained with respect to other
+parameterizations.
+As Pathwidth is known to be polynomial-time solvable when restricted
+graph classes such as interval graphs [3], trees [11] and cographs [9], it seems
+reasonable to think that determining the pathwidth of a graph G which is “almost” an interval graph should also be polynomial-time solvable. Formalizing the
+notion of “almost” as the number of vertices that have to be deleted to obtain
+a graph in the restricted class F, we can study the extent to which data reduction is possible for graphs which are close to polynomial-time solvable instances
+through the following problem:
+Pathwidth parameterized by a modulator to F
+Instance: A graph G = (V, E), a positive integer k, and a set S ⊆ V
+such that G − S ∈ F.
+Parameter: ` := |S|.
+Question: pw(G) ≤ k?
+The set S is a modulator to the class F. Observe that pathwidth should be
+polynomial-time solvable on F in order for this parameterized problem to be
+FPT. Our main result is a kernel lower bound for such a parameterization of
+Pathwidth. We prove that despite the fact that the pathwidth of an interval graph is simply the size of its largest clique minus one — which is very
+easy to find on interval graphs — the Pathwidth problem parameterized by
+a modulator to an interval graph does not admit a polynomial kernel unless
+NP ⊆ coNP/poly. In fact, we prove the stronger statement that, under the same
+condition, Pathwidth parameterized by a modulator to a single clique (i.e., by
+
+Kernel Bounds for Structural Parameterizations of Pathwidth
+
+3
+
+distance to F consisting of all complete graphs) does not admit a polynomial
+kernel1 (Section 5). As the graph resulting from the lower-bound construction is
+co-bipartite, its pathwidth and treewidth coincide [14]: a corollary to our theorem therefore shows that Treewidth parameterized by vertex-deletion distance
+to a clique does not admit a polynomial kernel unless NP ⊆ coNP/poly, thereby
+significantly strengthening a result of our earlier work [7] where we only managed
+to prove kernel lower bounds by modulators from cluster graphs and co-cluster
+graphs.
+Our kernel bound effectively shows that even in graphs which are cliques after
+the deletion of k vertices, the information contained in the (non)edges between
+these k vertices and the clique is such that we cannot decrease the size of the
+clique to polynomial in k in polynomial time, without changing the answer in
+some cases.
+Faced with these negative results, we try to formulate safe reduction rules
+for Pathwidth (Section 3). It turns out that many of the rules for Treewidth
+(e.g., the rules involving (almost) simplicial vertices) are invalid when applied
+to Pathwidth, and more careful reduction procedures are needed to reduce
+the number of such vertices. We obtain several reduction rules for pathwidth,
+and show that they lead to provable data reduction guarantees when analyzed
+using a suitable parameterization (Section 4). In particular we prove that Pathwidth parameterized by a vertex cover S (i.e., using F as the class of edgeless
+graphs in the template above) admits a kernel with O(|S|3 ) vertices, that the
+parameterization by a modulator S 0 to a disjoint union of stars has a kernel
+with O(|S 0 |4 ) vertices, and finally that parameterizing by a set S 00 whose deletion leaves a graph in which every connected component has at most c vertices
+admits a kernel with O(c · |S 00 |3 + c2 · |S 00 |2 ) vertices.
+
+2
+
+Preliminaries
+
+In this work all graphs are finite, simple, and undirected. The open neighborhood
+of a vertex v ∈ V in a graph G is denoted by NG (v), and
+S its closed neighborhood
+is NG [v]. For sets of vertices W ⊆ V we let NG [W ] = v∈W NG [v] and NG (W ) =
+NG [W ]\W . If S ⊆ V is a vertex set then G−S denotes the graph obtained from G
+by deleting all vertices of S and their incident edges. For a single vertex v we
+write G − v instead of G − {v}. A vertex v is simplicial in a graph G if NG (v) is a
+clique. A vertex v ∈ V is almost simplicial in a graph G if v has a neighbor w such
+that NG (v)\{w} is a clique. In such a case, we call w the special neighbor of v. For
+a set of vertices W ⊆ V , the subgraph of G induced by W is denoted as G[W ]. A
+path decomposition of a graph G = (V, E) is a non-empty sequence (X1 , . . . , Xr )
+of subsets of V called bags, such that:
+1
+
+For completeness we point out that Pathwidth parameterized by a modulator to
+a clique is FPT: try all orderings in which the vertices from S can be introduced
+and forgotten in a decomposition, and do a polynomial-time computation for each
+ordering to find the best way to fit the clique G − X into the decomposition.
+
+4
+
+Hans L. Bodlaender, Bart M. P. Jansen, and Stefan Kratsch
+
+S
+– 1≤i≤r Xi = V ,
+– for all edges {v, w} ∈ E there is a bag Xi containing v and w, and
+– for all vertices v ∈ V , the bags containing v are consecutive in the sequence.
+The width of a path decomposition is max1≤i≤r |Xi | − 1. The pathwidth pw(G)
+of G is the minimum width of a path decomposition of G. Throughout the paper
+we will often make use of the fact that the pathwidth of a graph does not increase
+when taking a minor. We also use the following results.
+Lemma 1 (Cf. [9]). If graph G contains a clique W then any path- or tree
+decomposition for G has a bag containing all vertices of W .
+Lemma 2. All graphs G admit a minimum-width path decomposition in which
+each simplicial vertex is contained in exactly one bag of the decomposition.
+Proof. Lemma 1 shows that for each simplicial vertex v, any path decomposition
+of G has a bag containing the clique N [v]. As removal of v from all other bags
+preserves the validity of the decomposition, we may do so successively for all
+simplicial vertices to obtain a decomposition of the desired form.
+t
+u
+
+3
+
+Reduction Rules
+
+In this section we give a collection of reduction rules. Formally, each rule takes as
+input an instance (G, S, k) of Pathwidth parameterized by a modulator
+to F, and outputs an instance (G0 , S 0 , k 0 ). With the exception of occasionally
+outright deciding yes or no, none of our reduction rules change the modulator S
+or the value of k. In the interest of readability we shall therefore be less formal in
+our exposition, and make no mention of the values of S 0 and k 0 in the remainder;
+they will be understood to be equal to S and k.
+We say that a rule is safe for pathwidth (or in short: safe) if for each input
+(G, S, k) and output (G0 , S 0 , k 0 ), the pathwidth of G is at most k if and only if the
+pathwidth of G0 is at most k 0 . Any subset of the rules gives a ‘safe’ preprocessing
+algorithm for pathwidth: apply the rules until no longer possible. We will argue
+later that this takes polynomial time for our rules, and give kernel bounds for
+some parameters of the graphs.
+3.1
+
+Vertices of small degree
+
+We start off with a few simple rules for vertices of small degree. Note that,
+necessarily, these rules are slightly more restrictive than for the treewidth case;
+e.g., we cannot simply delete vertices of degree one since trees have treewidth
+one but unbounded pathwidth. The first rule is trivial.
+Rule 1 Delete any vertex of degree zero.
+Rule 2 If two degree-one vertices share their neighbor then delete one of them.
+
+Kernel Bounds for Structural Parameterizations of Pathwidth
+
+5
+
+Correctness of Rule 2 follows from insights on the pathwidth of trees, pioneered by Ellis et al. [11]. A self-contained proof is provided in the appendix.
+The following rule handles certain vertices of degree two; a correctness proof
+is given in the appendix.
+Rule 3 Let v, w be two vertices of degree two, and suppose x and y are common
+neighbors to v and w with x ∈ S. Then remove w and add the edge {x, y}.
+The differences with safe rules for treewidth are interesting to note: for treewidth,
+we can remove vertices of degree one, and remove vertices of degree two when
+adding an edge between their neighbors.
+3.2
+
+Common neighbors and disjoint paths
+
+Rule 4 in this section also appears in our work on kernelization for treewidth [7]
+and traces back to well-known facts about treewidth (e.g.,[2,10]). It is also safe
+in the context of pathwidth; the safeness proof is identical to when dealing with
+treewidth and is hence deferred to the appendix.
+Lemma 3. Let v and w be nonadjacent vertices. Suppose there are at least k + 1
+internally vertex disjoint paths from v to w in (V, E). Then the pathwidth of G
+is at most k, if and only if the pathwidth of G0 = (V, E ∪ {{v, w}}) is at most k.
+A special case of Lemma 3, and the implied Rule 4, is when v and w have
+at least k + 1 common neighbors. As we do not want to increase the size of a
+modulator, we only add edges between pairs of vertices with at least one endpoint
+in the modulator; thus G − S remains unchanged.
+Rule 4 (Disjoint paths (with a modulator)) Let v ∈ S be nonadjacent to
+w ∈ V , and suppose there are at least k + 1 paths from v to w that only intersect
+at v and w, where k denotes the target pathwidth. Then add the edge {v, w}.
+3.3
+
+Simplicial vertices
+
+In this section, we give a safe rule that helps to bound the number of simplicial
+vertices of degree at least two in a graph. Recall that we already have rules for
+vertices of degree one and zero, which are trivially simplicial.
+Lemma 4. Let G = (V, E) be a graph, and let v ∈ V be a simplicial vertex
+of degree at least two. If for all x, y ∈ NG (v) with x 6= y there is a simplicial
+vertex w 6∈ NG [v] such that x, y ∈ NG (w), then pw(G) = pw(G − v).
+Proof. As G − v is a subgraph of G, we directly have that pw(G − v) ≤ pw(G).
+For the converse, let (X1 , . . . , Xr ) be an optimal path decomposition of G − v.
+Using Lemma 2, we assume that for each simplicial vertex x, there is a unique
+bag Xix with NG [x] ⊆ Xix .
+Let C = NG (v). A bag that contains C is called a C-bag. As C is a clique,
+Lemma 1 shows there is at least one C-bag. The C-bags must be consecutive
+
+6
+
+Hans L. Bodlaender, Bart M. P. Jansen, and Stefan Kratsch
+v
+
+Fig. 1. An example of an application of the Simplicial vertex rule.
+
+in the path decomposition; let them be Xi1 , . . . , Xi2 . We will first show there is
+a vertex w 6∈ NG [v] which is simplicial in G − v, and is contained in a C-bag.
+Let x, y ∈ C (possibly with x = y) be vertices such that x does not occur in bags
+with index smaller than i1 , and y does not occur in bags of index larger than i2 .
+If x 6= y then let w 6∈ NG [v] be simplicial in G such that x, y ∈ NG (w), whose
+existence is guaranteed by the preconditions. As w is also simplicial in G − v it
+occurs in a unique bag, which must be a C-bag since it must meet its neighbors x
+and y there. If x = y then, as v has degree at least two, there is a vertex w 6∈
+NG [v] which is simplicial in G and adjacent to x; hence its unique occurrence is
+also in a C-bag.
+Thus we have established there is a vertex w 6∈ NG [v] which is simplicial
+in G − v and is contained in exactly one bag, which is a C-bag Xi . Now insert
+a new bag just after Xi , with vertex set (Xi \ {w}) ∪ {v}. As Xi \ {w} contains
+all v’s neighbors, this gives a path decomposition of G without increasing the
+width, and concludes the proof.
+t
+u
+Lemma 4 directly shows that Rule 5 is safe for Pathwidth.
+Rule 5 Let v be a simplicial vertex of degree at least two. If for all x, y ∈ NG (v)
+with x 6= y there is a simplicial vertex w 6∈ NG [v] such that x, y ∈ NG (w), then
+remove v.
+3.4
+
+Simplicial components
+
+Let S be the set of vertices used as the modulator. We say that a set of vertices W
+is a simplicial component if W is a connected component in G−S and NG (W )∩S
+is a clique. Our next rule deals with simplicial components.
+Rule 6 (Simplicial components of known pathwidth) Let S ⊆ V be the
+modulator and let k denote the target pathwidth. Suppose that for each pair v, w ∈
+S∩NG (W ) (including v = w), there are at least 2k+3 simplicial components Z 6=
+W such that {v, w} ⊆ NG (Z) and pw(G[Z]) ≥ pw(G[W ]). Then remove W and
+its incident edges.
+
+Kernel Bounds for Structural Parameterizations of Pathwidth
+
+7
+
+Fig. 2. The vertices marked with a square box form a simplicial component when
+interpreting the round vertices as the modulator.
+
+Note that we have to include the case v = w to ensure correctness for simplicial
+components which are adjacent to exactly one vertex in the modulator. Lemma 9
+in the appendix shows that Rule 6 is safe.
+Let us briefly discuss the running time of this reduction rule. As the modulator ensures that G − S is contained in the graph class F, the rule can be
+applied in polynomial time if the pathwidth of graphs in F can be determined
+efficiently. In the setting in which we apply the rule, the graphs in F are either
+disjoint unions of stars (which are restricted types of forests, allowing the use of
+the linear-time algorithm of Ellis et al. [11]), or F has constant pathwidth which
+means that the FPT algorithm for k-Pathwidth [2] runs in linear time.
+3.5
+
+Almost simplicial vertices
+
+For almost simplicial vertices, we have a rule that replaces an almost simplicial
+vertex by a number of vertices of degree two. In several practical settings, the
+increase of number of vertices may be undesirable; the rule is useful to derive
+some theoretical bounds.
+v
+vw,y
+
+w
+
+vw,x vw,z vx,y vy,z
+
+w
+
+y
+
+y
+z
+
+z
+x
+
+vx,z
+
+x
+
+Fig. 3. An example of an application of the rule for almost simplicial vertices.
+
+Lemma 5. Let G = (V, E) be a graph and let v ∈ V be an almost simplicial
+vertex of degree at least three, with special neighbor w. Let G0 be obtained by
+deleting v and by adding a vertex vp,q with neighbors p and q for any p, q ∈ NG (v)
+with p 6= q. Then pw(G) = pw(G0 ).
+
+8
+
+Hans L. Bodlaender, Bart M. P. Jansen, and Stefan Kratsch
+
+The proof of the lemma is moved to the appendix. The lemma justifies
+the following reduction rule, by observing that an almost simplicial vertex v
+with degG (v) > k + 1 means that pw(G) > k, as NG [v] − w then forms a clique
+of size at least k + 2.
+Rule 7 Let v ∈ V \ S be an almost simplicial vertex of degree at least three
+with special neighbor w. Let k be the target pathwidth. If degG (v) > k + 1 then
+output no. Otherwise, delete v and add a vertex vp,q with neighbors p and q for
+any p, q ∈ N (v) with p 6= q.
+As a simplicial vertex is trivially almost simplicial, note that — in comparison
+to Rule 5 — the previous rule gives an alternative way of dealing with simplicial
+vertices.
+
+4
+
+Polynomial kernelizations
+
+For each of the safe rules given in the previous section, there is a polynomial
+time algorithm that tests if the rule can be applied, and if so, modifies the
+graph accordingly. (We assume that for Rule 6 the bound ` on the pathwidth of
+the components is a constant.) The following lemma shows that any algorithm
+that exhaustively applies (possibly just a subset of) these reduction rules can be
+implemented to run in polynomial time.
+Lemma 6. Each input instance (G, S, k) is exhaustively reduced by O(n2 + nk 2 )
+applications of the reduction rules.
+Proof. First we note that for non-trivial instances, Rule 4 does not add edges
+to a vertex of degree at most two. In particular, no rule increases the number
+of vertices of degree at least three. So, we have at most n applications of a rule
+that removes a vertex of degree at least three, and O(n2 ) applications of Rule
+4. Rule 7 is therefore executed at most n times in total, and thus the number of
+vertices of degree two that are added in these steps is bounded by O(nk 2 ). As
+each other rule removes at least one vertex, the total number of rule applications
+in G is bounded by O(n2 + nk 2 ).
+t
+u
+By analyzing our reduction rules with respect to different structural parameters, we get the following results.
+Theorem 1. Pathwidth parameterized by a modulator to F admits
+polynomial kernels for the following choices of F:
+1. A kernel with O(`3 ) vertices when F is the class of all independent sets, i.e.,
+if the modulator S is a vertex cover.
+2. A kernel with O(c · `3 + c2 · `2 ) vertices when F is the class of all graphs with
+connected components of size at most c.
+3. A kernel with O(`4 ) vertices when F is the class of all disjoint unions of
+stars.
+
+Kernel Bounds for Structural Parameterizations of Pathwidth
+
+9
+
+Proof. We show Part 3 followed by Part 2. Part 1 follows from the latter since
+it is a special case corresponding to c = 1.
+(Part 3.) As stars have pathwidth one, graphs with a modulator S of size
+` to a set of stars have pathwidth at most ` + 1. Thus, if k ≥ ` + 1, we return a
+dummy yes-instance of constant size. Now, assume k ≤ `.
+Our kernelization applies Rules 1–6 while possible, and applies Rule 7 to all
+vertices which have at most one neighbor in G−S. (Applying the rule to vertices
+with more neighbors in G − S might cause the resulting graph G0 − S not to be
+a disjoint union of stars.) Recall for Rule 6 that pw(G − S) ≤ 1.
+Let (G, S, k) be a reduced instance. We will first bound the number of connected components of G−S, with separate arguments for simplicial and nonsimplicial components. Each component is a star, i.e., it is a single vertex or a K1,r
+for some r (a center vertex with r leaves). Note that in this proof the term leaf
+refers to a leaf of a star in G − S, independent of its degree in G (and all degrees
+mentioned are with respect to G).
+Associate each nonsimplicial component C of G − S to an arbitrary pair of
+nonadjacent neighbors of C in S. It is easy to see that each such component
+provides a path between the two chosen neighbors, and that for different components these paths are internally vertex disjoint. Thus, since Rule 4 does not
+apply, no pair of vertices of S has more than k components associated to it.
+Hence there are at most k · |S|2 = O(`3 ) nonsimplicial components.
+Now consider a simplicial component W of G−S, and note that pw(G[W ]) ≤
+1. As Rule 6 does not apply, there is a pair v, w ∈ S ∩ NG (W ) (possibly v =
+w) such that there are strictly less than 2k + 3 simplicial components W 0 6=
+W with pw(G[W 0 ]) ≥ pw(G[W ]) and {v, w} ⊆ NG (W 0 ). Associate W to the
+pair v, w. It follows immediately that no pair of vertices of S has more than 2k+3
+components associated to it, which gives a bound of (2k + 3) · |S|2 = O(`3 ) on
+the number of simplicial components.
+Thus we find that G − S has a total of O(`3 ) connected components (each of
+which is a star). This bounds the number of centers of stars by O(`3 ). It remains
+to bound the total number of leaves that are adjacent to those centers.
+Clearly, each star center has at most one leaf which has degree one (in G) by
+Rule 2. Each leaf of degree two has exactly one neighbor in S in addition to its
+adjacent star center. Since Rule 3 does not apply, no two leaves of degree two
+can have the same star center and neighbor in S; thus there are at most O(`4 )
+leaves of degree two.
+Now, we are going to count the number of leaves (of stars) that are of degree
+more than two. For each such leaf, one neighbor is the center of its star and all
+other neighbors are in S. If its neighbors in S would form a clique, then the leaf
+would be almost simplicial in G (with the star center as the special neighbor)
+and Rule 7 would apply. Hence, as G is reduced, we can associate each such
+leaf to a nonadjacent pair of vertices in S. As Rule 4 cannot be applied, we
+associate O(k) vertices to a pair, and thus the number of such leaves is bounded
+by O(k · `2 ) = O(`3 ).
+
+10
+
+Hans L. Bodlaender, Bart M. P. Jansen, and Stefan Kratsch
+
+Thus, the total number of vertices in G is bounded by O(`4 ). By Lemma 6
+the reduction rules can exhaustively be applied in polynomial time. As the rules
+preserve the fact that G − S is a disjoint union of stars, the resulting instance
+is a correct output for a kernelization algorithm. This completes the proof of
+Part 3.
+(Part 2.) Fix some constant c and let F be the class of all graphs of component size at most c. Let (G, S, k) be an input instance. Note that the pathwidth
+of G is bounded by c + |S| − 1, since each component of G − S has pathwidth at
+most c − 1. We assume that k ≤ c + |S| − 2; otherwise the instance is yes and
+we may return a dummy yes-instance of constant size.
+Our algorithm uses Rules 1, 2, 4, 5, and 6. Regarding Rule 6 we note that the
+pathwidth of components of G−S can be computed in constant time (depending
+only on c).
+Consider a graph G where none of these rules can be applied. The bounds for
+the number of simplicial and nonsimplicial components of G−S work analogously
+to Part 3; there are O(k|S|2 ) components of the respective types. This gives a
+total of O(|S| + c · (c + |S|) · |S|2 ) = O(c2 |S|2 + c|S|3 ) vertices in G, using
+that k ≤ c + |S| − 2. This completes the proof of Part 2.
+t
+u
+We remark that while Rule 5 is not needed to establish the kernel bounds
+presented in the previous theorem, we have included it in our presentation for
+two reasons. First of all, applying the rule may prove to be useful in practical
+situations. It also leads to improved theoretical bounds on some quantities. For
+example, when F is the class of all independent sets (and the modulator S is a
+vertex cover), the use of Rule 5 will decrease the number of simplicial vertices
+in G − S to O(|S|2 ), whereas the bound would be O(|S|3 ) without this rule.
+Alas, as the kernel size for this choice of F is dominated by the Θ(|S|3 ) term for
+the number of non-simplicial vertices, we still end up with a cubic-vertex kernel.
+
+5
+
+Lower bounds: Modulator to a Single Clique
+
+We complement the positive results of the previous section by some negative
+results. In particular, we show that the problems Treewidth parameterized
+by a modulator to a single clique (TWMSC) and Pathwidth parameterized by a modulator to a single clique (PWMSC) do not admit a
+polynomial kernel unless NP ⊆ coNP/poly. In fact, we show that the results
+hold when restricted to co-bipartite graphs; as for these graphs the pathwidth
+equals the treewidth [14], the same proof works for both problems. The problems
+are covered by the general template given in the introduction, when using F as
+the class of all cliques. Observe that F only contains connected graphs, and in
+particular F is not closed under disjoint union.
+To prove the lower bound we employ the technique of cross-composition
+[6], starting from the following NP-complete version [15, Corollary 2.10] of the
+Cutwidth problem:
+
+Kernel Bounds for Structural Parameterizations of Pathwidth
+
+11
+
+Cutwidth on cubic graphs (Cutwidth3)
+Instance: A graph G on n vertices in which each vertex has degree at
+least one and at most three, and an integer k ≤ |E(G)|.
+Question: Is there a linear layout of G of cutwidth at most k, i.e., a
+permutation π of V (G) such that maxni=1 |{{u, v} ∈ E(G) | π(u) ≤ i <
+π(v)}| ≤ k?
+As space restrictions prohibit us from presenting the full proof in this extended abstract, we will sketch the main ideas. To obtain a kernel lower bound
+through cross-composition, we have to embed the logical OR of a series of t
+input instances of Cutwidth3 on n vertices each into a single instance of the
+target problem for a parameter value polynomial in n + log t. At the heart of our
+construction lies an idea of Arnborg et al. [1] employed in their NP-completeness
+proof for Treewidth. They interpreted the treewidth of a graph as the minimum cost of an elimination ordering on its vertices2 , and showed how for a given
+graph G a co-bipartite graph G∗ can be created such that the cost of elimination
+orderings on G∗ corresponds to the cutwidth of G under a related ordering.
+We extend their construction significantly. By the degree bound, instances
+with n vertices have O(n2 ) different degree sequences. The framework of crosscomposition thus allows us to work on instances with the same degree sequence
+(and same k). By enforcing that the structure of one side of the co-bipartite
+graph G∗ only has to depend on this sequence, all inputs can share the same
+“right hand side” of the co-bipartite graph; this part will remain small and act as
+the modulator. By a careful balancing act of weight values we then ensure that
+the cost of elimination orderings on the constructed graph G∗ are dominated by
+eliminating the vertices corresponding to exactly one of the input instances, ensuring that a sufficiently low treewidth is already achieved when one of the input
+instances is yes. On the other hand, the use of a binary-encoding representation
+of instance numbers ensures that low-cost elimination orderings for G∗ do not
+mix vertices corresponding to different input instances. The remaining details
+can be found in Appendix D. Our construction yields the following results.
+Theorem 2. Unless NP ⊆ coNP/poly, Pathwidth and Treewidth do not
+admit polynomial kernels when parameterized by a modulator to a single clique.
+Interestingly, the parameter at hand is nothing else than the size of a vertex
+cover in the complement graph.
+
+6
+
+Conclusions
+
+In this paper, we investigated the existence of polynomial kernelizations for
+Pathwidth. Taking into account that the problem is already known to be ANDcompositional with respect to the target pathwidth — thus excluding polynomial
+2
+
+To eliminate a vertex in a graph means to remove it while completing its open
+neighborhood into a clique. When eliminating the vertices of a graph in the order
+given by π, the cost of the elimination ordering π is the maximum degree of a vertex
+at the time it is eliminated.
+
+12
+
+Hans L. Bodlaender, Bart M. P. Jansen, and Stefan Kratsch
+
+kernels under the AND-distillation conjecture — we study alternative, structural
+parameterizations.
+Our main result is that Pathwidth admits no polynomial kernelization with
+respect to the number of vertex deletions necessary to obtain a clique, unless
+NP ⊆ coNP/poly. This rules out polynomial kernels for vertex deletion distance
+from various interesting graph classes on which Pathwidth is known to be
+polynomial-time solvable, like chordal and interval graphs.
+On the positive side we develop a collection of safe reduction rules for Pathwidth. Analyzing the effect of the rules we show that they give polynomial kernels with respect to the following parameters: vertex cover (i.e., distance from
+the class of independent sets), distance from graphs of bounded component size,
+and distance from disjoint union of stars.
+It is an interesting open problem to determine whether there is a polynomial
+kernel for Pathwidth parameterized by the size of a feedback vertex set. For the
+related Treewidth problem, a kernel with O(|S|4 ) vertices is known [7], where S
+denotes a feedback vertex set. Regarding Pathwidth, long paths in G − S are
+the main obstacle that needs to be addressed by additional reduction rules.
+
