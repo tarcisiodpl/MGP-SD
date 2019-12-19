@@ -1,0 +1,2224 @@
+
+Most causal discovery algorithms in the literature exploit an assumption usually referred to as the Causal Faithfulness or Stability Condition. In this paper, we highlight two components of the condition used
+in constraint-based algorithms, which we call
+“Adjacency-Faithfulness” and “OrientationFaithfulness.” We point out that assuming Adjacency-Faithfulness is true, it is possible to test the validity of OrientationFaithfulness. Motivated by this observation, we explore the consequence of making
+only the Adjacency-Faithfulness assumption.
+We show that the familiar PC algorithm
+has to be modified to be correct under the
+weaker, Adjacency-Faithfulness assumption.
+The modified algorithm, called Conservative PC (CPC), checks whether OrientationFaithfulness holds in the orientation phase,
+and if not, avoids drawing certain causal conclusions the PC algorithm would draw. However, if the stronger, standard causal Faithfulness condition actually obtains, the CPC
+algorithm outputs the same pattern as the
+PC algorithm does in the large sample limit.
+We also present a simulation study showing that the CPC algorithm runs almost as
+fast as the PC algorithm, and outputs significantly fewer false causal arrowheads than the
+PC algorithm does on realistic sample sizes.
+
+1
+
+MOTIVATION: FAITHFULNESS
+DECOMPOSED
+
+Directed acyclic graphs (DAGs) can be interpreted
+both probabilistically and causally. Under the causal
+interpretation, a DAG G represents a causal structure
+such that A is a direct cause of B just in case there
+
+Jiji Zhang
+Division of Humanities and Social Sciences
+California Institute of Technology
+Pasadena, CA 91125
+jiji@hss.caltech.edu
+
+is a directed edge from A to B in G. Under the probabilistic interpretation, a DAG G, also referred to as
+a Bayesian network, represents a probability distribution P that satisfies the Markov Property: each variable in G is independent of its non-descendants conditional on its parents. The Causal Markov Condition
+is a bridge principle linking the causal interpretation
+of a DAG to the probabilistic interpretation.1
+Causal Markov Condition: Given a set of variables
+whose causal structure can be represented by a DAG
+G, every variable is probabilistically independent of its
+non-effects (non-descendants in G) conditional on its
+direct causes (parents in G).
+The assumption that the causal structure can be represented by a DAG entails that there is no causal feedback, and that no common cause of any pair of variables in the DAG is left out. All DAG-based causal
+discovery algorithms assume the causal Markov condition, and most of them (e.g., those discussed in Pearl
+2000, Spirtes et al. 2000, Heckerman et al. 1999)
+also assume, if only implicitly, the converse principle,
+known as the Causal Faithfulness or Stability Condition:
+Causal Faithfulness Condition: Given a set of variables whose causal structure can be represented by a
+DAG, no conditional independence holds unless entailed by the Causal Markov Condition.
+Conditional independence relations entailed by the
+Markov condition are captured exactly by a graphical criterion called d-separation (Neapolitan 2004),
+defined as follows. Given a path p in a DAG, a nonendpoint vertex V on p is called a collider if the two
+edges incident to V on p are both into V (→ V ←),
+otherwise V is called a non-collider on p.
+Definition 1 (d-separation). In a DAG, a path p
+between vertices A and B is active (d-connecting)
+relative to a set of vertices C (A, B ∈
+/ C) if
+1
+
+For a more formal presentation of the notions mentioned in this section, see Spirtes et al. (2000).
+
+i. every non-collider on p is not a member of C;
+ii. every collider on p is an ancestor of some member
+of C.
+Two sets of variables A and B are said to be dseparated by C if there is no active path between any
+member of A and any member of B relative to C.
+A well-known important result is that for any three
+disjoint sets of variables A, B and C in a DAG G,
+A and B are entailed (by the Markov condition) to
+be independent conditional on C if and only if they
+are d-separated by C in G. So the causal Faithfulness
+condition can be rephrased as saying that for every
+three disjoint sets of variables A, B and C, if A and
+B are not d-separated by C in the causal DAG, then
+A and B are not independent conditional on C.
+Two simple facts about d-separation are particularly
+relevant to our purpose (see e.g. Neapolitan 2004, pp.
+89 for proofs):
+Proposition 1. Two variables are adjacent in a DAG
+if and only if they are not d-separated by any subset of
+other variables in the DAG.
+Call a triple of variables hX, Y, Zi in a DAG an unshielded triple if X and Z are both adjacent to Y but
+are not adjacent to each other.
+Proposition 2. In a DAG, any unshielded triple
+hX, Y, Zi is a collider if and only if all sets that dseparate X from Z do not contain Y ; it is a noncollider if and only if all sets that d-separate X from
+Z contain Y .
+Below we focus on two implications of the Causal
+Faithfulness Condition, easily derivable given Propositions 1 and 2. We call them Adjacency-Faithfulness
+and Orientation-Faithfulness, respectively.
+Implication 1 (Adjacency-Faithfulness). Given a
+set of variables V whose causal structure can be represented by a DAG G, if two variables X, Y are adjacent
+in G, then they are dependent conditional on any subset of V\{X, Y }.
+
+resented by a DAG G, let hX, Y, Zi be any unshielded
+triple in G.
+(O1) if X → Y ← Z, then X and Z are dependent
+given any subset of V\{X, Z} that contains Y ;
+(O2) otherwise, X and Z are dependent conditional on
+any subset of V\{X, Z} that does not contain Y .
+Orientation-Faithfulness obviously serves to justify the
+step of identifying unshielded colliders (and unshielded
+non-colliders). For any unshielded triple hX, Y, Zi resulting from the adjacency step, a conditioning set
+that renders X and Z independent must have been
+found. The Orientation-Faithfulness condition then
+implies that the triple is an unshielded collider if
+and only if the conditioning set does not contain
+Y . This is in fact what the familiar PC algorithm
+checks. The rest of our paper is motivated by the following simple observation: assuming the AdjacencyFaithfulness condition is true, we can in principle test
+whether Orientation-Faithfulness fails of a particular
+unshielded triple. Suppose we have a perfect oracle of
+conditional independence relations, which is in principle available for many parametric families in the large
+sample limit by performing statistical tests. Since the
+Adjacency-Faithfulness is by assumption true, out of
+the oracle one can construct correct adjacencies and
+non-adjacencies, and thus correct unshielded triples in
+the causal graph. For such an unshielded triple, say,
+hX, Y, Zi, if there is a subset of V\{X, Z} containing
+Y that renders X and Z independent and a subset
+not containing Y that renders X and Z independent,
+then Orientation-Faithfulness fails on this triple. This
+failing condition can of course be verified by the oracle.
+Note that this simple test of Orientation-Faithfulness
+does not rely on knowing what the true causal DAG
+is. The reason why this test works is that a distribution that satisfies the Adjacency-Faithfulness with
+respect to the true causal DAG but fails the above test
+is not Orientation-Faithful to any DAG, and hence not
+Orientation-Faithful to the true causal DAG.
+
+We call this condition Adjacency-Faithfulness for the
+obvious reason that this is the part of the Faithfulness
+condition that is used to justify the step of recovering adjacencies in constraint-based algorithms. Generically, this step proceeds by searching for a conditioning set that renders two variables independent, and by
+the causal Markov and Adjacency-Faithfulness conditions, the two variables are not adjacent if and only if
+such a conditioning set is found.
+
+This suggests that theoretically we can relax the standard causal Faithfulness assumption and still have
+provably correct and informative causal discovery procedures. In fact, one main result we will establish in
+this paper is that the PC algorithm, though incorrect
+under the weaker, Adjacency-Faithfulness condition,
+can be revised in such a way that the modified version – that we call CPC (conservative PC) – is correct
+given the Adjacency-Faithfulness condition, and is as
+informative as the standard PC algorithm if the Causal
+Faithfulness Condition actually obtains.
+
+Implication 2 (Orientation-Faithfulness). Given
+a set of variables V whose causal structure can be rep-
+
+In addition to the theoretical demonstration, we will
+present a simulation study comparing the CPC algo-
+
+rithm and the PC algorithm. The results show that
+the CPC algorithm runs almost as fast as the PC algorithm, which is known for its computational feasibility. More importantly, even when the standard
+Causal Faithfulness Condition holds, the CPC algorithm turns out to be more accurate on realistic sample
+sizes than the PC algorithm in that it outputs significantly fewer false causal arrowheads and (almost) as
+many true causal arrowheads.
+
+2
+
+HOW PC ALGORITHM ERRS
+
+Before we present our modification of the PC algorithm, it is helpful to explain how the PC algorithm can make mistakes under the causal Markov and
+Adjacency-Faithfulness conditions. The relevant details of the PC algorithm are reproduced below, where
+we use ADJ(G, X) to denote the set of nodes adjacent
+to X in a graph G:
+PC Algorithm
+S1 Form the complete undirected graph U on the set
+of variables V;
+S2 n = 0
+repeat
+For each pair of variables X and Y that
+are adjacent in (the current) U such that
+ADJ(U, X)\{Y } or ADJ(U, Y )\{X} has at
+least n elements, check through the subsets of ADJ(U, X)\{Y } and the subsets of
+ADJ(U, Y )\{X} that have exactly n variables. If a subset S is found conditional on
+which X and Y are independent, remove the
+edge between X and Y in U , and record S as
+Sepset(X, Y );
+n = n + 1;
+until for each ordered pair of adjacent variables X
+and Y , ADJ(U, X)\{Y } has less than n elements.
+S3 Let P be the graph resulting from step S2. For
+each unshielded triple hA, B, Ci in P , orient it as
+A → B ← C iff B is not in Sepset(A, C).
+S4 Execute the orientation rules given in Meek 1995.2
+If the input to the PC algorithm is a sample from a
+population distribution that is faithful to some DAG,
+then in the large sample limit, the output of the PC
+algorithm can be interpreted as a set of DAGs, all of
+2
+Details of the Meek orientation rules do not matter for
+the purposes of this paper. The rules are also described in
+Neapolitan 2004, pp. 542.
+
+which are d-separation equivalent (that is, they imply exactly the same d-separation relations). The dseparation equivalence class of DAGs output by the
+PC algorithm (and the score-based GES algorithm as
+well) is represented by a graphical object called a pattern, or a PDAG (Chickering 2002). A pattern is a
+mixture of directed and undirected edges. A DAG is
+represented by a pattern if it contains the same adjacencies as the pattern, every directed edge A → B in
+the pattern is oriented as A → B in the DAG, and if
+the DAG contains an unshielded collider, then so does
+the pattern. The output of the PC algorithm is correct
+given the Causal Markov and Faithfulness Conditions
+and a perfect conditional independence oracle (such as
+statistical tests in the large sample limit) in the sense
+that the true causal DAG is among the DAGs represented by the output pattern. The output of the PC
+algorithm is complete in the sense that if an edge A
+→ B occurs in every DAG in the d-separation equivalence class represented by the output pattern, then it
+is oriented as A → B in the output pattern. (Meek
+1995, Spirtes et al. 2000).
+Two specific features of PC are worth noting. First, in
+S2, the adjacency step, the PC algorithm essentially
+searches for a conditioning set for each pair of variables
+that renders them independent, which we henceforth
+call a screen-off conditioning set. But it does this with
+two additional tricks: (1) it starts with the conditioning set of size 0 (i.e., the empty set) and gradually
+increases the size of the conditioning set; and (2) it
+confines the search of a screen-off conditioning set for
+two variables to within the potential parents – i.e., the
+currently adjacent nodes – of the two variables, and
+thus systematically narrows down the space of possible screen-off sets as the search goes on. These two
+tricks increase both computational and statistical efficiency in most real cases, and we will keep this step
+intact in our modification.
+Secondly, in S3 the PC algorithm uses a very simple
+rule to identify unshielded colliders or non-colliders.
+For any unshielded triple hX, Y, Zi, it simply checks
+whether or not Y is contained in the screen-off set
+for X and Z found in the adjacency stage. Now
+if we assume the causal Markov and AdjacencyFaithfulness conditions are true, the adjacencies (and
+non-adjacencies) resulting from the adjacency stage
+are asymptotically correct.
+However, these two
+conditions do not imply the truth of OrientationFaithfulness, and when the latter fails, the PC algorithm will err even in the large sample limit.
+Consider the simplest example A → B → C where
+A⊥
+⊥C and A⊥
+⊥C|B. This is the case when, for example, causation fails to be transitive, an issue of great
+interest to philosophers of causality. In this situation
+
+the causal Markov and Adjacency-Faithfulness conditions are both satisfied, but Orientation-Faithfulness
+is not true of the triple hA, B, Ci. Now, given the
+correct conditional independence oracle, the PC algorithm would remove the edge between A and C in
+S2 because A⊥
+⊥C, and later in S3 orient the triple as
+A → B ← C because B is not in the screen-off set
+found in S2, i.e., the empty set. Simple as it is, the
+example suffices to establish that the PC algorithm is
+not asymptotically correct3 under the causal Markov
+and Adjacency-Faithfulness assumptions.
+
+3
+
+CONSERVATIVE PC
+
+It is not hard, however, to modify the PC algorithm to
+retain correctness under the weaker assumption. Indeed a predecessor of the PC algorithm, called the
+SGS algorithm (Spirtes et al. 2000), is almost correct.
+The SGS algorithm decides whether an unshielded
+triple hX, Y, Zi is a collider or a non-collider by literally checking whether (O1) or (O2) in the statement
+of Orientation-Faithfulness is true. Theoretically all
+it lacks is a clause that acknowledges the failure of
+Orientation-Faithfulness when neither (O1) nor (O2)
+passes the check. Practically, however, the SGS algorithm is a terribly inefficient algorithm. Computationally, it is best case exponential because it has to
+check dependence between X and Z conditional on
+every subset of V\{X, Z}. Statistically, tests of independence conditional on large sets of variables have
+very low power, and are likely to lead to errors. In addition,the sheer number of conditional independence
+tests makes it exceedingly likely that some of them
+will err, and we suspect that almost every unshielded
+triple will be marked as unfaithful if we run the SGS
+algorithms on more than a few variables.
+Fortunately, the main idea of the PC algorithm comes
+to the rescue. A correct algorithm does not have
+to check every subset of V\{X, Z} in order to test
+whether hX, Y, Zi is a collider, a non-collider, or an
+unfaithful triple. It only needs to check subsets of the
+variables that are potential parents of X and Z. This
+trick, as we shall show shortly, is theoretically valid,
+and turns out to work well in simulations.
+The CPC algorithm replaces S3 in PC with the following S3’, and otherwise remains the same.
+S3’ Let P be the graph resulting from step 1. For each
+unshielded triple hA, B, Ci, check all subsets of
+A’s potential parents and of C’s potential parents:
+3
+
+By ”asymptotically correct” we mean the probability
+of the output containing an error converges to zero in the
+large sample limit, no matter what the true probability
+distribution is.
+
+(a) If B is NOT in any such set conditional on
+which A and C are independent, orient A −
+B −−C as A → B ← C;
+(b) if B is in all such sets conditional on which
+A and C are independent, leave A −−B −−C
+as it is, i.e., a non-collider;
+(c) otherwise, mark the triple as “unfaithful” by
+underlining the triple, A −−B−− C.
+(In S4, The orientation rules that are applied to unshielded non-colliders in the PC algorithm are, of
+course, applied only to unshielded non-colliders in the
+CPC algorithm; in particular they are not applied to
+triples that are marked as unfaithful.)
+The output of the CPC algorithm can also be interpreted as a set of DAGs. If the input to the CPC
+algorithm is a sample from a distribution that satisfies
+the Markov and Adjacency-Faithfulness Assumptions,
+in the large sample limit, the output is an extended
+pattern, or e-pattern for short. An e-pattern contains
+a mixture of undirected and directed edges, as well
+as underlinings for unshielded triples that are unfaithful. A DAG is represented by an e-pattern if it has
+the same adjacencies as the e-pattern, every directed
+edge A → B in the e-pattern is oriented as A → B in
+the DAG, and every unshielded collider in the DAG
+is either an unshielded collider or a marked unfaithful
+triple in the e-pattern. These rules allow that an unfaithful triple in the e-pattern can be oriented as either
+a collider or a non-collider in a DAG represented by
+the e-pattern.
+The set of DAGs represented by an e-pattern may
+not be d-separation equivalent, if the e-pattern contains an unfaithful triple. For example, if A causes
+B, and B causes C, but the causation is not transitive (i.e. I(A, C|B) and I(A, C)), the resulting epattern is A−
+−B−−C, because it is an unfaithful triple.
+The set of DAGs represented by A −−B−− C contains
+A → B → C, A ← B → C, A ← B ← C, and
+A → B ← C. The latter DAG is not d-separation
+equivalent to the first three DAGs. Note that in this
+case the true distribution lies in the intersection of
+sets of distributions represented by non- d-separation
+equivalent DAGs. The intersection would be ruled out
+as impossible by the standard Faithfulness assumption.
+At this point it should be clear why the modified PC
+algorithm is labeled “conservative”: it is more cautious than the PC algorithm in drawing unambiguous
+conclusions about causal orientations. A typical output of the CPC algorithm is shown in Figure 1. The
+conservativeness is of course what is needed to make
+the algorithm correct under the causal Markov and
+Adjacency-Faithfulness assumptions.
+
+Figure 1: A typical output for CPC. Underlining
+(which in the figure looks like “crossing”) indicates unfaithful unshielded triples discovered by the algorithm.
+
+6
+4
+2
+0
+
+Time (seconds)
+
+Elapsed Time
+
+0
+
+20 40 60 80
+Dimension
+
+Theorem 1 (Correctness of CPC). Under the
+causal Markov and Adjacency-Faithfulness assumptions, the CPC algorithm is correct in the sense that
+given a perfect conditional independence oracle, the algorithm returns an e-pattern that represents the true
+causal DAG.
+Proof. Suppose the true causal graph is G, and all
+conditional independence judgments are correct. The
+Markov and Adjacency-Faithfulness assumptions imply that the undirected graph P resulting from step
+S2 has the same adjacencies as G does (Spirtes et al.
+2000). Now consider step S30 . If S30 (a) obtains, then
+A → B ← C must be a subgraph of G, because otherwise by the Markov assumption, either A’s parents
+or C’s parents d-separate A and C, which means that
+there is a subset S of either A’s potential parents or
+C’s potential parents containing B such that A⊥
+⊥C|S,
+contradicting the antecedent in S30 (a). If S30 (b) obtains, then A → B ← C cannot be a subgraph of
+G (and hence the triple must be an unshielded noncollider), because otherwise by the Markov assumption, there must be a subset S of either A’s potential
+parents or C’s potential parents not containing B such
+that A⊥
+⊥C|S, contradicting the antecedent in S30 (b).
+So neither S30 (a) nor S30 (b) will introduce an orientation error. It follows that every unshielded collider in
+G is either an unshielded collider or a marked triple
+in P . Trivially S30 (c) does not produce an orientation error, and it has been proven (in e.g., Meek 1995)
+that S4 will not produce any, which implies that every
+directed edge in P is also in G.
+The theorem entails that the output e-pattern (1) has
+the same adjacencies as the true causal DAG; and (2)
+all arrowheads and unshielded non-colliders in the epattern are also in the true causal DAG. Theorem 1,
+together with the consistency of statistical tests of in-
+
+Figure 2: Average elapsed time
+
+dependence, entails that the probability of the output
+containing an error approaches zero as the sample size
+approaches infinity.
+Note that a triple A→ B ←C or A −−B →C may occur in cases where the triple was initially marked as
+unfaithful, but all later orientation rules provided further consistent orientation information. In those cases,
+the underlining serves no purpose (as ambiguity concerning collider vs. non-collider is already dissolved)
+and can be removed. The remaining triples marked
+unfaithful by the CPC algorithm in the large sample
+limit are truly ambiguous in that either a collider or
+a non-collider is compatible with the conditional independence judgments. We conjecture but cannot yet
+prove that the CPC algorithm is complete in the sense
+that for every undirected edge in an e-pattern output
+by the CPC algorithm, there is a DAG represented
+by the e-pattern that orients the edge in one direction and another DAG represented by the e-pattern
+that orients the edge in the other direction. Finally,
+it is obvious that asymptotically the CPC algorithm
+and the PC algorithm produce the same output if the
+standard Faithfulness assumption actually obtains.
+
+4
+
+SIMULATION RESULTS
+
+The theoretical superiority of the CPC algorithm over
+the PC algorithm may not necessarily cash out in practice if the situations where the Adjacency-Faithfulness
+but not the Orientation-Faithfulness holds do not arise
+often. We will not try to make an argument to the
+contrary here, even though we believe such an argu-
+
+The simulations illustrate that the extra independence
+checks invoked in the CPC algorithms do not render CPC significantly slower than PC and that CPC
+is more accurate than PC in terms of arrow orientations. The explanation for the first point is that the
+main computational expense of the PC algorithm occurs in the adjacency stage; the number of independence checks added in CPC for orientation is small by
+comparison. The second point suggests that the PC
+algorithm too often infers that unshielded triples are
+colliders, and the CPC algorithm provides the right
+antidote to this by means of the extra checks it performs. Again, we expect that the CPC algorithm will
+do particularly better than the PC algorithm when the
+distribution generated is close-to-unfaithful to the true
+graph – a situation pointed out by several authors as
+a major obstacle to reliable causal inference (Robins
+et al. 2003, Zhang and Spirtes 2003).
+To illustrate these points, the following simulations
+were performed on linear Gaussian models, with variations for sparser and denser graphs, with dimensions
+(numbers of variables) ranging from 5 to 100 variables.
+For the sparser case, for each dimension d from 5 to 100
+in increments of 5, five random graphs were selected
+uniformly from the space of DAGs with at most d edges
+and with a maximum degree of 10. For each such
+graph, a random structural equation model was constructed by selecting edge coefficients randomly 0.95
+of the time uniformly from [−1.5, −0.5] ∪ [0.5, 1.5] and
+0.05 of the time uniformly from [−0.001, 0.001]. (Selection from the range [−0.001, 0.001] guarantees the
+presence of weak edges, which in turn often lead to al4
+
+Intuitively,
+almost violations of OrientationFaithfulness refer to situations where two variables,
+though entailed to be dependent conditional on some
+variables by the Orientation-Faithfulness condition, are
+close to conditionally independent. How to quantify the
+“closeness” and just how close is close enough to cause
+trouble depend on distributional assumptions and sample
+sizes.
+
+0
+
+40
+
+80 120
+
+Arrows Added
+
+Count
+
+ment can be made. Instead we wish to show that
+the CPC algorithm in practice performs better than
+the PC algorithm, regardless of whether OrientationFaithfulness holds or not. That is, even when the data
+are generated from a distribution Markov and Faithful
+to the true causal graph, it pays to be conservative on
+realistic sample sizes. One possible rationale for this
+is that even though PC is correct in the large sample limit if Orientation-Faithfulness is not violated,
+it is very liable to error on realistic sample sizes if
+Orientation-Unfaithfulness is almost violated. Almost
+violations of Orientation-Faithfulness can arise in several ways – for example, when a triple chain is almost non-transitive, or more generally, when one of
+the edges in an unshielded triple is very weak4 .
+
+0
+
+20 40 60 80
+Dimension
+
+Figure 3: Average count of arrow false positives
+most violations of faithfulness.) For each such model,
+a random data set of 1000 cases was simulated, to
+which PC and CPC were applied with significance level
+α = 0.05 for each hypothesis test of conditional independence, tested using Fisher’s Z transformation of
+partial correlation. The output was compared to the
+pattern of the true DAG (the true pattern), not the
+true DAG itself. Performance statistics were recorded,
+including elapsed time and false positive and negative counts for arrows, unshielded colliders, unshielded
+non-colliders, and adjacencies. For each number of
+variables, each performance statistic was averaged over
+the five random models constructed at that dimension,
+for PC and for CPC. This procedure was repeated
+for denser models with DAGs randomly selected uniformly from the set of DAGs with at most 2d edges
+and a maximum degree of 10.
+Counting orientation errors when there are differences
+in adjacencies as well raises some subtle issues that
+we have chosen to resolve in the following way. An
+arrowhead removal error (false negative) occurs when
+the true pattern P1 contains A → B, but the output
+P2 either does not contain an edge between A and B
+or does contain an edge between A and B but there
+is no arrowhead on this edge at B. An analogous rule
+is used to count arrowhead addition errors (false positive). This has the consequence that if A and B are
+not adjacent in P1 , but A − B is in P2 , this is counted
+as an adjacency addition error, but not an arrowhead
+addition or removal error. In contrast, if A → B is in
+P2 , this is counted as an adjacency addition error and
+an arrowhead addition error, because of the arrowhead
+at B. The justification for this is that the A − B er-
+
+0
+
+20 40 60 80
+
+60
+0 20
+
+Count
+
+40 80
+
+Noncolliders Added
+
+0
+
+Count
+
+Arrows Removed
+
+0
+
+Dimension
+
+20 40 60 80
+Dimension
+
+Figure 4: Average count of arrow false negatives
+
+Figure 5: Average count of non-collider false positive
+
+ror leaves open whether there is an arrowhead at B,
+and does not lead to any errors in predicting the effects of manipulations (the effects of manipulation are
+unknown because the orientation of the edge is unknown). In contrast, the A → B error does definitively
+state that there is an arrowhead at B, and does lead
+to errors in predicting the effects of manipulations.
+
+false negative unshielded non-colliders also matches
+that of PC, as shown in Figures 5 and 6. In a word, in
+no respect is PC noticeably better than CPC, whereas
+CPC is significantly better than PC in avoiding false
+positive causal arrowheads, the arguably most consequential type of errors.
+
+There is an unshielded non-collider addition error for
+the triple hX, Y, Zi if they form an unshielded noncollider in P2 , but P1 either has different adjacencies
+among X, Y , and Z, or the same adjacencies but is a
+collider. An unfaithful triple in G2 does not count as
+an unshielded non-collider or collider addition error,
+regardless of what is in G1 . Unshielded non-collider
+removal errors are handled in an analogous fashion.
+In all the figures, PC statistics are represented by triangles and CPC statistics are represented by circles;
+sparser models use filled symbols, and denser models
+used unfilled symbols. The horizontal axis is the number of variables in the true DAG.
+Figure 2 shows that for both sparser and denser models, CPC is only slightly slower than PC.
+Figure 3 shows that for both sparser and denser models, the number of extra arrows introduced is far better
+controlled by CPC than by PC. For sparser models, the
+number is particularly well-controlled. Figure 4 shows
+that for both sparser and denser models, the number
+of arrowhead removal errors committed by CPC is almost indistinguishable from the number of arrowhead
+removal errors committed by PC.
+The performance of CPC regarding false positive and
+
+Figure 7 plots the percentage of unfaithful triples
+among the total number of unshielded triples output
+by CPC. For sparser models, the percentage of unfaithful triples is around 30 percent; for denser models, it
+rises to around 40 percent. This confirms our expectation that CPC is more conservative the denser the
+true graph.
+Similar simulations were carried out parameterizing
+random graphs using discrete Bayes nets with 2 to
+4 categories per variable, but otherwise with identical setup to the sparser continuous simulations above,
+with similar results.
+
+5
+
+CONCLUSION
+
+The CPC algorithm we proposed in this paper is
+provably correct under the causal Markov assumption
+plus a weaker-than-standard Faithfulness assumption,
+the Adjacency-Faithfulness assumption. It can be regarded as a conservative generalization of the PC algorithm in that it theoretically gives the same answer
+as the PC does under the standard assumptions. Perhaps more importantly, simulation results suggest that
+the CPC algorithm works much better than the PC algorithm in terms of avoiding false causal arrowheads,
+and achieves this without costing significantly more
+
+0
+
+40
+
+80
+
+Percent Unfaithful Triples
+
+Percent
+
+400
+200
+0
+
+Count
+
+Noncolliders Removed
+
+0
+
+20 40 60 80
+
+0
+
+Dimension
+
+20 40 60 80
+Dimension
+
+Figure 6: Average count of non-collider false negatives
+
+Figure 7: Percent of unfaithful triples among all unshielded triples
+
+in running time or missing positive information. We
+do not claim that the evidence is conclusive, and we
+think it would be interesting to compare CPC and PC
+on real data sets.
+
+
+
+An important task in data analysis is the
+discovery of causal relationships between observed variables. For continuous-valued data,
+linear acyclic causal models are commonly
+used to model the data-generating process,
+and the inference of such models is a wellstudied problem. However, existing methods
+have significant limitations. Methods based
+on conditional independencies (Spirtes et al.
+1993; Pearl 2000) cannot distinguish between
+independence-equivalent models, whereas approaches purely based on Independent Component Analysis (Shimizu et al. 2006) are
+inapplicable to data which is partially Gaussian. In this paper, we generalize and combine the two approaches, to yield a method
+able to learn the model structure in many
+cases for which the previous methods provide answers that are either incorrect or are
+not as informative as possible. We give exact graphical conditions for when two distinct
+models represent the same family of distributions, and empirically demonstrate the power
+of our method through thorough simulations.
+
+1
+
+INTRODUCTION
+
+In much of science, the primary focus is on the discovery of causal relationships between quantities of interest. The randomized controlled experiment is geared
+specifically to inferring such relationships. Unfortunately, in many studies it is unethical, technically extremely difficult, or simply too expensive to conduct
+such experiments. In such cases causal discovery must
+
+Gustavo Lacerda
+Machine Learning Department
+Carnegie Mellon University
+Pittsburgh, PA, USA
+Shohei Shimizu
+Osaka University
+Japan
+
+be based on uncontrolled, purely observational data
+combined with prior information and reasonable assumptions.
+In cases in which the observed data is continuousvalued, linear acyclic models (also known as recursive
+Structural Equation Models) have been widely used
+in a variety of fields such as econometrics, psychology,
+sociology, and biology; for some examples, see (Bollen
+1989). In much of this work, the structure of the models has been assumed to be known or, at most, only
+a few different models have been compared. During
+the past 20 years, however, a number of methods have
+been developed to learn the model structure in an unsupervised way (Spirtes et al. 1993; Pearl 2000; Geiger
+and Heckerman 1994; Shimizu et al. 2006). Nevertheless, all approaches so far presented have either required distributional assumptions or have been overly
+restricted in the amount of structure they can infer
+from the data. In this contribution we show how to
+combine the strenghts of existing approaches, yielding
+a method capable of inferring the model structure in
+many cases where previous methods give incorrect or
+uninformative answers.
+The paper is structured as follows: Section 2 precisely
+defines the models under study, and Section 3 discusses existing methods for causal discovery of such
+models. In Section 4 we formalize the discovery problem and give exact theoretical results on identifiability.
+Then, in Section 5 we introduce and analyze a method
+termed PClingam that combines the strenghts of existing methods and overcomes some of their weaknesses,
+and is, in the limit, able to estimate all identifiable
+aspects of the underlying model. Section 6 provides
+empirical demonstrations of the power of our method.
+Finally, Section 7 maps out future work and Section 8
+provides a summary of the main points of the paper.
+
+2
+
+a
+
+LINEAR MODELS
+
+In this paper, we assume that the observed data has
+been generated by the following process:
+1. The observed variables xi , i = {1 . . . n} can be
+arranged in a causal order, such that no later variable causes any earlier variable. We denote such
+a causal order by k(i). That is, the generating
+process is recursive (Bollen 1989), meaning it can
+be represented graphically by a directed acyclic
+graph (DAG) (Pearl 2000; Spirtes et al. 1993).
+2. The value assigned to each variable xi is a linear
+function of the values already assigned to the earlier variables, plus a ‘disturbance’ (noise) term ei ,
+and plus an optional constant term ci , that is
+X
+bij xj + ei + ci ,
+(1)
+xi =
+k(j)<k(i)
+
+where we only include non-zero coefficients bij in
+the equation.
+3. The disturbances ei are all continuous random
+variables with arbitrary densities pi (ei ), and the ei
+are
+Q independent of each other, i.e. p(e1 , . . . , en ) =
+i pi (ei ).
+This formulation neither requires the disturbances to
+be normally distributed nor does it require them to
+have non-Gaussian (non-normal) densities. In general,
+some of the distributions can be Gaussian and some
+not, and we do not a priori know which are which.
+We assume that we are able to observe a large number of data vectors x (which contain the variables xi ),
+and each data vector is generated according to the
+above described process, with the same causal order
+k(i), same coefficients bij , same constants ci , and the
+disturbances ei sampled independently from the same
+distributions. Note that the independence of the disturbances implies that there are no unobserved confounders (Pearl 2000). Spirtes et al. (1993) call this
+the causally sufficient case.
+Finally, we assume that the observed distribution is
+faithful to the generating graph (Spirtes et al. 1993),
+i.e. the model is stable in the terminology of Pearl
+(2000). If the model parameters are in some sense
+randomly generated, this is not a strong assumption,
+as violations of faithfulness have Lebesgue measure 0
+in the space of the linear coefficients.
+An example of such a model is given in Figure 1a. Note
+that the full model consists of a directed acyclic graph
+over the variables, the connection strenghts bij , the
+constants ci , and the densities pi (ei ). In this example
+we have chosen ci = 0 for all i, so these are not shown.
+
+b
+x
+
+c
+
+d
+
+x
+
+x
+
+x
+
+x
+
+x
+
+y
+
+y
+
+y
+
+y
+
+y
+
+z
+
+z
+
+z
+
+z
+
+z
+
+3
+
+y
+-2
+
+z
+
+Figure 1: An example case used to illustrate the concepts described in Sections 2–4. (a) A linear, acyclic
+causal model for x, y and z. The data is generated as
+x := ex , y := 3x + ey , and z := −2y + ez , with ex and
+ey drawn from Gaussian distributions and ez from a
+non-Gaussian distribution, and ex , ey and ez are all
+mutually independent. Note that we show variables
+with Gaussian disturbances using circles whereas variables with non-Gaussian disturbances are marked by
+squares. (b) The three directed acyclic graphs over
+x, y and z which all entail the same conditional independence relationships as the generating model. (c)
+The three DAGs in (b) succintly represented as a dseparation-equivalence pattern. (d) The distributionequivalence pattern of the original model.
+
+3
+
+EXISTING METHODS
+
+Given our set of data vectors x, to what extent can
+we estimate the data generating process? Obviously,
+if the number N of data vectors is small, estimation
+may be quite unreliable. Therefore we will here mainly
+focus on the theoretical question: To what extent (and
+with what methods) can we identify the true model in
+the limit as N → ∞?
+The most well-known approach to inference of this
+type of causal networks is based on (conditional) independencies between the variables (Spirtes et al. 1993;
+Pearl 2000). When, as in our case, there are assumed
+to be no hidden confounding variables and no selection
+bias, one can in the large-sample limit identify the set
+of networks which represent the same independencies
+as the true data generating model. To illustrate, in
+Figure 1b we show all three DAGs which imply the
+set of independencies produced by the true model.
+This set is known as the d-separation-equivalence class,
+and is often represented in the form of a d-separationequivalence pattern: a partly directed graph in which
+undirected edges represent edges for which both directions are present in the equivalence class (Spirtes et al.
+1993), as illustrated in Figure 1c. We want to emphasize that, using conditional independence information
+alone, it is impossible to distinguish between members
+inside a d-separation-equivalence class because these
+(by definition) represent the same set of conditional
+
+independencies between the observed variables.
+Fortunately, in many cases there is additional information available that can be used to further distinguish
+between different DAGs. In particular, it can be shown
+(Shimizu et al. 2006) that if all (or all but one) distributions of the error variables are non-Gaussian, it is
+in fact possible to identify the complete causal model,
+including all the parameters. This is possible using
+a method based on Independent Component Analysis (ICA) (Hyvärinen et al. 2001). Unfortunately,
+however, when two or more disturbances are Gaussian the standard method based on ICA will fail. As
+an extreme example, when all disturbances are Gaussian, standard ICA-based methods return nonsense
+and are not even able to find the correct d-separationequivalence class.
+These considerations raise the question of whether it
+is possible to combine the methods so as to obtain
+robustness with respect to Gaussian distributions but
+not forgo the possibility of identifying the full model in
+favourable circumstances. Indeed, such a combination
+is possible and is presented in Section 5. Here, we simply note that the naı̈ve solution of first running some
+test and then selecting one of the two methods, will not
+be optimal. Consider, for instance, our example model
+in Figure 1a. Because there is more than one Gaussian error variable the standard ICA-based method
+(Shimizu et al. 2006) is not applicable, and hence one
+would have to settle for the d-separation-equivalence
+class (Figure 1c) given by independence-based methods. However, as we show in the next section, in this
+example we can actually reject one of the DAGs in
+the equivalence class and hence obtain a smaller set of
+possible generating models.
+
+4
+
+DISTRIBUTION-EQUIVALENCE
+
+In general, an ngDAG D is instantiated by many different models M which differ in their connection
+strengths bij as well as in their distributions pi (ei ).
+Next, we define the important concept of distributionequivalence between ngDAGs, which defines to what extent it is possible to infer the ngDAG which represents
+the true data generating causal model, from observational data alone.
+Definition 3 Two ngDAGs D1 and D2 are
+distribution-equivalent if and only if for any linear acyclic causal model M1 which instantiates D1
+there exists an instantiation M2 of D2 which yields
+the same joint observed distribution as M1 , and vice
+versa.
+Distribution-equivalence partitions the set of ngDAGs
+into distribution-equivalence classes, and these may be
+represented using simplified graphs:
+Definition 4 An ngDAG pattern representing an
+ngDAG D is a mixed graph (consisting of potentially
+both directed und undirected edges), obtained in the following way:
+1. Derive the d-separation-equivalence pattern corresponding to the DAG in D
+2. Orient any unoriented edges which originate from,
+or terminate in, a node positively marked in ng of
+D, in the orientation given by the DAG in D
+3. Finally, orient any edges which follow from the
+orientations given in the previous step and dseparation-equivalence, according to the rules derived by Meek (1995).
+We say that a mixed graph is an ngDAG pattern if it
+represents some ngDAG.
+
+First, we need to extend a DAG object to include information on the non-Gaussianity of associated disturbance variables.
+
+An ngDAG pattern is similar in many respects to dseparation-equivalence patterns. For example, we have
+the following result:
+
+Definition 1 An ngDAG is a pair (G, ng) where G is a
+directed acyclic graph over a set of variables V and ng
+is a binary vector of length |V |, each element of which
+is associated with one of the variables of V .
+
+Lemma 1 An ngDAG pattern is a chain graph.
+
+Definition 2 We say that a linear acyclic causal
+model M instantiates an ngDAG D (alternatively, D
+represents M ) if and only if the directed acyclic graph
+associated with M is equal to that specified in D, and
+further if the set of variables with non-Gaussian disturbance variables in M is equal to the set of positive
+entries in the binary vector specified in D.
+
+The proof is given in the Appendix.
+Our main result connects ngDAG patterns with
+distribution-equivalence in mixed Gaussian and nonGaussian models in the same way that d-separationequivalence patterns are associated with distributionequivalence in purely Gaussian models:
+Theorem 1 Two ngDAGs are distribution-equivalent
+if and only if they are represented by the same ngDAG
+pattern.
+
+The proof of this theorem is provided in the Appendix.
+The important point is that we now know exactly
+which models are indistinguishable from each other on
+the basis of observational data alone.
+
+(c) Calculate the corresponding ICA objective
+function
+X
+2
+Uf =
+(E{f (ei )} − k)
+(2)
+
+As a simple illustration, in Figure 1d we show the
+ngDAG pattern representing the ngDAG corresponding
+to the generating model of Figure 1a. Note that
+the ngDAG pattern is more informative than the dseparation-equivalence pattern of Figure 1c. Nevertheless, there are still two ngDAGs (leftmost two in
+Figure 1b) which cannot be distinguished based on
+non-experimental data.
+
+where k is the expected value of f applied to
+a zero-mean, unit variance Gaussian variable,
+i.e. k = E{f (g)}, g ∼ N (0, 1). In the ICA
+literature, many different choices of f have
+been utilized; here we suggest simply taking
+the absolute value function f (ei ) = |ei |, giving
+2
+X
+p
+(3)
+U=
+E{|ei |} − 2/π
+
+Henceforth in the paper we shall use the terms
+ngDAG pattern and distribution-equivalence pattern interchangably.
+
+5
+
+PC-LINGAM
+
+Although an important goal in this study was to look
+at the theoretical aspects of identifying DAGs in mixed
+Gaussian / non-Gaussian acyclic linear causal models, an equally significant objective is to give a practical method with which to infer models from a finite data set. Although there are a number of possible approaches, we here give a simple combination
+of independence-based techniques and the ICA-based
+method. The method, termed PClingam, consists of
+three steps:
+1. Use methods based on conditional independence
+tests to estimate the d-separation-equivalence
+class within which the generating model lies. In
+particular, we advocate using the PC algorithm
+(Spirtes et al. 1993) which is computationally efficient even for a large number of variables. Note
+that, for linear models, to obtain the d-separationequivalence class it is sufficient to identify the zero
+partial correlations in the data, as these depend
+only on the linear coefficients and the variances
+of the disturbances (and not on non-Gaussianity
+aspects of the distributions). However, since the
+data may well be signficantly non-Gaussian, nonparametric tests should optimally be used to find
+the zero partial correlations.
+2. For each DAG G in the estimated d-separationequivalence class:
+(a) Estimate the coefficients bij using ordinary
+least-squares regression. (Note that this provides consistent estimates regardless of nonGaussianity of the variables.)
+(b) Calculate the corresponding residuals ei and
+rescale them to zero mean and unit variance
+for each i
+
+i
+
+i
+
+Of course, since we only have samples we
+have to take the sample mean rather than
+the expectation.
+3. Select the highest-scoring DAG Gopt from Step
+2 and apply a statistical test for normality for
+each of the corresponding residuals ei . Using Definition 4, compute and return the ngDAG pattern
+representing the ngDAG (Gopt , ng) where ng is the
+vector indicating those residuals whose normality
+was rejected by the normality tests.
+The objective function U is commonly used in ICA as
+a measure of the non-Gaussianity of a random variable, and it can be shown to give a consistent estimator for finding independent components under weak
+conditions (Hyvärinen et al. 2001). ICA estimation
+is closely related to choosing the right DAG because
+statistical independence of the estimated residuals is a
+necessary condition for the correct model: Any DAG
+for which the estimated residuals are not independent
+violates the assumptions of the model (see Section 2)
+and hence cannot be the data-generating DAG. On
+the other hand, any DAG which results in statistically
+independent residuals represents one valid model that
+could have generated the data.
+Note that if we could disregard sampling effects,
+distribution-equivalent models would attain exactly
+the same value of U . However, in the practical case of
+a finite sample this is not the case, thus Step 3 in the
+PClingam algorithm is required to identify the correct
+distribution-equivalence class.
+The method as presented above has at least a couple of
+shortcomings. One is that, for any given function f (ei )
+used, there always exist distributions which are nonGaussian yet are not distinguished from the Gaussian
+by this measure. This is a well-known issue in ICA
+which fortunately tends to have little practical significance since few such distributions are encountered in
+practice. If needed, non-parametric Gaussianity measures could be used to remedy this potential problem.
+
+a
+
+b
+
+2
+5
+
+-1.3
+
+3
+
+1.1
+
+2
+
+0.8
+
+2
+
+5
+
+-1.4
+0.5 6
+
+c
+
+d
+
+2
+
+5
+
+3
+
+6
+
+e
+
+2
+
+5
+
+3
+
+6
+
+5
+
+3
+
+6
+
+3
+
+6
+
+0.6
+
+4
+
+1
+
+4
+
+1
+
+4
+
+1
+
+4
+
+1
+
+4
+
+1
+
+Figure 2: One of the networks used in the simulations. Variables with non-Gaussian disturbances are shown in
+squares, while those with Gaussian disturbances are plotted as circles. (a) True data-generating model. (b)
+True d-separation-equivalence pattern. (c) True distribution-equivalence pattern. (d) Estimated DAG Gopt .
+(e) Estimated distribution-equivalence pattern. See main text for details.
+Naturally, in some cases many of the disturbances may
+be slightly non-Gaussian yet sufficiently close to Gaussian that the available samples may not be sufficient
+to distinguish the two and utilize the information for
+determining causal directions in the model. Of course,
+this is not a shortcoming of this particular method but
+is a more general phenomenon.
+Another important limitation is that the ICA objective function given above will only provide a proper
+comparison of different DAGs for which the residuals
+ei are linearly uncorrelated. This is guaranteed to be
+the case when the search is in the correct d-separationequivalence class, but if in Step 1 of the procedure
+we select a too simple model (i.e. containing too few
+edges) then the estimated disturbances may be linearly correlated and the objective function misleading.
+Thus, it might be wise to include a term penalizing linear correlations such as is used in maximum likelihood
+estimation of ICA (Hyvärinen et al. 2001). However,
+to keep our method as simple as possible, we have
+omitted such a penalty term in this paper.
+
+6
+
+SIMULATIONS
+
+In this section we report on simulations used to test
+the performance of the PClingam method. First,
+we tested the ability of the non-Gaussianity objective function (3) of Step 2 and the normality tests
+of Step 3 of PClingam to identify the correct ngDAG
+pattern (distribution-equivalence class) when the true
+d-separation-equivalence pattern was known. In other
+words, we tested how well the algorithm would function if Step 1 of the method worked flawlessly. Subsequently, we experimented with the full method incorporating the necessary estimation of the d-separationequivalence class (Step 1).
+Figure 2a displays one of the models used to test the
+procedure. The disturbance distributions of variables
+X1 and X5 were a standard Gaussian the values of
+which were squared (but keeping the original sign)
+
+while the disturbance of X4 was produced in a similar
+way but instead raising the values to the third power.
+The disturbances of X2 , X3 , and X6 were Gaussian.
+The disturbance variables were scaled such that their
+variances ranged from 1.0 to 3.0. A sample of 1000
+data vectors was generated from the model.
+Figure 2b shows the true d-separation-equivalence pattern of the model in (a). The equivalence class consists
+of 12 different DAGs. However, the non-Gaussianity
+of the disturbances of X1 , X4 , and X5 means that
+there are actually only 2 DAGs which are distributionequivalent; these are represented by the distributionequivalence pattern of Figure 2c. Figure 2d shows the
+DAG Gopt found by Step 2 of PClingam from the data,
+when the true d-separation-equivalence class was given
+to the algorithm. An Anderson-Darling test for normality (Anderson and Darling 1954) gave the p-values
+0.000, 0.3145, 0.2181, 0.000, 0.000, and 0.0197 for the
+corresponding residuals e1 to e6 . Inferring a residual to be non-Gaussian when p < 0.01 in Step 3 of
+the method produced the ngDAG pattern of Figure 2e,
+which turns out identical to the true ngDAG pattern in
+(c).
+This basic procedure was repeated 20 times, with the
+results summarized in Table 1a. In each simulation,
+we randomly generated a linear acyclic causal model
+over 6 variables, with each variable randomly chosen to have either a Gaussian or a non-Gaussian disturbance. The non-Gaussian distributions used were
+those mentioned above as well as a Student’s t (2 degrees of freedom), a bimodal Mixture of Gaussians
+(0.5 N (−2, 1) + 0.5 N (2, 1)), a log-normal distribution
+(exponentiated standard normal) and a uniform distribution. The true d-separation-equivalence pattern was
+input to the algorithm, to test the functioning of the
+PClingam method when the correct pattern is selected
+in Step 1. The panel shows how often a specific type of
+true edge (in the true distribution-equivalence pattern)
+gave rise to a specific type of estimated edge (in the estimated distribution-equivalence pattern). Rows cor-
+
+Table 1: Summary of the simulations employing various methods for inferring the d-separation-equivalence
+class in Step 1 of PClingam. Each table is a confusion
+matrix of arcs in the true distribution-equivalence patterns vs arcs in the estimated distribution-equivalence
+pattern. See main text for details.
+
+a
+
+Using the true
+d-sep-equiv pattern
+
+b
+
+PC
+
+185
+
+0
+
+0
+
+0
+
+183
+
+0
+
+0
+
+2
+
+0
+
+12
+
+2
+
+0
+
+0
+
+12
+
+2
+
+0
+
+0
+
+0
+
+61
+
+0
+
+9
+
+1
+
+43
+
+8
+
+0
+
+0
+
+0
+
+40
+
+3
+
+2
+
+6
+
+29
+
+c
+
+d
+
+CPC
+
+GES
+
+183
+
+0
+
+1
+
+1
+
+173
+
+0
+
+8
+
+4
+
+0
+
+12
+
+2
+
+0
+
+0
+
+10
+
+2
+
+2
+
+9
+
+0
+
+50
+
+2
+
+2
+
+0
+
+51
+
+8
+
+3
+
+1
+
+2
+
+34
+
+1
+
+0
+
+1
+
+38
+
+7
+
+While the theoretical aspects of identifiability are
+solved, at least a couple of important issues regarding the estimation of the model from finite samples
+remain.
+First and foremost, non-parametric methods for identifying zero partial correlations in non-Gaussian settings should be used so as to obtain better estimates of
+the appropriate d-separation-equivalence class within
+which to search. Although the methods developed for
+Gaussian variables seem to work relatively well in our
+partly non-Gaussian setting, it is likely they will be
+outperformed by methods that take into account the
+possibility of non-Gaussian distributions.
+Another important question is how to make the procedure scalable to data involving many (tens or even
+hundreds of) variables. Although the current approach
+relies on a brute-force enumeration of all DAGs in the
+d-separation-equivalence class, it would not be difficult to adapt the method to do a local search among
+DAGs in an equivalence class. The extent to which
+such a method would be hampered by local maxima is
+unknown.
+
+8
+
+respond to the true edges, columns to estimated ones.
+Optimally all off-diagonal elements would be zero. It
+can be seen that the results are close to perfect; the
+method misclassifies two undirected edges as directed,
+but correctly estimates all others.
+These simulations confirm that the PClingam method
+works well at least when the d-separation-equivalence
+class can reliably be estimated. But in practice, with
+finite datasets, there may be significant errors in inferring the d-separation-equivalence class. The degree to
+which this affects the algorithm is an important practical issue.
+Thus, in further simulations, we applied several different methods for learning d-separation-equivalence
+patterns from the simulated data, as Step 1 in the
+PClingam method. The methods we compared were
+the PC algorithm (Spirtes et al. 1993), the Conservative PC algorithm (Ramsey et al. 2006), and the GES
+algorithm (Chickering 2002). Panels b-d of Table 1
+summarize the results. Although all of the methods
+assumed Gaussianity when learning the d-separationequivalence pattern, the results are still quite encouraging, and a clear majority of edges were correctly
+estimated.
+
+FUTURE WORK
+
+SUMMARY
+
+The discovery of linear acyclic causal models is a topic
+which has been thoroughly investigated in the last
+two decades. Both the Gaussian and the fully nonGaussian special cases are well understood, but the
+general mixed case has not been previously discussed.
+In this paper we have provided a complete characterization of distribution-equivalence and a practical estimation method in this setting.
+Acknowledgements
+The authors wish to thank Clark Glymour for helpful
+and stimulating discussions. P.O.H. was funded by a
+postdoctoral researcher grant from the University of
+Helsinki.
+
+
+We generalize Shimizu et al’s (2006)
+ICA-based approach for discovering linear
+non-Gaussian acyclic (LiNGAM) Structural
+Equation Models (SEMs) from causally sufficient, continuous-valued observational data.
+By relaxing the assumption that the generating SEM’s graph is acyclic, we solve the
+more general problem of linear non-Gaussian
+(LiNG) SEM discovery. LiNG discovery algorithms output the distribution equivalence
+class of SEMs which, in the large sample
+limit, represents the population distribution.
+We apply a LiNG discovery algorithm to simulated data. Finally, we give sufficient conditions under which only one of the SEMs in
+the output class is “stable”.
+
+1.1
+
+Patrik O. Hoyer
+Dept. of Computer Science
+University of Helsinki
+Helsinki, Finland
+
+The model, with an illustration
+
+Let x be the random vector of substantive variables, e
+be the vector of error terms, and B be the matrix of
+linear coefficients for the substantive variables. Then
+the following equation describes the linear SEM model:
+x = Bx + e
+
+(1)
+
+For example, consider the model defined by:
+x1 = e1
+x2 = 1.2x1 − 0.3x4 + e2
+x3 = 2x2 + e3
+
+(2)
+
+x4 = −x3 + e4
+x5 = 3x2 + e5
+Note that the coefficient of each variable on the lefthand-side of the equation is 1.
+
+1
+
+Linear SEMs
+
+Linear structural equation models (SEMs) are statistical causal models widely used in the natural and social
+sciences (including econometrics, political science, sociology, and biology) [1].
+The variables in a linear SEM can be divided into two
+sets, the error terms (typically unobserved), and the
+substantive variables. For each substantive variable
+xi , there is a linear equation with xi on the left-handside, and the direct causes of xi plus the corresponding
+error term on the right-hand-side.
+Each SEM with jointly independent error terms can
+be associated with a directed graph (abbreviated as
+DG) that represents the causal structure of the model
+and the form of the linear equations. The vertices of
+the graph are the substantive variables, and there is a
+directed edge from xi to xj just when the coefficient
+of xi in the structural equation for xj is non-zero. 1
+1
+
+Traditionally, SEMs with acyclic graphs are called “re-
+
+Fig. 1: Example 1
+x can also be expressed directly as a linear combination of the error terms, as long as I − B is invertible.
+Solving for x in Eq. 1 gives x = (I − B)−1 e. If we
+let A = (I − B)−1 , then x = Ae. A is called the reduced form matrix (in the terminology of Independent
+cursive”, and SEMs with cyclic graphs “non-recursive”[15].
+We avoid this usage, and use “acyclic” or “cyclic” instead.
+
+Components Analysis (see Section 3.1), it is called the
+“mixing matrix”).
+The distributions over the error terms in a SEM, together with the linear equations, entail a joint distribution over the substantive variables. This joint distribution can be interpreted in terms of physical processes,
+as shown next.
+1.2
+
+Interpretating linear SEMs
+
+These equations (contained in matrix equation (1))
+can be given several different interpretations. Under
+one class of interpretations, they are a set of equations satisfied by a set of variables x in equilibrium.
+With some further assumptions, the B matrix in the simultaneous equations (a.k.a. “equilibrium equations”)
+also represents the coefficients in a set of dynamical
+equations describing a deterministic dynamical system.
+Fisher [5] gave one such interpretation as follows:
+There is a relatively long observation period of length
+1, and a much shorter “reaction” lag of length ∆θ =
+1/n. The observed variable is the vector x̄[t], defined
+as the average of x over the observation period starting
+at t:
+n
+1X
+x[t + k∆θ]
+(3)
+x̄[t] ≡
+n
+
+that do not contain any “self-loops” (edges from a vertex to itself) 2 , i.e. the B matrices output by our
+LiNG discovery algorithms have all zeros in the diagonal. This is because it is impossible to determine the
+values of the diagonal entries of the B matrix from
+equilibrium data alone.
+In the underlying dynamical equations, it may be that
+for some index a, xa [t + (k − 1)∆θ] affects xa [t + k∆θ]
+(i.e. ba,a 6= 0). Our goal is to recover the coefficients
+that both represent the distribution of x̄ and correctly
+predict the effects of manipulations. A manipulation of
+a variable xi to a distribution P is modeled by replacing the dynamical equation for xi by a new dynamical
+equation xi [t + k∆θ] = e0 i , where e0 i has distribution
+P [10].
+For these purposes, the following argument sketches
+why the underdetermination of the diagonal of Bequil
+by the equilibrium data is not a problem, as long as
+ba,a 6= 1 in the underlying dynamical equations.
+The equation for x̄a has the form:
+x̄a = ba,a x̄a +
+
+n
+X
+
+ba,k x̄k + ea
+
+(6)
+
+k6=a,k=1
+
+If ba,a 6= 1, it is possible to rewrite this as:
+
+k=1
+
+x̄a − ba,a x̄a =
+
+Suppose that the underlying dynamical equations are:
+
+n
+X
+
+ba,k x̄k + ea
+
+(7)
+
+k6=a,k=1
+
+x[t + k∆θ] = Bdyn x[t + (k − 1)∆θ] + e
+
+(4)
+
+where e is constant over the observation period (but
+may differ for different units in the population, e.g.
+different observation periods).
+Fisher showed that, in the limit as ∆θ approaches 0,
+there is a Bequil = Bdyn such that:
+x̄[t] = Bequil x̄[t] + e
+
+(5)
+
+if and only if the modulus of each eigenvalue of Bdyn
+is less than or equal to 1, and no eigenvalue is equal
+to 1.
+The assumptions underlying this model are fairly
+strong, but commonly made in econometrics, and defended by Fisher [5].
+A simpler, but similar interpretation with similar consequences is the one in which the observed value x is
+the state in which the dynamical system converged,
+rather than its average over an observation period.
+1.2.1
+
+Dealing with self-loops
+
+The LiNG discovery algorithms presented in this paper
+(described in section 4) output a set of directed graphs
+
+
+n
+X
+1
+
+x̄a =
+1 − ba,a
+
+k6=a,k=1
+
+
+ba,k x̄k + ea  =
+
+n
+X
+
+b0a,k x̄k +e0a
+
+k=1
+
+(8)
+b0a,a
+
+= 0. The modified system of equations conwhere
+taining Equation 8 is represented by a graph that has
+no self-loops, and has a different underlying dynamical
+equation in which the coefficient for xa [t + (k − 1)∆θ]
+in the equation for xa [t + k∆θ] is zero.
+Note that in the second equation, the error term ea has
+been rescaled by 1/(1 − ba,a ) to form a new error term
+e0a and when (I − B)−1 is taken to form the reduced
+form coefficients, the coefficients corresponding to ea
+in the first set of equations will be multiplied by (1 −
+ba,a ), and the two changes cancel each other out.
+Now, if we consider the original dynamical system and
+the one that results from setting the diagonal of B to
+zero (as above), it is sometimes the case that one dynamical system satisfies the conditions for the dynamical equations to approach the simultaneous equations
+2
+Fisher argues that self-loops are not realistic, but these
+arguments are not entirely convincing.
+
+in the limit, while the other one does not, because the
+magnitude of the coefficients in the equation for xa [t]
+are different. If both forms satisfy Fisher’s conditions,
+then the act of manipulating any variable to a fixed
+distribution for all t makes the two sets of dynamical
+equations have equivalent limiting simultaneous equations.
+1.2.2
+
+Self-loops with coefficient 1
+
+Unfortunately, the case where ba,a = 1 cannot be handled in the same way, since 1/(1 − ba,a ) is infinite. If
+ba,a = 1, then there may be no equivalent form without a self-loop (or more precisely, the corresponding
+equations without a self-loop may require setting the
+variance of some error terms to zero). The case where
+ba,a = 1 is a genuine problem that we do not currently
+have a solution for. For the purposes of this paper, we
+assume that no self-loops have a coefficient of 1.
+As Dash has pointed out [4], there are cases where the
+simultaneous equations have a different graph than the
+underlying dynamical equations, and hence the graph
+that represents the simultaneous equations cannot be
+used to predict the effects of a manipulation of the
+underlying dynamical system. In [4], Dash presents
+two such examples. In both of them, in effect, Bdyn
+has a 1 in the diagonal.
+
+2
+2.1
+
+The problem and its history
+The problem of DG causal discovery
+
+Using the interpretations from 1.2, we can frame the
+problem as follows: given samples of the equilibrium
+distribution of a LiNG process whose observed variables form a causally sufficient set 3 , find the set of
+SEMs that describe this distribution, under the assumption that it is non-empty.
+
+the linear coefficients, and features common to those
+directed graphs (such as ancestor relations). The algorithm performs a series of statistical tests of zero partial correlations to construct the PAG. The set of zero
+partial correlations that is entailed by a linear SEM
+with uncorrelated errors depends only upon the linear
+coefficients, and not upon the distribution of the error
+terms. Under some assumptions4 , in the large sample
+limit, CCD outputs a PAG that represents the true
+graph.
+There are a number of limitations to this algorithm.
+First, the set of DGs contained in a PAG can be large,
+and while they all entail the same zero partial correlations (viz., those judged to hold in the population),
+they need not entail the same joint distribution or even
+the same covariances. Hence in some cases, the set represented by the PAG will include cyclic graphs that do
+not fit the data well. Therefore, even assuming that
+the errors are all Gaussian, it is possible to reduce the
+size of the set of graphs output by CCD, although in
+practice this can be intractable. For details on the
+algorithm, see [11].
+
+3
+
+Shimizu et al’s approach for
+discovering LiNGAM SEMs
+
+The “LiNGAM algorithm”[12], which uses Independent Components Analysis (ICA), reliably discovers a
+unique correct LiNGAM SEM, under the following assumptions about the data: the structural equations
+of the generating process are linear and can be represented by an acyclic graph; the error terms have
+non-zero variance; the samples are independent and
+identically distributed; no more than one error term
+is Gaussian; and the error terms are jointly independent.5
+3.1
+
+2.2
+
+Richardson’s Cyclic Causal Discovery
+(CCD) Algorithm
+
+While many algorithms have been suggested for
+discovering (equivalence classes of) directed acyclic
+graphs (DAGs) from data, for general linear directed
+graphs (DGs) only one provably correct algorithm was
+known (until now), namely Richardson’s Cyclic Causal
+Discovery (CCD) algorithm.
+CCD outputs a “partial ancestral graph” (PAG) that
+represents both a set of directed graphs that entail the
+same set of zero partial correlations for all values of
+3
+A set V of variables is causally sufficient for a population if and only if in the population every common direct
+cause of any two or more variables in V is in V . (For
+subtleties regarding this definition, see [13]).
+
+Independent Components Analysis (ICA)
+
+Independent components analysis [3, 8] is a statistical technique used for estimating the mixing matrix
+A in equations of the form x = Ae (e is often called
+“sources” and written s), where x is observed and e
+and A are not.
+ICA algorithms find the invertible linear transforma4
+
+The assumptions are: the samples are independent and
+identically distributed, no error term has zero variance, the
+statistical tests for zero partial correlations are consistent,
+linearity of the equations, the existence of a unique reduced
+form, faithfulness (i.e. there are no zero partial correlations
+in the population that are not entailed for all values of the
+free parameters of the true graph), and that the error terms
+are uncorrelated.
+5
+The error terms are typically not jointly independent
+if the set of variables is not causally sufficient.
+
+tion W = A−1 of the data X that makes the error distributions corresponding to the implied samples E of
+e maximally non-Gaussian (and thus, maximally independent). The matrix A can be identified up to scaling
+and permutation as long as the observed distribution
+is a linear, invertible mixture of independent components, at most one of which is Gaussian [3]. There are
+computationally efficient algorithms for estimating A
+[8].
+3.2
+
+The LiNGAM discovery algorithm
+
+If we run an ICA algorithm on data generated by a
+linear SEM, the matrix WICA obtained will be a rowscaled, row-permuted version of I − B, where B is the
+coefficient matrix of the true model (this is a consequence of the derivation in Section 1.1). We are now
+left with the problem of finding the proper permutation and scale for the W matrix so that it equals I −B.
+
+Fig. 2: After removing the edges whose coefficients are
+statistically indistinguishable from zero: (a) the raw WICA
+matrix output by ICA on a SEM whose graph is x2 →
+f matrix, obtained by
+x1 ← x3 (b) the corresponding W
+permuting the error terms in WICA
+
+Since the order of the error terms given by ICA is arbitrary, the algorithm needs to correctly match each
+error term ei to its respective substantive variable xi .
+This means finding the correct permutation of the rows
+of WICA . We know that the row-permutation of WICA
+corresponding to the correct model cannot have a zero
+in the diagonal (we call such permutations “inadmissible”) because W = I − B, and the diagonal of B is
+zero.
+Since, by assumption, the data was generated by a
+DAG, there is exactly one row-permutation of WICA
+that is admissible [12]. To visualize this, this constraint says that there is exactly one way to reorder
+the error terms so that every ei is the target of a vertical arrow.6
+In this example, swapping the first and second error
+terms is the only permutation that produces an admissible matrix, as seen in Fig. 2(b).
+
+After the algorithm finds the correct permutation, it
+finds the correct scaling, i.e. “normalizing” W by dividing each row by its diagonal element, so that the
+diagonal of the output matrix is all 1s (i.e. the coefficient of each error term is 1, as specified in Section
+1).
+Bringing it all together, the algorithm computes B by
+f ), W
+f=
+using B = I − W 0 , where W 0 = normalize(W
+RowP ermute(WICA ) and WICA = ICA(X).
+Besides the fact that it determines the direction of every causal arrow, another advantage of LiNGAM over
+conditional-independence-based methods [13] is that
+the correctness of the algorithm does not require the
+faithfulness assumption.
+For more details on the LiNGAM approach, see [12].
+
+4
+
+Discovering LiNG SEMs
+
+The assumptions of the family of LiNG discovery algorithms described below (abbreviated as “LiNG-D”) are
+the same as the LiNGAM assumptions, replacing the
+assumption that the SEM is acyclic with the weaker
+assumption that the diagonal of Bdyn contains no 1s.
+In this more general case, as in the acyclic case, candidate models are generated by finding all admissible matches of the error terms (ei ’s) to the observed
+variables (xi ’s). In other words, each candidate corresponds to a row-permutation of the WICA matrix that
+has a zeroless diagonal.
+As in LiNGAM, the output is the set of admissible
+models. In LiNGAM, this set is guaranteed to contain
+a single model, thanks to the acyclicity assumption.
+If the true model has cycles, however, more than one
+model will be admissible.
+The remainder of this section addresses the problem
+of finding the admissible models, given that ICA has
+finite data to work with.
+4.1
+
+Prune and solve Constrained n-Rooks
+
+These algorithms generate candidate models by testing which entries of WICA are zero (i.e. pruning),
+and finding all admissible permutations based on that
+(i.e. solving Constrained n-Rooks, see Section 4.1.2).
+We call an algorithm “local” if, for each entry wi,j of
+WICA , it makes a decision about whether wi,j is zero
+using only wi,j .
+4.1.1
+
+Deciding which entries are zero
+
+6
+
+Another consequence of acyclicity is that there will be
+no right-pointing arrows in this representation, provided
+that the xs are topologically sorted w.r.t. the DAG.
+
+There are several methods for deciding which entries
+of WICA to set to zero:
+
+• Thresholding: the simplest method for estimating which entries of WICA are zero is to simply choose a threshold value, and set every entry
+of WICA smaller than the threshold (in absolute
+value) to zero. This method fails to account for
+the fact that different coefficients may have different spreads, and will miss all coefficients smaller
+than the threshold.
+• Test the non-zero hypothesis by bootstrap
+sampling: another method for estimating which
+entries of WICA are actually zero is to do bootstrap sampling. Bootstrap samples are created
+by resampling with replacement from the original
+data. Then ICA is run on each bootstrap sample, and each coefficient wi,j is calculated for each
+bootstrap sample. This leads to a real-valued distribution for each coefficient.7 Then, for each one,
+a non-parametric quantile test is performed in order to decide whether 0 is an outlier. If it isn’t,
+the coefficient is set to 0 (i.e. the corresponding
+edge is pruned.)8
+• Use sparse ICA: Use an ICA algorithm that
+returns a sparse (i.e. pre-pruned) mixture, such
+as the one presented by Zhang and Chan [16].
+Unlike the other methods above, this is not a local
+algorithm.
+4.1.2
+
+Constrained n-Rooks: the problem and
+an algorithm
+
+Once it is decided which entries are zero, the algorithm
+searches for every row-permutation of WICA that has
+a zeroless diagonal. Each such row-permutation corresponds to a placement of n rooks onto the non-zero
+entries on an n × n chessboard such that no two rooks
+threaten each other. Then the rows are permuted so
+that all the rooks end up on the diagonal, thus ensuring that the diagonal has no zeros.
+To solve this problem, we use a simple depth-first
+search that prunes search paths that have nowhere to
+place the next rook. In the worst case, every permutation is admissible, and the search must take O(n!).
+7
+
+One needs to be careful when doing this, since each run
+of ICA may return a WICA in a different row-permutation.
+This means that we first need to row-permute each bootstrap WICA to match with the original WICA .
+8
+One could object that, instead of a quantile test, the
+correct procedure would be to simulate under the null hypothesis (i.e.: edge is absent) using the estimated error
+terms, and then compare the obtained distribution of the
+ICA statistics with their distribution for the bootstrap.
+However, this raises issues and complexities that are tangential to the current paper.
+
+4.2
+
+A non-local algorithm
+
+Local algorithms work under the assumption that the
+estimates of the wi,j are independent of each other –
+which is in general false when estimating with finite
+samples. This motivates the use of non-local methods.
+In the LiNGAM (acyclic) approach [12], a non-local
+algorithm is presented for finding the single best rowpermutation of WICA , which minimizes a loss function
+that heavily penalizes entries in the diagonal that are
+close to zero (such as x → |1/x|). This is written as a
+linear assignment problem (i.e. finding the best match
+between the ei s and xi s), which can be solved using
+the Hungarian algorithm [9] or others.
+For general LiNG discovery, however, algorithms that
+find the best linear assignment do not suffice, since
+there may be multiple admissible permutations.
+One idea is to use a k-th best assignment algorithm
+[2] (i.e. the k-th permutation with the least penalty
+on the diagonal), for increasing k. With enough data,
+all permutations corresponding to inadmissible models
+will score poorly, and there should be a clear separation between admissible and inadmissible models.
+The non-local method presented above, like the thresholding method, fails to account for differences in spread
+among estimates of the entries of WICA . It would be
+straightforward to fix this by modifying the loss function to penalize diagonal entries for which the test fails
+to reject the null hypothesis (as described in the part
+about bootstrap sampling in Section 4.1.1), instead of
+penalizing them for merely being close to zero.
+4.3
+
+Sample run
+
+We generated 15000 sample points using the SEM in
+Example 1 and error terms distributed according to a
+symmetric Gaussian-squared distribution9 .
+Fig. 3 shows the output of the local thresholding algorithm with the cut-off set to 0.05.
+For the sake of reproducibility, our code with instructions is available from: www.phil.cmu.edu/~tetrad/
+cd2008.html .
+
+5
+
+Theory
+
+5.1
+
+Notions of DG equivalence
+
+There are a number of different senses in which the
+directed graphs associated with SEMs can be “equivalent” or “indistinguishable” given observational data,
+9
+
+The distribution was created by sampling from the
+standard Gaussian(0,1) and squaring it. If the value sampled was negative, it was made negative again.
+
+the error terms are assumed to be Gaussian, then distribution equivalence entails (but is not entailed by)
+covariance equivalence, which entails (but is not entailed by) d-separation equivalence.
+
+Fig. 3: The output of LiNG-D: Candidate #1 and Candidate #2
+
+assuming linearity and no dependence between error
+terms:
+• DGs G1 and G2 are zero partial correlation equivalent if and only if the set of zero partial correlations entailed for all values of the free parameters
+(non-zero linear coefficients, distribution of the error terms) of a linear SEM with DG G1 is the same
+as the set of zero partial correlations entailed for
+all values of the free parameters of a linear SEM
+with G2 . For linear models, this is the same as
+d-separation equivalence. [13]
+• DGs G1 and G2 are covariance equivalent if and
+only if for every set of parameter values for the free
+parameters of a linear SEM with DG G1 , there is
+a set of parameter values for the free parameters
+of a linear SEM with DG G2 such that the two
+SEMs entail the same covariance matrix over the
+substantive variables, and vice-versa.
+• DGs G1 and G2 are distribution equivalent if and
+only if for every set of parameter values for the free
+parameters of a linear SEM with DG G1 , there is a
+set of parameter values for the free parameters of
+a linear SEM with DG G2 such that the two SEMs
+entail the same distribution over the substantive
+variables, and vice-versa. Do not confuse this with
+the notion of distribution-entailment equivalence
+between SEMs: two SEMs with fixed parameters
+are distribution-entailment equivalent iff they entail the same distribution.
+It follows from well-known theorems about the Gaussian case [13], and some trivial consequences of known
+results about the non-Gaussian case [12], that the following relationships exist among the different senses of
+equivalence for acyclic graphs: If all of the error terms
+are assumed to be Gaussian, distribution equivalence
+is equivalent to covariance equivalence, which in turn
+is equivalent to d-separation equivalence. If not all of
+
+So for example, given Gaussian error terms, A ← B
+and A → B are zero partial correlation equivalent, covariance equivalent, and distribution equivalent. But
+given non-Gaussian error terms, A ← B and A → B
+are zero-partial-correlation equivalent and covariance
+equivalent, but not distribution equivalent. So for
+Gaussian errors and this pair of DGs, no algorithm
+that relies only on observational data can reliably select a unique acyclic graph that fits the population distribution as the correct causal graph without making
+further assumptions; but for all (or all except one) nonGaussian errors there will always be a unique acyclic
+graph that fits the population distribution.
+While there are theorems about the case of cyclic
+graphs and Gaussian errors, we are not aware of any
+such theorems about cyclic graphs with non-Gaussian
+errors with respect to distribution equivalence. In
+the case of cyclic graphs with all Gaussian errors,
+distribution equivalence is equivalent to covariance
+equivalence, which entails (but is not entailed by) dseparation equivalence [14]. In the case of cyclic graphs
+in which at most one error term is non-Gaussian, distribution equivalence entails (but is not entailed by)
+covariance equivalence, which in turn entails (but is
+not entailed by) d-separation equivalence. However,
+given at most one Gaussian error term, the important
+difference between acyclic graphs and cyclic graphs is
+that no two different acyclic graphs are distribution
+equivalent, but there are different cyclic graphs that
+are distribution equivalent.
+Hence, no algorithm that relies only on observational
+data can reliably select a unique cyclic graph that fits
+the data as the correct causal graph without making further assumptions. For example, the two cyclic
+graphs in Fig. 3 are distribution equivalent.
+5.2
+
+The output of LiNG-D is correct and as
+fine as possible
+
+Theorem 1 The output of LiNG-D is a set of SEMs
+that comprise a distribution-entailment equivalence
+class.
+Proof: First, we show that any two SEMs in the output of LiNG-D entail the same distribution.
+The weight matrix output by ICA is determined only
+up to scaling and row permutation. Intuitively, then,
+permuting the error terms does not change the mixture. Now, more formally:
+
+Let M1 and M2 be candidate models output by LiNGD. Then W1 and W2 are row-permutations of WICA :
+W1 = P1 WICA , W2 = P2 WICA
+Likewise, for the error terms: E1 = P1 E, E2 = P2 E
+Then the list of samples X implied by M1 is A1 E1 =
+−1
+(W1 )−1 E1 = (P1 WICA )−1 (P1 E) = WICA
+P1 −1 P1 E =
+−1
+WICA E.
+By the same argument, the list of samples X implied
+−1
+by M2 is also WICA
+E. Therefore, any two SEM models output by LiNG-D entail the same distribution.
+Now, it remains to be shown that if LiNG-D outputs
+one SEM that entails a distribution P , it outputs all
+SEMs that entail P .
+Suppose that there is a SEM S that represents the
+same distribution as some T , which is output by
+LiNG-D. Then the reduced-form coefficient matrices
+for S and T , AS and AT , are the same up to columnpermutation and scaling. Hence, I − BS and I − BT
+are also the same up to scaling and row-permutation
+(by I − B = A−1 ). By the assumption that there are
+no self-loops with coefficient 1, neither I − BT nor
+I − BS has zeros on the diagonal. Since I − BT is a
+scaled row-permutation of WICA that has no zeros on
+the diagonal, so is I − BS . Thus S is also output by
+LiNG-D. 
+Theorem 2 If the simultaneous equations are linear
+and can be represented by a directed graph; the error
+terms have non-zero variance; the samples are independently and identically distributed; no more than one
+error term is Gaussian; and the error terms are jointly
+independent, then in the large sample limit, LiNG-D
+outputs all SEMs that entail the population distribution.
+Proof: ICA gives pointwise consistent estimates of A
+and W under the assumptions listed [3]. This entails
+that there are pointwise consistent tests of whether an
+entry in the W matrix is zero, and hence (by definition) in the large sample limit, the limit of both type I
+and type II errors of tests of zero coefficients are zero.
+Given the correct zeroes in the W matrix, the output
+of the local version of the LiNG-D algorithm is correct
+in the sense that the simultaneous equation describes
+the population distribution. 
+In general, each candidate model B 0 = I − W 0 has
+the structure of a row-permutation of WICA . The
+structures can be generated by analyzing what happens when we permute the rows of W 0 . Remember
+that edges in B 0 (and thus W 0 ) are read column-torow. Thus, row-permutations of W 0 change the positions of the arrow-heads (targets), but not the arrow-
+
+tails (sources). Richardson proved that the operation
+of reversing a cycle preserves the set of entailed zero
+partial correlations, but did not consider distribution
+equivalence [11].
+5.3
+
+Adding the assumption of stability
+
+In dynamical systems, “stable” models are ones in
+which the effects of one-time noise dissipate. For example, a model that has a single cycle whose cycleproduct (product of coefficients of edges in the cycle) is ≥ 1 is unstable, while one that has a single
+cycle whose cycle-product is between -1 and 1 is stable. On the other hand, if a positive feedback loop of
+cycle-product 2 is counteracted by a negative loop with
+cycle-product −1.5, then the model is stable, because
+the effective cycle-product is 0.5.
+A general way to express stability is lim B t = 0,
+t→∞
+which is mathematically equivalent to: for all eigenvalues e of B, |e| < 1, in which |z| means the modulus
+of z. This eigenvalues criterion is easy to compute.
+Given only the coefficients between different variables,
+it is impossible to measure the stability of a SEM without assuming something about the self-loops. Therefore, in this section, it is assumed that the true model
+has no self-loops.
+It is often the case that many of the SEMs output
+by LiNG-D are unstable. Since in many situations,
+the variables are assumed to be in equilibrium, we are
+often allowed to rule out unstable models.
+In the remainder of this section, we will prove that if
+the SEM generating the population distribution has a
+graph in which the cycles are disjoint, then among the
+candidate SEMs output by LiNG-D, at most one will
+be stable.
+Theorem 3 SEMs in the form of a simple cycle with
+a cycle-product π such that |π| ≥ 1 are unstable.
+Proof: Let k be the length of the cycle. Then B k =
+πI. Then for all integers i, B ik = π i I. So if |π| ≥ 1,
+the entries of B ik do not get smaller than the entries
+of B as i increases. Thus, B t will not converge to 0 as
+t → ∞. 
+Corollary 1: For SEMs in the form of a simple cycle,
+having a cycle-product ≥ 1 is equivalent to having an
+eigenvalue ≥ 1 (in modulus), which is equivalent to
+being unstable.
+Theorem 4 Suppose that there is a SEM M with disjoint cycles with coefficient matrix B and graph G that
+entails a distribution Q, and a SEM M0 6= M with
+graph G0 , coefficient matrix B0 , which is an admissible permutation of M and also entails Q. Then G0
+
+also contains disjoint cycles, at least one of which is a
+reversal of a cycle C in G, whose cycle-product is the
+inverse of the cycle-product of C.
+Proof: Due to space limitations, the proof is just
+sketched here. Every permutation can be represented
+as a product of disjoint cyclic subpermutations of the
+form a → b → . . . m → n → a, where a → b
+means a gets mapped onto b. (Some cyclic subpermutations may be trivial, i.e. contain a single object mapped onto itself). Hence it suffices to prove
+the theorem for a single admissible cyclic row permutation of B. It can be shown that if a cyclic
+row permutation of B, a → b → . . . m → n → a
+is admissible, then G contains the cycle C equal to
+a ← b ← . . . m ← n ← a, and G0 contains the reversed
+cycle C equal to a → b → . . . m → n → a. Moreover,
+if G0 contains two cycles that touch, so does G.
+Consider BC , the submatrix of B that contains the
+coefficients of the edges in cycle C.
+
+
+0
+...
+0 bk,1
+
+
+ b1,2
+0
+...
+0 
+
+
+
+
+BC = 
+
+.
+..
+
+ 0
+b
+0
+2,3
+
+
+
+
+..
+.
+0
+0
+0
+Qk−1
+Note that the cycle-product πC = bk,1 i=0 bi,i+1 .
+WC = I − BC .
+The “reversal” is the row-permutation in which the
+first row gets “rotated” into the bottom:
+
+−b1,2
+1
+...
+0
+
+
+
+
+..
+
+ 0
+.
+−b
+0
+2,3
+
+
+RowP ermute(WC ) = 
+
+
+
+..
+
+ 0
+.
+0
+1
+
+
+1
+0
+. . . −bk,1
+Normalizing the diagonal to be all 1s, we get WC 0 .
+Computing BC 0 = IQ− WC 0 , one can see that the cyclek−1
+1
+1
+product πC 0 = bk,1
+i=0 bi,i+1 = 1/πC . 
+We will now show that for SEMs in which the cycles are
+disjoint, their stability only depends on the stability of
+the cycles.
+Theorem 5 A SEM in which the cycles are disjoint
+is stable if and only if it has no unstable cycles.
+Proof: Let be G be a SEM whose cycles are disjoint.
+Then BG can be written as a block-triangular matrix
+where each diagonal block is a cycle. The set of eigenvalues of a block-triangular matrix is the union of the
+sets of eigenvalues of the blocks in the diagonal (in this
+
+case, the eigenvalues of the cycles). Suppose a cycle
+of G is unstable. Then it has an eigenvalue ≥ 1 (in
+modulus). But since this is also an eigenvalue of BG ,
+it follows that G is unstable. The other direction goes
+similarly. 
+Theorem 6 If the true SEM is stable and has a graph
+in which the cycles are disjoint, then no other SEMs
+in the output of LiNG-D will be stable.
+Proof: Suppose the true SEM is stable and has a
+graph in which the cycles are disjoint. Call it G. Since,
+by Theorem 2, the output of LiNG-D are the admissible distribution-entailment equivalent alternatives to
+the true SEM, it suffices to show that all other admissible candidates are unstable.
+By Theorem 5, all cycles in G are stable. Let H be
+an admissible alternative to G, such that H 6= G. By
+Theorem 4, H will have at least one cycle C reversed
+relative to G and this reversed cycle will have a cycle product that is the inverse of the cycle product of
+C. By Corollary 1, the reversed matrix is not stable.
+Thus, by Theorem 5, H is unstable.
+Therefore, the only stable admissible alternative to G
+is G itself. 
+It follows that if the true model’s cycles are disjoint,
+then under the assumption that the true model is stable, we can fully identify it using a LiNG discovery algorithm (at most one SEM in the output of the LiNG
+discovery algorithm will be stable).
+For example, consider the two candidate models shown
+in Fig. 3. By assuming that the true model is stable,
+one would select candidate #2. Since our simulation
+used a stable model, this is indeed the correct answer
+(see Fig. 1).
+In general, however, there may be multiple stable models, and one cannot reliably select the correct one.
+When the cycles are not disjoint, it is easy to find examples for which there are multiple stable candidates.
+The condition of disjoint cycles is sufficient, but not
+necessary: it is easy to come up with SEMs where
+we have exactly one stable SEM in the distributionentailment equivalence class, despite intersecting cycles.
+
+6
+
+Discussion
+
+We have presented Shimizu’s approach for discovering
+LiNGAM SEMs, and generalized it to a method that
+discovers general LiNG SEMs. This improves upon the
+state-of-the-art on cyclic linear SEM discovery by outputting only the distribution-entailment equivalence
+class of SEMs, instead of the entire d-separation equiv-
+
+alence class; and by relaxing the faithfulness assumption. We have also shown that stability can be a powerful constraint, sometimes narrowing the candidates
+to a single SEM.
+
+[4] D. Dash (2005) - Restructuring Dynamic Causal
+Systems in Equilibrium. Proceedings of the Tenth
+International Workshop on Artificial Intelligence
+and Statistics (AIStats 2005)
+
+There are a number of questions that remain open for
+future research:
+
+[5] F. Fisher (1970) - A correspondence principle
+for simultaneous equation models. Econometrica,
+38(1):73-92.
+
+• The LiNG-D algorithm generates all admissible
+permutations. The worst-case time-complexity of
+n-Rooks is high, but can we do better than depthfirst search for random instances? Is there an algorithm to efficiently search for the stable models,
+without going through all candidates? In the case
+where the cycles are disjoint, it is possible to just
+find the correct permutation for each cycle independently, but no such trick is known in general.
+• How can prior information be incorporated into
+the algorithm?
+• How can the algorithm be modified to allow the
+assumption of causal sufficiency to be relaxed?
+For the acyclic case, see [7].
+• How can the algorithm be modified to allow for
+mixtures of non-Gaussian and Gaussian (or almost Gaussian) error terms? Hoyer et al [6] address this problem for the acyclic case.
+• How could we integrate this method into mainstream dynamical systems research? Can the algorithm handle noisy dynamics and noisy observations? Could it be made to handle non-linear
+dynamics? What about self-loops of coefficient 1?
+How could one integrate this with methods that
+use non-equilibrium time-series data?
+Acknowledgements
+The authors wish to thank Anupam Gupta, Michael
+Dinitz and Cosma Shalizi. GL was partially supported
+by NSF Award No. REC-0537198.
+
+

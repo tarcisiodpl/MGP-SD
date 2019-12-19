@@ -1,0 +1,4337 @@
+
+This paper investigates the possibility of
+performing automated reasoning in probabilistic
+logic when probabilities are expressed by means
+of linguistic quantifiers. Each linguistic term is
+expressed as a prescribed interval of proportions.
+Then instead of propagating numbers, qualitative
+terms are propagated in accordance with the
+numerical interpretation of these terms. The
+quantified syllogism, modelling the chaining of
+probabilistic rules, is studied in this context. It
+is shown that a qualitative counterpart of this
+syllogism makes sense, and is relatively
+independent of the threshold defining the
+linguistically meaningful intervals, provided that
+these threshold values remain in accordance with
+the intuition. The inference power is less than
+that of a full-fledged probabilistic constraint
+propagation device but better corresponds to
+what could be thought of as commonsense
+probabilistic reasoning.
+1
+
+INTRODUCTION
+
+Precise values of probabilities are not always available.
+Experts often assess probabilities under the form of
+intervals (e.g. "between 80 and 90 % of A's are B's") or
+even linguistically (e.g. "almost all A's are B's"), or are
+only able to rank-order probability values, stating that a
+probability is certainly greater than another. Thus it
+raises the question of the possibility of reasoning with
+probabilities in a qualitative way. The main appeal of a
+qualitative approach (when such an approach is feasible),
+is that it requires less precision than a pure numerical
+representation while still leading to meaningful
+conclusions in the reasoning process. Also, the
+qualitative approach allows us to have a better interface
+with human users, in a way more compatible with their
+own reasoning processes. The idea of reasoning
+qualitatively with probabilities has been investigated
+along different lines by various researchers in Artificial
+Intelligence especially in the last five years. A first
+family of approaches works with inequalities between
+probabilities (e.g.Wellman (1990)). A second type of
+approach considers probability-like functions which take
+
+Lluis Godo
+Ramon L6pez de Mantaras
+
+Institut d'Investigacio en Intelligencia Artificial
+CEAB-CSIC
+Cami de Santa Barbara
+17300 Blanes, Spain
+
+their values in a finite totally ordered set not related to
+[0,1] (e.g.Yang, Beddoes and Poole, 1990). Another kind
+of qualitative probability approach is Adams (1975)'
+conditional logic (see also Pearl (1988)) which
+manipulates infinitesimal probabilities. For the sake of
+brevity we do not mention other logical approaches to
+probabilities here.
+The approach developed in this paper maintains an
+interpretation of qualitative (linguistic) probability values
+in terms of numerical intervals. Here, linguistic
+quantifiers such as most, few, etc ... are viewed as
+imprecisely or fuzzily known conditional probabilities,
+i.e. terms represented by crisp, or in the most general
+case, fuzzy subintervals of [0,1] (Zadeh, 1985 ; Dubois
+and Prade, 1988). Here, an ordered set of elementary
+labels of quantifiers is chosen in order to provide a
+linguistic scale for conditional probabilities (or
+proportions) used in default rules like "Q A's are B's",
+where Q is viewed as the answer to the question : "how
+many A's are B's ?". A qualitative algebra (Q-algebra)
+(Trave-Massuyes and Piera, 1989) is defined on the set of
+possible labels, built from the elementary labels forming
+the scale. Inference rules which are the qualitative
+counterparts of numerical formulas for computing bounds
+on probabilities in quantified syllogisms or similar
+propagation rules, can be proposed for reasoning in
+qualitative probability networks.
+The next section discusses how to build a set of
+linguistic labels to be used in the qualitative probability
+computations. Section 3 gives the necessary background
+about local patterns of inference used to propagate
+constraints on probabilities known to belong to intervals.
+Section 4 defines qualitative versions of these rules of
+inference. Section 5 discusses the robustness of the
+approach, i.e. to what extent the qualitative calculus
+remains unchanged when the numerical interpretation of
+the linguistic labels is slightly modified. A qualitative
+analysis of inference rules in Adams' probabilistic logic
+is given in Section 6. Section 7 discusses the problems
+encountered when trying to develop a qualitative
+constraint propagation rule based on Bayes theorem.
+Section 8 gives an example and shows how the constraint
+propagation-based strategy, recalled in Section 3, to
+answer queries about conditional probabilities can be
+adapted to the qualitative setting.
+
+A Sym bo l ic Approach to Reasoning with L in gu is tic Quantifiers
+
+2
+
+LATTICES OF LABELS
+
+Let us consider an ordered set of elementary labels of
+linguistic quantifiers that may account for any probability
+value. Each label corresponds to a subinterval of the unit
+interval, and the set of labelled subintervals completely
+covers it. So a linguistic scale will be made of the labels
+of a collection of subintervals covering (0,1] of the form
+[an-1· an ], [an, 1), 1}. For
+{0, (0, a11. (at, a21
+•
+
+... ,
+
+convenience we shall call a "partition" such a collection,
+although the intervals overlap at their edges, except in 0
+and 1 which are dealt with separately due to their
+particular meanings corresponding to 'none' and 'all'.
+
+Let fP be a partition of [0,1] in subintervals representing
+quantifiers from a linguistic scale. By convention, both
+the linguistic scale and the corresponding partition will
+be denoted fP. It seems reasonable that this linguistic
+scale should be symmetric with respect to 0.5 since the
+antonym of each linguistic quantifier in the scale should
+also be in the scale. Linguistic antony my, for instance
+ANT(Almosr none) =Almost all or ANT(Few) = Most,
+is expressed at the numerical level by relations like
+ANT([a,b]) = [1 - b, 1 -a], since intervals are used to
+represent the meaning of linguistic quantifiers. As a
+consequence if P(A) is the probability of event A,
+linguistically qualified by X E fP, then P(A) the
+probability of the complementary event A should be
+ANT(X} E fP.
+
+The universe of description U induced by a partition fP is
+defined as the set of intervals that are union of adjacent
+elements of fP. The set inclusion relationship (�:;)
+provides U with an ordered structure that has a tree
+representation. For instance, if we take parameters "a" and
+"b" to be smaller than 0.5, then [0,1] can be (non
+strictly) symmetrically partitioned as
+
+Fi!Nre 1 :
+
+The set of elementary (most specific) linguistic
+quantifiers can also be ordered according to the usual
+certainty ordering in the unit interval :
+
+None� Almost none� Few� About half� Most�
+Almost all � All
+This ordering enables us to consider higher level elements
+of the universe U as intervals defined on the partition set,
+for instance, [Few Most] = {X E fP I Few s; X :S Most)
+and it is fully compatible with the above numerical
+interpretation in terms of probability intervals. The
+semantics of the higher level elements of the universe
+corresponds to the convex hull of the intervals attached to
+their edges. For instance, the (numerical} interpretation of
+[Few Most}, i.e. 'From few to most', is the interval
+[a, 1-a}. The certainty ordering can be partially extended
+to the whole universe U as well, by defining for every
+[Xt. Y1 ], [X2, Y2] E U
+[XI, YI] =:;; [X2, Y2] if, and only if, Xt s; X2 and
+Y1 :S Y2,
+
+iP = { 0, (O,a], [a, b], [b, 1-b], [1-b, 1 -a],
+[1-a, 1), 1}
+
+corresponding to the following linguistic quantifiers :
+0 ::=None
+(0, a] ::=Almost none (Al-none for short)
+[a, b} ::=Few
+[b, 1-b] ::=About half (Ab-half for short)
+[1 - b, 1 -a] ::=Most
+[1 - a, 1} ::=Almost all (Al-a/1 for short)
+1 ::=All
+The set fP constitutes the highest meaningful level of
+specificity with respect to the language. Between this
+level and the least specific one (i.e. the whole interval
+[0, 1]), the universe of description U contains several
+internal ordered levels of specificity. For example, with
+the seven terms defined above we have five levels in
+between ; see Figure 1.
+
+Specificityorderinl{
+
+giving rise to a structure which differs from the previous
+one. Such a double ordering structure is in accordance
+with bilattices as discussed in (Ginsberg, 1988).
+
+3
+
+LOCAL PROPAGATION OF
+INTERVAL-VALUED
+PROBABILITIES
+
+In (Amarger, Dubois and Prade, 1991b), a local
+computation approach which deals with interval-valued
+conditional probabilities is presented. In the approach a
+basic pattern for local inference is the following so-called
+'quantified syllogism' :
+P(BIA)E [P* (BIA),P*(BIA)]; P(AIB}E [P*(AIB),P*(AIB)]
+P(CIB)e [P*(CIB),P*(CIB)];P(BIC} e [P*(BIC),P*(BIC)]
+P(CIA)
+
+=
+
+?
+
+P(AIC) = ?
+
+75
+
+76
+
+Dubois, Prade, Godo, and Lopez de Mantaras
+
+where P• and P* respectively denote lower and upper
+bounds, and where we want to compute (the tightest)
+bounds which can be deduced for P(CIA) and P(AIC).
+The following bounds have been established in (Dubois
+and Prade, 1988; Dubois, Prade and Toucas, 1990) and
+have been shown to be the tig htes t ones when P(BIA),
+P(AIB), P(BIC) and P(CIB) are precisely known (i.e.
+P(BIA) = P•(BIA) = P*(BIA), etc.), and are different from
+0 or 1:
+
+(
+
+lower bound :
+P•(CIA)
+
+==
+
+P•(BIA) max 0, 1 -
+
+l
+
+; ��(��
+
+B)
+
+.
+
+)
+
+upper bound :
+P*(CIA);:;
+1'
+min
+
+l
+
+_
+
+p•(BIA)+
+
+P•(BIA)·P*(CIB)
+P•(AIB)
+
+'
+
+P * (BIA) ·P * (CIB)
+'
+P•(AIB)·P•(BIC)
+
+[1- P•(BIC)] + P"' (BIA)
+P•(AIB) P•(BIC)
+Related local patterns of inference for interval-valued
+conditional probabilities have been independently
+developed by Guntzer, KieBling and TMne (1991), Thane
+et al. (1991a) and by Heinsohn (1991) in the contexts of
+deductive data bases and of terminological languages
+respectively. Wh il e the above lower bound is still
+optimal when only bounds are known on P(BIA), P(AIB)
+and P(CIB), Thline, Gilntzer and KieBling (1991b) have
+recently pointed out that the above upper bound can be
+improved when only lower and upper bounds on the
+probabilities are available in the syllogism. This is
+basically due to the fact that the third and fourth tenns are
+linearly increasing with respect to P(BIA) while the
+second term is linearly decreasing in P(BIA) if P*(CIB) <
+P.(AIB). These authors show that the above upper bound
+becomes optimal provided that we add the following fifth
+term in the above minimum of four terms :
+·
+
+P*(CIB)
+·
+
+(P •(AIB) - P * (CIB))
+
+This fifth term is simply obtained by computing the
+value of P(BIA) that makes the second and third term
+equal. This fifth term does improve the upper bound if
+and only if P•(AIB) > P*(CIB), and moreover the interval
+[P•(BIA),P*(BIA)] contains the quantity
+�(BIC) · P.(AIB)
+�(BIC) ·�(AlB) + P*(CIB)
+
+·
+
+(1- �(BIC))
+
+The local inference approach proposed in Amarger et al.
+(1991b) also takes advantage of an extended form of
+Bayes rule expressed in tenns of conditional probabilities
+only, namely
+
+=
+
+k-1
+
+P(Ak1A1) fi
+
+i=l
+
+P(AjiAi+l)
+P(Ai+tiAi)
+
+(with all involved quantities positive), from which useful
+inequalities are obtained in the case where only lower and
+upper bounds are available.
+The constraint propagation method which is used is the
+following : recursively apply the quantified syllogism to
+generate upper and lower boWJds of missing probabilities.
+This step is performed until the probability intervals can
+no longer be improved. Then recursively apply the
+extended Bayes rule to improve the bounds thus
+generated, and continue the whole procedure until no
+improvement takes place. This constraint propagation
+method can somet imes give bounds as tight as the best
+ones computed by a global optimization method based on
+linear programming (see Amarger et al., 1991b).
+4
+4.1
+
+p * (BIA). p * (CIB)
+
+P * (CIB) + P>�<(BIC)
+
+VA1,... ,Ak, P(A11Ak)
+
+THE QUALITATIVE QUANTIFIED
+SYLLOGISM
+COMPUTATION OF THE
+QUALITATIVE TABLE
+
+In this section we will focus on the qualitative
+counterpart of the quantified syllogism inference pattern,
+recalled in the preceding section. We use the following
+notations, where Qi are linguistic labels.
+Ql A's are B's; Q2 B's are A's
+Q3 C's are B's ; Q4 B's are C's
+QS A's are C's; Q6 C's are A's
+This inference rule is interesting from the point of view
+of commonsense reasoning since it offers a precise model
+of chaining uncertain "if... then ..." statements expressed
+by means of imprecise quantifiers or conditional
+probabilities. In the following we build the qualitative
+functions (Q-fWictions) corresponding to that pattern, i.e.
+we build a table giving qualitative values for Q5 and Q6
+for any combi na ti on of possible qualitative values for
+Ql, Q2, Q3 and Q4.
+The process of building the Q-functions is perfonned
+according to the following steps :
+1. Consider a linguistic scale of linguistic quantifiers
+together with a suitable partition of the unit interval
+[0,1] that represents them. In what follows we will
+use the partition gp defined above with parameters a =
+0.2, and b = 0.4, that is, (0,0.2] = Almost none ;
+[0.2, 0.4] =Few; [0.4,0.6] ;; About half; [0.6,0.8] =
+Most; [0.8,1) =Almost all.
+2. Consider all possible combinations of these linguistic
+values for P(BIA), P(AIB), P(BIC) and P(CIB).
+3. For each of such combinations, compute the lower
+and upper bounds of P(CJA) (and P(AIC)) using the
+numerical expression of the pattern given in Section
+
+A Symbolic Approach to Reasoning with Linguistic Quantifiers
+
+3. For example if Q1 = Most, Q2 =Almost all, Q3 =
+About half, Q4 = Almost all, then :
+P*(BIA) = 0.8
+P*(AIB) = 1
+P*(BIC) = 0.6
+P*(CIB) = 1
+which gives
+P*(CIA) = 1
+P*(AIC) 1
+
+P.(BIA) =0.6
+P•(AIB) = 0.8
+P•(BIC) = 0.4
+P•(CIB) = 0.8
+P•(CIA) =0.45
+P•(AIC) = 0.3.
+
+=
+
+4. These results are then approximated by means of the
+most specific element of the universe of description U
+(see Figure 1) which contains them. So, the interval
+[0.45, 1] for P(CIA) is approximated to the larger
+interval [0.4, 1], that is, the resulting Q5 is set to
+[About-half, All]. In the same way, Q6 is
+approximated to [Few, All].ln this way, we have
+partially defined the qualitative functions QS and Q6,
+i.e. defined as functions
+Q5, Q6 : fP
+
+X
+
+fP
+
+X
+
+fP
+
+X
+
+fP -----> U.
+
+5 . Finally, the complete definition of the qualitative
+functions Q5, Q6 : U x U x U x U ------> U can be
+easily derived from the above partially defined ones by
+simply applying them on the upper and lower bounds
+(which are elements of ;?) of the non-elementary
+elements of U, and then taking the convex hull. For
+instance:
+QS([Most, All], All, [None, All], Almost-all) =
+= convex_hull_of(QS(Most, All, None, Almost-all),
+Q5(All, All, None, Almost-all), QS(Most, All, All,
+Almost-all), Q5(All, All, All, Almost-all) )
+= convex_hull_of([About-half, All], Almost-all,
+[About-half, Most], Almost-all) = [About-half, All]
+:
+
+Note that in the above procedure, the
+qualitative calculation table for the quantified syllogism
+is computed by using the approximation step only at the
+end of the computation. Another approach one may think
+of would be to have precomputed tables for product and
+quotient, and to use them in the calculation of the
+bounds. However this latter approach would not be
+satisfactory because it yields too imprecise results.
+Remark
+
+4. 2
+
+THE 5-QUANTIFIER CASE
+
+In this section we analy se the results obtained on the
+most elementary type of qualitative scale of linguistic
+quantifiers, i.e. (none, few, about half, most, all) where
+few is of the form [E,a] for some positive, infinitesimal
+value E, a is some number in (0, 1/2), about half is
+interpreted as [a, 1 -a], and most is [1 -a, 1-E] .
+Note that the name "about half' is indeed short for
+"neither few nor most, but in between", since the interval
+[a, 1- a] may be quite imprecise.
+Table 1 gives the complete results when a = 0.3 ; the
+table is sorted by putting together the 4-tuples (Q1 Q2
+Q3 Q4) that lead to the same value of QS. A first remark
+
+is that in many situations when none of the quantifiers
+mean "all", no information is obtained on P(CIA). This
+is especially true when both P(AIB) and P(BIA) take
+small qualitative values. Some lines of the table may
+look surprising. For instance we see that nothing can be
+inferred from the four statements
+"all A's are B's"; "most B's are A's"
+"all C's are B's"; "about half of the B's are C's".
+Especially, the lower bound P•(CIA) =0 is attained in
+this case if pessimistic interpretations of "most" and
+"about half' are chosen, say 70% and 30% respectively.
+P(BIA)
+
+P(AIB)
+
+P(CIB)
+
+P(CIA)
+
+none
+
+none
+
+[none,most]
+
+[none,all]
+
+[none,all]
+
+few
+
+few
+
+[few,most]
+
+{few,most]
+
+few
+
+half
+
+[few,half]
+
+{few,most]
+
+few
+
+most
+
+[few,halfl
+
+half
+
+[half,all]
+
+most
+
+[few,most]
+
+half
+
+[half,all)
+
+[few,half]
+
+[few,most]
+
+[few,most]
+[few,most]
+
+P(BJC)
+
+all
+
+[few,half]
+
+aU
+
+all
+
+most
+
+aU
+
+half
+
+few
+
+[few,aU)
+
+none
+
+none
+
+few
+
+half
+
+most
+
+most
+
+[few,half]
+
+most
+
+few
+
+few
+
+most
+
+[few,half]
+
+all
+
+[few,most]
+
+most
+
+most
+
+aU
+
+half
+
+few
+
+half
+
+most
+
+[few,half]
+
+few
+
+most
+
+half
+
+few
+
+most
+
+most
+
+half
+
+half
+
+[few,half]
+
+all
+
+[few,most]
+
+half
+
+[few,all]
+
+none
+
+none
+
+most
+
+[few,all]
+
+few
+-
+
+few
+
+[few,half]
+
+all
+
+[few,most]
+
+few
+
+most
+
+most
+
+few
+[few,half]
+
+few
+
+[most,all]
+
+few
+
+most
+
+all
+
+half
+
+most
+
+all
+
+few
+
+most
+
+[few,all]
+
+none
+
+none
+
+none
+
+none
+
+all
+
+[few,all]
+
+[few,all]
+
+none
+
+few
+
+few
+
+none
+most
+
+all
+
+few
+
+[few,all]
+
+[few,half]
+
+all
+
+[few,half]
+
+most
+
+[few,half]
+
+most
+
+half
+
+most
+
+most
+
+most
+
+few
+
+half
+
+most
+
+all
+
+few
+
+all
+
+few
+
+all
+
+few
+
+all
+
+half
+
+most
+
+all
+
+[half,most]
+
+half
+
+all
+
+[few,half]
+few
+
+few
+
+half
+
+all
+
+most
+
+most
+
+most
+
+all
+
+[few,most]
+
+half
+
+few
+
+[most,all]
+
+most
+
+[most,all]
+
+half
+
+half
+
+all
+
+most
+
+all
+
+half
+
+most
+
+half
+
+all
+
+[non e,half]
+
+[none,few]
+
+(none,none]
+[few,all]
+
+[few,most]
+
+[few,most]
+
+half
+
+few
+
+[none, most]
+
+half
+
+few
+
+all
+
+[half,most)
+
+half
+
+all
+
+most
+
+all
+
+[few,most)
+
+few
+
+most
+
+all
+
+all
+
+half
+
+[few,half]
+
+77
+
+78
+
+D ub ois , Prade, Godo, and Lopez de Mantaras
+
+few
+
+[few,all)
+
+all
+
+few
+
+most
+
+all
+
+all
+most
+
+half
+
+few
+
+most
+
+[few,half]
+
+all
+
+few
+
+few
+
+all
+
+all
+
+all
+[most,all]
+
+[half,most]
+few
+
+all
+
+[few,all]
+
+few
+
+all
+
+few
+half
+
+all
+
+most
+all
+
+all
+
+half
+
+[few,all)
+
+[few,most]
+
+all
+
+most
+
+[few,most]
+
+most
+
+all
+
+most
+
+most
+
+most
+
+all
+
+most
+
+all
+
+most
+
+most
+
+all
+
+[few all]
+
+most
+
+half
+all
+
+[few,all]
+all
+
+[few,all)
+
+half
+
+most
+
+[few,all)
+
+[few,most]
+
+most
+all
+
+[few,all]
+all
+
+[few,all]
+
+most
+
+[few,all]
+
+[few,all)
+
+all
+
+all
+
+all
+
+all
+
+P•(CIA)::::max O,l-
+
+all
+
+all
+
+all
+
+[half,all]
+
+[half,most]
+[half,half)
+[most,all]
+[most,most]
+fall ,all]
+
+The case P(BIA)
+'all' and P(BIC) = 'all' represents a
+typical case of statistical inference, when, knowing the
+probability P(CIB), and considering some individual in
+class B, one tries to say something about its probability
+of being a C. Namely B represents a population, C a
+subclass of this population for which the proportion or
+probability P(CIB) is known. For instance B represents
+the inhabitants of some city and C the proportion of
+individuals in that population that are older than 60. Now
+take an individual xo in B. There are several ways of
+=
+
+a
+
+)
+
+( �)
+
+; P"'(CI A)=min l.
+
+itself. Let us consider the situation where P(CIB) > 1/2.
+If the degree of typicality t :5 P(CIB) = a then the
+probability P(CIA) is no longer upper bounded, but can
+be lower than P(CIB) as well. When the typicality t is
+low enough, that is t :5 min(P(CIB), 1 - P(CIB)) nothing
+can be inferred on P(CIA). It corresponds to the case when
+A and C could be disjoint subsets of B. This
+phenomenon explains the presence of rows of Table I
+where despite the high values of some of the probabilities
+the results of the chaining is very imprecise.
+
+S
+
+ROBUS TNES S
+
+=
+
+=
+
+·
+
+few
+few
+few
+
+half
+
+most
+
+is
+
+viewed as having nothing special). The problem is then:
+knowing P(CIB) what is the probability that xo belongs
+
+to C ? This problem can be solved by computing P(CIA)
+where A is a maximal subclass of B, of which xo is a
+typical element.
+
+This problem corresponds to all rows of Table 1 where
+P(BIA)
+1 and P(BIC) 1. It can be checked that P(CIA)
+can be much more imprecise than P(CIB), since it can be
+[none, all] (i.e."unknown") in several cases.
+=
+
+This phenomenon can be precisely studied in an
+analytical way, letting P(CIB) = a, and P(AIB) = t.
+Parameter t can be called a typicality index of set A with
+respect to B. It expresses the probability that selecting at
+random an individual in B, it lies in A, i.e. it is "like
+xo"· The commonsense saying that statistics should be
+cautiously used when making decisions about individual
+situations can be given a precise form thanks to the
+quantified syllogism. When P(AIB) = t, P(BIA) = 1,
+P(CIB)=a, P(BIC)= 1, we get the following results on
+
+few
+[few, half]
+
+?
+
+?
+
+[few, half]
+
+the choice of the value of a. Namely half
+� (0, a] only if
+
+a 2: d, where d
+
+xo
+
+most
+
+few
+
+The question mark '?' indicates some ambiguity due to
+
+xo"·
+
+particular as nobody is like him) to B itself (if
+
+half
+
+few
+
+few
+
+(1 - a )2]
+
+maximal subset of B containing individuals "just like
+Note that A can range from [xo} (if xo is so
+
+ANALYSIS
+
+Table 1 is obtained for a specific value of the threshold a
+between "few" and "half'. A legitimate question is
+whether such results are still valid for other values of the
+threshold. Let us start with qualitative tables for product
+and quotient, with "few"
+(O,a], "most"= [1 -a, I),
+"half'
+[a, I- a]. The product table is defined as
+None Q= None, All · Q= Q, and
+
+considering xo according to its peculiarities. Let A be the
+
+P(CIA):
+
+�
+
+=
+
+Table 1: Compactedtabl e of th e quantifiedsyllogism for
+the 5 element Partition ('half means 'about half)
+
+=
+
+1
+
+The only case when P(CIA) can only be equal to P(CIB)
+is when t
+1, i.e. when the reference class of xo is B
+
+few
+
+[most,all]
+
+(
+
+[few,few]
+
+3
+
+(1 - a )2
+
+- ..[5
+
+•
+
+half= [a2,
+
+::s; a, which requires
+
+"" 0.382 . In that case
+2
+half * half= few and most • most = [(I - a )2, I) ex.
+[a, I) when a > d, so that most * most= [few, most].
+The latter equality does not sound natural. On the
+contrary if a < d, then half * half = [few, half1 ;
+most • most:::: [half, most]. From a commonsense point
+of view, it is not very unnatural to require that "few" may
+mean a proportion less than .3 or so. Again "half' is here
+short for "neither few nor most but in-between". Hence it
+is clear that the product of qualitative probabilities is
+almost independent of the choice of the threshold a in
+(0, I/2). It fits the intuition and is completely threshold­
+independent for "a" small enough. The same problem
+can be solved for the (bounded) quotient, and it leads to
+the following almost-robust table
+
+I
+none
+few
+half
+most
+all
+
+none
+[none, all)
+all
+all
+all
+all
+
+few
+none
+[none, all]
+all
+all
+all
+
+half
+none
+[few, all)
+[half, all]
+all
+all
+
+most
+all
+none
+none
+[few, half) few
+half
+[half, all]
+most
+most
+all
+all
+
+A Symbolic Approach to Reasoning with linguistic Quantifiers
+
+The terms half/half and few/most are given for a< d.
+Only these terms change if a is larger. Note that the
+subdiagonal part of the table has been truncated to 1 .
+In order t o study the robustness o f the quantified
+syllogism table, several runs of the program that generate
+this table have been done, with a varying between 0.25
+and .38. Only a few lines of the qualitative table change
+(nine over 625 ""s4 distinct 4-tuples of quantifiers for
+
+.
+
+0 25� a �.35). In order to get a better insight, it is
+interesting to consider a significant subpart of the table,
+where quantifiers are either "few" or "most", i.e. when
+P(AIB), P(BIA), P(CIB), P(BIC) are close to 0 or close to
+1. In order to let the p arameter a appear we shall use the
+following notation
+P(AIB) Vo (a) which means P(AIB) �a
+P(AIB) V 1 (a) which means P(AlB) �a.
+Then by applying the optimal bounds on P(CIA) as
+described in Section 3 on the 16 = 42 4-tuples of
+extreme quantifiers, potential instability of the results
+was obtained for the 6 following cases only :
+P(BIA)
+Vrf,a.)
+
+P(AIB)
+VJ(I-a)
+
+P(BIC)
+Vt(l-a)
+
+P(CIB)
+Vrf..a.)
+
+Vrf,a.)
+
+Vt(l-a.)
+
+Vt(l-a)
+
+Vt(l-a)
+
+Vt(l-a)
+
+Vt(l-a)
+
+VrJ..a.)
+
+Vrf..a)
+
+Vt(l-o:)
+
+Vt(l-o:)
+
+VrJ.a)
+
+Vt(l-a)
+
+VJ(l-o:)
+
+VJ(I-o:)
+
+Vt(l-a)
+
+Vrf..a.)
+
+Vt(l-a)
+
+Vt(l-a)
+
+Vt(l-a)
+
+Vt(l-a)
+
+P(CIA)
+VrJ.a/-/(1-a)l)
+Vo((a.z/(1-a)l)+a.)
+Vo(2a.)
+VJ(l-2a.)
+2 2
+Vo(a/((1-a) +a ))
+VJ(I-2a.)
+
+most
+most
+most
+
+most
+most
+most
+
+few
+most
+most
+
+most
+few
+most
+
+[half, all]
+[none, half]
+[half, all]
+
+When the quantifier "(about) half' is involved in the
+inference pattern, the resulting quantifiers P(CIA) may get
+more precise (e.g. [few, all] becomes [half, all] when a
+becomes smaller). But the table obtained for a = 0.3
+remains correct but not optimally precise .
+
+6
+
+A QUALITATIVE ANALYS IS OF
+ADAMS' INFERENCE RULES
+
+Adams (1975) has proposed a probabilistic inference
+system based on the three inference rules :
+triangularity :
+Bayes rule:
+disjunction :
+
+A � B, A � C � (A " B)� C
+A � B, (A " B) � C � A � C
+A � C, B � C � (A v B) � C
+
+which are sound when A � B is understood as the
+probability P(BIA) � I - £ where e is arbitrarily small.
+These rules are used in Pearl (1988) to build a
+probabilistic inference-like default logic. It is interesting
+to consider finistic semantics for these rules in
+relationship with the linguistic probability scale. In this
+respect A� B will be interpreted as "most A's are B's".
+First it is easy to verify that triangularity and Bayes rule
+axioms can be expressed in terms of the quantified
+syllogism, of which they are special cases, noticing that
+
+P(BIA)
+
+=
+
+P(AnBIA).
+
+Triangularity : P{A n BIA) = most ; P(AIA n B)
+P(CIA) = most; compute P(CIA n B);
+
+=
+
+1 ;
+
+Bayes rule : P(AIA n B) = 1 ; P(A n BIA) = most ;
+= most ; compute P(CIA) .
+
+It is easy to verify that for a s; 1/3
+
+P(CIA n B)
+
+a2
+�a
+--�2;;( 1 - a)
+
+Taking 'most'= [1 - a, 1), we easily get the lower bound
+on P(CIA n B) and P(CIA) in each case by using the
+quantified syllogism
+
+2a
+
+s;
+
+as;1-2a
+
+1- a
+
+� + a2
+
+(1-a)
+
+$ 1-a (since
+
+�
+
+(1- a) +a 2
+
+(
+
+P(CIA n B) � max 0,1� 2a).
+
+These inequalities guarantee that whatever the v alue of
+a $ 1/3 , the value of P(CIA), as shown in Table 2
+remains within a given range (e.g. (0, a], (0, 1 -a], [a,
+1)) corresponding to a symbolic label, even if there is a
+degradation of the result which is less specific than Vo(a)
+or V 1( 1 - a) (except in the first line of Table 2). Hence
+we get the following robust computation table for the
+quantified syllogism (we only give here the 4-tuples that
+lead to an informative output) :
+
+few
+few
+few
+most
+
+few
+most
+few
+most
+few
+
+few
+most
+most
+few
+
+[none, most]
+few
+(few, all]
+[few, half]
+[none, half]
+
+P.(AnBI A)
+
+)
+
+=
+
+l- 2a
+1-a
+
+P(CIA) � P*(BIA) P*(CIA n B) = (I -a)2.
+·
+
+There is again a degradation of the lower bounds.
+However these lower bounds are again greater than a
+when a$ d.
+The third axiom pertains to another kind of inference that
+does not directly relate to the quantified syllogism. In
+Amarger et al. (1991a) the following identity was
+obtained:
+
+P(CIA)
+P(CIAuB)
+
+most
+most
+most
+most
+most
+
+1- P.(CIA)
+
++
+
+P(BI A)
+
+P(CI B)
+
+P(CIA n B)
+
+P(AIB)
+1
+
+P(BIA)
+
++
+
+1
+
+P(AIB)
+
+-1
+
+Hence a lower bound to P(CIA u B) is obtained when
+n B) = 1. When P(CIA) � 1-a, P(CIB) � I - a
+(both express "most"), we get
+
+P(CIA
+
+79
+
+80
+
+Dubois, Prade, Godo, and Lopez de Mantaras
+
+P(CJA u B)
+
+�
+
+K(1
+
+-
+
+a) - 1
+
+OP * (AIB)old
+
+K-1
+1
+
+1
+
+� 2. The right-hand
++
+P(AJB)
+P(BJA)
+term of the inequality is increasing with K. Hence the
+lower bound for P(CJAuB) � 2(1 - a) - I = 1 - 2a.
+More generally P(CJAuB) � 1 - a- a' when P(CJA) �
+1 - a, P(CIB) � 1 - a'. On the whole, we have found
+finistic counterparts of Adams' axioms that enable to
+quantify how inaccurate we are when we apply these
+axioms for commonsense reasoning with high
+probabilities.
+where K =
+
+The three axioms can be summarized as
+A
+
+�
+
+a
+
+�
+
+B,A
+
+a
+
+A� B, An B
+A
+
+�
+
+a
+
+a
+
+-
+
+�
+
+C �A
+
+C�AuB
+
+�
+
+�
+
+-
+
+2a
+
+7
+
+)]
+
+k�l
+Ili= Q P•(Ai+JIAi)
+l
+
+since this operation must be done for all cycles one
+might look for the counterpart of a longest path
+algorithm, here with qualitative values. But this is
+tricky if we want to compute quotients only at the
+end of the shortest path procedure, and keep separate
+the products of terms along cycles. The maximum
+operation (Q1/Q2) v (S 1/S2 ) should be directly
+expressed as an operation v' between pairs (QJ,Q2)
+and (S 1 ,S 2) that furnishes a new pair of qualitative
+values. Moreover, longest path algorithms make an
+extensive use of the distributivity of the addition
+over the maximum. Here we would require a property
+such as
+
+C
+
+In the case of the generalized Bayes theorem (GBT),
+described in Section 3, we cannot use the same method as
+we did in Section 4 with the quantified syllogism rule
+because here the number of arguments, i.e. the length of
+the involved cycle, is variable. This prevents us from
+having the qualitative inference pattern defined by a table.
+Then the only possibility left is to replace in the GBT
+expression the product and quotient operations by
+qualitative ones defined on the universe of description U.
+These more basic qualitative operations can be stored in
+tables.
+
+1
+rr!<A·1+1
+1
+- OP * (A·I
+
+ii)
+
+C
+
+THE GENERALIZED BAYES
+THEOREM
+
+·
+
+for a given cycle, find a proper ordering for the
+computation. Especially, it is not obvious that
+(Xl·X2) I (X3-X4) (computing products first) is equal
+to (Xt/X2) · (X3/X4) (computing quotients first).
+Because of the truncation effect of the quotient table,
+it seems better to compute products before quotients.
+
+B reads P(BIA) � 1
+a. In terms of
+a
+linguistic proportions, those rules can be "Written
+changing a into "most" and interpreting the resulting
+conditional probabilities as "more than few" in the three
+cases, provided that a < 1/3. These rules enable
+probabilistic reasoning to be performed as a qualitative
+non-monotonic logic, but where the validity of
+conclusions can be numerically assessed.
+
+where A
+
+QP * (BIA)
+
+i)
+
+-a-4C
+
+- a--.2�>
+2-a--
+
+[
+
+A and v denote the min and max operations in the sense
+of the certainty ordering. But the computation of these
+quantities raises several problems
+
+1-a
+
+�
+
+C.B
+
+C �An B
+
+A
+
+Xl
+
+v
+
+Xz
+
+(
+
+X3 · X4
+X s · X6
+
+)
+
+=
+
+X1
+
+·
+
+X3
+
+X I · X4
+
+v
+
+X2 · Xs
+
+X2 · X6
+
+It is not clear that this property holds in the
+qualitative algebra.
+But the basic question is whether this constraint
+propagation rule, which proved useful in the quantitative
+case leads to really improve qualitative probability
+bounds. This can be precisely studied on the 5 quantifier
+case of Section 4.2.
+The smallest expression to be computed with non­
+extreme probabilities is of the form (Ql Q2 Q3)!(Q4
+Qs) with Qi E {few, half, most}. It is easy to check from
+the product and quotient tables that
+·
+
+i)
+ii)
+
+Q 1 Q2 E
+most]}
+·
+
+0 1 Q2
+above
+·
+
+·
+
+·
+
+·
+
+{few, [few, most], [few, half], [half,
+03 can only belong to the same set as
+
+Given a cyle (At, ... ,Ak, At) with AI =A, Ak B the
+qualitative probability QP(AIB), known to lie in the
+interval [QP,.(AIB)0ld• QP*(AIB)otdl should be improved
+by letting
+
+iii) the only case where a quotient can be significantly
+informative is when the operands are [few, most],
+[half, most] and [half, half] since few/most= [few,
+half] and half/half= [half, all] = half/most.
+
+Q P*(AIB)new
+
+As a consequence (QJ Q2 · 0 3)/(0 4 · Qs) can give
+[few, all] at the very best. This is when Q1 0 2 Q3 =
+[few, half] and 04 Qs = [half, most]. This is not likely
+to be very useful for improving probability bounds. In
+the 7-quantifier case, the best informative result can be
+
+=
+
+QP•(AIB)old
+QP * (AIB)new
+
+·
+
+=
+
+v
+
+[
+
+=
+
+n"!c_.=-t Q P•(AiiA i+I)
+
+-\ ..
+Q P•(BIA) -��-=.!.
+
+;
+..;...:_
+____;
+_____:_
+
+Il i=1 QP * (Ai+tiAi)
+
+l
+
+·
+
+·
+
+·
+
+A Symbolic Approach to Reasoning with Linguistic Quantifiers
+
+shown
+
+to be
+
+Q1 02 Q3
+Q4 Q 5
+·
+
+·
+
+·
+
+8
+
+[half,
+
+_
+
+all)
+
+corresponding to when
+
+[half, most]
+
+[most, al- all)
+
+[half, most]
+
+[most, at- all]
+
+��--�.�d
+
+.
+
+linguistic partition of the unit interval, can be recursively
+applied to any set of linguistic quantified statements of
+the form Q A(s are Bi's which form a probabilistic
+
+network. It is then possible to generate new statements of
+that kind, and to improve precision for the ones that were
+originally stated. Let us consider the following qualitative
+counterpart of a 5-predicate example of Amarger et al.
+(199la, b):
+
+•
+
+•
+
+•
+
+•
+
+•
+
+•
+•
+
+•
+
+•
+•
+
+•
+
+Most to almost all students are sportsmen (Q
+[most,
+al-all]
+Almost all students are young (Q = al-all)
+Half of the sportsmen are students (Q "' half)
+Almost all sportsmen are single (Q = al-all)
+At least almost all sportsmen are young (Q = [al-all,
+all])
+At least most singles are sportsmen (Q "' [most, all])
+Most singles are young (Q = most)
+Almost no singles have children (Q = al-none)
+Few young people are students (Q =few)
+Almost all young people are sportsmen (Q"' al-all)
+At most almost no young people have children (Q =
+[none, al-none]
+At most almost no people who have children are single
+(Q [none, al-none])
+At most almost no people who have children are young
+(Q [none, al-none))
+=
+
+=
+
+•
+
+=
+
+These statements are but examples and must not be
+examined as to their actual truthworthiness.
+Let us consider a 7-element partition as follows
+partition: (0, 0.2, 0.4, 0.6, 0.8, 1)
+� (none, al-none, few, half, most, al-all, all}.
+=
+
+The quantified syllogism rule is run until no
+improvement of the quantifiers, nor new statements can
+be generated. The following results were obtained :
+•
+
+•
+
+•
+
+At least few students are single (Q = [few, all])
+Not more than few sportsmen have children (Q =[none,
+few])
+From almost-none to half singles are students (Q = [at­
+none, half]).
+
+Let us consider now a 9-element partition as follows
+partition: (0, 0. 1 0.2, 0.4, 0.6, 0.8, 0.9,
+,
+
+;;>
+
+=
+
+•
+
+•
+
+S YMBOLIC CONSTRAINT
+PROPAGATION
+
+The quantified syllogism rule, as precomputed for a given
+
+•
+
+•
+•
+
+1)
+
+(none, al-none, v-few, few, half, most, v-many,
+al-all, all)
+
+where v =few stands for very-few ([0,1, 0.2)) and v-many
+stand for very many ([0.8, 0.9)). Using th e same input
+data, more results are obtained:
+
+At least half of the students are single (Q = [half, all))
+Not more than half of the students have children (Q =
+[none, half])
+Not more than very few sportsmen have children (Q =
+[none, v-few])
+Most to very many singles are sportsmen (Q = [most,
+v-many]).
+
+These results are consistent but strong e r than thos e
+obtained with the ?-element partition. It is interesting to
+compare them with the results of the numerical procedure
+that directly handles interval probabilities given below
+under the form of incidence matrices giving
+P(<column>kroW>):
+
+iltj:J_ut data
+
+student
+
+sp_ort
+
+_young
+
+children
+
+.ro.7oo.o.9oo1
+[0.400,0.600] [1.000,1.000
+sport
+si'!_gle
+[0.000,1.000] _10.700,0.900
+_y_oung J0.250,0.35Ql _10.800,0.900
+children _[0.000,1.0001 [0.000,1.0001
+student
+
+input data
+student
+sport
+si'!_gle
+young
+children
+
+jl.OOO, 1.0001
+
+sin.11;le
+
+[0.000,1.0001
+[0.800,0.8501
+n .ooo.1.ooo1
+[0.900,1.000]
+[0.000,0.0501
+
+[0.850,0.9501 .[0.000,1.000)
+[0.900,1.000] [O.OOO,l.OOQl
+_[0.600,0.800� _10.050,0.80Ql
+[1.000,1.000] [0.000,0.050]
+J0.000,0.05Ql _ll.OOO,l.OOOJ
+
+Inputdata
+saturated
+network
+
+student
+
+[1.000,1.000]
+_10.400,0.400�
+single
+[0.222,0.366]
+young
+[0.350,0.350]
+children _10.000,0.099]_
+student
+
+SJl.Ort
+
+saturated
+
+y oung
+
+student
+
+[0.850,0.8501
+[0.900,0.958]
+_10.800,0.8001
+[1.000,1.000]
+[0.000,0.0441
+
+network
+
+sport
+sin_gle
+young
+children
+
+sport
+
+single
+
+[0.900,0.9001
+_[1.000,1.0001
+.[0.700,0.7001
+[0.834,0.8881
+[0.000,0.127]
+
+[0.607 ,1.000]
+[0.850,0.850]
+r1.ooo.1.ooo1
+[0.900,0.9001
+[0.000,0.050]
+
+children
+
+[0.000,0.271
+[0.000,0.154
+_10.050,0.100
+[0.000,0.050
+[1.000,1.000
+
+Probabilitiesafter constraintpropagation
+The main difference between the numerical and the
+symbolic results appears on the last row. The symbolic
+inference approach was not able to deduce that almost
+nobody having children is a student, and very few are
+sportsmen. Note that we have tried to develop a
+qualitative version of the generalized Bayes rule using
+longest path algorithms and the product and quotient
+tables of computation. However no improvement of the
+results has been observed. More work is to be done along
+that line.
+
+81
+
+82
+
+Dubois, Prade, Godo, and Lopez de Mantaras
+
+9 C ONCLUDING REMARKS
+We have shown in this paper that a qualitative calculus
+for the probabilistic scale 'none', 'few', 'from few to
+most', 'most', 'all' can be developed in agreement with a
+numerical interpretation of probabilities, provided that the
+intended numerical meaning of 'few' is less than 33 % in
+any case and the one of 'most' is more than 66 %. These
+thresholds are quite in agreement with commonsense
+which seems to disagree that "most A's are B's" if less
+than 70 % of A's are B's, or that "few A's and B's'' when
+there are more than 30 % of A's which are B's. However
+it does not mean that humans are currently able to
+provide the correct (in the sense of probability calculus)
+qualitative values given by the rules derived in this paper.
+It is well known (e.g. Kahneman, Slavic and Tversky,
+1 980) that humans are often in trouble not only for
+correctly assessing probabilities, but also to make
+accurrate inference from them.
+One might wonder whether fuzzy intervals are useful or
+not in the modeling of linguistic quantifiers. Clearly the
+use of precise thresholds to delimit the extensions of
+"few", "half', "most" has something arbitrary. However
+since the linguistic computation tables obtained here are
+partially independent of the choice of the threshold, it
+turns out that using fuzzy partitions instead of non-fuzzy
+ones would not make much difference here, especially if a
+fuzzy partition is viewed as an imprecise specification of
+the thresholds between the meanings of the basic terms.
+Nevertheless fuzzy intervals remain useful in the scope of
+feeding numbers in probabilistic networks, from the
+knowledge of linguistic values, rather than reasoning
+with linguistic values. Indeed, when looking for the
+numerical interpretation of linguistic quantifiers, fuzzy
+intervals look like a more faithful model than crisp ones.
+But then the constraint propagation algorithms must be
+adapted to handle fuzzy upper and lower probabilities in
+the numerical setting. Applying fuzzy arithmetic to the
+quantified syllogism rule (as done by Dubois and Prade
+( 1988)) appears to be in total contrast with defining
+linguistic counterparts of numerical constraint
+propagation rules, as done here.
+Acknowledgments : This work is partially supported
+by the ESPRIT-Basic Research project n°3085, DRUMS.
+
+
+
+
+The behaviour of these small autonomous robots is
+
+In this paper we present some results obtained
+with a troupe of low-cost robots designed to
+cooperatively explore and adquire the map of
+unknown structured orthogonal environments. In
+order to improve the covering of the explored
+zone, the robots show different behaviours and
+cooperate by transferring each other the perceived
+environment when they meet. The returning
+robots deliver to a host computer their partial
+maps and the host incrementally generates the
+map
+
+of
+
+the
+
+environment
+
+by
+
+means
+
+of
+
+a
+
+possibility/ necessity grid.
+Keywords: uncertain reasoning in situated autonomous
+robots, map building with uncertainty, possibility/
+necessity theory
+
+1
+
+INTRODUCTION
+
+similar -to some degree- to that of ants in two aspects.
+First, in order to increase the coverage of the environment,
+the robots have a partially random moving behaviour; and
+second, the robots cooperate by transferring each other the
+perceived
+
+environment
+
+when
+
+they
+
+meet.
+
+Sharing
+
+information in this way, allows the host to get the
+information not only from the robots that successfully
+return after an exploratory run, but also some information
+from those that could not return, provided that they had
+encountered robots that safely returned. Using this multi­
+robot strategy to generate a model of the environment, we
+expect to achieve a better efficiency than that which would
+be obtained based only on a single expensive robot.
+The following section in this paper describes the structure
+and the behaviour of the robots. Then, we describe a
+statistical error analysis performed in order to know how
+the error intervals increase with the covered distance and
+the number of turns. This analysis will be used to model
+the environment by
+
+means
+
+of possibility/necesity
+
+With the aim of exploring an structured environment that
+
+techniques. The fourth
+
+is unknown but easily passable, a troupe of low cost,
+
+generation process based on the partial maps perceived by
+
+section describes the map
+
+small autonomous robots has been developed. These
+
+the successfully returning robots. Finally, we describe the
+
+robots follow the already classical line of insect robots
+
+results obtained to date, we briefly point to related work
+
+(Alami et al. 1993) (Brooks 1991). The goal of these
+
+and we mention some future work.
+
+autonomous robots is to explore and obtain partial
+information about an orthogonal environment and deliver
+this information to a host computer. Exploration is
+performed moving randomly and following walls (or
+obstacle edges) when detected. The computer host is
+expected to generate the most plausible map from the
+obtained information . This map models the environment
+in terms of degrees of possibility and necessity of the
+
+2
+STRUCTURE
+ROBOT
+
+OF
+
+EACH
+
+MOVILE
+
+Each robot has been designed with the aim of being small
+and cheap. They must have a high autonomy and be
+endowed with a low cost processor to memorise the
+perceived environment map.
+
+position of the detected walls and obstacles. The reason of
+choosing possibility/necessity techniques instead of
+
+The robots environment perception system and the
+
+probability is our need of an initial assigment of values
+
+communication with the host or with other robots is
+
+representing ignorance. Possibility theory allows a clear
+
+based
+
+representation of ignorance but probability does not.
+Regarding evidential theory, it is worth noticing that in
+
+communication process consists of delivering the
+environmental information of a robot and it can be
+
+our case Possibility and Necessity are in fact particular
+cases of Belief and Plausibility because our frame of
+
+stablished between a robot and the host as well as between
+two robots that meet along their exploration. Therefore,
+
+discernment is fl={ wall,-.wall}.
+
+on
+
+IR
+
+impulse
+
+modulated
+
+sensors.
+
+The
+
+this communication process allows to get all the
+
+352
+
+Lopez-Sanchez, Lopez de Mantaras, and Sierra
+
+information of non-returning mini robots that had been
+transferred to returning ones.
+
+2.1
+
+MECHANICAL
+
+CHARACTERISTICS
+
+Each robot is 21 em. length and 15 em. wide (see Fig. 1).
+It has three wheels, two of them are 5 em. steering wheels
+controlled by independent motors. The robots can reach a
+maximum speed up of 0.6 m/sec., and since the battery
+has about half hour of autonomy, each robot can do a
+maximum exploration of about 1000 m.
+
+P3= robot with "routine" behaviour.
+When the robot finds a frontal obstacle, the turn can be
+done to the right or to the left based also on a probability
+value P4. The robots having a probability P4<0.5 will
+show a tendency to turn to the right more often than to
+the left, whilst the robots having a probability P4>0.5
+will behave inversely.
+Consequently, the different robots of the exploration
+troupe will not show an identical behaviour. They can
+behave in six different ways corresponding to the different
+combinations of behaviours and turning tendencies.
+
+2.4
+
+- Impulse generators at each wheel for odometry.
+
+The control unit in each robot has been designed having in
+mind that the hardware had to be as simple as possible
+but, on the other hand, it had to allow achieving a
+behaviour sufficiently smart in order to navigate
+efficiently. Furthermore the robot had to be based on a
+hardware flexible enough to allow for experimentation of
+navigation and control strategies. These requirements have
+resulted in a design which contains three different
+functional modules : the navigation module that generates
+the trajectory to be followed; the steering module that
+controls the motors in order to follow the generated
+trajectory; and the perception mo dule that acquires
+information of the environment by means of IR sensors.
+The computer used to implement the navigation control
+unit is a 80C l86 with a 1MB RAM to store the perceived
+environment map. Finally, the steering control module is
+implemented on a 80C552 and operates with a resolution
+of 2 mm.
+
+- Five I.R. proximity sensors for frontal obstacles
+detection and for wall following.
+
+3
+
+Figure 1: Autonomous Mini-Robot
+
+2.1
+
+SENSING CAPABILITY
+
+Each robot is equipped with the following sensors:
+
+- A proximity sensor for the detection of the terrain
+horizontal discontinuities.
+- Safety micro switches for the detection of possible
+collision.
+- One omnidirectional IR Emitter/Receiver sensor to
+detect other robots and to transmit data
+- One IR Emitter with a scope of 90 degrees to
+generate a priority signal (right hand preference)
+
+2.3
+
+CONTROL SYSTEM
+
+NAVIGATION STRATEGY
+
+The navigation system incorporated to each robot has a
+partially random behaviour: The robot does a ±45° or
+
+±90° turn either randomly or when it detects an obstacle.
+The random turns are done with significantly different
+probabilities: PpP 2>P 3 , corresponding to three
+differentiated behaviours:
+P t =robot with an "Anxious" behaviour
+P 2=robot with "normal" behaviour
+
+ERROR ANALYSIS
+
+With the goal of studying the position error of each robot
+due to the imprecise odometry and to the imprecise
+steering, we have performed an analysis based on
+experimental data obtained from the real robots running
+straight (10 feet and 20 feet) and also turning 45 degrees
+left and 45 degrees right followed by a 10 feet straight run.
+We have performed 20 trials of each run and turning
+situation for each robot. With the data obtained, we have
+used the Kolmogorov normality test to verify that the
+experimental sample indeed follows a normal distribution
+both in the direction of the trajectory and in the direction
+perpendicular to the trajectory and we have tested that both
+distributions are independent. Based on this distributions
+we have determined the size of an error rectangle,
+comprising the 95% of the sample (which is elliptical
+shaped), associated to the final position of the robot after a
+straight run of I 0 feet. This rectangle is 2.5 inches (in the
+direction of the trajectory) x 1 1 inches (in the direction
+perpendicular to the trajectory) in the average. We have
+also experimentally concluded that the size of the error
+rectangle is proportional to the covered distance.
+Concerning the additional error due to turning, we have
+obtained that when the robots turn 45 degrees there is, in
+
+Incremental map generation
+
+the average, an error of about 2 degrees always towards the
+same direction. For example a robot with 2 degrees of
+error towards the left turns 43 degrees to the right instead
+of 45 degrees and turns about 47 degrees to the left instead
+of 45 degrees.
+
+3.1
+
+ERROR PROP�GA TION
+
+In free· space, a trajectory is composed of a set of
+alternating segments and turns. Given the error rectangle
+at the initial point of a trajectory, we want to determine
+the error rectangle at the end of each segment taking into
+account the turning error and the error accumulated along
+the segment. The next figure shows the error propagation
+after a right turn, a straight line, another right turn and
+finally another straight line.
+
+353
+
+the position of the walls detected (and followed) by the
+infrared sensors along the tr�ectory path, as well as the
+singular points detected, that is the wall ends and the
+corners. Due to the unavoidable odometry error, the
+position of the detected walls has an associated error. As
+we have explained in the last section, we have
+experimentally determined this error which has been
+approximated by a rectangle centered around the cell
+corresponding to the estimated position of the robot as
+shown in figure 3.
+
+.com� unicated
+_
+pOSitiOn
+
+• discretization
+
+of the error:
+errorx=5, error y=3
+
+Figure 3: Grid representation of a position and its
+associated error.
+Modelling the cenainty of detected walls
+
+Figure 2: Error propagation
+
+When following a wall, since the robot remains
+practically always at the same distance from the wall, the
+error along the direction orthogonal to the wall is taken to
+be constant and equal to the error that the robot has after
+turning to place itself parallel to the wall once the wall
+has been detected. This error analysis and error propagation
+study is performed on each robot and is used by the host
+to compute the possibility/necessity grid modelling the
+environment as described in the next section.
+
+4
+
+MAP GENERATION
+
+The space being explored by the robots is discretized by
+means of a grid. Cells in the grid represent a small area of
+the real environment and contain two values : the degree
+of possibility and the degree of necessity of the presence
+of obstacles. Initially, that is before any exploration has
+taken place, all the cells have a possibility value n of I
+and a necessity value N of 0. These initial values
+correpond to a situation of total ignorance according to the
+theory of possibility (Dubois and Prade 1988). As robots
+communicate the information gathered during their
+exploration, the possibility and necessity values are
+modified in a way that depends on the presence, or not, of
+obstacles. The information gathered by each robot is
+nothing else but the trajectory of the robot together with
+
+When an error rectangle is associated to a position that
+belongs to a detected wall, the occupancy certainty degree
+(that is the certainty about the presence of an obstacle in
+that position) is expressed by means of necessity values in
+every cell that results partially or totally covered by the
+error rectangle around that position. The necessity values
+decrease linearly with the magnitude of the error and
+remains positive (N(wall) = lX> 0) in the cells inside the
+error rectangle but gets the value 0 at the cells outside the
+limits of the rectangle. These values have been established
+with the aim of reflecting that, having detected some
+obstacle, the necessity that there is a wall cannot be
+longer zero but positive since a positive value denotes
+some certainty degree about the occupancy of the space.
+However this occupancy certainty degree decreases when
+the distance to the central cell of the error rectangle
+increases. Figure 4 a) shows this case. Notice that the
+possibility value is constantly equal to 1 in all the cells
+covered by the error rectangle.
+As we have already mentioned in the introduction, in our
+case Possibility and Necessity values are particular cases
+of Belief and Plausibility ones. We can easily see how our
+assigned values N(wall)=a>O and J1(wall)=l can be
+considered as Belief(wall) and Plausibility(wall)
+corresponding to the following basic probability
+assignment (b.p.a.):
+frame of discernment n= {wall,wall},
+with mass m:P(.Q) � [0, 11 .
+m(0)=0, m(wall)=a, m(wall)=O, m(il)=l-a.
+and therefore, we obtain:
+
+354
+
+Lopez-Sanchez, Lopez de Mantaras, and Sierra
+
+Bel(wall)= 2,P(A)=m(wall)+m(0)=a
+
+The computation of this height is done locally for each
+cell in the discretized environment grid on the basis of
+
+LP(A) m(wall)+ m(Q) =1- a
+
+Pl(wall) =
+
+=
+
+Af"'lwa/1;<0
+
+the pyramid base. This is done passing four different
+
+values among cells: er . ez, eu and ed which contain the
+
+Modelling the certainty of free space
+
+distance between the current position and each side of the
+
+On the other hand, paths along which there was no
+detection supply information of free space, that is ri(-,
+
+wall)=l and N(--, wall)>O, or equivalently, according to the
+axioms
+
+of
+
+necessity propagation. Such propagation starts at the
+central cell and spreads over all those cells laying within
+
+possibility
+
+theory,
+
+n (wall) < 1. This
+
+possibility value increases with the distance to the central
+cell of the error rectangle and reaches the value 1 at the
+cells outside the limits of the error rectangle. Obviously,
+
+we have N(wall) = 0 for all the cells covered by the error
+rectangle. Figure 4b shows this case.
+
+error rectangle, i.e. right, left, up and down respectively.
+This definition implies that their values are unitarily
+increased or decreased in each step of the propagation until
+
+they reach the zero value. Let errorx be the length of the
+error rectangle base, and let errory be the rectangle height,
+
+then the error values are initially assigned at the central
+cell as follows: e,=e[,=error x/2 and eu =ed = erro ryl2 and
+
+the following formulas are used to compute the height N
+
+corresponding to each cell within the error rectangle
+
+(Figure 5 shows schematically the propagation process):
+
+N=min(Nx ,Ny), where:
+lel-e,l
+el+e,
+x-err"
+N" = 1-�err =
+x=
+err"
+max error'
+2
+'
+"
+2
+
+Il(wall)=l
+
+Nr =1-
+
+N(wall)>O
+
+_Y_ -
+
+errY
+
+y - er r �
+'
+_;__ _ _ _
+max error
+
+e +e
+erry =-d
+2
+
+_
+_
+•
+
+• initial cell
+
+a)
+
+et = er=4
+e.= ed =2
+
+N= 1-{4/max_error)
+
+Il( wall)< I
+
+edge cell
+
+et = 8, er=O,
+e. =3, ed= 1
+N=O
+
+�wall�
+0
+
+1'--o'--oj'--oj:....lii:...C��
+a)
+
+b)
+
+N=height
+
+Figure 4:
+
+TI and N values assigned to cells corresponding
+
+to: a) wall detection, and b) free space.
+4.1
+
+N�
+
+VALUE ASSIGNMENT
+
+�
+
+eJ =
+
+The height of the pyramids in figure 4 are determined by
+the magnitude of the error. The underlying idea is to
+establish a linear error-height relation such that, a null
+
+0
+
+..._
+-fl
+
+e- ++
+
+et
+
+=
+
+er
+
+b)
+
+e- --
+
+er=
+
+0
+
+N-O
+
+e/ ++
+
+error implies the maximum allowed value of height (i.e.
+one), while an error too large implies a zero height since
+the information is no longer reliable. The error threshold
+that assigns a limit to a 'too large' error is established
+
+Figure 5: Value propagation: a) to adjacent cells, and b)
+along one dimension of the error rectangle.
+
+experimentally and is the same as the one that forces the
+robot to return from its exploration due to the irrelevancy
+of its later data. Summarising, the height values are
+obtained by applying the following formula:
+
+hezght
+.
+
+=
+
+1
+
+-
+
+c_ u_rr_ e_n_ t _e_rr _ o_ r
+maximum allowed error
+
+___
+
+__
+
+4.2
+
+COMBINATION OF VALUES
+
+The cell necessity and possibility values representing
+trajectories in free space and wall segments are propagated
+from a central cell to the cells around as we have seen
+above. In considering consecutive points along the
+trajectory of the robot or along a wall segment, some of
+
+355
+
+Incremental map generation
+
+the cells covered by the current pyramid might already
+have values assigned by previous pyramids, and as a
+
+independent wall detections in the same cell, and this
+
+consequence the new values must be the result of a
+combination between these old and new values. In the case
+
+support masses:
+
+of wall segments the values are necessities (increasing
+from 0) and are combined by using the max operation
+(figure 6 b). In the case of trajectories these values are
+possibilities (decreasing from 1) and are combined by
+means of the min operator. Figure 6 a) graphically shows
+the results of such combination
+
+operation is nothing but Dempster's rule for simple
+
+Bel;(wall) =a;
+
+i
+
+=
+
+1.2
+
+Belt2 (wall) =m1 $ m2 (wall)= a1 + a2 - a1 a2
+•
+
+(and m(.O)
+
+=
+
+(1- a,)· (1- a2 ))
+
+On the other hand, we also combine values coming from a
+single
+
+wall
+
+segment detection, and since we are
+
+considering non-independent evidences, Dempster's rule is
+not suitable for evidence combination. Instead, we have
+used a max-combination, a cautious operation whose
+results are still under the evidence theory framework.
+Indeed, max combination is in accordance with the so­
+called 'combination of compatible Belief functions'
+(Chateauneuf
+
+1994) that makes sense when interpreting
+
+Bel/Pl values as bounds of the probability measures
+consistent with them. Namely, let
+
+F;=12, = {PIB el;(A)� P(A)� Pl;(A)}
+
+a)
+
+be the family of such probabilities (Dempster 1967).
+Then, their natural combination can be taken as the
+intersection:
+
+F1.2 = Fr 11 F2 =
+{Pimax(Be/1 (A), Bel2 (A))� P(A)� min(P/1 (A), Pl2(A))}
+In general,
+
+inf
+
+PeF1r'IF2
+
+P(A) and
+
+suo
+
+PeFl'>F2
+
+P(A) are not a pair of
+
+Belief and Plausibility values (Chateauneuf 1994).
+However, in our particular case, this combination leads to
+a proper belief function. Indeed, the function
+
+b)
+
+Bel{; (wall)= inf
+
+Figure 6: Segment representation corresponding to: a)
+trajectories (possibility pyramids), and b) walls (necessity
+pyramids ).
+When the same portion of a wall has been detected twice
+(or more) indepently, the necessities are combined by
+means of the probabilistic sum, that is S(x,y)
+
+=
+
+x+y-
+
+xy,
+
+in order to reinforce the certainty about the location of the
+wall. Figure
+
+Be/P is
+
+defmedas
+
+7 shows this situation
+
+PEF1rtF2
+
+=
+
+P (A) = max(Bel1(wall), Bel2(wall)) =
+
+max(a1, a2)
+
+Be(2 (0)= Belt2 (-.wall)= 0
+Belt2 (0.)
+a belief
+
+=
+
+1
+
+function whose corresponding mass assignments
+
+are :
+
+m(wall)= max(a1, a2)
+
+m(0)
+
+=
+
+m(-.wall)= 0
+
+m(!l)= l-max(a.,a2)
+Moreover, in this particular case, this max-combination is
+also in accordance with a new combination operation
+
+proposed in (Torra
+
+5
+
+RESULTS
+
+Figure
+Figure 7: Reinforcement combination of two wall
+segments.
+Following the interpretation of the Possibility/Necessity
+assignments as Belief/Plausibility values, we can justify
+now the use of the two different combination rules
+described above. On one hand, we have already seen that
+we
+
+apply
+
+the
+
+probabilistic
+
+sum when combining
+
+1995).
+
+8 shows some of the results obtained, in
+
+simulation, with three robots departing from the point
+labelled "I" and taking into account the error position
+propagation along the trajectories.
+
+The
+
+orthogonal
+
+environment is represented by straight continuous lines,
+the trajectories by dark grey and the detected walls and
+obstacles by medium grey and the singular points by light
+grey. The darker the color along the three trajectories, the
+smaller the possibility value rr of existence of a wall or
+
+356
+
+Lopez-Sanchez, Lopez de Mantaras, and Sierra
+
+Figure 8: Global map obtained from three partial maps by three robots. 'I' indicates the exploration initial position of the
+robots.
+the sense that e�ch point i� the map has a degree of being
+obstacle. For the detected wall segments, the lighter the
+em�ty and of bemg �ccupied however their approach ijSes
+grey the smaller the certainty value N of the wall or
+straight fuzzy sets �nstead o� dual possibility/necessity
+obst�cle being in that position. The grey degradation in
+measures, another difference IS tha� th� y work with only
+the smgular points als? reflects the decrease of certainty
+.
+one robot and therefore no �ooperatlon IS mvolved, finally
+_ actual positiOn. The exploration stops when
+about their
+_
+they use ultrasomc sensors mstead of infrared ones and as
+the cumulated error is higher than a previously set value.
+a consequence the error accumulates faster than in our
+approach. The main consequence of working with only
+6 RELATED WORK
+one robot and less precise sensors is that the maps built
+are significantly smaller.
+There are quite a few works addressing the problem of map
+building. (Betge-Brezetz et al. 1996) use landmarks,
+CONCLUSIONS AND FURTHER
+7
+defined as object features, to model natural environments
+WORK
+an� the uncertainty associated to their position is
+estimated by means of probabilistic techniques assuming a
+The real robots are now working with a contour-based
+gaussian distribution of the uncertainty. In the case of
+map building method also based on fuzzy techniques but
+certainty grid representations, the probabilistic approach
+we
+have detected some shortcomings due to the globality
+has been also widely used to estimate the probability of
+of the computational process involved, such shortcomings
+cell occupancy (Moravec and Elfes 1985, Lim and Cho
+obliged us to adopt some ad hoc solutions during the
+19?2, Pagac e_t a!. 1996). Probabilistic techniques are
+proces
+of map completion (see Amat et al. 1995). The
+reliable only If enough sensor data is available and,
+grid-based
+method presented here is completely based on a
+furt�ermore, if the data is well distributed in the explored
+local computation process (the propagation of possibility
+envuonment and this distribution can be easily obtained.
+and necessity values from a cell to their neighbours),
+A very natural alternative when these conditions are not
+exploits
+better the information about free space conveyed
+met is provided by fuzzy set theory. (Kim et al 1994) use
+by
+the
+trajectories,
+takes advantage of the fact that
+fuzzy numbers to model the uncertainty of the parameters
+possibility
+and
+necessity
+are dual measures and,
+of geometric primitives and coordinate transformations
+furthermore,
+is
+computationally
+simpler. we are now in
+used to describe natural environments. (Poloni et al. 1995)
+the
+process
+of
+incorporating
+this
+new
+approach to the real
+have also used fuzzy logic to build maps of unknown
+robots. On the other hand, further work is also in progress
+office-like environments. Their work is similar to ours in
+regarding the problem of planning additional trajectories
+
+Incremental map generation
+
+towards zones of the environment poorly explored. In the
+long term we also plan to address the problem of learning
+h ighe r level environment concepts ("corner", "door", etc.)
+based on sequences of sensor radings, i.e. we plan to
+address the problem of symbol grounding at least in
+simple orthogonal environments
+Acknowledgments
+
+We would like to thank our colleague Dr. Lluis Godo for
+h i s helpful c ontrib ut i ons and comments about the
+theoretical aspects of this work .
+The robots have been designed and built under the
+supervisi on of Prof. Jo se p Amat at the LSI department
+(UPC, Barcelona, Spain).
+References.
+
+Alami R. ,Cha t il l a R., Espiau B . , "Designing an
+Intelligent Control Architecture for Autonomous Robots"
+In Proceedings of the 7th International Conference on
+Advanced Robotics, Tokyo, 1993.
+,
+
+Amat J., Lopez de Mantaras R. and Sierra C.
+"Cooperative autonomous robots for exploring unknown
+environments". In Proceedings of the 4th International
+Symposium on Experimental Robotics, 1995. pp 28-33.
+Betge-Brezetz S., Hebert P., Chatila R. and Devy M.,
+"Uncertain Map Making in Natural Environments". In
+Proceedings of the IEEE: International Conference on
+Robotics and Automation., pp I 048-1053, 1996.
+Brooks R. A., "Intelligence Without Reason" In
+Proceedings of International Joint Conference of Artificial
+Intelligence, pp 569-595, Sydney, A ustrali a 1991.
+,
+
+Chateauneuf, A. "Combination of Compatible Belief
+functions and relation of specificity " . In Advances in
+Dempster-Shafer Theory of Evidence, Wiley, New York,
+pp 97-114, 1994.
+Dempster, A.P. "Upper and lower probabilities induced by
+a multivalued mapping . In Annals of Mathematical
+Statistics, Vol 38, pp 325-339, 1967.
+"
+
+Dubois D., Prade H., "Possibility Theory", Plenum
+Press, New York, 1988.
+Kim W. J., J. Hyup Ko and M. Jin Chung, "Uncertain
+robot environment modelling using fuzzy numbers",
+Fuzzy Sets and Systems. Vol 61, pp 53-62, 1994.
+
+Lim, J.H. and Cho, D.W. "Phisically Based Sensor
+Modelling for Sonar Map in Specular Environment". In
+Proceedings of the IEEE: International Conference on
+Robotics and Automation., pp 1714-1719, 1992.
+Movarec, H. P.and Elfes, A. "Hight Resolution Maps
+from Wide Angle Sonar". In Pr ocee dings of the IEEE
+International Conference on Robotics and Automation, pp
+116-121, 1985.
+
+Pagac D., Nebot E. M. and Durrant-White H. "An
+evidential approach to probabilistic m ap-buildin g". In
+
+357
+
+Pr oceedings of the IEEE :International Conference on
+pp 745-750, 1996.
+
+Robotics and Automation.,
+
+Poloni M., Ulivi G. and Vendittelli M. "Fuzzy logic and
+autonomous vehicles: Experiments in ultrasonic vision".
+Fuzz y Sets and Systems. Vol 69, pp 15-27, 1995.
+
+Torra, V. "A new combination Function in Evidence
+Theory". In International Journal of Intelligent Systems
+(IJIS). Vol 10, n.12, 1995.
+
+
+
+—This paper presents a new type of evolutionary
+algorithm (EA) based on the concept of “meme”, where the
+individuals forming the population are represented by semantic
+networks and the fitness measure is defined as a function of the
+represented knowledge. Our work can be classified as a novel
+memetic algorithm (MA), given that (1) it is the units of culture,
+or information, that are undergoing variation, transmission,
+and selection, very close to the original sense of memetics as
+it was introduced by Dawkins; and (2) this is different from
+existing MA, where the idea of memetics has been utilized as a
+means of local refinement by individual learning after classical
+global sampling of EA. The individual pieces of information are
+represented as simple semantic networks that are directed graphs
+of concepts and binary relations, going through variation by
+memetic versions of operators such as crossover and mutation,
+which utilize knowledge from commonsense knowledge bases.
+In evaluating this introductory work, as an interesting fitness
+measure, we focus on using the structure mapping theory of
+analogical reasoning from psychology to evolve pieces of information that are analogous to a given base information. Considering
+other possible fitness measures, the proposed representation and
+algorithm can serve as a computational tool for modeling memetic
+theories of knowledge, such as evolutionary epistemology and
+cultural selection theory.
+
+I. I NTRODUCTION
+The idea that a simple progression of variation, natural
+selection, and heredity can account for the great complexity
+and apparent design observed in living beings has eventually
+led to the formulation of Universal Darwinism, generalizing
+the mechanisms and extending the domain of this process
+to systems outside biology, including economics, psychology,
+physics, and even culture [1], [2]. Within this larger framework, the concept of meme introduced by Dawkins as an
+evolving unit of culture—or information, idea, or belief—
+analogous to a gene [3], hosted, altered, and reproduced in
+individuals’ minds, forms the basis of the field of memetics1 .
+Within the discipline of evolutionary computation, the
+recently maturing field of memetic algorithms (MA) has
+experienced increasing interest as a successful method for
+solving many hard optimization problems [4], [5], [6]. The
+existing formulation of MA is essentially a hybrid approach,
+combining classical evolutionary algorithms (EA) with local
+search, where the population-based global sampling of EA in
+1 Quoting
+
+Dawkins [3]: “Examples of memes are tunes, ideas, catchphrases, clothes fashions, ways of making pots or of building arches. Just
+as genes propagate themselves in the gene pool by leaping from body to body
+via sperms or eggs, so memes propagate themselves in the meme pool by
+leaping from brain to brain...”
+
+∗ Artificial
+
+Ramon López de Mántaras∗
+
+Intelligence Research Institute, IIIA - CSIC
+Campus Universitat Autònoma de Barcelona
+08193 Bellaterra, Spain
+Email: mantaras@iiia.csic.es
+
+each generation is followed by a local search, or learning,
+performed by each candidate solution. For this reason, this
+approach has been often referred to under different names
+besides MA, such as “hybrid EAs” or “Lamarckian EAs”. To
+date, MAs have been successfully applied to a wide variety of
+problem domains such as NP-hard optimization problems [7],
+[8], engineering [9], machine learning [10], [11], and robotics
+[12].
+The aim of this study is to propose a computational model
+comprising a meme pool subject to variation and selection
+that will be able to evolve pieces of knowledge under a given
+memetic fitness measure, paralleling the existing use of EA in
+solving optimization problems. While this approach is based
+on memetics, it is unlike the existing sense of the word in current MA (as an hybridization of local search into EA). Rather,
+it is intended as a new tool focused exclusively on the memetic
+evolution of knowledge itself, which can find use in fields such
+as knowledge-based systems, reasoning, and computational
+creativity. As the basis of our approach, we introduce a solution representation based on semantic networks [13]. These
+are a simple type of formal representation for ontologies,
+formed by graphs where vertices correspond to concepts and
+edges correspond to directed relations (Fig. 1). To operate on
+these structures, we adapt variation operators such as crossover
+and mutation to manipulate concepts and relations, utilizing
+the commonsense knowledge bases of ConceptNet [14] and
+WordNet [15]. From the perspective of representation and
+genetic operators, our approach is partly similar to the use of
+tree structures in genetic programming [16] and the approaches
+of genetic network programming [17], [18], parallel distributed
+genetic programming [19], and evolutionary graph generation
+[20].
+In this paper, we present three main contributions:
+•
+
+•
+
+•
+
+Using semantic networks for encoding individual memotypes, where graphs formed by concepts and relations
+represent units of evolving knowledge.
+Introducing operations for evolutionary variation, such
+as mutation and crossover, that are adapted to work on
+semantic networks.
+Introducing a memetic fitness measure for evolutionary
+selection to evaluate our implementation, based on the
+structure mapping theory from psychology.
+
+Following an overview of our approach, the paper presents
+implementation details of the proposed algorithm in Section II.
+
+think
+city
+CapableOf
+AtLocation
+
+human
+Desires
+Desires
+IsA
+
+cake
+
+Causes
+
+UsedFor
+
+animal
+
+CreatedBy
+Desires
+
+bake
+
+learn
+
+eat
+read
+
+IsA
+
+bird
+CapableOf
+
+fly
+
+Fig. 1.
+
+A semantic network with 11 concepts and 11 relations.
+
+We evaluate the method with experiments presented in Section III and conclude the paper and discuss future work in
+Section IV.
+II. A N EW T YPE OF M EMETIC A LGORITHM
+Our algorithm proceeds similar to conventional EA, with
+a relatively small set of parameters. We implement semantic
+networks as linked-list data structures of concept and relation
+objects. The descriptions of representation, memetic variation,
+fitness evaluation, and selection steps are presented in the
+following sections. The parameters affecting each step of the
+algorithm (Algorithm 1) are given in Table I.
+Algorithm 1 The proposed memetic algorithm
+1: procedure M EMETIC A LGORITHM
+2:
+P (t = 0) ← I NITIALIZE(P opsize , Cmax , Rmin , T )
+3:
+repeat
+4:
+φ(t) ← E VALUATE F ITNESSES(P (t))
+5:
+S(t) ← S ELECTION(P (t), φ(t), Ssize , Sprob )
+6:
+V (t) ← VARIATION(S(t), Pc , Pm , T )
+7:
+P (t + 1) ← V (t)
+8:
+t←t+1
+9:
+until stop criterion
+10: end procedure
+
+IsA(bird, animal)2 ) describing a subsumption hierarchy that
+is true by definition; in assertional networks, the relations
+describe instantiations and assertions that are contingently true
+(e.g. AtLocation(human, city)) [13]. In this study we combine the two approaches for increased expressivity (Fig. 1).
+As such, semantic networks provide a simple yet powerful
+means to represent the “memes” of Dawkins as data structures
+that are algorithmically manipulatable, allowing a procedural
+implementation of memetic evolution.
+There are several existing algorithms using graph-based
+representations for the encoding of candidate solutions in EA
+[21]. The most notable work among these is genetic programming (GP) [16], where candidate solutions are pieces of computer program represented in a tree hierarchy, which is actually
+a specific type of graph structure [21]. In parallel distributed
+genetic programming (PDGP) [19], the restrictions of the tree
+structure of GP is relaxed by allowing multiple outputs from a
+node, which allows a high degree of parallelism in the evolved
+programs. In evolutionary graph generation (EGG) [20] the
+focus is on evolving graphs with applications in electronic
+circuit design. Genetic network programming (GNP) [17], [18]
+introduces compact networks with conditional branching and
+action nodes; and similarly, neural programming (NP) [22]
+combines GP with artificial neural networks for the discovery
+of network structures via evolution.
+The use of a graph-based representation makes the design of
+variation operators specific to graphs necessary. In works such
+as GNP, this is facilitated by using a string-based encoding of
+node names, types, and connectivity, permitting operators very
+close to their counterparts in conventional EA; and in PDGP,
+the operations are simplified by making nodes occupy points
+in a fixed-size two-dimensional grid. What is common with
+GP related algorithms is that the output of each node in the
+graph can constitute an input to another node. In comparison,
+the range of connections that can form a semantic network
+of a given set of concepts is limited by commonsense knowledge, i.e. the relations have to make sense to be useful (e.g.
+IsA(bird, animal) is meaningful while Causes(bird, table)
+is not). To address this issue, we introduce new crossover
+and mutation operations for memetic variation, making use
+of commonsense reasoning [23], [14] and adapted to work on
+semantic networks.
+B. Commonsense Knowledge Bases
+
+A. Representation: Semantic Networks as Memes
+The algorithm is centered on the use of semantic networks
+[13] for encoding evolving memotypes. A semantic network is
+a graphic notation for the representation of knowledge in the
+form of sets of vertices representing concepts, interconnected
+by edges representing relations (Fig. 1). This type of graph
+representation has found use in many subfields of artificial
+intelligence, including natural language processing, machine
+translation, and information retrieval. Constructs resembling
+semantic networks have long been in use also in other fields
+such as philosophy and linguistics.
+An important characteristic of a semantic network is
+whether it is definitional or assertional: in definitional
+networks the emphasis is on taxonomic relations (e.g.
+
+Commonsense reasoning refers to the type of reasoning
+involved in everyday human thinking, based on commonsense
+knowledge that an ordinary person is expected to know, or
+“the knowledge of how the world works” [23]. Commonsense
+knowledge bases such as the ConceptNet3 project of MIT
+Media Lab [14] and Cyc4 maintained by Cycorp company
+are set up to assemble and classify commonsense information.
+The lexical database WordNet5 maintained by the Cognitive
+Science Laboratory at Princeton University also has charac2 Here we adopt the notation IsA(bird, animal) to mean that the concepts
+bird and animal are connected by the directed relation IsA, i.e. “bird is an
+animal.”
+3 http://conceptnet.media.mit.edu
+4 http://www.cyc.com
+5 http://wordnet.princeton.edu
+
+teristics of a commonsense knowledge base, via synonym,
+hypernym6 , and hyponym7 relations [15].
+In our implementation we make use of ConceptNet version
+4 and WordNet version 3 to obtain and process commonsense
+knowledge, where ConceptNet contributes around 560,000
+definitional and assertional relations involving 320,000 concepts and WordNet contributes definitional relations involving
+around 117,000 synsets8 , as of the writing of this article.
+The hypernym and hyponym relations among noun synsets
+in WordNet provide a reliable collection of IsA relations. In
+contrast, the variety of assertions in ConceptNet, contributed
+by volunteers across the world, makes it more prone to noise.
+We address this by ignoring all assertions with a reliability
+score (determined by contributors’ voting) below a set minimum Rmin (Table I).
+C. Initialization
+At the start of a run, the population of size P opsize
+is initialized with individuals created by random semantic
+network generation (Algorithm 1). This is achieved by starting
+from a network comprising only one concept randomly
+picked from commonsense knowledge bases and running
+a semantic network expansion algorithm that (1) randomly
+picks a concept in the given network (e.g. human); (2)
+compiles a list of relations—from commonsense knowledge
+bases—that the picked concept can be involved in (e.g.
+{CapableOf (human, think), Desires(human, eat), · · ·})
+(3) appends to the network a relation randomly picked from
+this list, together with the other involved concept; and (4)
+repeats this until a given number of concepts has been
+appended or a set timeout T has been reached (covering
+situations where there are not enough relations). Figure 1
+presents a random semantic network created this way. Note
+that even if grown in a random manner, the network itself is
+totally meaningful because it is a combination of information
+from commonsense knowledge bases.
+The initialization algorithm depends upon the parameters of
+Cmax , the maximum number of initial concepts, and Rmin ,
+the minimum ConceptNet relation score (Table I).
+D. Selection
+After the assignment of a fitness value to each individual
+in the current generation (Section II-F), all individuals in the
+population are replaced with offspring generated by variation
+operators applied on parents. The parents are probabilistically
+selected from the population according to their fitness, with
+reselection allowed. While individuals with a higher fitness
+have a better chance of being selected, even individuals with
+low fitness have a chance to produce offspring, however
+small. In our experiments we employ tournament selection
+(Section III).
+In each cycle of the algorithm, crossover is applied to parents selected from the population until P opsize × Pc offspring
+are created (Table I). Mutation is applied to P opsize × Pm
+selected individuals, supplying the remaining part of the next
+
+generation (i.e. Pc + Pm = 1). We also employ elitism, by
+replacing a randomly picked offspring in the next generation
+with the individual with the current best fitness.
+E. Memetic Variation Operators
+In contrast with existing graph-structured evolutionary approaches such as GP, PDGP, and GNP that we have discussed
+in Section II-A, our representation does not permit arbitrary
+connections between different nodes and requires variation
+operators that should be based on information provided by
+commonsense knowledge bases.
+This means that any variation operation on the individuals
+should: (1) preserve the structure within boundaries set by
+commonsense knowledge; and (2) ensure that even vertices
+and edges randomly introduced into a semantic network connect to existing ones through meaningful relations.
+Here we present commonsense crossover and mutation
+operators specific to semantic networks.
+1) Commonsense Crossover: In classical EA, features representing individuals are commonly encoded as linear strings
+and the crossover operation simulating genetic recombination
+is simply defined as a cutting and merging of this one dimensional object from two parents; and in graph-based approaches
+such as GP, subgraphs can be freely exchanged between parent
+graphs [24], [16], [21]. Here, as mentioned, the requirement
+that a semantic network has to make sense imposes significant
+constraints on the nature of recombination.
+We introduce two types of commonsense crossover that
+are tried in sequence by the variation algorithm. The first
+type attempts a sub-graph interchange between two selected
+parents similar to common crossover in standard GP; and
+where this is not feasible due to the commonsense structure
+of relations forming the parents, the second type falls back to
+a combination of both parents into a new offspring.
+Type I (subgraph crossover): A pair of concepts, one
+from each parent, that are interchangeable9 are selected
+as crossover concepts, picked randomly out of all possible
+such pairs. For instance, in Figure 2, bird and airplane
+are interchangeable, since they can replace each other in
+the relations CapableOf (·, f ly) and AtLocation(·, air).
+In each parent, a subgraph is formed, containing: (1)
+the crossover concept; (2) the set of all relations, and
+associated concepts, that are not common with the other
+crossover concept (In Figure 2 (a), HasA(bird, f eather)
+and
+AtLocation(bird, f orest);
+and
+in
+(b)
+HasA(airplane, propeller),
+M adeOf (airplane, metal),
+and U sedF or(airplane, travel)); and (3) the set of all
+relations and concepts connected to these (In Figure 2 (a)
+P artOf (f eather, wing) and P artOf (tree, f orest); and in
+(b) M adeOf (propeller, metal)), excluding the ones that are
+also one of those common with the other crossover concept
+(the concept f ly in Figure 2 (a), because of the relation
+CapableOf (·, f ly)). This, in effect, forms a subgraph of
+information specific to the crossover concept, which is
+insertable into the other parent. Any relations between the
+subgraph and the rest of the network not going through the
+
+6Y
+
+is a hypernym of X if every X is a (kind of) Y (IsA(dog, canine)).
+is a hyponym of X if every Y is a (kind of) X.
+8 A synset is a set of synonyms that are interchangeable without changing
+the truth value of any propositions in which they are embedded.
+7Y
+
+9 We define two concepts from different semantic networks as interchangeable if both can replace the other in all, or part, of the relations the other is
+involved in, queried from commonsense knowledge bases.
+
+crossover concept are severed (e.g. U sedF or(wing, f ly) in
+Figure 2 (a)). The two offspring are formed by exchanging
+these subgraphs between the parent networks (Figure 2 (c)
+and (d)).
+Type II (graph merging crossover): A concept from each
+parent that is attachable10 to the other parent is selected as
+a crossover concept. The two parents are merged into an
+offspring by attaching a concept in one parent to another
+concept in the other parent, picked randomly out of all possible
+attachments (CreatedBy(art, human) in Figure 3. Another
+possibility is Desires(human, joy).). The second offspring is
+formed randomly the same way. In the case that no attachable
+concepts are found, the parents are merged as two separate
+clusters within the same semantic network.
+2) Commonsense Mutation: We introduce several types of
+commonsense mutation operators that modify a parent by
+means of information from commonsense knowledge bases.
+For each mutation to be performed, the type is picked at
+random with uniform probability. If the selected type of
+mutation is not feasible due to the commonsense structure of
+the parent, another type is again picked. In the case that a set
+timeout of T trials has been reached without any operation,
+the parent is returned as it is.
+Type I (concept attachment): A new concept randomly
+picked from the set of concepts attachable to the parent is
+attached through a new relation to one of existing concepts
+(Figure 4 (a) and (b)).
+Type IIa (relation addition): A new relation connecting two
+existing concepts in the parent is added, possibly connecting
+unconnected clusters within the same network (Figure 4 (c)
+and (d)).
+Type IIb (relation deletion): A randomly picked relation in
+the parent is deleted, possibly leaving unconnected clusters
+within the same network (Figure 4 (e) and (f)).
+Type IIIa (concept addition): A randomly picked new concept is added to the parent as a new cluster (Figure 4 (g) and
+(h)).
+Type IIIb (concept deletion): A randomly picked concept is
+deleted with all the relations it is involved in, possibly leaving
+unconnected clusters within the same network (Figure 4 (i)
+and (j)).
+Type IV (concept replacement): A concept in the parent,
+randomly picked from the set of those with at least one interchangeable concept, is replaced with one of its interchangeable
+concepts, again randomly picked. Any relations left unsatisfied
+by the new concept are deleted (Figure 4 (k) and (l)).
+F. Fitness Measure
+Since the evolving individuals in our approach represent
+pieces of knowledge, or memes, the fitness measure for evolutionary selection is defined as a function of the represented
+knowledge. In Section III we define a memetic fitness measure
+based on the structure mapping theory from psychology [25],
+to evaluate our approach. The simple fitness function used
+in this introductory study can be extended to take graphtheoretical properties of semantic networks into account, such
+10 We define a distinct concept as attachable to a semantic network if at
+least one commonsense relation connecting the concept to any of the concepts
+in the network can be discovered from commonsense knowledge bases.
+
+as the number of nodes or edges, shortest path length, or the
+clustering coefficient [26].
+Another interesting possibility is to make the inclusion
+of certain concepts a requirement, allowing the discovery of
+memes formed around a given set of seed concepts. This can
+be also achieved through starting the initialization procedure
+described in Section II-C with the given concepts.
+A direct and very interesting application of our approach
+would be to devise experiments with realistically formed
+fitness functions modeling selectionist theories of knowledge,
+which remain untested until this time. One such theory is
+the evolutionary epistemology of Campbell [2], describing
+the development of human knowledge and creativity through
+selectionist principles such as blind variation and selective
+retention (BSVR).
+III. E XPERIMENTS AND R ESULTS
+To evaluate our approach, we first introduce a fitness
+measure based on structure mapping. The rest of this section
+then summarizes our choice of parameters and results from
+experiments.
+A. Analogy with a Given Semantic Network
+As a simple and interesting memetic fitness function, we
+introduce analogical similarity with a given semantic network,
+utilizing the Structure Mapping Engine (SME) [27], [28].
+SME is an algorithm implementing the psychological structure
+mapping theory of Gentner [25], often cited as the most
+influential work on modeling analogy-making [29]. Using the
+analogical matching score from SME as a fitness measure, our
+algorithm can evolve collections of information, or memes,
+that are analogous to a given one.
+SME is based on the idea that an analogy is a one-to-one
+mapping from one domain (the base) into another (the target),
+which correspond, in our fitness measure, to the semantic network supplied at the start and the individual networks whose
+fitnesses are evaluated by the function. The mapping is guided
+by the structure of relations between concepts in the two
+domains, ignoring the semantics of the concepts themselves;
+and is based on the systematicity principle, where connected
+knowledge is preferred over independent facts and is assigned
+a higher matching score. A commonly used example is the
+analogy between the Solar System and the Rutherford–Bohr
+model of the atom [25], where sun and planet in the first
+domain are analogous to nucleus and electron in the second
+domain. The labels and structure of relations in the two
+domains (e.g. {Attracts(sun, planet), Orbits(planet, sun),
+· · ·} and {Attracts(nucleus, electron), Orbits(electron,
+nucleus), · · ·}) define and constrain the possible mappings
+between concepts in the two domains that can be formed by
+SME.
+We make use of our own implementation of SME based
+on the original description by Falkenhainer [27] and adapt it
+to the simple concept–relation structure of semantic networks,
+by mapping the predicate calculus constructs of entities into
+concepts, relations to relations, attributes to IsA relations,
+and excluding functions.
+
+(a) Parent 1
+
+(b) Parent 2
+lift
+
+metal
+MadeOf
+
+PartOf
+
+propeller
+HasA
+
+UsedFor
+
+wing
+
+fly
+
+MadeOf
+
+travel
+
+Causes
+
+CapableOf
+
+feather
+
+airplane
+air
+PartOf
+
+AtLocation
+
+bird
+
+AtLocation
+
+CapableOf
+
+air
+
+oxygen
+forest
+
+fly
+CapableOf
+
+PartOf
+
+kite
+
+(c) Offspring 1
+Fig. 2.
+
+AtLocation
+
+HasA
+
+tree
+
+(d) Offspring 2
+
+Commonsense crossover type I (subgraph crossover), centered on the concepts of bird for parent 1 and airplane for parent 2.
+
+notes
+PartOf
+
+music
+Causes
+
+UsedFor
+
+art
+IsA
+
+Causes
+
+joy
+
+violin
+HasA
+
+PartOf
+
+music
+UsedFor
+
+violin
+
+(a) Parent 1
+
+Causes
+
+art
+
+AtLocation
+
+brain
+
+notes
+
+IsA
+
+planet
+
+human
+
+CreatedBy
+
+IsA
+
+Causes
+IsA
+
+IsA
+
+earth
+
+human
+AtLocation
+
+(b) Parent 2
+
+woman
+HasA
+
+HasA
+
+woman
+
+joy
+
+planet
+
+IsA
+
+earth
+
+HasA
+
+brain
+
+(c) Offspring
+
+Fig. 3. Commonsense crossover type II (graph merging crossover), merging by the relation CreatedBy(art, human). If no concepts attachable through
+commonsense relations are encountered, the offspring is formed by merging the parent networks as two separate clusters within the same semantic network.
+
+B. Results
+In this introductory study, we adopt values for crossover
+and mutation probabilities similar to earlier studies in graphbased EA [24], [16] (Table I). We use a crossover probability
+of Pc = 0.85, and a somewhat-above-average mutation rate of
+Pm = 0.15, accounting for the high tendency of mutation
+postulated in memetic literature11 . We employ tournament
+selection, meaning that for each selection, a “tournament” is
+held among a few randomly chosen individuals, and the more
+fit individual of each successive pair is the winner according
+to a winning probability. In our experiments, we subject a
+11 See
+
+Gil-White [30] for a review and discussion of mutation in memetics.
+
+population of P opsize = 200 individuals to tournament selection with tournament size Ssize = 8 and winning probability
+Sprob = 0.8.
+Using this parameter set, we present the results from two
+runs of experiment: evolved analogies for a network describing
+some basic astronomical knowledge are shown in Figure 5
+and for a network of familial relations in Figure 6. We show
+in Figure 7 (a) the progress of the best and average fitness
+in the population during the run that produced the results in
+Figure 5. The best and average size of semantic networks
+forming the individuals are shown in Figure 7 (b). We observe
+that evolution asymptotically reaches a fitness plateau after
+about 40 generations. This coincides roughly with the point
+
+home
+
+eat
+
+dessert
+
+dessert
+
+home
+AtLocation
+
+IsA
+
+eat
+Desires
+
+UsedFor
+
+IsA
+
+AtLocation
+
+Desires
+
+UsedFor
+
+IsA
+
+person
+cheesecake
+
+person
+
+IsA
+
+CapableOf
+
+dessert
+
+dessert
+
+cheesecake
+
+walk
+
+(a) Mutation type I (before)
+
+(b) Mutation type I (after)
+
+cake
+
+(c) Mutation type IIa (before)
+
+(d) Mutation type IIa (after)
+
+sweet
+
+sweet
+
+eat
+
+HasProperty
+
+dessert
+dessert
+IsA
+
+cheesecake
+
+IsA
+
+cheesecake
+
+cheesecake
+
+IsA
+
+(e) Mutation type IIb (before)
+
+IsA
+
+IsA
+
+IsA
+
+cheesecake
+
+IsA
+
+cake
+
+(f) Mutation type IIb (after)
+
+person
+
+IsA
+
+cake
+
+cake
+
+UsedFor
+
+dessert
+
+IsA
+
+IsA
+
+eat
+
+HasProperty
+
+UsedFor
+
+dessert
+
+IsA
+
+IsA
+
+cake
+
+cake
+
+(g) Mutation type IIIa (before)
+
+(h) Mutation type IIIa (after)
+
+eat
+
+sweet
+
+sweet
+
+eat
+
+HasProperty
+
+dessert
+
+HasProperty
+
+UsedFor
+
+home
+
+UsedFor
+
+university
+
+dessert
+AtLocation
+
+AtLocation
+
+eat
+
+IsA
+IsA
+
+cheesecake
+
+UsedFor
+
+IsA
+
+dessert
+
+IsA
+
+person
+
+UsedFor
+
+CapableOf
+
+(j) Mutation type IIIb (after)
+Fig. 4.
+
+Desires
+
+dessert
+
+cake
+
+cake
+
+(i) Mutation type IIIb (before)
+
+eat
+Desires
+
+person
+CapableOf
+
+walk
+
+(k) Mutation type IV (before)
+
+walk
+
+(l) Mutation type IV (after)
+
+Examples illustrating the types of commonsense mutation used in this study.
+
+where the size of the best individual becomes comparable with
+that of the given base semantic network (Figure 5), after which
+improvements in the one-to-one analogy become sparser.
+Our experiments demonstrate that the proposed algorithm is
+capable of spontaneously creating collections of knowledge
+analogous to the one given in a base semantic network, with
+very good performance. In most cases, our implementation
+was able to reach extensive analogies within 50 generations
+and reasonable computational time.
+IV. C ONCLUSION AND F UTURE W ORK
+In summary, we have presented a novel evolutionary algorithm that employs semantic networks as evolving individuals,
+paralleling the evolutionary model of cultural variation and
+selection in the existing field of memetics. This algorithm, to
+our knowledge, is the first of its kind. The use of semantic
+networks provides a suitable basis to implement the representation and manipulation of memes—in the sense of units of
+culture, or knowledge, as it was put forth by Dawkins [3]. We
+have introduced preliminary versions of variation operators
+that work on this representation, utilizing knowledge from
+commonsense knowledge bases. We have also contributed
+a memetic fitness measure based on the structure mapping
+theory of Gentner [25] with a firm basis in psychology, to
+
+TABLE I
+PARAMETERS USED DURING EXPERIMENTS
+Parameter
+
+Value
+
+Population size (P opsize )
+Crossover probability (Pc )
+Mutation probability (Pm )
+
+200
+0.85
+0.15
+
+Semantic networks
+
+Max. initial concepts (Cmax )
+Min. relation score (Rmin )
+Timeout (T )
+
+5
+2.0
+10
+
+Selection
+
+Type
+Tournament size (Ssize )
+Tournament win prob. (Sprob )
+Elitism
+
+Tournament
+8
+0.8
+Employed
+
+Evolution
+
+evaluate the feasibility and performance of our work. Considering other possible fitness measures, we hope that our
+approach can serve as a computational tool for implementing
+and experimenting with different theories of cultural evolution
+encountered in memetics, such as evolutionary epistemology
+and cultural selection theory. The facts that:
+•
+
+the algorithm is exclusively on the evolution of knowl-
+
+galaxy
+
+home
+universe
+
+AtLocation
+
+PartOf
+
+IsA
+
+AtLocation
+
+man
+
+father
+
+solar system
+
+dream
+
+IsA
+
+human
+
+PartOf
+
+CapableOf
+HasSubevent
+
+large object
+
+sleep
+
+AtLocation
+
+IsA
+
+family
+
+IsA
+
+planet
+
+HasA
+
+PartOf
+
+mass
+IsA
+
+mother
+
+MadeOf
+HasProperty
+
+earth
+
+HasA
+
+woman
+IsA
+
+IsA
+
+CapableOf
+
+matter
+
+female
+
+moon
+
+care
+
+HasProperty
+HasProperty
+
+(a) Given semantic network, 11 concepts, 11 relations (base domain)
+
+spherical
+
+(a) Given semantic network, 10 concepts, 11 relations (base domain)
+mountain
+
+music hall
+
+percussion instrument
+
+forest
+PartOf
+AtLocation
+
+AtLocation
+
+play instrument
+
+IsA
+
+IsA
+
+instrument
+
+tree
+
+CapableOf
+
+drum
+
+HasSubevent
+
+make music
+IsA
+
+source of vitamin
+
+AtLocation
+IsA
+
+wind instrument
+
+fruit
+IsA
+
+IsA
+
+HasA
+
+apple
+
+HasA
+
+IsA
+
+member of orchestra
+clarinet
+
+seed
+
+leave
+
+HasProperty
+
+CapableOf
+
+HasProperty
+
+green
+
+(b) Evolved individual, 9 concepts, 9 relations (target domain)
+
+perform glissando
+
+(b) Evolved individual, 10 concepts, 9 relations (target domain)
+
+Fig. 5.
+Experiment 1: The evolved individual is encountered after 35
+generations, with fitness value 2.8. Concepts and relations of the individual
+not involved in the analogy are not shown here for clarity.
+
+Fig. 6.
+Experiment 2: The evolved individual is encountered after 42
+generations, with fitness value 2.7. Concepts and relations of the individual
+not involved in the analogy are not shown here for clarity.
+
+edge itself under a fitness measure defined as a function
+of the represented knowledge;
+• and that it uses an encoding based on knowledge representation (in the form of semantic networks), utilizing
+memetic operators specifically created for the modification of these
+set it apart from existing MA, where the concept of memetics has been used as a synonym for an hybridization of local
+refinement by individual learning after a classical global EA
+sampling.
+The proposed algorithm is highly relevant from the perspective of computational creativity [31], [32], especially for tasks
+such as conceptual blending [33] and story generation [34].
+We believe that our approach can fit into both classifications of
+creativity discussed by Boden [35]: (1) exploratory creativity,
+where the commonsense nature of our memetic operators
+addresses the criticism about the lack of world knowledge12 ;
+and (2) transformational creativity, where the potential of
+evolutionary approaches have already been noted. Within the
+field of analogical reasoning, virtually all of existing research
+has been focused on the discovery and assessment of pos-
+
+sible analogical mappings between two given domains [29],
+while our approach provides a novel technique for the openended discovery of information analogous to a given domain,
+together with the analogical mapping.
+For future work following this study, we acknowledge
+several lines of research concerning the design of the algorithm and its possible applications. Regarding the design,
+the research would benefit from exploring different types of
+mutation and crossover [24], [17]. It would be significant to
+ground the design of such operators on existing theories of
+cultural transmission and modification, discussed in sociological theories of knowledge.
+Regarding the applications, in an upcoming paper we intend
+to focus on different types of computational creativity that
+would be achievable with this model. In the long term, we
+argue that if a theoretically sound basis for memetic variation and inheritance can be put in place, and together with
+realistic memetic fitness measures, our approach can enable
+“computational memetic simulations” analogous to those in
+computational biology, such as genetic drift or coalescent
+theories.
+
+12 Quting
+
+Boden [35]: “What’s missing, as compared with the human mind,
+is the rich store of world knowledge (including cultural knowledge) that’s
+often involved.”
+
+ACKNOWLEDGMENT
+This work was supported by a JAE-Predoc fellowship from
+CSIC, and the research grants: 2009-SGR-1434 from the
+
+3.0
+è è è è è è è è è è èé è èé è è è
+è è è è è è è è è è è è èé èé é é é é é é é é é é é é é é
+èèè ééééééééééé
+éé
+èè éé
+è éé
+è
+èè éé
+é
+è
+è éé
+èè é
+é
+èè é
+é
+è
+é
+è é
+
+2.5
+
+è
+
+Fitness
+
+2.0
+1.5
+1.0
+
+è
+é
+è é
+é
+
+0.5
+
+é
+
+0.0
+
+0
+
+10
+
+20
+
+30
+
+40
+
+Generations HtL
+
+50
+
+(a)
+20
+
+Semantic network size
+
+é
+
+é
+é
+éé éé
+é
+é
+é
+é é ééé
+
+ééé
+é
+é
+é
+éé
+é
+é
+è è èé é é é é
+èèèèèèèèèèèèèèèè
+è é é è è è éè è è è è è è è è è è
+è è èé é
+è é
+è èé èé é é
+èè
+é
+
+15
+
+10
+è è èé
+è é
+è é
+é
+èèé
+éé
+
+5
+
+éé
+
+0
+0
+
+10
+
+20
+
+30
+
+Generations HtL
+
+40
+
+50
+
+(b)
+Fig. 7. Evolution of (a) fitness and (b) semantic network size during the
+course of an experiment with parameters given in Table I. Filled circles
+represent the best individual in a generation, while the empty circles represent
+population average. Network size is taken to be the number of relations (edges)
+in the semantic network.
+
+Generalitat de Catalunya, CSD2007-0022 from MICINN, and
+Next-CBR TIN2009-13692-C03-01 from MICINN.
+

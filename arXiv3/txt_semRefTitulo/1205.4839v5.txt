@@ -1,0 +1,1133 @@
+
+This paper presents the first actor-critic algorithm for off-policy reinforcement learning.
+Our algorithm is online and incremental, and
+its per-time-step complexity scales linearly
+with the number of learned weights. Previous work on actor-critic algorithms is limited to the on-policy setting and does not
+take advantage of the recent advances in offpolicy gradient temporal-difference learning.
+Off-policy techniques, such as Greedy-GQ,
+enable a target policy to be learned while
+following and obtaining data from another
+(behavior) policy. For many problems, however, actor-critic methods are more practical
+than action value methods (like Greedy-GQ)
+because they explicitly represent the policy;
+consequently, the policy can be stochastic
+and utilize a large action space. In this paper,
+we illustrate how to practically combine the
+generality and learning potential of off-policy
+learning with the flexibility in action selection
+given by actor-critic methods. We derive an
+incremental, linear time and space complexity algorithm that includes eligibility traces,
+prove convergence under assumptions similar to previous off-policy algorithms1 , and
+empirically show better or comparable performance to existing algorithms on standard
+reinforcement-learning benchmark problems.
+
+The reinforcement learning framework is a general
+temporal learning formalism that has, over the last
+1
+
+See errata in section B
+
+Appearing in Proceedings of the 29 th International Conference on Machine Learning, Edinburgh, Scotland, UK, 2012.
+Copyright 2012 by the author(s)/owner(s).
+
+few decades, seen a marked growth in algorithms and
+applications. Until recently, however, practical online
+methods with convergence guarantees have been restricted to the on-policy setting, in which the agent
+learns only about the policy it is executing.
+In an off-policy setting, on the other hand, an agent
+learns about a policy or policies different from the one
+it is executing. Off-policy methods have a wider range
+of applications and learning possibilities. Unlike onpolicy methods, off-policy methods are able to, for example, learn about an optimal policy while executing
+an exploratory policy (Sutton & Barto, 1998), learn
+from demonstration (Smart & Kaelbling, 2002), and
+learn multiple tasks in parallel from a single sensorimotor interaction with an environment (Sutton et al.,
+2011). Because of this generality, off-policy methods
+are of great interest in many application domains.
+The most well known off-policy method is Q-learning
+(Watkins & Dayan, 1992). However, while Q-Learning
+is guaranteed to converge to the optimal policy for the
+tabular (non-approximate) case, it may diverge when
+using linear function approximation (Baird, 1995).
+Least-squares methods such as LSTD (Bradtke &
+Barto, 1996) and LSPI (Lagoudakis & Parr, 2003) can
+be used off-policy and are sound with linear function
+approximation, but are computationally expensive;
+their complexity scales quadratically with the number of features and weights. Recently, these problems
+have been addressed by the new family of gradientTD (Temporal Difference) methods (e.g., Sutton et
+al., 2009), such as Greedy-GQ (Maei et al., 2010),
+which are of linear complexity and convergent under
+off-policy training with function approximation.
+All action-value methods, including gradient-TD
+methods such as Greedy-GQ, suffer from three important limitations. First, their target policies are deterministic, whereas many problems have stochastic optimal policies, such as in adversarial settings or in par-
+
+Off-Policy Actor-Critic
+
+tially observable Markov decision processes. Second,
+finding the greedy action with respect to the actionvalue function becomes problematic for larger action
+spaces. Finally, a small change in the action-value
+function can cause large changes in the policy, which
+creates difficulties for convergence proofs and for some
+real-time applications.
+The standard way of avoiding the limitations of actionvalue methods is to use policy-gradient algorithms
+(Sutton et al., 2000) such as actor-critic methods
+(e.g., Bhatnagar et al., 2009). For example, the natural actor-critic, an on-policy policy-gradient algorithm, has been successful for learning in continuous
+action spaces in several robotics applications (Peters
+& Schaal, 2008).
+The first and main contribution of this paper is to
+introduce the first actor-critic method that can be applied off-policy, which we call Off-PAC, for Off-Policy
+Actor–Critic. Off-PAC has two learners: the actor and
+the critic. The actor updates the policy weights. The
+critic learns an off-policy estimate of the value function for the current actor policy, different from the
+(fixed) behavior policy. This estimate is then used
+by the actor to update the policy. For the critic, in
+this paper we consider a version of Off-PAC that uses
+GTD(λ) (Maei, 2011), a gradient-TD method with eligibitity traces for learning state-value functions. We
+define a new objective for our policy weights and derive
+a valid backward-view update using eligibility traces.
+The time and space complexity of Off-PAC is linear in
+the number of learned weights.
+The second contribution of this paper is an off-policy
+policy-gradient theorem and a convergence proof for
+Off-PAC when λ = 0, under assumptions similar to
+previous off-policy gradient-TD proofs.2
+Our third contribution is an empirical comparison of
+Q(λ), Greedy-GQ, Off-PAC, and a soft-max version of
+Greedy-GQ that we call Softmax-GQ, on three benchmark problems in an off-policy setting. To the best
+of our knowledge, this paper is the first to provide
+an empirical evaluation of gradient-TD methods for
+off-policy control (the closest known prior work is the
+work of Delp (2011)). We show that Off-PAC outperforms other algorithms on these problems.
+
+1. Notation and Problem Setting
+In this paper, we consider Markov decision processes
+with a discrete state space S, a discrete action space A,
+a distribution P : S × S × A → [0, 1], where P (s0 |s, a)
+2
+
+See errata in section B
+
+is the probability of transitioning into state s0 from
+state s after taking action a, and an expected reward
+function R : S × A × S → R that provides an expected
+reward for taking action a in state s and transitioning
+into s0 . We observe a stream of data, which includes
+states st ∈ S, actions at ∈ A, and rewards rt ∈ R for
+t = 1, 2, . . . with actions selected from a fixed behavior
+policy, b(a|s) ∈ (0, 1].
+Given a termination condition γ : S → [0, 1] (Sutton et
+al., 2011), we define the value function for π : S ×A →
+(0, 1] to be:
+V π,γ (s) = E [rt+1 + . . . + rt+T |st = s] ∀s ∈ S
+
+(1)
+
+where policy π is followed from time step t and terminates at time t + T according to γ. We assume
+termination always occurs in a finite number of steps.
+The action-value function, Qπ,γ (s, a), is defined as:
+Qπ,γ (s, a) =
+X
+P (s0 |s, a)[R(s, a, s0 ) + γ(s0 )V π,γ (s0 )]
+
+(2)
+
+s0 ∈S
+
+for
+for all s ∈ S. Note that V π,γ (s) =
+P all a ∈ A and
+π,γ
+(s, a), for all s ∈ S.
+a∈A π(a|s)Q
+The policy πu : A × S → [0, 1] is an arbitrary, differentiable function of a weight vector, u ∈ RNu , Nu ∈ N,
+with πu (a|s) > 0 for all s ∈ S, a ∈ A. Our aim is to
+choose u so as to maximize the following scalar objective function:
+Jγ (u)
+
+=
+
+X
+
+db (s)V πu ,γ (s)
+
+(3)
+
+s∈S
+
+where db (s) = limt→∞ P (st = s|s0 , b) is the limiting
+distribution of states under b and P (st = s|s0 , b) is
+the probability that st = s when starting in s0 and
+executing b. The objective function is weighted by
+db because, in the off-policy setting, data is obtained
+according to this behavior distribution. For simplicity
+of notation, we will write π and implicitly mean πu .
+
+2. The Off-PAC Algorithm
+In this section, we present the Off-PAC algorithm in
+three steps. First, we explain the basic theoretical
+ideas underlying the gradient-TD methods used in the
+critic. Second, we present our off-policy version of the
+policy-gradient theorem. Finally, we derive the forward view of the actor and convert it to a backward
+view to produce a complete mechanistic algorithm using eligibility traces.
+
+Off-Policy Actor-Critic
+
+2.1. The Critic: Policy Evaluation
+Evaluating a policy π consists of learning its value
+function, V π,γ (s), as defined in Equation 1. Since
+it is often impractical to explicitly represent every
+state s, we learn a linear approximation of V π,γ (s):
+V̂ (s) = vT xs where xs ∈ RNv , Nv ∈ N, is the feature
+vector of the state s, and v ∈ RNv is another weight
+vector.
+Gradient-TD methods (Sutton et al., 2009) incrementally learn the weights, v, in an off-policy setting,
+with a guarantee of stability and a linear per-time-step
+complexity. These methods minimize the λ-weighted
+mean-squared projected Bellman error:
+MSPBE(v) = ||V̂ − ΠTπλ,γ V̂ ||2D
+where V̂ = Xv; X is the matrix whose rows are all xs ;
+λ is the decay of the eligibility trace; D is a matrix with
+db (s) on its diagonal; Π is a projection operator that
+projects a value function to the nearest representable
+value function given the function approximator; and
+Tπλ,γ is the λ-weighted Bellman operator for the target
+policy π with termination probability γ (e.g., see Maei
+& Sutton, 2010). For a linear representation, Π =
+X(X T DX)−1 X T D.
+In this paper, we consider the version of Off-PAC that
+updates its critic weights by the GTD(λ) algorithm
+introduced by Maei (2011).
+
+The two theorems below provide justification for this
+approximation3 .
+Theorem 1 (Policy Improvement). Given any policy
+parameter u, let
+u0 = u + α g(u)
+Then there exists an  > 0 such that, for all positive
+α < ,
+Jγ (u0 ) ≥ Jγ (u)
+Further, if π has a tabular representation (i.e., separate weights for each state), then V πu0 ,γ (s) ≥ V πu ,γ (s)
+for all s ∈ S.
+(Proof in Appendix3 ).
+In the conventional on-policy theory of policy-gradient
+methods, the policy-gradient theorem (Marbach &
+Tsitsiklis, 1998; Sutton et al., 2000) establishes the relationship between the gradient of the objective function and the expected action values. In our notation,
+that theorem essentially says that our approximation
+is exact, that g(u) = ∇u Jγ (u). Although, we can not
+show this in the off-policy case, we can establish a relationship between the solutions found using the true
+and approximate gradient:
+Theorem 2 (Off-Policy Policy-Gradient Theorem).
+Given U ⊂ RNu a non-empty, compact set, let
+
+2.2. Off-policy Policy-gradient Theorem
+
+Z̃ = {u ∈ U | g(u) = 0}
+
+Like other policy gradient algorithms, Off-PAC updates the weights approximately in proportion to the
+gradient of the objective:
+ut+1 − ut ≈ αu,t ∇u Jγ (ut )
+
+(4)
+
+where αu,t ∈ R is a positive step-size parameter. Starting from Equation 3, the gradient can be written:
+"
+#
+X
+X
+b
+π,γ
+∇u Jγ (u) = ∇u
+d (s)
+π(a|s)Q (s, a)
+s∈S
+
+=
+
+X
+s∈S
+
+db (s)
+
+Z = {u ∈ U | ∇u Jγ (u) = 0}
+where Z is the true set of local maxima and Z̃ the set
+of local maxima obtained from using the approximate
+gradient, g(u). If the value function can be represented
+by our function class, then Z ⊂ Z̃. Moreover, if we
+use a tabular representation for π, then Z = Z̃.
+(Proof in Appendix3 ).
+
+a∈A
+
+X
+
+[∇u π(a|s)Qπ,γ (s, a)
+
+a∈A
+
++ π(a|s)∇u Qπ,γ (s, a) ]
+The final term in this equation, ∇u Qπ,γ (s, a), is difficult to estimate in an incremental off-policy setting.
+The first approximation involved in the theory of OffPAC is to omit this term. That is, we work with
+an approximation to the gradient, which we denote
+g(u) ∈ RNu , defined by
+X
+X
+∇u Jγ (u) ≈ g(u) =
+db (s)
+∇u π(a|s)Qπ,γ (s, a)
+s∈S
+
+The proof of Theorem 2, showing that Z = Z̃, requires
+tabular π to avoid update overlap: updates to a single
+parameter influence the action probabilities for only
+one state. Consequently, both parts of the gradient
+(one part with the gradient of the policy function and
+the other with the gradient of the action-value function) locally greedily change the action probabilities
+for only that one state. Extrapolating from this result, in practice, more generally a local representation
+for π will likely suffice, where parameter updates influence only a small number of states. Similarly, in the
+non-tabular case, the claim will likely hold if γ is small
+
+a∈A
+
+(5)
+
+3
+
+See errata in section B
+
+Off-Policy Actor-Critic
+
+Algorithm 1 The Off-PAC algorithm
+Initialize the vectors ev , eu , and w to zero
+Initialize the vectors v and u arbitrarily
+Initialize the state s
+For each step:
+Choose an action, a, according to b(·|s)
+Observe resultant reward, r, and next state, s0
+δ ← r + γ(s0 )vT xs0 − vT xs
+ρ ← πu (a|s)/b(a|s)
+Update the critic (GTD(λ) algorithm):
+ev ← ρ (xs + γ(s)λev )
+
+0
+T
+v ← v + αv δe
+− λ)(w
+ev )xs
+ v − γ(s )(1
+
+w ← w + αw δev − (wT xs )xs
+Update thehactor:
+i
+u (a|s)
++ γ(s)λeu
+eu ← ρ ∇πuuπ(a|s)
+u ← u + αu δeu
+s ← s0
+
+(the return is myopic), again because changes to the
+policy mostly affect the action-value function locally.
+Fortunately, from an optimization perspective, for all
+u ∈ Z̃\Z, Jγ (u) < minu0 ∈Z Jγ (u0 ), in other words,
+Z represents all the largest local maxima in Z̃ with
+respect to the objective, Jγ . Local optimization techniques, like random restarts, should help ensure that
+we converge to larger maxima and so to u ∈ Z. Even
+with the true gradient, these approaches would be incorporated into learning because our objective, Jγ , is
+non-convex.
+2.3. The Actor: Incremental Update
+Algorithm with Eligibility Traces
+We now derive an incremental update algorithm using
+observations sampled from the behavior policy. First,
+we rewrite Equation 5 as an expectation:
+"
+#
+X
+g(u) = E
+∇u π(a|s)Qπ,γ (s, a) s ∼ db
+a∈A
+
+"
+
+π(a|s) ∇u π(a|s) π,γ
+Q (s, a) s ∼ db
+=E
+b(a|s)
+b(a|s) π(a|s)
+a∈A
+
+
+= E ρ(s, a)ψ(s, a)Qπ,γ (s, a) s ∼ db , a ∼ b(·|s)
+X
+
+= Eb [ρ(st , at )ψ(st , at )Qπ,γ (st , at )]
+∇u π(a|s)
+where ρ(s, a) = π(a|s)
+b(a|s) , ψ(s, a) = π(a|s) , and we introduce the new notation Eb [·] to denote the expectation implicitly conditional on all the random variables
+(indexed by time step) being drawn from their limiting
+stationary distribution under the behavior policy. A
+standard result (e.g., see Sutton et al., 2000) is that an
+arbitrary function of state can be introduced into these
+equations as a baseline without changing the expected
+value. We use the approximate state-value function
+provided by the critic, V̂ , in this way:
+h
+
+i
+g(u) = Eb ρ(st , at )ψ(st , at ) Qπ,γ (st , at ) − V̂ (st )
+
+The next step is to replace the action value,
+Qπ,γ (st , at ), by the off-policy λ-return. Because these
+are not exactly equal, this step introduces a further
+approximation:
+h
+
+i
+[ = Eb ρ(st , at )ψ(st , at ) Rλ − V̂ (st )
+g(u) ≈ g(u)
+t
+where the off-policy λ-return is defined by:
+Rtλ = rt+1 + (1 − λ)γ(st+1 )V̂ (st+1 )
+λ
++ λγ(st+1 )ρ(st+1 , at+1 )Rt+1
+
+Finally, based on this equation, we can write the forward view of Off-PAC:
+
+
+ut+1 − ut = αu,t ρ(st , at )ψ(st , at ) Rtλ − V̂ (st )
+
+#
+
+The forward view is useful for understanding and analyzing algorithms, but for a mechanistic implementation it must be converted to a backward view that
+does not involve the λ-return. The key step, proved in
+the appendix, is the observation that
+h
+
+i
+Eb ρ(st , at )ψ(st , at ) Rtλ − V̂ (st ) = Eb [δt et ] (6)
+where δt = rt+1 + γ(st+1 )V̂ (st+1 ) − V̂ (st ) is the conventional temporal difference error, and et ∈ RNu is
+the eligibility trace of ψ, updated by:
+et = ρ(st , at ) (ψ(st , at ) + λet−1 )
+Finally, combining the three previous equations, the
+backward view of the actor update can be written simply as:
+ut+1 − ut = αu,t δt et
+The complete Off-PAC algorithm is given above as Algorithm 1. Note that although the algorithm is written
+in terms of states s and s0 , it really only ever needs
+access to the corresponding feature vectors, xs and
+xs0 , and to the behavior policy probabilities, b(·|s), for
+the current state. All of these are typically available
+in large-scale applications with function approximation. Also note that Off-PAC is fully incremental and
+has per-time step computation and memory complexity that is linear in the number of weights, Nu + Nv .
+With discrete actions, a common policy distribution
+is the Gibbs distribution, which uses a linear combiT
+
+nation of features π(a|s) =
+
+eu φs,a
+P uT φ
+s,b
+be
+
+where φs,a are
+
+state-action features for state s, action a, and where
+
+Off-Policy Actor-Critic
+
+P
+u π(a|s)
+ψ(s, a) = ∇π(a|s)
+= φs,a − b π(b|s)φs,b . The stateaction features, φs,a , are potentially unrelated to the
+feature vectors xs used in the critic.
+
+3. Convergence Analysis
+Our algorithm has the same recursive stochastic form
+as the off-policy value-function algorithms
+ut+1 = ut + αt (h(ut , vt ) + Mt+1 )
+N
+
+N
+
+where h : R → R is a differentiable function and
+{Mt }t≥0 is a noise sequence. Following previous offpolicy gradient proofs (Maei, 2011), we study the behavior of the ordinary differential equation
+u̇(t) = u(h(u(t), v))
+The two updates (for the actor and for the critic) are
+not independent on each time step; we analyze two
+separate ODEs using a two timescale analysis (Borkar,
+2008). The actor update is analyzed given fixed critic
+parameters, and vice versa, iteratively (until convergence). We make the following assumptions.
+(A1) The policy viewed as a function of u, π(·) (a|s) :
+RNu → (0, 1], is continuously differentiable, ∀s ∈
+S, a ∈ A.
+(A2) The update on ut includes a projection operator,
+Γ : RNu → RNu , that projects any u to a compact set U = {u | qi (u) ≤ 0, i = 1, . . . , s} ⊂ RNu ,
+where qi (·) : RNu → R are continuously differentiable functions specifying the constraints of the
+compact region. For u on the boundary of U,
+the gradients of the active qi are linearly independent. Assume the compact region is large enough
+to contain at least one (local) maximum of Jγ .
+(A3) The behavior policy has a minimum positive value
+bmin ∈ (0, 1]: b(a|s) ≥ bmin ∀s ∈ S, a ∈ A
+(A4) The sequence (xt , xt+1 , rt+1 )t≥0 is i.i.d. and has
+uniformly bounded second moments.
+(A5) For every u ∈ U (the compact region to which u
+is projected), V π,γ : S → R is bounded.
+Remark 1: It is difficult to prove the boundedness of
+the iterates without the projection operator. Since we
+have a bounded function (with range (0, 1]), we could
+instead assume that the gradient goes to zero exponentially as u → ∞, ensuring boundedness. Previous
+work, however, has illustrated that the stochasticity in
+practice makes convergence to an unstable equilibrium
+unlikely (Pemantle, 1990); therefore, we avoid restrictions on the policy function and do not include the
+projection in our algorithm
+
+Finally, we have the following (standard) assumptions
+on features and step-sizes.
+(P1) ||xt ||∞ < ∞, ∀t, where xt ∈ RNv
+T
+
+(P2) Matrices C = E[xt xt T ], A = E[xt (xt − γxt+1 ) ]
+are non-singular and uniformly bounded. A, C
+and E[rt+1 xt ] are well-defined because the distribution of (xt , xt+1 , rt+1 ) does not depend on t.
+(S1) α
+are deterministic P
+such that
+u,t > 0, ∀tP
+Pv,t , αw,t , αP
+2
+α
+=
+α
+=
+α
+=
+∞
+and
+v,t
+w,t
+u,t
+tP
+t
+t αv,t <
+Pt 2
+αu,t
+2
+∞, t αw,t < ∞ and t αu,t < ∞ with αv,t → 0.
+.
+(S2) Define H(A)
+=
+(A + AT )/2 and let
+−1
+λmin (C H(A)) be the minimum eigenvalue
+of the matrix C −1 H(A)4 . Then αw,t = ηαv,t for
+some η > max(0, −λmin (C −1 H(A))).
+Remark 2: The assumption αu,t /αv,t → 0 in (S1)
+states that the actor step-sizes go to zero at a faster
+rate than the value function step-sizes: the actor update moves on a slower timescale than the critic update (which changes more from its larger step sizes).
+This timescale is desirable because we effectively want
+a converged value function estimate for the current
+policy weights, ut . Examples of suitable step sizes are
+1
+αv,t = 1t , αu,t = 1+t1log t or αv,t = t2/3
+, αu,t = 1t .
+(with αw,t = ηαv,t for η satisfying (S2)).
+The above assumptions are actually quite unrestrictive. Most algorithms inherently assume bounded features with bounded value functions for all policies;
+unbounded values trivially result in unbounded value
+function weights. Common policy distributions are
+smooth, making π(a|s) continuously differentiable in
+u. The least practical assumption is that the tuples
+(xt , xt+1 , rt+1 ) are i.i.d., in other words, Martingale
+noise instead of Markov noise. For Markov noise, our
+proof as well as the proofs for GTD(λ) and GQ(λ),
+require Borkar’s (2008) two-timescale theory to be extended to Markov noise (which is outside the scope of
+this paper). Finally, the proof for Theorem 3 assumes
+λ = 0, but should extend to λ > 0 similarly to GTD(λ)
+(see Maei, 2011, Section 7.4, for convergence remarks).
+We give a proof sketch of the following convergence
+theorem5 , with the full proof in the appendix.
+Theorem 3 (Convergence of Off-PAC). Let λ = 0 and
+consider the Off-PAC iterations with GTD(0)6 for the
+critic. Assume that (A1)-(A5), (P1)-(P2) and (S1)(S2) hold. Then the policy weights, ut , converge to
+4
+
+Minimum exists as all eigenvalues real-valued (Lemma 4)
+See errata in section B
+6
+GTD(0) is GTD(λ) with λ = 0, not the different algorithm called GTD(0) by Sutton, Szepesvari & Maei (2008)
+5
+
+Off-Policy Actor-Critic
+
+d = 0} and the value function
+Ẑ = {u ∈ U | g(u)
+weights, vt , converge to the corresponding TD-solution
+with probability one.
+Proof Sketch: We follow a similar outline to the
+two timescale analysis for on-policy policy gradient
+actor-critic (Bhatnagar et al., 2009) and for nonlinear
+GTD (Maei et al., 2009). We analyze the dynamics
+for our two weights, ut and zt T = (wt T vt T ), based on
+our update rules. The proof involves satisfying seven
+requirements from Borkar (2008, p. 64) to ensure convergence to an asymptotically stable equilibrium.
+
+Behavior
+
+Greedy-GQ
+
+Softmax-GQ
+
+Off-PAC
+
+4. Empirical Results
+This section compares the performance of Off-PAC to
+three other off-policy algorithms with linear memory
+and computational complexity: 1) Q(λ) (called QLearning when λ = 0), 2) Greedy-GQ (GQ(λ) with
+a greedy target policy), and 3) Softmax-GQ (GQ(λ)
+with a Softmax target policy). The policy in Off-PAC
+is a Gibbs distribution as defined in section 2.3.
+We used three benchmarks: mountain car, a pendulum
+problem and a continuous grid world. These problems all have a discrete action space and a continuous state space, for which we use function approximation. The behavior policy is a uniform distribution
+over all the possible actions in the problem for each
+time step. Note that Q(λ) may not be stable in this
+setting (Baird, 1995), unlike all the other algorithms.
+The goal of the mountain car problem (see Sutton &
+Barto, 1998) is to drive an underpowered car to the
+top of a hill. The state of the system is composed of
+the current position of the car (in [−1.2, 0.6]) and its
+velocity (in [−.07, .07]). The car was initialized with
+a position of -0.5 and a velocity of 0. Actions are a
+throttle of {−1, 0, 1}. The reward at each time step
+is −1. An episode ends when the car reaches the top
+of the hill on the right or after 5,000 time steps.
+The second problem is a pendulum problem (Doya,
+2000). The state of the system consists of the angle (in
+radians) and the angular velocity (in [−78.54, 78.54])
+of the pendulum. Actions, the torque applied to the
+base, are {−2, 0, 2}. The reward is the cosine of the
+angle of the pendulum with respect to its fixed base.
+The pendulum is initialized with an angle and an angular velocity of 0 (i.e., stopped in a horizontal position).
+An episode ends after 5,000 time steps.
+For the pendulum problem, it is unlikely that the behavior policy will explore the optimal region where the
+pendulum is maintained in a vertical position. Consequently, this experiment illustrates which algorithms
+make best use of limited behavior samples.
+
+Figure 1. Example of one trajectory for each algorithm
+in the continuous 2D grid world environment after 5,000
+learning episodes from the behavior policy. Off-PAC is the
+only algorithm that learned to reach the goal reliably.
+
+The last problem is a continuous grid-world. The
+state is a 2-dimensional position in [0, 1]2 . The actions are the pairs {(0.0, 0.0), (−.05, 0.0), (.05, 0.0),
+(0.0, −.05), (0.0, .05)}, representing moves in both dimensions. Uniform noise in [−.025, .025] is added
+to each action component. The reward at each
+time step for arriving in a position (px , py ) is defined as: −1 + −2(N (px , .3, .1) · N (py , .6, .03) +
+N (px , .4, .03)·N (py , .5, .1)+N (px , .8, .03)·N (py , .9, .1))
+√
+(p−µ)2
+where N (p, µ, σ) = e− 2σ2 /σ 2π. The start position is (0.2, 0.4) and the goal position is (1.0, 1.0). An
+episode ends when the goal is reached, that is when
+the distance from the current position to the goal is
+less than 0.1 (using the L1-norm), or after 5,000 time
+steps. Figure 1 shows a representation of the problem.
+The feature vectors xs were binary vectors constructed
+according to the standard tile-coding technique (Sutton & Barto, 1998). For all problems, we used ten
+tilings, each of roughly 10 × 10 over the joint space
+of the two state variables, then hashed to a vector of
+dimension 106 . An addition feature was added that
+was always 1. State-action features, ψs,a , were also
+106 + 1 dimensional vectors constructed by also hashing the actions. We used a constant γ = 0.99. All
+the weight vectors were initialized to 0. We performed
+a parameter sweep to select the following parameters:
+1) the step size αv for Q(λ), 2) the step-sizes αv and
+αw for the two vectors in Greedy-GQ, 3) αv , αw and
+the temperature τ of the target policy distribution for
+Softmax-GQ and 4) the step sizes αv , αw and αu for
+Off-PAC. For the step sizes, the sweep was done over
+the following values: {10−4 , 5 · 10−4 , 10−3 , . . . , .5, 1.}
+
+Off-Policy Actor-Critic
+Mountain car
+
+0
+
+Pendulum
+
+3000
+
+Continuous grid world
+
+0
+-2000
+
+2000
+-1000
+
+-4000
+
+1000
+
+-3000
+
+0
+
+Average Reward
+
+Average Reward
+
+Average Reward
+
+-6000
+
+Behaviour
+Q-Learning
+Greedy-GQ
+Softmax-GQ
+Off-PAC
+
+-2000
+
+Behaviour
+Q-Learning
+Greedy-GQ
+Softmax-GQ
+Off-PAC
+
+-1000
+-2000
+
+Behaviour
+Q-Learning
+Greedy-GQ
+Softmax-GQ
+Off-PAC
+
+-8000
+-10000
+-12000
+
+-3000
+
+-14000
+
+-4000
+-4000
+-5000
+
+0
+
+20
+
+60
+
+40
+
+80
+
+100
+
+-5000
+
+-16000
+
+0
+
+50
+
+100
+Time steps
+
+Episodes
+
+Mountain car
+αw αu , τ αv λ
+Reward
+Behavior:
+
+Q(λ):
+
+200
+
+-18000
+
+0
+
+1000
+
+3000
+
+2000
+
+4000
+
+Pendulum
+Continuous grid world
+αw αu , τ αv λ Reward αw αu , τ αv λ
+Reward
+
+final
+
+na
+
+na
+
+na na
+
+−4822±6
+
+na
+
+na
+
+na na
+
+−4582±0
+
+na
+
+na
+
+na na −13814±127
+
+na
+
+na
+
+na na
+
+−4880±2
+
+na
+
+na
+
+na na −4580±.3
+
+na
+
+na
+
+na na
+
+final
+
+na
+
+na
+
+.1
+
+.6
+
+−143±.4
+
+na
+
+na
+
+.5 .99
+
+1802±35
+
+na
+
+na .0001
+
+0
+
+−5138±.4
+
+overall
+
+na
+
+na
+
+.1
+
+0
+
+−442±4
+
+na
+
+na
+
+.5 .99
+
+376±15
+
+na
+
+na .0001
+
+0
+
+−5034±.2
+
+.0001
+
+na
+
+.1
+
+.4
+
+−131.9±.4
+
+0
+
+na
+
+.5
+
+.4
+
+1782±31
+
+0.05
+
+1.0
+
+.2
+
+−5002±.2
+
+.0001
+
+na
+
+.1
+
+.2
+
+−434±4
+
+.0001
+
+na
+
+.01
+
+.4
+
+785±11
+
+0
+
+na .0001
+
+0
+
+−5034±.2
+
+.0005
+
+.1
+
+.1
+
+.4
+
+−133.4±.4
+
+0
+
+.1
+
+.5
+
+.4
+
+1789±32
+
+.1
+
+.2
+
+.05 .005
+
+overall
+Softmax-GQ:final
+
+na
+
+−14237±33
+
+50
+
+.5
+
+.6
+
+−3332±20
+−4450±11
+
+overall
+
+.0001
+
+.1 .05
+
+−470±7
+
+.0001
+
+.6
+
+620±11
+
+.1
+
+50
+
+.5
+
+.6
+
+final
+
+.0001
+
+1.0 .05
+
+0 −108.6±.04
+
+.005
+
+.5
+
+.5
+
+0
+
+2521±17
+
+0
+
+.001
+
+.1
+
+.4
+
+−37±.01
+
+1.0
+
+0
+
+−356±.4
+
+0
+
+.5
+
+.5
+
+0
+
+1432±10
+
+0
+
+.001
+
+.005
+
+.6
+
+−1003±6
+
+overall
+
+.001
+
+.5
+
+5000
+
+Episodes
+
+overall
+
+Greedy-GQ: final
+
+Off-PAC:
+
+150
+
+Figure 2. Performance of Off-PAC compared to the performance of Q(λ), Greedy-GQ, and Softmax-GQ when learning
+off-policy from a random behavior policy. Final performance selected the parameters for the best performance for the
+last 10% of the run, whereas the overall performance was over all the runs. The plots on the top show the learning curve
+for the best parameters for the final performance. Off-PAC had always the best performance and was the only algorithm
+able to learn to reach the goal reliably in the continuous grid world. Performance is indicated with the standard error.
+
+divided by 10+1=11, that is the number of tilings
+plus 1. To compare TD methods to gradient-TD methods, we also used αw = 0. The temperature parameter, τ , was chosen from {.01, .05, .1, .5, 1, 5, 10, 50, 100}
+and λ from {0, .2, .4, .6, .8, .99}. We ran thirty runs
+with each setting of the parameters.
+For each parameter combination, the learning algorithm updates a target policy online from the data
+generated by the behavior policy. For all the problems, the target policy was evaluated at 20 points in
+time during the run by running it 5 times on another
+instance of the problem. The target policy was not updated during evaluation, ensuring that it was learned
+only with data from the behavior policy.
+Figure 2 shows results on three problems. SoftmaxGQ and Off-PAC improved their policy compared to
+the behavior policy on all problems, while the improvements for Q(λ) and Greedy-GQ is limited on the continuous grid world. Off-PAC performed best on all
+problems. On the continuous grid world, Off-PAC was
+the only algorithm able to learn a policy that reliably
+found the goal after 5,000 episodes (see Figure 1). On
+all problems, Off-PAC had the lowest standard error.
+
+5. Discussion
+Off-PAC, like other two-timescale update algorithms,
+can be sensitive to parameter choices, particularly the
+step-sizes. Off-PAC has four parameters: λ and the
+three step sizes, αv and αw for the critic and αu for
+the actor. In practice, the following procedure can
+be used to set these parameters. The value of λ, as
+with other algorithms, will depend on the problem and
+it is often better to start with low values (less than
+.4). A common heuristic is to set αv to 0.1 divided
+by the norm of the feature vector, xs , while keeping
+the value of αw low. Once GTD(λ) is stable learning
+the value function with αu = 0, αu can be increased
+so that the policy of the actor can be improved. This
+corroborates the requirements in the proof, where the
+step-sizes should be chosen so that the slow update
+(the actor) is not changing as quickly as the fast inner
+update to the value function weights (the critic).
+As mentioned by Borkar (2008, p. 75), another scheme
+that works well in practice is to use the restrictions
+on the step-sizes in the proof and to also subsample
+updates for the slow update. Subsampling updates
+means only updating every {tN, t ≥ 0}, for some N >
+
+Off-Policy Actor-Critic
+
+1: the actor is fixed in-between tN and (t + 1)N while
+the critic is being updated. This further slows the
+actor update and enables an improved value function
+estimate for the current policy, π.
+In this work, we did not explore incremental natural
+actor-critic methods (Bhatnagar et al., 2009), which
+use the natural gradient as opposed to the conventional
+gradient. The extension to off-policy natural actorcritic should be straightforward, involving only a small
+modification to the update and analysis of this new
+dynamical system (which will have similar properties
+to the original update).
+Finally, as pointed out by Precup et al. (2006), offpolicy updates can be more noisy compared to onpolicy learning. The results in this paper suggest that
+Off-PAC is more robust to such noise because it has
+lower variance than the action-value based methods.
+Consequently, we think Off-PAC is a promising direction for extending off-policy learning to a more general
+setting such as continuous action spaces.
+
+6. Conclusion
+This paper proposed a new algorithm for learning
+control off-policy, called Off-PAC (Off-Policy ActorCritic). We proved that Off-PAC converges in a standard off-policy setting. We provided one of the first
+empirical evaluations of off-policy control with the new
+gradient-TD methods and showed that Off-PAC has
+the best final performance on three benchmark problems and consistently has the lowest standard error.
+Overall, Off-PAC is a significant step toward robust
+off-policy control.
+
+7. Acknowledgments
+This work was supported by MPrime, the Alberta Innovates Centre for Machine Learning, the Glenrose Rehabilitation Hospital Foundation, Alberta Innovates—
+Technology Futures, NSERC and the ANR MACSi
+project. Computational time was provided by Westgrid and the Mésocentre de Calcul Intensif Aquitain.
+Appendix: See http://arXiv.org/abs/1205.4839

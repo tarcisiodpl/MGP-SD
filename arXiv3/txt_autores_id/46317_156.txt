@@ -1,0 +1,2578 @@
+
+We present a probabilistic model of events in
+continuous time in which each event triggers
+a Poisson process of successor events. The
+ensemble of observed events is thereby modeled as a superposition of Poisson processes.
+Efficient inference is feasible under this model
+with an EM algorithm. Moreover, the EM algorithm can be implemented as a distributed
+algorithm, permitting the model to be applied to very large datasets. We apply these
+techniques to the modeling of Twitter messages and the revision history of Wikipedia.
+
+1
+
+Introduction
+
+Real-life observations are often naturally represented
+by events—bundles of features that occur at a particular moment in time. Events are generally nonindependent: one event may cause others to occur.
+Given observations of events, we wish to produce a
+probabilistic model that can be used not only for prediction and parameter estimation, but also for identifying structure and relationships in the data generating
+process.
+We present an approach for building probabilistic
+models for collections of events in which each event
+induces a Poisson process of triggered events. This
+approach lends itself to efficient inference with an EM
+algorithm that can be distributed across computing
+clusters and thereby applied to massive datasets. We
+present two case studies, the first involving a collection
+of Twitter messages on financial data, and the second
+focusing on the revision history of Wikipedia. The latter example is a particularly large-scale problem; the
+data consist of billions of potential interactions among
+events.
+Our approach is based on a continuous-time formal-
+
+Michael I. Jordan
+Depts. of EECS and Statistics
+University of California, Berkeley
+jordan@cs.berkeley.edu
+
+ism. There have been a relatively small number of
+machine learning papers focused on continuous-time
+graphical models; examples include the “Poisson networks” of Rajaram et al. [2005] and the “continuoustime Bayesian networks” described in Nodelman et al.
+[2002, 2005]. These approaches differ from ours in that
+they assume a small set of possible event labels and do
+not directly apply to structured label spaces. A more
+flexible approach has been presented by Wingate et al.
+[2009] who define a nonparametric Bayesian model
+with latent events and causal structure. This work
+differs from ours in several ways, most importantly
+in that it is a discrete-time model that allows for interaction only between adjacent time steps. Finally,
+this work is an extension and generalization of the
+“continuous-time noisy-or” presented in Simma et al.
+[2008].
+There is also a large literature in statistics on point
+process modeling that provides a context for our
+work. A specific connection is that the fundamental
+stochastic process in our model is known in statistics
+as a “mutually self-exciting point process” [Hawkes,
+1971]. There are also connections to applications in
+seismology, notably the “Epidemic Type AftershockSequences” framework of Ogata [1988], which involves
+a model similar to ours that is applied to earthquake
+prediction.
+
+2
+
+Modeling Events with Poisson and
+Cox Processes
+
+Our representation of collections of events is based
+on the formalism of marked point processes. Let each
+event be represented as a pair (t, x) ∈ R+ ×F, where t
+is the timestamp and x the associated features taking
+values in a feature space. A dataset is a sequence of
+observations (t, x) ∈ R+ × F. We use Da:b to denote
+the events occuring between times a and b.
+Within the framework of marked point processes, we
+have several modeling issues to address: 1) how many
+
+the density : f (t, x)
+the data : D0:T
+
+Baseline
+Event 1
+Event 2
+Event 3
+Event 4
+Event 5
+Poisson Intensity
+
+events occur? 2) when do events occur? 3) what features they possess? A classical approach to answering
+these questions proceeds as follows: 1) the number
+is distributed Poisson(α), 2) the timestamps associated with event are independent and identically distributed (iid) from a fixed distribution, 3) the features
+are drawn independently from a fixed distribution g:
+
+Z32
+
+= fθ = T · α · h(t)g(x)
+
+Z31
+Z3B
+
+∼ PP (f ) ,
+
+Time (Arrows denote event occurances)
+
+where α is the average occurrence rate, h is a density
+for locations, g is the marking density and PP denotes
+the inhomogeneous Poisson process. We might wish
+for the density h to capture periodic activity due to
+time-of-day effects, for example by having the intensity
+be a step function of the time.
+However, real collections of events often exhibit dependencies that cannot be captured by a standard Poisson process (the Poisson process makes the assumption that the number of events that occur in two nonoverlapping time intervals must be independent). One
+way to capture such dependencies is to consider Cox
+processes, which are Poisson processes with a random
+mean measure. In particular, consider mean measures
+that take the form of latent Markov processes. In
+queueing theory, this kind of model is referred to as
+a Markov-Modulated Poisson Process [Rydén, 1996]
+and it has been used as a model for packets in networks [Fischer and Meier-Hellstern, 1993].
+2.1
+
+Events Causing Other Events
+
+In this paper we take a different approach to modeling
+collections of dependent events in which the occurrence
+of an event (t, x) triggers a Poisson process consisting
+of other events. Specifically, we model the triggered
+Poisson process as having intensity
+k(t,x) (t0 , x0 )
+
+= α(x)gθ (x0 |x)hθ (t0 − t)
+
+(1)
+
+α(x)
+
+is
+
+the expected number of events
+
+hθ (t)
+
+is
+
+the delay density
+
+gθ
+
+is
+
+the label transition density.
+
+Denote by Π0 the events caused by a baseline Poisson
+process with mean measure µ0 and let Πi be the events
+triggered by events in Πi−1 :
+D = ∪i Πi
+
+(2)
+
+Π0 ∼ PP (µ0 )
+
+Πi ∼ PP 
+
+
+X
+
+(t,x)∈Πi−1
+
+kt,x (·, ·) .
+
+Figure 1: A diagram of the overlapping intensities and
+one possible forest that corresponds to these events.
+Alternatively, we can use the superposition property
+of Poisson processes to write a recursive definition:
+
+
+X
+D ∼ PP µ0 +
+k (t0 , x0 ) .
+(3)
+(t,x)∈D
+
+This definition makes sense only when k(t0 ,x0 ) is positive only for t > t0 , since an event (t, x) can only
+cause resulting events at a later time, requiring that
+hθ (t) = 0 for t ≤ 0.
+View as a Random Forest In our model, each
+event is either caused by the background Poisson process or a previous event (see Figure 1). If we augment
+the representation to include the cause of each event,
+the object generated is a random forest, where each
+event is a node in a tree with timestamp and features
+attached. The parent of each event is the event that
+caused it; if that does not exist, it must be a root node.
+Let π(p) be the event that caused p, or ∅ if the parent
+does not exist. Usually, this parenthood information
+is not available and must be estimated, which corresponds to estimating the tree structure from an enumeration of the nodes, their topological sort, timestamps and features. We show how this distribution
+over π(p) can be estimated by an EM algorithm.
+2.2
+
+Model Fitting
+
+The parameters of our model can be estimated with
+an EM algorithm [Dempster et al., 1977]. If π(p), the
+cause of the event, was known for every event, then
+it would be possible to estimate the parameters µ0 ,
+α, g and h using standard results for maximum likelihood estimation under a Poisson distribution. Since π
+
+is not observed, we can use EM to iteratively estimate
+the latent variables and maximize the parameters. For
+uniformity of notation, assume that there is a dummy
+event (0, ∅) and k(0,∅) (t, x) = fbase (t, x) so that we can
+treat the baseline intensity the same as all the other intensities resulting from events. We introduce z(t0 ,x0 ,t,x)
+as expectations of the latent π where z(t0 ,x0 ,t,x) corresponds to the expectation of 1(π(t,x)=(t0 ,x0 )) . Neglecting terms that don’t depend on the EM variables z,
+
+
+X
+X
+L =
+log 
+k(t0 ,x0 ) (t, x)
+(t0 ,x0 )∈D0:t
+
+(t,x)∈D
+
+
+≥
+
+X
+
+(t,x)∈D
+
+s.t.
+
+
+X
+
+X
+
+z(t0 ,x0 ,t,x) log k(t0 ,x0 ) (t, x)
+
+(t0 ,x0 )∈D0:t
+
+z(t0 ,x,0,x,y) = 1.
+
+t0 ,x0
+
+The bound is tight when
+z(t0 ,x0 ,t,x) = P
+
+log k(t0 ,x0 ) (t, x)
+.
+(t0 ,x0 ) log k(t0 ,x0 ) (t, x)
+
+These z variables act as soft-assignment proxies for π
+and allow us to compute expected sufficient statistics
+for estimating the parameters in fbase and k. The specific details of this computation depend on the specific
+choices made for fbase and k, but this basically reduces
+the estimation task to that of estimating a distribution from a set of weighted samples. For example, if
+fbase (t, x) = α1(0≤t≤T ) g(x) where g(x)
+P is some labeling distribution, then α̂M LE = T −1 (t,x) z(0,∅,t,x) .
+Regardless of the delay and labeling distributions and
+the relative intensities of different events, the total intensity of the total mean measure should be equal to
+the number of events observed. This can either be
+treated as a constraint during the M step if possible
+(for example, if α(x) has a simple form), or the results
+of the M step should be projected onto this set of solutions by scaling k and fbase , increasing the likelihood
+in the process.
+
+handled by introducing more latent variables—one for
+each element. Thus the credit-assigning step builds a
+distribution not only over the past events that were
+potential causes, but also the individual components
+of the mixture.
+2.3
+
+The Fertility Model
+
+A key design choice is the choice of α(x), the expected
+number of events. When x ranges over a small space
+it may be possible to directly estimate α(x) for each x.
+However, with a larger feature space, this approach is
+infeasible for both computational and statistical reasons and so a functional form of the fertility function
+must be learned. In presenting these fertility models,
+we assume for simplicity that x is a binary feature
+vector.
+Linear Fertility We consider α(x) = α0 +β T x with
+the restriction α0 ≥ 0, β ≥ 0. By Poisson
+P additivity
+it is possible to factor α(x) into α0 + i:xi =1 βi and,
+as part of the EM algorithm, build a distribution over
+the allocation of features to events, collecting sufficient
+statistics to estimate the values. Note that β ≥ 0 is
+an important restriction, since the mean of each of
+the constituent Poisson random variables must be nonnegative.
+This can be somewhat relaxed by considering
+α(x) =
+P −
+−T
+α0 +β +T x+β
+(1
+−
+x)
+where
+α
+≥
+β
+.
+Foregoing
+0
+i
+i
+P
+the α0 ≥ i βi− restriction allows the intensity to be
+negative which does not make probabilistic sense.
+Multiplicative Fertility The linear model of fertility places significant limits on the negative influence
+that features are allowed to exhibit and also implies
+that the fertility effect of any feature will always be the
+same regardless of its context.
+
+QAlternatively, we can
+estimate α(x) = exp β T x = i wixi for w = exp β,
+where we assume that one of the dimensions of x is a
+constant 1, leading to derivatives having the form:
+Y
+X
+X
+X
+xj
+∂
+L=−
+xj
+wixi +
+z(t0 ,x0 ,t,x) .
+∂wj
+wj
+0 0
+t,x∈D
+
+Additive components. It is possible to develop
+more sophisticated models by making k(t,x) more
+complex.
+Consider a mixture k(t,x) (t0 , x0 ) =
+PL (l)
+0
+0
+(l)
+are individual densities.
+l=1 k(t,x) (t , x ) where k
+For example, in the Wikipedia edit modeling domain,
+(1)
+k(t,x) can produce events similar to x at a time close
+(2)
+k(t,x)
+
+to t, whereas
+can correspond to more thoughtful
+responses that occur later but also differ more substantially from the event that caused them. Since the
+EM algorithm introduces a latent variable for every
+additive component inside the logarithm, the separation of some components into a further sum can be
+
+i6=j
+
+t,x∈D t ,x ∈D0:t
+
+The exact solution for a single wj is readily obtained,
+so we can optimize L by either coordinate descent or
+gradient steps. An alternative approach based on Poisson thinnings is described in Simma [2010].
+Combining Fertilities It is also possible to build a
+fertility model that combines additive and multiplicative components:
+
+
+(0)
+α(x) = α0 + β (0)T x + exp α01 + β (1)T x + · · · .
+The EM algorithm distributes credit between the con
+stant term β (0)T x and the terms exp α01 + β (1)T x .
+
+A possible concern is that this requires fitting a large
+number of parameters. A special case is when x has
+a particular structure and there is reason to believe
+that it is composed of groups of variables that interact
+multiplicatively within the group, but linearly among
+groups, in which case the multiplicative models can be
+used on only a subset of variables.
+Additionally, it is possible to build a fertility model of
+the form
+
+
+(0)
+α(x) = α0 + β (0)T x · exp α01 + β (1)T x
+by using linearity to additively combine intensities
+and using thinning to handle the multiplicative factors [Simma, 2010].
+2.4
+
+Computational Efficiency
+
+In this section we briefly consider some of the principal challenges that we needed to face to fit models to
+massive data (in particular for the Wikipedia data).
+For certain selections of delay and transition distributions, it is possible to collapse certain statistics together and significantly reduce the amount of bookkeeping required. Consider a setting in which there
+are a small number of possible labels, that is, xi ∈
+{1 . . . L} for small L, and the delay distribution h(t)
+is the exponential distribution hλ (t) = 1(λ) exp (−λx).
+We can use the memorylessness of the exponential distribution to avoid the need to explicitly build a distribution over the possible causes of each event.
+Order the events by their times t1 , . . . , tn and let
+lij
+
+=
+
+exp (λti−1 − λti ) bi−1,j (li−1,j + ti − ti−1 ) /bij
+
+bij
+
+=
+
+exp (λti−1 − λti ) bi−1,j + α(xi )g(j|xi ).
+
+Let i(s) = inf{ti : ti < s} and note that the intensity
+at time s for a label of type j is
+
+exp λti(s) − λs bi(s),j + fbase (s, j),
+and the weighted-average delay is li(s),j + s − ti(s) .
+Counting the number of type j events triggering type
+k can be done with similar techniques by letting bi,j,k
+(the intensity at time i(s) for events j caused by k)
+change only when an event k is encountered. If the
+transition density is sparse, only some bij need to be
+incremented and the rest may be left unmodified, as
+long as the missing exponential decay is accounted for
+later. While this computational technique works for
+only a restricted set of models and has computational
+complexity O(|D|z̄) where z̄ is the average number of
+non-zero k(·, x) entries, it is much more computationally efficient than the direct method when there are a
+large number of somewhat closely spaced events.
+
+For large-scale experiments on Wikipedia, we use
+Hadoop, an open-source implementation of MapReduce [Dean and Ghemawat, 2004]. The object that we
+map over is a collection of a page and its neighbors in
+the link graph.1 Each map operation also accesses the
+hyperparameters shared across pages and runs multiple EM iterations over the events associated with that
+page. The learned parameters are returned to the reducer which updates the hyperparameters and another
+MapReduce job fits models with these updated hyperparameters. Thus, the reduce step only accumulates
+statistics for the hyperparameters, as well as collects
+log-likelihoods.
+Hadoop requires that each object being mapped over
+be kept in memory, which requires careful attention to
+representation and compression; these memory limits
+have been the key challenge in scaling. If each neighborhood does not fit in memory, it is possible to break
+it into pieces, run the E step in the Map phase and
+then use the Reduce phase to sum up all the sufficient
+statistics and maximize parameters, but this requires
+many more chained MapReduce jobs, which is inefficient. For our experiments, careful engineering and
+compression was sufficient.
+
+3
+
+Twitter Messages
+
+Twitter is a popular microblogging website that is
+used to quickly post short comments for the world
+to see. We collected Twitter messages (composed of
+the sender, timestamp and body) that contained references to stock tickers in the message body. Some
+messages form a conversation; others are posted as
+a result of a real-world event inspiring the commentary. The dataset that we collected contains 54717
+messages and covers a period of 39 days. For modeling, each message can be represented as a triple of
+a user, timestamp and a binary vector of features. A
+typical message
+User:
+
+SchwartzNow
+
+Time:
+
+2009-12-17T19:20:15
+
+Body: also for tommorow expect
+high volume options traded stocks
+like $aapl,$goog graviate around the
+strikes due to the delta hedging
+1
+This is generated with a sequence of MapReduce jobs
+where we first compute diffs and featurize, then for each
+page we gather a list of neighbors that require that page’s
+history, and finally each page sends a copy of itself to all
+its neighbors. A page’s body is insufficient to determine
+its neighbors since the body only contains outgoing (not
+incoming) links so the incoming links need to be collected
+first.
+
+occurs on 2009-12-17 at 19:20:15 and has the features
+$AAPL and $GOOG and is missing features such as
+$MSFT and HAS_LINK. Due to length constraints
+and Internet culture, the messages tend to not be completely grammatical English and often a message is
+simply a shortened Web link with brief commentary.
+In addition to the stocks involved and whether links
+are involved, features also denote the presence or absence of keywords such as “buy” or “option.”
+
+Train log−liklelihood
+
+Test log−liklelihood
+
+Mix 4 Unif
+Mix 2 Unif
+Unif(0,2000)
+Unif(0,1000)
+Gamma(k=0.5)
+Gamma(k=0.6)
+Gamma(k=0.7)
+
+Baseline Intensities The simplest possible baseline
+intensity is a time-homogeneous Poisson process, but
+the empirical intensity is very periodic. A better baseline is to break up the day into intervals of (for example) an hour, assume that the intensity is uniform
+within the hour and that the pattern repeats. So,
+h(t) = pbt/24c . The log-likelihoods for these baselines
+are reported in Table 1. It is worth noting that the
+gain from incorporating periodicity in the baseline is
+much smaller than the gain from the other parts of the
+model.
+This timing model must be combined with a feature
+distribution. We use a fully independent model, where
+each feature is present independently of the others.
+Q g (x)
+1−g (x)
+That is, g(x) = i pi i (1 − pi ) i , where gi is
+the ith feature. Clearly, the MLE estimates for pi are
+simply the empirical fraction of the data that contains
+that feature.
+3.1
+
+Intensity and Delay Distributions
+
+When events can trigger other events, each induces
+a Poisson process of successor events.
+We factor the intensity for that process as k(t,x) (t0 , x0 ) =
+α(x)g(x0 |x)h(t0 − t), with the constituents described
+in Eq. 1. For the intensity, we implemented a multiplicative model where the expected number of events
+is α(x) = exp(β T x). The delay distribution h must
+capture the empirical fact that most responses occur
+shortly after the original message, but there exist some
+responses that take significantly longer, meaning that
+h needs a sufficiently heavy tail. As candidates, we
+consider uniform, piecewise uniform, exponential and
+gamma distributions.
+Log-likelihoods for different delays are reported in Figure 2. The transition function used, gγ , is described
+later. The best performing delay distribution is the
+gamma, with shape parameters less than 1; the shape
+parameter is also estimated in the results of Table 1.
+Note that the results show that the choice of a delay
+distribution has a smaller impact on the overall likelihood than the transition distribution. This is due
+in part to the fact that for an individual event the
+features are embedded in a large space and there is
+
+Gamma(k=0.8)
+Gamma(k=0.9)
+Exponential
+−1.44 −1.45 −1.46 −1.47 −1.48 −1.49 −5.7
+Log−likelihood (1e5)
+
+−5.75
+−5.8
+Log−likelihood (1e4)
+
+−5.85
+
+Figure 2: Log-likelihoods for various delay functions.
+more to explain. The predictive ability of the Poisson
+process associated with an event to explain the specific features of a resultant event is the predominant
+benefit of the model.
+3.2
+
+Transition Distribution
+
+The remaining aspect of the model is the transition
+distribution g(x|x0 ) that specifies the types of events
+that are expected to result from an event of type
+x0 . Let’s consider the possible relationships between
+a message and its trigger:
+1. A simple ‘retweet’—a duplication of the original
+message.
+2. A response—a message either prompts a specific
+response to the content of the message, or motivates another message on a similar topic.
+3. After a message, the probability of another (possibly unrelated) message is increased because the
+original event acts as a proxy for general user activity. These kinds of messages represent variation in the baseline event rate not captured by
+the baseline process and are unrelated to the triggering message in content, so they should take on
+a distribution from the prior.
+We construct a transition function parametrized by γ
+that is a product of independent per-feature transitions, each a mixture of the identity function and the
+prior:
+
+
+Y
+x0
+1−x0
+gγ (x, x0 ) =
+(1 − γ) 1(xi =x0 ) + γpi i 1 − pi i .
+i
+
+i
+
+Note that gγ is not a mixture of the identity and the
+prior.
+
+Table 1: Log-likelihoods for models of increasing sophistication.
+
+800
+600
+400
+200
+
+Proportion of Intensity
+
+Mean Delay for Component(secs)
+
+Component-wise mean delay
+
+1000
+
+00
+0.9
+0.8
+0.7
+0.6
+0.5
+0.4
+0.3
+0.2
+0.1
+0.00
+
+5
+
+10
+
+15
+
+20
+Iteration
+
+Independent Component
+g Component
+Identical Component
+Overall
+25
+
+30
+
+35
+
+40
+
+Mixture Components
+Independent Component
+g Component
+Identical Component
+
+5
+
+10
+
+15
+
+20
+Iteration
+
+25
+
+30
+
+35
+
+40
+
+Figure 3: Trace of parameters of the individual mixture components in model 5.
+We denote two important special cases as g1 , where
+each resultant event is drawn independently, and g0 ,
+where the caused events must be identical to the trigger. With an exponential delay distribution and α(x)
+fixed at 1, g0 is equivalent to setting the Poisson intensity to an exponential moving average with decay
+parameter determined by λ. The EM algorithm can
+be used to find the optimal decay parameter, but as
+the reported results show, this model is inferior to one
+that utilizes the features of the events.
+Earlier, we enumerated relationships between a message and its trigger. For example, the retweets are
+completely identical to the original, with the possible exception of a “@username” reference tag, so the
+transition would be g0 . A response would have similar
+features but may differ in a few features, and a densityproxy message would have features independent of the
+causing message, corresponding to gγ for 0 < γ < 1.
+g1 models the density-proxy phenomenon.
+Let us now consider some possible models, where the
+Greek letters represent parameters to be estimated:
+
+k1(t,x) (t0 , x0 ) = exp α1 + β1T x h1 (t0 − t) g1 (x, x0 )
+
+k2(t,x) (t0 , x0 ) = exp α2 + β2T x h2 (t0 − t) gγ (x, x0 )
+
+k3(t,x) (t0 , x0 ) = exp α3 + β3T x h3 (t0 − t) g0 (x, x0 )
+
+k4(t,x) (t0 , x0 ) = exp α4 + β4T x h4 (t0 − t) ×
+
+Type
+Homogeneous Baseline Only
+Periodic Baseline Only
+Exp
+Delay,
+Independent
+transition(k1 )
+Intensity doesn’t depend on features, Exp Delay, gγ transition
+Feature-dependent intensity, Exp
+Delay, Identity transition (k3 )
+Exp Delay, hγ transition (k2 )
+Shared intensity, shared Exp delay,
+mixture transition (k4 )
+Mixture of (intensity, exp delay,
+different transitions) (k5 )
+Mixture of (intensity, gamma delay,
+different transitions)
+
+Train
+-167810
+-164695
+-161905
+
+Test
+-66050
+-64758
+-63017
+
+-145752
+
+-57383
+
+-146558
+
+-57810
+
+-145557
+-145629
+
+-57313
+-57379
+
+-145152
+
+-57130
+
+-144621
+
+-56966
+
+the ith phenomenon, while k4 and k5 are intended to
+capture all three effects.
+´ Both g and h are densities, so
+it’s easy to compute k(t,x) (t, x, t0 , x0 )dt0 dx0 . The results, shown in Figure 1, indicate that models 4 and 5
+are significantly superior to the first three, demonstrating that separating the multiple phenomena is useful.
+For h, we use an exponential distribution.
+In model 4, all the transition distributions share the
+same fertility and delay functions,whereas in model 5,
+each distribution has its own fertility and delay. As
+shown in Figure 3, the latter performs significantly
+better, indicating that the three different categories of
+message relationships have different associated fertility
+parametrizations and delays. The top plot shows the
+proportions of each component in the mixture, defined
+as the ratio of the average fertility of the component to
+the total fertility. The bottom plot demonstrates that
+while the mean delay of the overall mixture remains
+almost constant throughout the EM iterations, different individual components have substantially different
+delay means.
+3.3
+
+Results and Discussion
+
+Table 1 reports the results for a cascade of models of increasing sophistication, demonstrating the gains that
+result from building up to the final model. The first
+stage of improvements, from the homogeneous to the
+periodic baseline and then to the independent transition model focuses on the times at which the events
+occur, and shows that roughly equivalent gains follow
+0
+0
+0
+(η1 g1 (x, x ) + η2 gγ (x, x ) + η3 g0 (x, x )) from modeling periodicity and from further capturing
+less periodic variability with an exponential moving
+3
+X
+average. The big boost comes from a better labeling
+0
+0
+0
+0
+k5(t,x) (t , x ) =
+ki(t,x) (t , x ).
+distribution that allows the features of events to dei=1
+pend on the previous events, capturing both the topicThe models ki for i from 1 to 3 are designed to capture
+wise hot trends and specific conversations.
+
+Of course, the shape of the induced Poisson process has
+an effect. The different types of transitions have distinctly different estimated means for their delay distributions, which is to be expected since they capture different effects. As seen in Figure 3 the overall-intensity
+proxying independent transition has the highest mean,
+since the level of activity, averaged over labels, changes
+slower than the activity for a particular stock or topic.
+For shape, lower k, higher-variance gamma distributions work best.
+The final component is a fertility model that depends
+on the features of the event and allows some events
+to cause more successors than others. This actually
+has less impact on the log-likelihood than the other
+components of the model.
+
+4
+
+Wikipedia
+
+Wikipedia is a public website that aims to build a
+complete encyclopedia through user edits. We work
+to build a probabilistic model for predicting edits to
+a page based on revisions of the pages linking to it.
+Causes outside of that neighborhood are not considered. The reasons for that restriction are primarily computational—considering all edits as potential
+causes for all other edits, even within a short time
+window, is impractical on such a large scale. As a
+demonstration of scale, we model 414,540 pages with a
+total of 71,073,739 revisions (the raw datafile is 2.8TB
+in size), involving billions of considered interactions
+between events.
+4.1
+
+Structure in Wikipedia’s History
+
+As we build up a probabilistic model for edits, it’s
+useful to consider the kinds of structure we would like
+the model to capture. Edits can be broadly categorized
+into:
+Minor Fixes: small tweaks that include spelling corrections, link insertion, etc. Only one or a few words
+in the document are affected.
+Major Insert: Often, text is migrated from a different page such that we obtain the addition of many
+words and the removal of none or very few. From
+the user’s perspective, this corresponds to typing or
+pasting in a body of text with minimal editing of the
+context.
+Major Delete: The opposite of a major insert. Often
+performed by vandals who delete a large section of the
+page.
+Major Change: An edit that affects a significant
+number of words but is not a simple insert or delete.
+
+Self delay, component 1
+
+0
+
+50
+
+Neighbor delay, component 1
+
+100
+150
+Mean (hours)
+Self delay, component 2
+
+200
+
+0
+
+50
+
+100
+150
+Mean (hours)
+Neighbor delay, component 2
+
+0
+
+1
+
+2
+3
+Mean (hours)
+Self delay, component 3
+
+4
+
+5
+
+0
+
+1
+
+0
+
+0.1
+
+0.2
+0.3
+Mean (hours)
+
+0.4
+
+0.5
+
+0
+
+0.1
+
+2
+3
+4
+Mean (hours)
+Neighbor delay, component 3
+
+0.2
+0.3
+Mean (hours)
+
+0.4
+
+200
+
+5
+
+0.5
+
+Figure 4: Delay distribution histogram over all pages.
+
+Revert: Any edit that reverts the content of the page
+to a previous state. Often, this is the immediately
+previous state but sometimes it goes further back. A
+revert is typically a response to vandalism, though edits done in good faith can also be reverted.
+Other Edit: A change that affects more than a couple
+of words but is not a major insert or delete.
+
+4.2
+
+Delay Distributions
+
+Since most pages have many neighbors, each event has
+a large number of possible causes and the mean measure at each event is the sum over many possible triggers. This means the exact shape of the delay distribution is not as important as in cases when only a few
+possible triggers are considered. We model the delay
+as a mixture of three exponentials, intending them to
+capture short, medium and longer-term effects. For
+each page, we estimate both the parameters and the
+mixing weights. Figure 4 shows a histogram of the
+estimated means.
+One component is a very fast response, with an average of 3.6 minutes for the same-page and 13.8 minutes
+for the adjacent-page delay. On the same page, the
+component captures edits caused by each other, either
+when an individual is making multiple modifications
+and saving the page along the way, or when a different user noticing the revisions on a news feed and instantly responding by changing or undoing them. The
+remaining components capture the periodic effects and
+time-varying levels of interest in the topic, as well as
+reactions to specific edits.
+
+The model needs to capture the significant attributes
+of the revision, in addition to its timestamp, but we
+don’t aim to completely model the exact content of the
+edit, as the inadequacies of that aspect of the model
+would dominate the likelihood. Instead, we identify
+key features (type—revert, major insert, etc—whether
+the edit was made by a known user, and the identity
+of the page) of the edits and build a distribution over
+events as described by those features, not the raw edits.
+
+Log-likelihood
+
+Transition Distribution
+
+8.90 1e7
+8.95
+9.00
+9.05
+9.10
+9.15
+9.20
+9.25
+9.30
+9.35
+No Neighbors
+2.36
+
+1e7
+
+Train
+
+Neighbors,
+Neighbors,
+Same Transition Test Diff Transition
+
+Unregularized
+Transition
+Regularized
+Transition
+Neighbors,
+Own Intensity
+
+2.38
+Log-likelihood
+
+4.3
+
+2.40
+
+2.42
+
+2.44
+
+Unregularized
+
+2.46
+
+Regularized
+
+Transition
+
+Transition
+
+No Neighbors
+
+2.48
+
+When a page with features x triggers an event with features x0 , the latter vector is drawn from a distribution
+over possible features. When the number of possible
+feature combinations is small, the transition matrix
+can be directly learned, but when there are multiple
+features, or features which can take on many values,
+we need to fit a structured distribution. We partition
+the features into two parts as x = (x1 , x2 ), where x1
+are features that can appear in any revision (such as
+the type of the edit and whether the editor is anonymous) and where x2 is the identity of the page. Note
+that x2 can take on very many values, each one appearing relatively infrequently. There are a vast number of
+observations and we can directly learn the transition
+matrix h1 (x1 , x01 ). For each target page x02 , we model
+an x1 transition as
+x01 |x1 , x2
+θx1 ,x2
+
+∼ Dirichlet (γx1 )
+
+• No Neighbors: The revisions on each page can
+be caused either by the baseline or a previous revision on that page but not by revisions of the
+neighbors:
+0
+
+0
+
+= 1(x2 =x? ) αs g(x0 |x)hs (t0 − t)
+2
++ 1(x2 ∈δx? ) αn g(x0 |x)hn (t0 − t).
+2
+
+Figure 5 shows log-likelihoods of successive iterations
+of the model. The regularized versions use the Dirichlet prior; the others estimate θ on each page independently. The bars correspond to:
+
+0
+
+Neighbors,
+Own Intensity
+
+Poisson process of edits on the page. That process has its own delay distribution and intensity,
+but those are the same for all neighbors. The
+transition conditional distribution is the same for
+both events
+x?
+
+which, due to conjugacy, corresponds to shrinkage towards γx1 . As more transitions are observed, the
+page’s transition probability becomes more driven by
+the specific observed probabilities on that page. The
+allocation over components of γ is directly maximized,
+while the magnitude of γ is chosen over a validation
+set. x2 is handled by fixing a particular page that we
+refer to as x?2 and fitting a model for revisions of that
+page, (x1 , x?2 ). Then, the process over all the pages is
+a superposition of processes over each possible x2 .
+
+x?
+2
+
+Neighbors,
+Diff Transition
+
+Figure 5: Log-Likelihoods of various models. Models with regularized transition matrices perform significantly better on unseen data, but non-trivially worse
+on the training set, indicating strong regularization.
+The baseline-only is not shown but has −1.48 × 108
+training and −3.98 × 107 test log-likelihoods.
+
+2
+k(t,x)
+(t0 , x0 )
+
+∼ Multinomial (θx1 ,x2 )
+
+Neighbors,
+Same Transition
+
+0
+
+Parameters for functions with different subscripts
+are estimated separately.
+• Neighbors, Different Transitions: Same as
+above, but uses different transition distributions
+for x?2 and its neighbors:
+x?
+
+2
+k(t,x)
+(t0 , x0 )
+
+=
++
+
+1(x2 =x? ) αs gs (x0 |x)hs (t0 − t)
+2
+1(x2 ∈δx? ) αn gn (x0 |x)hn (t0 − t).
+2
+
+Here, the parameters for the two different g are
+estimated separately and are regularized towards
+γ same or γ neighbor , respectively.
+• Neighbors, Own Intensities: Each neighbor
+has its own α parameter:
+α(x, x0 ) = 1(x? =x0 ,x2 neighbor of
+2
+2
+
+αx2 .
+x?
+2)
+
+0
+
+k(t,x) (t , x ) = 1(x2 =x? ) αg(x |x)h(x, x , t − t).
+2
+
+• Neighbors, Same Transition: Revisions to the
+neighbors of the page in the link graph cause a
+
+For most pages there is insufficient data to estimate the individual αs accurately; regularization
+of α is required and is discussed later.
+
+agonal is predominantly positive, indicating that an
+event of a particular type on a neighbor makes an
+event of the same type more likely on the current
+page. Note the significantly positive rectangle for transitions between massive inserts, deletions and changes.
+The magnitude of the ratio is almost identical in the
+rectangle; significant modifications induce other large
+modifications but the specific type of modification, or
+whether it is made by a known user, are irrelevant.
+Large changes act as indications of interest in the topic
+or significant structural changes in the related pages.
+
+REVERT
+UNKNOWN_CONTRIB
+
+REVERT
+KNOWN_CONTRIB
+
+MINOR_TWEAK
+KNOWN_CONTRIB
+
+MINOR_TWEAK
+UNKNOWN_CONTRIB
+
+Caused Event
+
+MASS_INS
+UNKNOWN_CONTRIB
+
+MASS_INS
+KNOWN_CONTRIB
+
+MASS_DEL
+UNKNOWN_CONTRIB
+
+MASS_DEL
+KNOWN_CONTRIB
+
+MASS_CHANGE
+KNOWN_CONTRIB
+
+MASS_CHANGE
+UNKNOWN_CONTRIB
+
+DEFAULT
+UNKNOWN_CONTRIB
+
+REVERT
+UNKNOWN_CONTRIB
+!SELF
+REVERT
+KNOWN_CONTRIB
+!SELF
+MINOR_TWEAK
+UNKNOWN_CONTRIB
+!SELF
+MINOR_TWEAK
+KNOWN_CONTRIB
+!SELF
+MASS_INS
+UNKNOWN_CONTRIB
+!SELF
+MASS_INS
+KNOWN_CONTRIB
+!SELF
+MASS_DEL
+UNKNOWN_CONTRIB
+!SELF
+MASS_DEL
+KNOWN_CONTRIB
+!SELF
+MASS_CHANGE
+UNKNOWN_CONTRIB
+!SELF
+MASS_CHANGE
+KNOWN_CONTRIB
+!SELF
+DEFAULT
+UNKNOWN_CONTRIB
+!SELF
+DEFAULT
+KNOWN_CONTRIB
+!SELF
+REVERT
+UNKNOWN_CONTRIB
+SELF
+REVERT
+KNOWN_CONTRIB
+SELF
+MINOR_TWEAK
+UNKNOWN_CONTRIB
+SELF
+MINOR_TWEAK
+KNOWN_CONTRIB
+SELF
+MASS_INS
+UNKNOWN_CONTRIB
+SELF
+MASS_INS
+KNOWN_CONTRIB
+SELF
+MASS_DEL
+UNKNOWN_CONTRIB
+SELF
+MASS_DEL
+KNOWN_CONTRIB
+SELF
+MASS_CHANGE
+UNKNOWN_CONTRIB
+SELF
+MASS_CHANGE
+KNOWN_CONTRIB
+SELF
+DEFAULT
+UNKNOWN_CONTRIB
+SELF
+DEFAULT
+KNOWN_CONTRIB
+SELF
+DEFAULT
+KNOWN_CONTRIB
+
+Features of the Causing Event
+
+Baseline
+
+Figure 6: Learned Transition Matrix. The area of
+the circles corresponds to the logarithm of the conditional probability of the observed feature, divided by
+the marginal. The yellow, light-colored circles correspond to the transition being more likely than average;
+red correspond to the transition being less likely.
+
+4.4
+
+Learned Transition Matrices
+
+Figure 6 shows the estimated transition matrix. Each
+circle denotes log(g(x, x0 )/p(x0 )); when it is high, that
+label of the caused event is much more likely than it
+would be otherwise.
+The top row represents the intensity for the baseline,
+the labels of events whose cause is not a previous
+event. Positive values correspond to event types that
+the events-triggering-events aspect of the model is less
+effective in capturing and thus are over-represented in
+the otherwise-unexplained column. Reverts, both by
+known and anonymous contributors, are significantly
+underrepresented, indicating that the rest of the model
+is effective in capturing them. Revisions made by
+known contributors are under-represented, as the rest
+of the model captures them better than the edits made
+by anonymous contributors. Events generated from
+this row account for 23.87% of total observed events.
+The next block corresponds to edits on neighbors causing revisions of the page under consideration and are
+responsible for 19.11% of observed events. The di-
+
+The remaining block represents edits on a page causing
+further changes on the same page and is responsible for
+57.02% of the observations. There is a stronger positive diagonal component here than above, as similar
+events co-occur. Large changes, especially by anonymous users, lead to an over-representation of reverts
+following them. On the other hand, reverts result in
+extra large changes, as large modifications are made,
+reverted and come back again feeding an edit war.
+Reverts actually over-produce reverts. This is not a
+first-order effect, since reverts rarely undo the previous undo, but rather captures controversial moments.
+The presence of a revert is an indication that previously, an unmeritorious edit was made, which suggests
+that future unmeritorious edits (that tend to be long
+and spammy) that need to be reverted are likely.
+4.5
+
+Regularizing Intensity Estimates
+
+When for a fixed page x?2 an edit occurs on its neighbor, one would expect the identity of the neighbor to
+affect its likelihood of causing an event on x?2 . As
+it turns out, effectively estimating the intensities between a pair of pages is impractical unless a very large
+number of revisions have been observed. Even in the
+high-data regimes, strong regularization is required.
+We tried regularizing fertilities both towards zero and
+toward a common per-page mean, using both L1 and
+L2 penalties, but these regularizers empirically led to
+poorer likelihoods than using a single scalar α for all
+neighbors, suggesting that there is not enough data to
+accurately estimate individual αs. One reason is that
+pages with a large number of events also have a large
+number of neighbors, so the estimation is always in a
+difficult regime. Furthermore, the hypothetical ‘true’
+values of these parameters will change with time, as
+new neighbors appear and change.
+Let mi be the number of revisions of the ith neighbor
+page and let ni be the expected number of events triggered by that neighbor’s revisions. One approach that
+works in high-data regimes is to let
+P
+ni
+j nj
++ (1 − λ)
+,
+α̂i,REG = λ P
+m
+m
+j
+i
+j
+
+Table 2: Sample list of pages (in bold) and the intensities estimated for them and their top neighbors.
+This is under strong regularization, which explains the
+similarity of the weights.
+Page
+AH-64 Apache
+
+Int.
+0.49
+
+Page
+South Pole
+
+Int.
+0.46
+
+AH-1 Cobra
+CH-47 Chinook
+101st Airborne
+Division
+Mil Mi-24
+Flight simulator
+List of Decepticons
+
+0.063
+0.040
+0.040
+
+Equator
+Roald Amundsen
+Ernest Shackleton
+
+0.017
+0.016
+0.016
+
+0.037
+0.037
+0.034
+
+0.015
+0.015
+0.014
+
+Tom Clancy’s Ghost
+Recon Advanced
+Warfighter
+Command & Conquer
+
+0.034
+
+Geography of Norway
+Navigation
+South Georgia and
+the South Sandwich
+Islands
+National Geographic
+Society
+List of cities by
+latitude
+
+0.014
+
+0.033
+
+0.014
+
+for a parameter λ between zero and one, which yields
+an average between the aggregate and individual maximizers. The regularizer forces the P
+lower weights
+to
+P
+clump as each is lower-bounded by λ nj / mj . On
+a subset of the Wikipedia graph that includes only
+pages with more than 500 revisions, this improves
+held-out likelihoods compared to having a single α for
+all neighbors. The improvement is very small, however, certainly smaller than the impact of other aspects
+of the model. Example pages and intensities estimated
+for their neighbors are shown in Table 2.
+
+5
+
+Conclusions
+
+We have presented a framework for building models of
+events based on cascades of Poisson processes, demonstrated their applications and demonstrated scalability on a massive dataset. The techniques described in
+this paper can exploit a wide range of delay, transition
+and fertility distributions, allowing for applications to
+many different domains.
+One direction for further investigation is to provide
+support for latent events that are root causes for some
+of the observed data. Another is a Bayesian formulation that integrates instead of maximizes parameters;
+this may work better for complex fertility or transition distributions that lack sufficient observations to
+be accurately fit with maximum likelihood. Both extensions complicate inference and reduce scalability;
+indeed, Wingate et al. [2009] propose a Bayesian model
+with latent events but scaling is an issue. Furthermore, allowing the parameters of the model to depend
+on time (for example, letting the fertility be a draw
+from a Gaussian process) would be very useful, though
+again, computational issues are a concern.
+
+6
+
+Acknowledgements
+
+We gratefully acknowledge support for this research
+from Google, Intel, Microsoft and SAP.
+
+
+
+We present a generative model for representing and reasoning about the relationships among events in continuous time. We
+apply the model to the domain of networked and distributed computing environments where we fit the parameters of the
+model from timestamp observations, and
+then use hypothesis testing to discover dependencies between the events and changes
+in behavior for monitoring and diagnosis.
+After introducing the model, we present
+an EM algorithm for fitting the parameters and then present the hypothesis testing approach for both dependence discovery
+and change-point detection. We validate
+the approach for both tasks using real data
+from a trace of network events at Microsoft
+Research Cambridge. Finally, we formalize the relationship between the proposed
+model and the noisy-or gate for cases when
+time can be discretized.
+
+1
+
+Introduction
+
+The research described in this paper was motivated
+by the following real life application in the domain of
+networked distributed systems: In a modern enterprise network of scale, dependencies between hosts
+and network services are surprisingly complex, typically undocumented, and rarely static. Even though
+network management and troubleshooting rely on
+this information, automated discovery and monitoring of these dependencies remains an unsolved probJohn is now with Dickinson College, PA. Work done
+while a Researcher with Microsoft Research. Alex is with
+the University of California, Berkeley, CA. Work done
+while an intern with Microsoft Research.
+∗
+
+lem. In [2] we described a system called Constellation in which computers on the network cooperate
+to make this information available to all users of the
+network. Constellation takes a black-box approach
+to locally (at each computer/server in the network)
+learn explicit dependencies between its services using
+little more than the timings of packet transmission
+and reception. The black-box approach is necessary
+since any more processing of the incoming and outgoing communication packages would imply prohibitive
+amounts of overhead on the computer/server. The
+local models of dependency can then be recursively
+and distributively composed to provide a view of the
+global dependencies. In Constellation, computers
+on the network cooperate to make this information
+available to all users in the network.
+Constellation and its application to system wide
+tasks such as characterizing a networking site service and hosts dependencies for name resolution, web
+browsing, email, printing, reconfiguration planning
+and end-user diagnosis are described in [2]. This paper focuses on the probabilistic and statistical building blocks of that system: the probabilistic model
+used in the local learning, the EM algorithm used
+to fit the parameters of the model, and the statistics
+of the hypothesis testing used to determine the local
+dependencies. The model, which we call Continuous Time Noisy Or (CT-NOR), takes as input sequences of input events and output events and their
+time stamps. It then models the interactions between the input events and output events as Poisson
+processes whose intensities are modulated by a (parameterized) function taking into account the distance in time between the input and output events.
+Through this function the domain expert is able to
+explicitly encode knowledge about the domain. The
+paper makes the following contributions:
+
+1. Develops an EM algorithm for fitting all the parameters of this model and an algorithm for dependence discovery and change point detection
+based on statistical hypothesis testing.
+2. Evaluates the performance of the model and the
+inference procedures both on synthetic data and
+on real life data taken from a substantial trace
+of a large computer network.
+3. Formalizes the relationship between CT-NOR
+and the noisy-or (NOR) gate [11] when the time
+between the events can be discretized.
+This paper is organized as follows: Section 2 describes the model and Section 3 describes the EM
+algorithm for fitting the parameters. Section 4 is
+concerned with the relation to the NOR gate. The
+algorithms and framework for applying the model to
+dependency discovery and change point detection is
+described in Section 5. That section also contains
+validation experiments with synthetic data. Section 6 contains experiments on real data and results.
+Finally, Section 7 has some conclusions and future
+work.
+
+2
+
+The CT-NOR model
+
+In this section we formally describe the CT-NOR
+model with the objective of building the likelihood
+equation. First, we provide some background on
+Poisson Processes, and then we use them to construct the model (Eq. 4).
+A Poisson Process1 can be thought of as random
+process, samples from which take the form of a set
+of times at which events occurred. A Poisson Process is defined over a mean (base) measure f (t) and
+is characterized the property that for any interval
+(t1 , t2 ), the number of events that occur in that interval follows
+the Poisson distribution with the param´t
+eter t12 f (t)dt. Furthermore, the number of events
+that occur on two disjoint intervals are independent.
+
+(j)
+
+time of the lth output event and ik the time of
+the kth input on channel j. Furthermore, let n
+denote the number of output events and n(j) the
+number of input events on channel j. Then event
+k in input channel j generates a Poisson process
+(j)
+of output events with the base measure pk (t) =
+(j)
+w(j) fθ (t − ik ).
+The term w(j) represents the average number of output events that we expect each input event on channel j to be responsible for, and fθ (t) is the distribution of the delay between an input and the output
+events caused by it, taking as its argument the delay
+between the time of the output ol and the time of
+(j)
+the input ik . The mathematical structure of the
+intensity makes intuitive sense: the probability that
+a given input event caused a given output event depends on both the expected number of events it generates and the “distance” in time between them.
+We recall that given multiple independent Poisson
+processes (denoted as P P ) we can use the sum of
+their intensities to construct a “global” Poisson proP Pn(j) (j)
+pk (t)) as the
+cess and write {ol } ∼ P P ( j k=1
+probability of the set of n outputs {ol }, 1 ≤ l ≤ n.
+The double sum runs over all the channels and over
+all input events in the channels. Intuitively, and similar to the NOR gate in graphical models [11], the
+independence between the between input channels
+translates into a model where the events in the output channel are “caused” by the presence of any (a
+disjunction) of input events in the input channels
+(with some uncertainty). The formal relation with
+NOR is presented in Section 4.
+We now proceed to write the likelihood of the data
+given
+P (j)the(j)model and the input events. Let λ =
+w , the total mass of the Poisson base meajn
+sure. The number n of outputs is distributed as a
+Poisson distribution
+
+n
+
+∼
+
+(1)
+
+P oisson(λ),
+
+2
+
+Let us use “channel” to denote a sequence of events.
+The CT-NOR model considers a single output channel and a set of input channels. Let ol denote the
+1
+This overview is very informal. The more general
+and formal measure-theoretic definition can be found in
+[5].
+2
+In the domain of computer networks, a channel refers
+to a unidirectional flow of networked packets. Thus a
+channel will be identified by the service (e.g., HTTP,
+LDAP, etc) and the IP address of the source or destination. In this paper we identified the packets with events
+as it is only their time stamp that matters.
+
+and the location of a specific output event ol is distributed with the probability density
+
+ol
+
+∼
+=
+
+P Pn(j)
+j
+
+k=1
+
+λ
+P Pn(j)
+j
+
+k=1
+
+(j)
+
+pk (ol )
+
+for l = 1 . . . n
+
+(2)
+
+(j)
+
+w(j) fθ (ol − ik )
+λ
+
+(3)
+
+The likelihood of observing a set {ol } of outputs is3 :
+
+L(o|i) = λn · e−λ
+
+n X (j)
+(j)
+Y
+w fθ (ol − i )
+k
+
+l=1 jk
+
+λ
+
+(4)
+
+Before concluding this section, we expand a bit on
+the function fθ as it is an important part of the
+model. This function provides us with the opportunity of encoding domain knowledge regarding the
+expected shape of the delay between input and output events. In our experience using CT-NOR to
+model an enterprise network we used two specific
+instantiations: a mixture of a narrow uniform and
+a decaying exponential and a mixture of a uniform
+and Gaussian. The uniform distribution captures
+the expert knowledge that a lot of the protocols involve a response within a window of time (we call
+this co-occurrence). The Gaussian delay distribution extends the intuitions of co-occurrence within
+a window to also capture dependencies that can be
+relatively far away in time (such as with the printer).
+The left tail of the Gaussian corresponding to negative delays is truncated. The exponential distribution captures the intuition that the possibility of
+dependency decays as the events are further away in
+time (this is true for the HTTP protocol). We will
+not explicitly expand these functions in the derivations as they tend to obscure the exposition. Needless to say that the parameters of these functions are
+all fitted automatically using EM as described in the
+next section.
+Groups of channels may have different delay distributions, in which case the delay distribution can be indexed by the channel group and all the derivations in
+this paper remain the same. For example, channels
+can be grouped by network service, where all HTTP
+channels have the same delay distribution (thus allowing data from multiple channels to assist in parameter fitting), but the DNS channels are allowed
+a different delay distribution. All the experiments in
+the paper use a leak — a pseudo-channel with a single event at the start of the observation period and
+a delay distribution that is uniform over the length
+of the observations. This leak captures events which
+are not explained by the remaining channels.
+
+3
+
+Fitting a CT-NOR model
+
+We perform inference and estimation on the model
+through the EM algorithm. We first set the stage
+by finding a suitable bounding function B(z) for the
+likelihood. The EM algorithm iteratively chooses a
+tight bound in the E step and then maximizes the
+(j)
+bound in the M step. Let zkl be some positive vector
+P
+(j)
+(j)
+such that jk zkl = 1 for each l. For a fixed l, zkl
+is the probability of the latent state indicating that
+packet k on channel j caused output l. Then from
+Eq. 4:
+log L(o|i) = −λ +
+
+n
+X
+
+X
+
+w(j) fθ (ol − ik )
+
+log
+
+X
+
+zkl
+
+l=1
+
+= −λ +
+
+n
+X
+
+jk
+
+l=1
+
+= −λ +
+
+n
+X
+
+(j)
+
+log
+
+(j) w
+
+Since the Poisson Process produces unordered outputs but the events are considered to be sorted, a permutation factor of n! is required. It cancels out the n! in
+the Poisson density.
+
+(j)
+
+fθ (ol − ik )
+(j)
+
+zkl
+
+jk
+
+log Ez
+
+(j)
+
+w(j) fθ (ol − ik )
+(j)
+
+zkl
+
+l=1
+
+Now, by Jensen’s inequality, log L(o|i) ≥ B(z)
+where:
+(j)
+
+B(z) = −λ +
+
+X
+
+Ez log
+
+w(j) fθ (ol − ik )
+(j)
+
+zkl
+
+l
+
+3.1
+
+E-Step
+
+For a particular choice of θ (the parameters of the fθ
+function) and w(j) , the bound above is tight when
+(j)
+
+(j)
+
+zkl = P
+
+w(j) fθ (ol − ik )
+(j ′ )
+
+j ′ k′
+
+because in that case,
+
+w(j ′ ) fθ (ol − ik′ )
+(j)
+
+w (j) fθ (ol −ik )
+
+is a constant for
+
+(j)
+zkl
+
+a fixed l and E log C = log EC = log C. Therefore,
+(j)
+we use these choice of zkl .
+3.2
+
+M-step
+(j)
+
+For a fixed choice of zkl , we need to maximize the
+bound with respect to w(j) and θ.
+Optimizing with respect to w(j) , we notice that the
+derivative is
+X X (j) 1
+∂B
+(j)
+=
+−n
++
+zkl (j)
+∂w(j)
+w
+l
+
+3
+
+(j)
+
+yielding
+
+ŵ
+
+(j)
+
+=
+
+(j)
+kl zkl
+n(j)
+
+P
+
+k
+
+With respect to θ, we can say that
+X (j)
+(j)
+zkl log fθ (ol − ik )
+θ̂ = arg max
+θ
+
+jkl
+
+which is simply the parts of the objective function
+that depend on θ. This can be a very easy optimization problem for a large class of distributions,
+as it is of the same form as maximum likelihood parameter observation given observed data points and
+corresponding counts. For example, for the exponential family, this simply requires moment matching: µ(θ̂) =
+
+P
+
+(j)
+
+jkl
+
+(j)
+
+zkl T (ol −ik )
+P
+(j)
+jkl zkl
+
+where µ(θ̂) is the mean
+
+parameterization of the estimated parameter θ̂ and
+T (·) are the sufficient statistics for the family.
+
+4
+
+Relation to Noisy Or
+
+As an alternative model, consider binning the observed data into windows of width δ and modeling
+the presence or absence of output events in a particular bin as a NOR [11]. The possible explanations
+(parents) are the presence of input events in preceding windows. We will show that a particular, natural
+parameterization of the NOR model is equivalent to
+CT-NOR in the limit, as the bin width approaches
+zero. This relationship is important because it provides a nontrivial extension of NOR to domains with
+continuous time and provides insight into the independence structure of the two models.
+Let Oδt be an indicator of presence of output events
+(j)δ
+between the times tδ and tδ + δ and It be the indicator for input events from channel j in that same
+time period. We will use PNOR to denote the probability under the NOR model and PCT-NOR for probability under CT-NOR.
+
+of distributions, this parameterization imposes only
+minor constraints on the weights, but will be useful
+for reasoning about NOR models which model the
+same data but with differing bin widths. When the
+bin width is halved, the probability that one of the
+sub-bins has an output event must be equal to the
+probability that the large bin has an output event
+plus a second-order term. This condition is required
+for a coherent parameterization of a family of NOR
+distributions and follows from the technical conditions placed on fθ .
+We argue that as the bin width δ decreases, this
+model becomes equivalent to a CT-NOR with a suitable choice of parameters. Choose a δ sufficiently
+small that each bin contains at most one input event
+per channel, and at most one output event. We will
+t
+use PNOR
+to denote PNOR (Oδt = 0|Input), the probability that the tth bin has no output events falling
+into it.
+
+t
+PNOR
+
+=
+
+
+YY
+1 − w(j) fθ ((t − s)δ)I(j)δ
+s
+j s<t
+
+=
+
+YY
+j
+
+=
+
+k
+
+1−δ
+
+
+(j)
+1 − w(j) fθ (tδ − ik )δ + o(δ 2 )
+
+XX
+j
+
+k
+
+Under a CT-NOR model which uses the same w(j)
+and the same fθ , the probability of not observing
+any outputs is very similar. We use π to denote the
+parameter of the Poisson random variable governing
+the number of outputs in the interval.
+
+π
+
+=
+
+XX
+j
+
+PNOR (Oδt
+
+= 0|Input) =
+
+YY
+
+(1 −
+
+(j)
+)
+p(t−s) I(j)δ
+s
+
+= δ
+
+j s<t
+
+(j)
+
+The p(t−s) is the weight associated with the possible
+(j)δ
+
+explanation Is . To prevent the number of parameters from increasing as the bin size becomes small,
+reparameterize with
+(j)
+
+p(t−s) = w(j) fθ (δ(t − s))δ
+for any distribution fθ that satisfies some technical
+conditions.4 Since fθ may be a very flexible family
+4
+
+It is sufficient for the density to exist and be Lips-
+
+
+(j)
+w(j) fθ (tδ − ik ) + o(δ 2 )
+
+ˆ
+
+tδ+δ
+
+tδ
+
+k
+
+XX
+j
+
+t
+PCT-NOR
+
+w(j)
+w
+
+(j)
+
+(j)
+
+fθ (x − ik )dx
+(j)
+
+fθ (tδ − ik ) + o(δ 2 )
+
+k
+
+= P [Poisson(π) = 0]
+= exp(−π)
+= 1 − π + o(δ 2 )
+t
+= PNOR
++ o(δ 2 )
+
+chitz, which means that there exists a constant C such
+that |fθ (a) − fθ (b)| ≤ C|a − b| for any a, b. Any continuously differentiable function with a bounded derivative
+satisfies this condition. It is easy to extend this proof to
+any bounded density with a finite number of discontinuities which has a bounded derivative everywhere except
+for the discontinuities.
+
+These results can be combined to demonstrate that
+the probability assigned to any set of output events
+by the two models is equal up a factor of (1 + o(nδ))
+which converges to 1 as δ decreases to zero. The
+asymptotics are in terms of bin width δ decreasing
+to zero for a fixed set of observations, so n and T are
+constant.
+
+PNOR (Out|In)
+PCT-NOR (Out|In)
+1−Oδt 
+Oδt
+T /δ 
+t
+t
+Y
+1 − PNOR
+PNOR
+=
+t
+t
+PCT-NOR
+1 − PCT-NOR
+t=0
+= (1 + o(δ 2 ))T /δ−n · (1 + o(δ))n
+
+= (1 + (T /δ − n)o(δ 2 )) · (1 + no(δ))
+= (1 + (T + n)o(δ))
+= (1 + o(δ))
+CT-NOR and NOR with an increasingly small bin
+size assign equivalent probability to any sequence
+of output events, indicating that the two classes of
+models are closely related, and that CT-NOR is the
+model that emerges as the limit when the NOR’s bin
+size is decreased toward zero.
+
+5
+
+Dependence discovery and change
+point detection
+
+With the probabilistic framework described in the
+previous section, we can use statistical machinery
+to perform inference for two applications: a) inputoutput relation discovery and b) change-point detection. The next two subsections describe the algorithms in detail and also validate the main assumptions using synthetically generated data. The final
+subsection (5.3) describes a computationally efficient
+approximation to the hypothesis test procedures.
+5.1
+
+Dependence discovery
+
+For the purposes of network management, a crucial
+problem is dependence discovery. For each computer
+in the network, we are interested in automatically
+finding out from observations which input channels
+have a causal effect on an output channel.
+We can frame the dependency discovery task as hypothesis testing. Specifically, testing whether an input channel j causes output events corresponds to
+testing the hypothesis that w(j) = 0. One way of
+testing this hypothesis is through the likelihood ratio test [14]. We fit two models: Mfull , under which,
+
+all the parameters are unrestricted, and Mres , under which w(j) is constrained to be zero. The test
+statistic in this case is
+−2 log Λ = −2 log
+
+LMres (Data)
+LMfull (Data)
+
+The asymptotic distribution of this test statistic is
+called a χ̄2 and is a mixture of χ2 with different degrees of freedom. The weights depend on the Fisher
+information matrix and are difficult to compute[7],
+but the significant terms in the mixture are χ21 and
+χ20 which is a delta function at zero. The χ̄2 emerges
+as the null distribution instead of the more familiar χ2 because the weight parameters w(·) are constrained to be non-negative, and when an estimated
+ŵ(j) is zero in the unconstrained model, imposing
+the constraint does not change the likelihood. If a
+set of true null hypotheses is known, the mixture coefficients can be trivially estimated, with the weight
+of χ20 being the proportion of test statistics that are
+0. When no ground truth is available, the proportion of null hypotheses can be estimated using the
+method described in [13] and then used to estimate
+the mixture proportions.
+To demonstrate that the model efficiently recovers
+the true causal channels and has the proper teststatistic distribution under the null hypothesis, we
+first test the model on synthetic data that is generated according to some instantiation of the model.
+10 input channels are generated; half of them have
+no causal impact on output events and half produce
+a Poisson(0.01) number of output events with the delay distribution of Exponential(0.1). Note that the
+causality is weak – very few input events actively
+produce an output. For each hour, 500 input events
+per channel, the corresponding output events, and
+100 uniformly random noise events (which are not
+caused by any input activity) are produced. The
+resulting p-values are plotted in Figure 1.
+Observe that the null p-values (conditioned on the
+test statistic being non-zero) are distributed uniformly. This is evidenced by the p-values following
+the diagonal on the quantile-quantile plot. The alternative p-values (without any conditioning) for channels which exhibit causality are mostly very low, with
+88% being below 0.1. Furthermore, the specific parameter estimates (the delay distribution parameter
+and w(j) ) are in line with their true values.
+5.2
+
+Changepoint Detection
+
+When the relationship between events is altered, it
+can be an indication of a significant change in the
+
+1.0
+
+1.0
+
+0.0
+
+0.0
+
+0.2
+
+0.4
+
+P−Values
+
+0.6
+
+0.8
+
+0.8
+0.6
+0.4
+0.2
+
+P−Values
+
+0.0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1.0
+
+0.0
+
+0.2
+
+Uniform
+
+0.4
+
+0.6
+
+0.8
+
+1.0
+
+Uniform
+
+Figure 1: Quantile-quantile plot of dependency discovery p-values for 2 hours of synthetic data. The
+red circles are the distribution of p-values for the
+null hypotheses, and are uniform. The blue triangles show p-values of the alternative hypotheses and
+are small, indicating power.
+
+Figure 2: Quantile-quantile plot of the p-values for
+changepoint detection on synthetic data. The red
+circles are null hypotheses (no changepoint), the
+green diamonds are a weak alternative (w(j) increases from 0.01 to 0.02) and the blue triangles are a
+strong alternative (w(j) increases from 0.01 to 0.05).
+
+system; in the case of Constellation, this is of interest to the system administrators. We describe
+a building block for identifying whether the parameters w(j) change between two time periods and
+demonstrate its correct functionality. Changepoint
+algorithms have long been studied in machine learning and statistics, and our test for whether the behavior of a parameter is altered between two time
+periods can be plugged into one of many existing algorithms. Furthermore, the simple two-period test
+described here is sufficient for many monitoring applications.
+
+the weight changes:
+
+We again use the log-likelihood ratio test methodology. In order to do that, it is necessary to extend the
+model to allow the parameters to depend on time.
+The model can be written as
+
+
+X X (j)
+(j)
+{o} ∼ P P 
+w (j) fθ (ol − ik ) .
+j
+
+k
+
+ik
+
+Detecting changepoints is accomplished by testing
+two hypotheses. The null is that the weights do not
+change between two time periods, and can be written
+(j)
+as wt = w(j) . Under the alternative, for a particular channel of interest m and an interval of time S,
+
+∀j 6= m
+
+(j)
+
+wt
+
+(m)
+
+wt
+
+= w(j)
+= w(m) if t ∈ S, w′(m) otherwise.
+
+The existence of a changepoint is equivalent to rejecting the null hypothesis. Fitting the alternative
+model is a simple modification of the EM procedure
+described for the null model; for fast performance, it
+is possible to initialize at the null model’s parameter
+values and take a single M step, reusing the latent
+variable distribution estimated in the E step. The
+test statistic in this case will again be −2 log Λ and
+its null distribution will be χ2 if the true w(m) > 0
+and χ̄2 otherwise.
+Figure 2 shows a quantile-quantile plot of the pvalues (computed using the χ2 distribution) under
+the null hypothesis, computed for causal channels of
+the same synthetic data as in section 5.1; there are
+two hours of data with 500 input events per channel per hour. As expected, the quantile-quantile plot
+forms a straight line, demonstrating that on the synthetic dataset, the null test statistic has a χ2 distribution. When a strong changepoint is observed (w(j)
+changes from 0.01 to 0.05) , the p-values are very low.
+When a weak changepoint is observed (w(j) changes
+
+from 0.01 to 0.02) the p-values are lower than under
+the null distribution but power is significantly lower
+than when detecting the major changepoint.
+
+ROC for HTTP
+1
+
+5.3
+
+Bounding the log-likelihood ratio
+
+Computing the log-likelihood ratio requires refitting
+a restricted model, though only a small number of
+EM steps is typically required. However, it is possible to bound the log likelihood ratio for dependency
+discovery very efficiently.
+
+True Positive Rate
+
+0.9
+
+0.8
+
+0.7
+
+NoisyOR with bounds
+NoisyOR with exact computations
+Unamb. coocc.
+Std. coocc.
+
+0.6
+
+0.5
+0
+
+For the restricted model testing channel m’s causality, we must compute the likelihood under the constraint that w(m) = 0. Take the estimates of w of the
+λ
+unrestricted model and let α = λ−w(m)
+. Instead
+n(m)
+of computing the ratio with the true maximum likelihood parameters for the restricted model, we propose a set of restricted parameters, and compute the
+ratio using them. We produce a restricted version of
+parameters w(·) by setting w(m) to zero and inflating
+the rest by a factor of α. That simply corresponds
+to imposing the restriction, and redistributing the
+weight among the rest of the parameters, so that
+the expected number of output packets remains the
+same. In that case,
+
+LMres (Data)
+LMf ull (Data)
+P
+Y j6=m,k αw(j) fθ (ol − i(j)
+k )
+≥ −2 log
+P
+(j)
+(j)
+fθ (ol − ik )
+l
+jk w
+!
+P
+(m)
+(m)
+Y
+fθ (ol − ik )
+kw
+= −2 log
+α 1− P
+(j) f (o − i(j) )
+θ l
+l
+jk w
+k
+!
+Y
+X (j)
+= −2 log
+α 1−
+zml
+
+−2 log Λ = −2 log
+
+l
+
+k
+
+j
+As a reminder, zml
+is the latent variable distribution
+estimated in the E-step of EM. Since the numerator
+of the log-likelihood ratio is a lower bound and the
+denominator exact, this expression
+is a lower bound
+P (j) 
+Q 
+on Λ. Intuitively, log l 1 − k zml corresponds
+to the probability that channel m has exactly 0 output events assigned to it when causality is assigned
+according to the EM distribution on the latent variables . The log α term corresponds to the increase
+in likelihood from redistributing channel m’s weight
+among the other channels.
+
+0.1
+
+0.2
+
+0.3
+
+0.4
+
+0.5
+
+FDR
+
+Figure 3: ROC for CT-NOR and competing algorithms on data from a real enterprise network. Both
+the exact an approximate CT-NOR tests produce detection results superior to the alternative methods.
+
+6
+
+Results
+
+We describe the results of applying the algorithms
+of the previous section to a subset of a real dataset
+consisting of a trace comprising headers and partial
+payload of around 13 billions packets collected over
+a 3.5 week period in 2005 at Microsoft Research in
+Cambridge, England. This site contains about 500
+networked machines and the trace captures conversations over 2800 off-site IP addresses. Ground-truth
+for dependence discovery and change point detection
+is not readily available and it has to be manually generated. We took 24 hours of data at the web proxy
+and manually extracted ground truth for the HTTP
+traffic at this server by deep inspection of HTTP
+packets. It is with this part of the data that we validate our algorithms, as it provides us with objective
+metrics, such as precision and recall, to assess the
+performance of our algorithms.
+6.1
+
+Dependency Discovery
+
+First, we are interested in assessing the performance
+of the dependence discovery capabilities of our model
+and hypothesis testing algorithm. In the application of diagnosis and monitoring of networked systems it is crucial to maintain a consistent map of all
+the server and services inter-dependencies and their
+changes. Finding dependencies at the server level is
+the main building block used by Constellation [2] in
+building this global map. We compare our method
+to two other alternatives. One is a simple binomial
+test: for each input channel, we count the number of
+output packets falling within a W width window of
+
+6.2
+
+Changepoint Detection
+
+Since the true presence or absence of a changepoint
+is unknown, we estimate it from the actual packet
+causes, obtained through deep inspection of HTTP
+packets. We collect a set of input and output channel pairs for which there is no evidence of change.
+We regard these as coming from the null hypothesis.
+A set of pairs for which the ground truth provides
+strong evidence of a change are collected, and considered to be from the alternative hypothesis.
+We apply our changepoint test to that population,
+and report the results in Figure 4. The CT-NOR
+changepoint detection algorithm produces uniformly
+distributed p-values for channels which come from
+the null hypothesis and do not exhibit a changepoint,
+confirming that our null hypothesis distribution is
+calibrated. On the other hand, the test on alterna5
+As sometimes an input package generates more than
+one output packet, we enabled our model to account for
+this by allowing “autocorrelations” to take place. Namely
+a packet in an output channel can depend on an input
+channel or on the (time-wise) preceding output packet.
+
+1.0
+0.8
+0.6
+0.4
+0.2
+0.0
+
+As can be seen on the ROC curve in Figure 3,
+CT-NOR successfully captures 85% of the true correlations with a 1% false positive rate. In total, the
+model detects 95% of the true correlations at 10%
+of false positives. We want to additionally point
+out that some of correlations present are very subtle; 13% of the correlations are evidenced by a single output packet. We also point out that CT-NOR
+performs significantly better than both alternatives
+based on co-occurrence of input packets, providing
+even more conclusive evidence that CT-NOR is capturing nontrivial dependencies. The approximation
+error from using the bound of section 5.3 is minimal,
+while the computation savings are significant. On a
+relatively slow laptop, the bounds on log-likelihood
+ratio test for a hour of traffic on a busy HTTP proxy
+can be computed in 7 seconds; exact computations
+take 86 seconds.
+
+P−Values
+
+an input packet, and determine whether that number is significantly higher than if the output packets
+were uniformly distributed. We call this “standard
+co-occurrence.” The second alternative considers an
+input and output channel to be dependent only if
+there is a unique input packet in the immediate vicinity of an output packet. The reason we select these
+two alternatives is that a) they reflect (by and large)
+current heuristics used in the systems community [1]
+and b) they will capture essentially the “easy” dependencies (as our results indicate).5
+
+0.0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1.0
+
+Uniform
+
+Figure 4: Quantile-Quantile plot of changepoint pvalues. The red circles are channel pairs which, according to the ground truth, not exhibit a changepoint. The blue triangles represent channel pairs exhibiting change according to the ground truth.
+tive hypothesis channels produces a large proportion
+of very small p-values, indicating confidence that a
+changepoint occurred.
+
+7
+
+Conclusions and Future Work
+
+We presented a generative model based on Poisson
+processes called CT-NOR, to model the relationship
+between events based on the time of their occurrences. The model is induced from data only containing information about the time stamps for the
+events. This capability is crucial in the domain of
+networked systems as collecting any other type of information would entail prohibitive amounts of overhead. Specific domain knowledge about the expected
+shape of the distribution of the time delay between
+events can be incorporated to the model using a parameterized function. The EM algorithm used to fit
+the parameters of the model given the data also induces the parameters of this function. The combination of knowledge engineering and learning from data
+is clearly exemplified in the application we presented
+to the domain of computer systems, where we used
+a mixture model consisting of an exponential and a
+uniform distribution.
+In terms of applying the model we focused on providing building blocks for diagnosis and monitoring.
+
+We provided algorithms based on statistical hypothesis testing for (a) discovering the dependencies between input and output channels in computer networks, and for (b) finding changes in expected behavior (change-point detection). We validated these
+algorithms first on synthetic data, and then on a
+subset (HTTP traffic) of a trace of real data from
+events in a corporate communication network containing 500 computers and servers.
+The relationship presented in Section 4 between
+CT-NOR and the NOR gate is interesting for multiple reasons. First, as the NOR gate has been extensively studied in this community in modeling and
+learning environment and in causal discovery [4], the
+immediate benefits are a) increasing the applicability to continuous time, and b) augmenting its modeling capabilities using the time delay functions used
+in this work. Second, this correspondence provide
+us with another intuition on the independence assumptions behind the Poisson process, as applied to
+the characterization of the relationship between the
+events in various inputs to the events in a specific
+output.
+For the particular application of dependency discovery between channels in a computer network we explored a varied set of alternative approaches. They
+all failed miserably. Among these, we briefly discuss
+two: We cast the problem as one of classification,
+and tried a host of Bayesian network classifiers [6].
+The idea was to first discretize time into suitable
+periods, and then have as features the existence or
+absence of events in the input channels and as the
+class the existence or absence of events in the output channel. The accuracy was abysmal. The main
+problem with this approach is that the communication in these networks is bursty by nature with relatively large periods of quiet time. Once we started to
+look at Poisson as the appropriate way to quantify
+the distributions in these classifiers the choice of the
+Poisson process became clear. We also explored the
+use of hypothesis testing comparing the inter-time
+between events in the input and output channels to
+the inter-time between the input and a fictitious random channel. The accuracy in terms of false positives and true positives was worse than those based
+on co-occurrence. The main problem here is that we
+are considering pairwise interactions and there are
+many confounder in all the other channels.
+With regards to related approaches, both the work
+on continuous time Bayesian networks [10] and in
+general about dynamic Bayesian networks (e.g., [9])
+are obviously very different in terms of the parameterization of the models, the assumptions, and the
+
+intended application. The work that is closest to
+ours is contained in the paper by Rajaram et al [12]
+where they propose a (graphical) model for point
+processes in terms of Poisson Networks. The main
+difference between their work and ours is the tradeoff between representation capabilities and complexity in inference that the different foci of our respective papers entails. Due to the distributed nature of
+our application domain, we concentrate on modeling
+the “families” (local parent/child relationship) and
+basically assume that we can reconstruct, in a distributed manner based on the local information, the
+topology of the network. This enables us to induce
+families with large numbers of parents, and with relatively complex interactions as given by the delay
+function fθ , while performing inference efficiently. In
+the Poisson Networks paper [12], the number of parents of each node are restricted, and the rate function
+is parameterized by a generalized linear model. Even
+with these (relatively benign) restrictions inference
+is non-trivial in terms of finding the structure of the
+Bayesian network and indeed this is a contribution of
+that paper. Obviously, future work includes merging
+both approaches: an immediate benefit would be to
+decrease the vulnerability of our approach to spurious causal dependencies due to ignoring the global
+structure in the estimation.
+There are other three threads that we are currently
+investigating for future work. The first one involves
+recasting the fitting and inference procedures described in the model in the Bayesian framework. An
+advantage of the Bayesian approach will be on the
+inclusion of priors. As channels differ greatly on the
+number of events this can further increase the accuracy of discovery. A second direction is that of incorporating False Discovery Rates [3] calculations in
+order to accurately estimate false positives when we
+don’t have ground truth regarding the relationship
+between the channels. As we are performing a large
+number of hypothesis tests, this becomes a necessity.
+In [2] we experimented with the basic approach described in [3], and we verified that the approach is
+very conservative in the context of the HTTP and
+DNS protocols where we do have ground truth. We
+plan to explore less conservative approaches such as
+the one described in [13] or adapt the one explored
+in [8]. Finally we are in the process of getting suitable data and plan to apply this model to biological networks such as neurons that communicate with
+other neurons using spikes in electrical potential.
+
+8
+
+Acknowledgments
+
+We thank T. Graepel for comments on a previous version of this paper. We are also grateful for
+the helpful suggestions of the anonymous reviewers
+which we hope we have addressed to their satisfaction.
+
+

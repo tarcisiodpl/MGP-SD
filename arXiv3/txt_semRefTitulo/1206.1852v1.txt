@@ -1,0 +1,817 @@
+
+
+always
+
+optimal
+
+because
+
+some
+
+relationships
+
+This paper presents a method of optimization,
+
+between couple of user objects can be generalized
+
+based on both Bayesian Analysis technical and
+
+and others suppressed according to values of forces
+
+Galois Lattice of Fuzzy Semantic Network. The
+
+that characterize them.
+
+technical System we use learns by interpreting an
+
+obtained Net, we propose to proceed to an
+
+unknown word using the links created between this
+
+Inductive Bayesian Analysis, on the Net obtained
+
+new word and known words. The main link is
+
+from Galois lattice. The objective of this analysis
+
+provided by the context of the query. When
+
+can be seen as an operation of filtering of the
+
+novice’s query is confused with an unknown verb
+
+obtained descriptive graph.
+
+Indeed, to simplify the
+
+(goal) applied to a known noun denoting either an
+object in the ideal user’s Network or an object in
+
+Keywords: Fuzzy semantic Networks, Fuzzy
+
+the user’s Network, the system infer that this new
+
+semantic Networks, Optimization.
+
+verb corresponds to one of the known goal. With
+the learning of new words in natural language as
+
+1
+
+Introduction
+
+in
+
+In order to respond to a query, an executive
+
+agreement with the user, the system improves its
+
+assistant might know very precisely the goal
+
+representation scheme at each experiment with a
+
+the user has in mind, which means an object
+
+new user and, in addition, takes advantage of
+
+in a given state (the properties of the object
+
+the
+
+interpretation,
+
+which
+
+was
+
+produced
+
+previous discussions with users. The semantic Net
+
+being transformed). Moreover, even when
+
+of user objects thus obtained by learning is not
+
+1844
+
+Eighth international Conference on Information Processing and Management of Uncertainty in Knowledge-Based Systems.
+
+goals are fairly well defined, it is often
+
+and he often would like to ask an expert
+
+necessary to think about superordinate goals.
+
+operator about how to execute an action such
+
+Let’s take (example 1) the query of a subject
+
+as "how to rub letters" [12], [13].
+
+using a Macintosh Computer.
+2
+
+The Ideal Expert’s and Novice User’s
+
+The Galois lattice [6] and the fuzzy set methods
+Fuzzy Semantic Net
+have been used to develop the "on-line instructions"
+We define the ideal Expert knowledge of a
+mechanisms of an Intelligent Assistance System. It
+system as the knowledge that is sufficient to
+can be seen as a supervisor of task execution that
+the system and that is described in a semantic
+has the "ideal user's knowledge" of (i) prerequisites
+network (figure1). Construction of the Ideal
+of procedures, (ii) subGoals structure. And (iii) the
+Expert Knowledge starts if given a set of
+semantic network of the elements of the device
+tasks that are executed using elements of one
+where applied procedures are used as properties, as
+technical device through procedures. The first
+well as (iv) the knowledge of perceptible and
+step is the task decomposition as a hierarchy
+imperceptible effects of user's actions. With an
+of Goal decomposition into subGoals from
+interactive dialogue with a user, the Assistance
+the level of the Goal of the task to primitive
+System tries to match items provided by users in
+actions. The second step consists in (i)
+natural language with the knowledge included in
+drawing up a list of possible Goals and the
+the ideal user's semantic network [7], [12].
+procedures
+
+to
+
+reach
+
+these
+
+Goals
+
+(ii)
+
+The example of the technical system we
+constructing the Ideal Expert Net as a
+consider here is Word Processor software
+classical semantic network. But, instead of
+(figure1), with Objects such as "chain-ofusing
+
+structural
+
+properties
+
+of
+
+systems
+
+characters", and procedures such as "cut" or
+interface Objects; Goals reachable with those
+"copy". For a novice user of the software, the
+Objects are used as properties. The ideal
+list of standard denominations is not obvious
+
+1845
+
+Eighth international Conference on Information Processing and Management of Uncertainty in Knowledge-Based Systems.
+
+user's description uses valid procedures that
+
+the Ideal Expert Net [12]. If the Assistance
+
+have to be applied to the elements of the
+
+System does not understand the meaning of
+
+device in order to successfully complete the
+
+an instruction, it discusses with the user until
+
+task. Classes of Objects and relations between
+
+it is able to interpret the query in its own
+
+classes of Objects merge from routines for
+
+language [14]. With the learning of new
+
+classification
+
+words
+
+and
+
+routines
+
+for
+
+classes
+
+in
+
+natural
+
+language
+
+as
+
+the
+
+organization [22].
+
+interpretation produced in agreement with the
+
+However given the polysemic aspects of
+
+user, the system improves its representation
+
+natural language (verbs and nouns which
+
+scheme at
+
+express goals and device objects), with the
+
+each experiment with a new user. And, in
+
+necessity of a man-machine interface that
+
+addition,
+
+involve queries of users, the problem that is
+
+discussions with users. In a first time the
+
+under investigation is how to match the
+
+standard Objects and recognized by the
+
+content of a query (the label of an Object and
+
+software are described in a semantic network
+
+the label of a Goal applied to this Object, as
+
+where goals stand for properties of Objects.
+
+expressed by a novice user) to their
+
+And in a second time, as the queries of an
+
+corresponding items (class of Objects and
+
+user are expressed in natural language and as
+
+Goals as properties) in the Ideal Expert Net.
+
+they correspond more or less to these standard
+
+By answering queries of the users while they
+
+denominations, the system establishes fuzzy
+
+try to perform a given goal, the Expert
+
+connections between its primary knowledge
+
+Assistant
+
+and the new labels of Objects or procedures
+
+delivers
+
+not
+
+only
+
+planning
+
+takes
+
+advantage
+
+of
+
+previous
+
+information, but also a goal structure and the
+
+expressed by the user [12], [16].
+
+knowledge of what justifies the procedure by
+
+The obtained semantic Net of user objects is
+
+providing the knowledge that is included in
+
+not
+
+always
+
+optimal
+
+because
+
+some
+
+1846
+
+Eighth international Conference on Information Processing and Management of Uncertainty in Knowledge-Based Systems.
+
+relationships between couple of user objects
+
+construct the semantic user object system.
+
+can be generalized and others suppressed
+
+This construction consists; from a symbolic
+
+according to values of forces that characterize
+
+table of linguistic data (table 2), to construct,
+
+them. Indeed, to simplify the obtained Net,
+
+in a first time the binary table (crossed
+
+we propose to proceed to an inductive
+
+system’s objets with user objects are obtained
+
+Bayesian analysis on the obtained Net from
+
+by 0 and 1) (table 3), and in a second time,
+
+Galois lattice [8],[25]. The objective of this
+
+the different implications between each
+
+analysis can be seen as an operation of
+
+couple of user objects.
+
+filtering of the obtained descriptive graph.
+
+To illustrate this method, we propose to
+construct the semantic user objects Net
+
+3
+
+Optimization of the Fuzzy Semantic Nets by
+
+corresponding to the following symbolic table
+
+Bayesian Analysis
+
+(table 2). This last allows us to construct the
+
+The approach that we present in this
+paper
+
+is
+
+established
+
+from
+
+Procope‘s
+
+user objects Net with all possible implications
+between each couple of objects according to
+
+formalism [18], [19], based on the Galois
+
+the next rule.
+
+lattice
+
+Bayesian
+
+defined by a set of property ai with i ∈ [1, n],
+
+formalism [1], [2], [5]. The underlying idea is
+
+we have A implies B if and only if ∀ ai
+
+to end to a hierarchical structure of object
+
+verifying A then ai verifying also B. To
+
+users
+
+construct this graph, we have used the
+
+method
+
+allowing
+
+categorization
+
+[9]
+
+and
+
+having
+by
+
+the
+
+a
+
+process
+
+discrimination
+
+of
+and
+
+software
+
+GLG
+
+Let A and B two Objects
+
+(Galois
+
+lattice’s
+
+Graph)
+
+generalization. To end to a hierarchical
+
+developed
+
+structure of user objects in the form of a
+
+Department of the Preparatory Institute to
+
+symbolic data table, the method of the Galois
+
+Studies of Engineer of Monastir and that is
+
+lattice is the means that we have adopted to
+
+going to be published later.
+
+in
+
+Mathematics
+
+and
+
+Physics
+
+1847
+
+Eighth international Conference on Information Processing and Management of Uncertainty in Knowledge-Based Systems.
+
+The obtained semantic Net of user objects is
+
+implicative structures corresponding to the
+
+not
+
+form of implicative graph (figure 2).
+
+always
+
+optimal
+
+because
+
+some
+
+relationships between couple of user objects
+can be generalized and others suppressed
+
+3.1
+
+according to values of forces that characterize
+
+From observations realized on each couple of
+
+them. Indeed, to simplify the obtained Net,
+
+user objects, we have built the following table
+
+we propose to proceed to an inductive
+
+(table 4) that presents sorting crossed in
+
+Bayesian analysis on the obtained Net from
+
+effective for each pair of user objects. Each
+
+Galois lattice [8], [25].
+
+places in table 4 represents 768 users of the
+
+The principal objective of this analysis is to
+
+software that we have put in place.
+
+find all the possible oriented dependence
+
+instance, in the first places, corresponding to
+
+existing between different user objects: the
+
+the couple of objects 'the Sign' and 'the
+
+knowledge of some will determine - it such or
+
+number', 100 users have used the word 'the
+
+such others. To reply to this objective, we
+
+Sign' to each time that they have used the
+
+have considered the following user objects:
+
+word 'the number' to designate a system's
+
+The number, The Sign, The letters, The
+
+object. 30 other users have used the word 'the
+
+numbers, The Characters and Substantive.
+
+number' without used the word 'the Sign'. 85
+
+These user objects represent synonymies by
+
+have used the word 'the Sign' without using
+
+novice users to designate the following
+
+the word 'the number' and 553 remainder of
+
+system’s objects: Char, Word and Key shown
+
+the total effective have not used neither the
+
+in table 2. To determine the different binary
+
+word 'the Sign' nor the word 'the number' to
+
+relationships
+
+designate system's object.
+
+between
+
+each
+
+couple,
+
+the
+
+Descriptive Inductive Analysis
+
+For
+
+analysis consists to study the implicative
+
+For each of these crossed sorting, we
+
+structure to
+
+calculate the Loevinger’s indication H [3], [4]
+
+each
+
+couple,
+
+then
+
+to
+
+all
+
+1848
+
+Eighth international Conference on Information Processing and Management of Uncertainty in Knowledge-Based Systems.
+
+associated to the four possible error squares.
+
+presents relationships of q-exclusion and
+
+Positive indices are represented in fat (table
+
+tendency to the q-exclusion.
+
+4). If we consider the two values-mark
+htend=0,40 and hquasi=0,60 we have to respect
+
+3.2
+
+next conclusions:
+
+Analysis
+
+H < htend
+htend ≤ H
+
+absence of q-implication
+≤ hquasi tendency to the q-
+
+implication
+H ≥ hquasi q–implication
+
+Processing by Inductive Bayesian
+
+This stage consists in determine with the help
+of the IBA [2], [3], observed oriented
+relationships
+
+descriptively
+
+that
+
+can
+
+be
+
+certified inductively, among all relationships
+
+The suitable figure 3 shows two possible
+
+in order that the indication H ≥ 0,20. The
+
+cases. The first case, constituted following
+
+objective of this analysis can be seen as an
+
+user objects: Substantive, The number, The
+
+operation
+
+Sign, The letters, and The numbers. Positive
+
+descriptive graph (figure 3).
+
+connection following q-implication from The
+
+In order that, we are going to calculate, to
+
+number to The Sign. From The Sign to The
+
+each places in the table 5 above (H < 0,20),
+
+letters with tendency to the equivalence, q-
+
+the inferior credibility limit, for a guarantee -
+
+implication with equivalence between The
+
+mark δ=90, for the corresponding indication
+
+Sign and The numbers, tendency to the q -
+
+dress η.
+
+implication from The Sign to The numbers
+
+have used a recent version of the software
+
+and between The number and Substantive
+
+IBA-2 developed in the Cognitive Psychology
+
+with tendency to the equivalence. The second
+
+Laboratory of the Paris8 University and that
+
+case constituted by the number user objects,
+
+is going to be published later. Results of these
+
+Substantive, The Characters and The Sign
+
+calculations are presented in the following
+table 6.
+
+of
+
+filtering
+
+of
+
+the
+
+obtained
+
+To realize these calculations, we
+
+Negative values are not taken in
+
+1849
+
+Eighth international Conference on Information Processing and Management of Uncertainty in Knowledge-Based Systems.
+
+account and therefore it does not appear in
+
+allows identifying the unknown novice user
+
+table 5.
+
+request of the share of the device used. This
+
+The results of this filtering allow
+
+determining
+
+relationships
+
+that
+
+can
+
+be
+
+can serve as basis for our research so as to
+
+generalized, among the totality of observed
+
+elaborate a general methodology to diagnosis
+
+relationships descriptively.
+
+the purpose goal of the subject, applicable to
+
+According to the graph of the figure 4, we can
+
+a large diversity of devices. The objective
+
+certify on the one hand, a q-implication with
+
+being to find the totality of compatible
+
+tendency to the equivalence between The Sign
+
+purposes with actions of the users, the trip of
+
+and the letters user objects and a q-
+
+such graphs facilitates grandly the research.
+
+implication from The Sign to The number. We
+
+The development of this method would have
+
+can also certify, on the other hand, a tendency
+
+to allow a best approximation of the category
+
+to the q-implication from Substantive to The
+
+of the purpose aimed by the user and best
+
+number. For the implication from the letters
+
+approaches the diagnosis. We think that it
+
+to The Characters and from this last to the
+
+would be interesting to strengthen this tool of
+
+numbers, we notices that there is an absence
+
+softening with the notion of similarity
+
+of q-implication with tendency to the
+
+between two Objects (respectively two Goals)
+
+exclusion.
+
+so as to establish connection between user
+Object (or Goal) and system Object (or
+
+4
+
+system Goal) in the semantic Net. This makes
+
+Conclusion
+Although the approach presented in this
+
+only increase performances of the system in
+
+paper, that consists of a learning of new word
+
+the course of the identification of user
+
+in natural language
+
+requests.
+
+in a fuzzy semantic
+
+Networks, represent a particular methodology
+to diagnosis the goal query’s novice users and
+
+1850
+
+Eighth international Conference on Information Processing and Management of Uncertainty in Knowledge-Based Systems.
+
+correspondance. Mathématiques et

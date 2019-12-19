@@ -1,0 +1,5763 @@
+
+Qualitative possibilistic networks, also
+known as min-based possibilistic networks,
+are important tools for handling uncertain
+information in the possibility theory framework. Despite their importance, only the
+junction tree adaptation has been proposed
+for exact reasoning with such networks.
+This paper explores alternative algorithms
+using compilation techniques.
+We first
+propose possibilistic adaptations of standard
+compilation-based probabilistic methods.
+Then, we develop a new, purely possibilistic,
+method based on the transformation of the
+initial network into a possibilistic base. A
+comparative study shows that this latter
+performs better than the possibilistic adaptations of probabilistic methods. This result
+is also confirmed by experimental results.
+
+1
+
+INTRODUCTION
+
+In possibility theory there are two different ways to
+define the counterpart of Bayesian networks. This is
+due to the existence of two definitions of possibilistic
+conditioning: product-based and min-based conditioning (Dubois and Prade, 1988). When we use the product form of conditioning, we get a possibilistic network
+close to the probabilistic one sharing the same features
+and having the same theoretical and practical results.
+However, this is not the case with min-based networks.
+In this paper, we are interested in the inference problem in multiply connected networks, which is known
+as a hard problem (Cooper, 1990). More precisely,
+we propose three compilation methods for min-based
+possibilistic networks.
+The compilation of Bayesian networks is always considered as an important area. Recently, researchers
+
+Salem Benferhat
+CRIL-CNRS
+University of Artois
+France, 62307
+benferhat@cril.univ-artois.fr
+
+Rolf Haenni
+RISIS
+Bern University
+Switzerland, CH-2501
+rolf.haenni@bfh.ch
+
+have been interested in various kinds of exact and approximate Bayesian networks inference algorithms using compilation techniques (Darwiche, 2003) (Chavira
+and Darwiche, 2005) (Wachter and Haenni, 2007), etc.
+Despite the importance of possibility theory, there is
+no compilation that has been proposed for possibilistic networks. This paper analyzes this issue by first
+adapting well-known compilation-based probabilistic
+inference approaches, namely the arithmetic circuit
+method (Darwiche, 2003) and the logical compilation
+of Bayesian Networks (Wachter and Haenni, 2007).
+Both of them are based on a network’s encoding into a
+logical representation and a compilation into a target
+compilation language, namely Π-DNNF. From there,
+all possible queries are answered in polynomial time.
+The third method exploits results obtained on one
+hand in (Benferhat et al., 2002) that transforms a minbased possibilistic network into a possibilistic knowledge base, and on the other hand results obtained regarding compilation of possibilistic bases (Benferhat
+et al., 2007) in order to assure inference in polytime.
+This method that is purely possibilistic is flexible since
+it permits to exploit efficiently all the existing propositional compilers.
+The rest of this paper is organized as follows: Section 2 gives a briefly background on possibility theory, possibilistic logic, possibilistic networks and introduces some compilation concepts. Section 3 is dedicated to possibilistic adaptations of compilation-based
+probabilistic inference methods. Section 4 presents a
+new inference method in possibilistic networks using
+compiled possibilistic knowledge bases. Experimental
+study is presented in Section 5.
+
+2
+2.1
+
+BASIC CONCEPTS
+POSSIBILITY THEORY
+
+This subsection briefly recalls some elements of possibility theory, for more details we refer to (Dubois and
+Prade, 1988). Let V = {X1 , X2 , ..., XN } be a set of
+
+variables. We denote by DXi = {x1 , .., xn } the domain
+associated with the variable Xi . By xi we denote any
+instance of Xi . Ω denotes the universe of discourse,
+which is the Cartesian product of all variable domains
+in V . Each element ω ∈ Ω is called a state of Ω.
+The notion of possibility distribution denoted by π is
+a mapping from the universe of discourse to the unit
+interval [0, 1]. To this scale, two interpretations can be
+attributed, a quantitative one when values have a real
+sense and a qualitative one when values reflect only an
+order between the different states of the world. This
+paper focuses on the qualitative interpretation of possibility theory.
+Given a possibility distribution π, we can define a mapping grading the possibility measure of an event φ ⊆ Ω
+by Π(φ) = maxω∈φ π(ω). Π has a dual measure which
+is the necessity measure N (φ) = 1 − Π(¬φ).
+Conditioning consists in modifying our initial knowledge, encoded by a possibility distribution π, by the
+arrival of a new certain piece of information φ ⊆ Ω.
+The qualitative interpretation of the scale [0, 1] leads
+to the well known definition of min-conditioning (Hisdal, 1978), (Dubois and Prade, 1988):
+
+Π(ψ ∧ φ) if Π(ψ ∧ φ) < Π(φ)
+Π(ψ | φ) =
+(1)
+1
+otherwise
+2.2
+
+POSSIBILISTIC LOGIC
+
+Possibilistic logic (Dubois et al., 1994) handles qualitative uncertainty in a logical setting. A possibilistic
+logic formula is a pair (p, a) where p is a propositional
+formula and a its uncertainty degree which estimates
+to what extent it is certain that p is true. The higher
+is the weight, the more certain is the formula. A possibilistic knowledge base Σ is made up of a finite set
+of weighted formulas, i.e.,
+Σ = {(pi , ai ), i = 1, .., n}
+
+(2)
+
+where ai is the lower bound on N (pi ).
+Each possibilistic knowledge base induces a unique
+possibility distribution such that ∀ ω ∈ Ω and ∀
+(pi , ai ) ∈ Σ:
+
+1
+if ω |= pi
+πΣ (ω) =
+(3)
+1 − max {ai : ω 2 pi } otherwise
+where |= is propositional logic entailment.
+2.3
+
+POSSIBILISTIC NETWORKS
+
+A min-based possibilistic network over a set of variables V , denoted by ΠGmin is composed of:
+- a graphical component that is a DAG (Directed
+
+Acyclic Graph) where nodes represent variables and
+edges encode the links between the variables. The
+parent set of a node Xi is denoted by Ui =
+{Ui1 , Ui2 , ..., Uim }. For any ui of Ui we have ui =
+{ui1 , ui2 , ..., uim } where m is the number of parents of
+Xi . In what follows, we use xi , ui , uij to denote, respectively, possible instances of Xi , Ui and Uij .
+- a numerical component that quantifies different links.
+For every root node Xi (Ui = ∅), uncertainty is represented by the a priori possibility degree Π(xi ) of each
+instance xi ∈ DXi , such that maxxi Π(xi ) = 1. For the
+rest of the nodes (Ui 6= ∅) uncertainty is represented
+by the conditional possibility degree Π(xi |ui ) of each
+instances xi ∈ DXi and ui ∈ DUi . These conditional
+distributions satisfy the following normalization condition: maxxi Π(xi |ui ) = 1, for any ui .
+The set of a priori and conditional possibility degrees
+in a min-based possibilistic network induce a unique
+joint possibility distribution defined by the following
+chain rule:
+πmin (X1 , .., XN ) = min
+
+i=1..N
+
+2.4
+
+Π(Xi | Ui )
+
+(4)
+
+COMPILATION CONCEPTS
+
+A target compilation language is a class of formulas
+which is tractable for a set of transformations and
+queries. Compilation languages are compared in terms
+of their spatial efficiency via the succinctness criteria and also in terms of the set of logical queries and
+transformations they support in polynomial time (see
+(Darwiche and Marquis, 2002) for more details).
+Within the most effective target compilation languages, we cite the Decomposable Negation Normal
+Form (DNNF) (Darwiche, 2001). This language is universal and presents a number of properties (determinism, smoothness, etc.) that makes it of a great interest.
+It supports a rich set of polynomial-time logical operations. To define DNNF, the starting point is Negation
+Normal Form (NNF) which is a set of propositional
+formulas where possible connectives are conjunctions,
+disjunctions and negations. A set of important properties may be imposed to NNF, such that:
+- Decomposability: the conjuncts of any conjunction in
+NNF do not share variables.
+- Determinism: two disjuncts of any disjunction in
+NNF are logically contradictory.
+- Smoothness: the disjunct of any disjunction in NNF
+mentions the same variables.
+These properties lead to a number of interesting subsets of NNF. Within these subsets, the language
+DNNF (Darwiche, 2001) is one of the most effective
+target compilation languages that supports the decomposability. We can also mention, the d-DNNF sat-
+
+isfying determinism, sd-DNNF satisfying smoothness
+and determinism, etc. Each compilation language supports some queries and transformations in polynomial
+time. In what follows we are in particular interested
+by conditioning and forgetting transformations (Darwiche and Marquis, 2002).
+
+∨ and ∧ as max and min operators, respectively). A
+sentence in Π-sd-DNNF is a sentence in Π-DNNF satisfying decomposability, determinism and smoothness.
+
+3
+
+In (Darwiche, 2003), authors have focused on inference in compiled Bayesian networks. The main idea is
+based on representing the network using a polynomial
+and then retrieving answers to probabilistic queries by
+evaluating and differentiating the polynomial. This
+latter itself is exponential in size, so it has been represented efficiently using an arithmetic circuit that can
+be evaluated and differentiated in time and space linear in the circuit size. In what follows, we propose
+a direct adaptation of this method in the possibilistic setting. Given a min-based possibilistic network,
+we first encode it using a possibilistic function fmin
+defined by two types of variables:
+
+POSSIBILISTIC ADAPTATIONS
+OF COMPILATION-BASED
+PROBABILISTIC INFERENCE
+METHODS
+
+There are several compilation methods which handle
+the inference problem in probabilistic graphical models. In this section, we first propose an adaptation
+of the arithmetic circuit method of (Darwiche, 2003).
+Then we will study one of its variants proposed in
+(Wachter and Haenni, 2007), namely the logical compilation of Bayesian Networks.
+DNNF has been introduced for propositional language.
+Recall that in qualitative possibility theory, we basically manipulate two main operators Max and Min.
+These operators fully make sense when we deal with
+qualitative plausibility ordering. Therefore, we propose to define concepts of Π-DNNF (resp. Π-d-DNNF,
+Π-sd-DNNF) as adaptations of the DNNF language
+(resp. d-DNNF, sd-DNNF) (Darwiche, 2001) in the
+possibilistic setting (definition 1).
+Definition 1. A sentence in Π-DNNF is a rooted
+DAG where each leaf node is labeled with true, false
+or variable’s instances and each internal node is labeled with max or min operators and can have arbitrarily several children. Roughly speaking, Π-DNNF is
+the same as the classical DNNF although its operators
+are max and min instead of ∨ and ∧, respectively.
+Example 1. Figure 1 depicts a sentence in Π-DNNF.
+Consider the Min-node (root) in this figure. This node has
+two children, the first contains variables A, B while the
+second contains variables C, D. This node is decomposable
+since its two children do not share variables.
+
+3.1
+
+INFERENCE USING POSSIBILISTIC
+CIRCUITS
+
+• Evidence indicators: for each variable Xi in the
+network , we have a variable λxi for each instance
+xi ∈ DXi .
+• Network parameters: for each variable Xi and its
+parents Ui in the network, we have a variable
+θxi |ui for each instance xi ∈ DXi and ui ∈ DUi .
+fmin = max
+x
+
+min
+(xi ,ui )∼x
+
+λxi θxi |ui
+
+(5)
+
+where x represents instantiations of all network variables and ui ∼ x denotes the compatibility relationship among ui and x. The possibilistic function fmin
+of a possibilistic network represents the possibility distribution and allows to compute possibility degrees of
+variables of interest. Namely, for any piece of evidence
+e which is an instantiation of some variables E in the
+network, we can instantiate fmin as it returns the possibility of e, Π(e) (Definition 2 and Proposition 1).
+Definition 2. The value of the possibilistic function
+fmin at evidence e, denoted by fmin (e), is the result of
+replacing each evidence indicator λxi in fmin with 1 if
+xi is consistent with e, and with 0 otherwise.
+Proposition 1. Let ΠGmin be a possibilistic network
+representing the possibility distribution π and having
+the possibilistic function fmin . For any evidence e, we
+have fmin (e) = π(e).
+
+Figure 1: A sentence in Π-DNNF.
+
+A sentence in Π-d-DNNF is a sentence in Π-DNNF
+satisfying decomposability and determinism (viewing
+
+Let figure 2 be the min-based possibilistic network
+used throughout the paper.
+The possibilistic function of the network in figure 2
+has 8 terms corresponding to the 8 instantiations of
+variables F, B, D. Two of these terms are as follows:
+
+is outlined by algorithm 1. Note that the suffix P F is
+added to signify that this method uses a possibilistic
+function (fmin ) before ensuring the CNF encoding.
+Algorithm 1: Inference using Π-DNNF (Π-DNNFP F )
+
+Figure 2: Example of ΠGmin .
+
+fmin = max(min(λd1 , λf1 , λb1 , θd1 |f1 ,b1 , θf1 , θb1 ); min
+(λd1 , λf2 , λb1 , θd1 |f2 ,b1 , θf2 , θb1 ); · · · )
+If the evidence e = (d1 , b1 ) then fmin (d1 , b1 ) is obtained by applying the following substitutions to fmin :
+λd1 = 1, λd2 = 0, λb1 = 1, λb2 = 0, λf1 = λf2 = 1. This
+leads to Π(e) = 0.7.
+The possibilistic function fmin is then encoded on a
+propositional theory (CNF) using λxi and θxi |ui . For
+each network variable Xi , the encoding contains the
+following clauses:
+λxi ∨ λxj
+(6)
+¬λxi ∨ ¬λxj , i 6= j
+
+(7)
+
+Moreover, for each propositional variable θxi |ui , the
+encoding contains the clause:
+λxi ∧ λui1 ∧ . . . ∧ λuim ↔ θxi |ui
+
+(8)
+
+The CNF encoding, denoted by Kfmin recovers the
+min-joint possibility distribution (proposition 2).
+Proposition 2. The CNF encoding Kfmin of a possibilistic network encodes the joint distribution of given
+network.
+Once the CNF encoding is accomplished, it is then
+compiled into a Π-DNNF, from which we extract the
+possibilistic circuit ζp (definition 3) that implements
+the encoded fmin .
+Definition 3. A possibilistic circuit ζp encoded by a
+Π-DNNF sentence ξ c is a DAG in which leaf nodes
+correspond to circuit inputs, internal nodes correspond
+to max and min operators, and the root corresponds to
+the circuit output.
+As in the probabilistic case (Darwiche, 2003), this circuit can be used for linear-time inference. More precisely, computing the possibility degree of an event
+consists on evaluating ζp by setting each evidence indicator λx to 1 if the event is consistent with x, to 0
+otherwise and applying operators in a bottom-up way.
+This possibility degree corresponds exactly to the one
+computed from the min-joint possibility distribution
+(proposition 3). This method referred to Π-DNNFP F
+
+Data: ΠGmin , instance of interest x, evidence e
+Result: Π(x|e)
+begin
+Compilation into Π-DNNF
+Encode ΠGmin into fmin using equation 5
+EncodeCNF of ΠGmin into ξ using equations 6, 7, 8
+Compile ξ into ξ c
+ζp ← Possibilistic Circuit of ξ c
+Inference
+Applying Operators on ζp
+Π(x, e) ← Root Value (ζp ; (x,e))
+Π(e) ← Root Value (ζp ; e)
+if Π(x, e) ≺ Π(e) then Π(x|e) ← Π(x, e)
+else Π(x|e) ← 1
+return Π(x|e)
+end
+
+Proposition 3. Let ΠGmin be a possibilistic network.
+Let πmin be a joint distribution obtained by chain rule.
+Then for any a ∈ Da and e ∈ DE , we have Π(A =
+a|E = e) = Πmin (A = a|E = e) where Πmin (A =
+a|E = e) is obtained from πmin using equation 1 and
+Π(A = a|E = e) is obtained from algorithm 1.
+The key point to observe here is that this approach
+can handle possibilistic circuits of manageable size as
+in the probabilistic case since some possibility values
+may have some specific values; for instance, whether
+they are equal to 0 or 1, and whether some possibilities are equal. In this case, we can say that the
+network exhibit some local structure. By exploiting
+it, the produced circuits can be smaller. In fact, the
+normalization constraint relative to the initial network
+will mean that we will have several values equal to 1.
+Thus the idea is to make an advantage from such a
+local structure which has a particular behavior with
+the max operator in order to construct more compact
+possibilistic circuits w.r.t. standard ones as stated by
+the following proposition:
+Proposition 4. Let N bposs and N bproba be the number of clauses in the possibilistic and probabilistic
+cases, respectively. Then N bposs ≤ N bproba .
+Note that for particular situations where probability
+values are 1 or 0, we have N bposs = N bproba , otherwise
+N bposs ≺ N bproba .
+Example 2. To illustrate algorithm 1 we will consider
+the min-based possibilistic network represented in figure 2.
+We are looking for Π(f2 |d1 ) with f2 as instance of interest and d1 as evidence. First, we encode the network as
+a possibilistic function and encode it on CNF. This latter is then compiled into Π-DNNF from which a possibilistic circuit is extracted. The possibility degree Π(f2 |d1 ) is
+computed using this circuit in polynomial time. For instance, Π(f2 , d1 ) is computed using ζp by just replacing
+
+λf2 = λd1 = λb1 = λb2 = 1 and applying possibilistic
+operators in a bottom-up way as shown in figure 3. Hence,
+Π(f2 |d1 ) = Π(f2 , d1 ) = 0.4 since Π(f2 , d1 ) = 0.4 ≺ 1.
+
+from a function fψ encoding the CNF. Then, we have
+πmin (xi , ..., xj ) = Π(xi , ..., xj ), i.e. fψ recovers the
+min-joint possibility distribution πmin .
+Comparing theoretically the probabilistic and the possibilistic case allows us to deduce the following proposition:
+Proposition 6. The possibilistic encoding of a possibilistic network given by Kψ (equation 10) is more
+compact than the probabilistic encoding given in
+(Wachter and Haenni, 2007).
+In fact, the number of variables used in Kψ is less than
+the one used in (Wachter and Haenni, 2007). In particular for parameters, our approach uses one variable
+per different weight, while in the probabilistic encoding
+one variable per parameter. For each clause in Kψ
+there exists a clause of the same size in the probabilistic encoding. The converse is false.
+
+Figure 3: Inference using the possibilistic circuit (ζp ).
+
+3.2
+
+INFERENCE USING POSSIBILISTIC
+COMPILED REPRESENTATIONS
+
+DNNF plays an interesting role in compiling propositional knowledge bases. It has been used to compile
+probabilistic networks. More precisely in (Wachter
+and Haenni, 2007), authors have been interested in
+performing a CNF logical encoding of the probability distribution induced by a bayesian network, then
+a compilation phase from CNF to d-DNNF. In this
+section, we propose to adapt this encoding in the possibilistic setting by taking into consideration the local
+structure aspect. This allows to reduce the number
+of additional variables comparing to the probabilistic
+encoding. Let ∆ be propositions linked to network’s
+variables and let θ be propositions linked to the possibility distribution entries (equal to 1). We start by
+looking at the possibility distribution encoding. The
+logical representation of a network variable Xi is defined by: ψXi =
+
+^
+^
+
+ui1 ∧ · · · ∧ uim ∧ θxi |ui → xi
+(9)
+ui
+
+θxi |ui ∈ΩθX
+
+i
+
+|ui
+
+By taking the conjunction of all logical representations
+of variables, we obtain the network’s representation ψ
+as follows:
+^
+ψ=
+ψXi
+(10)
+Xi ∈∆
+
+The CNF encoding, denoted by Kψ indeed recovers
+the min-joint possibility distribution (proposition 5).
+Proposition 5. Let πmin be the joint possibility distribution obtained using the chain rule with the minimum operator and Π be the possibility degree computed
+
+Once the qualitative network is encoded by Kψ , it is
+compiled into a compilation language that supports
+the transformations conditioning and forgetting and
+the query possibilistic computation. This language is
+Π-DNNF (proposition 7). Therefore, the CNF encoding is first compiled, and the resulting Π-DNNF is then
+used to compute efficiently, i.e. in polynomial time
+a-posteriori possibility degrees (proposition 8). This
+method referred to Π-DNNF is outlined by algo. 2.
+Proposition 7. Π-DNNF supports conditioning, forgetting and possibilistic computation.
+Algorithm 2: Inference using Π-DNNF
+Data: ΠGmin , instance of interest x, evidence e
+Result: Π(x|e)
+begin
+Compilation into Π-DNNF
+EncodeCNF of ΠGmin into ψ using equation 10
+Compile ψ into ψpc
+Inference
+v1 ← Explore Π-DNNF(x ∧ e, ψpc )
+v2 ← Explore Π-DNNF(e, ψpc )
+if v1 ≺ v2 then Π(x|e) ← v1 else Π(x|e) ← 1
+return Π(x|e)
+end
+
+Proposition 8. Let ΠGmin be a possibilistic network.
+Let πmin be a joint distribution obtained by chain rule.
+Then for any a ∈ Da and e ∈ DE , we have Π(A =
+a|E = e) = Πmin (A = a|E = e) where Πmin (A =
+a|E = e) is obtained from πmin using equation 1 and
+Π(A = a|E = e) is obtained from algorithm 2.
+Example 3. Let us illustrate algorithm 2. In fact, ψ of
+the network of figure 2 is : ψ = ψF ∧ ψB ∧ ψD = {(θ1 ∨
+f2 ) ∧ (θ2 ∨ b1 ) ∧ (f2 ∨ b2 ∨ θ2 ∨ d1 ) ∧ (f2 ∨ b1 ∨ θ1 ∨ d2 ) ∧
+(f1 ∨ b2 ∨ θ3 ∨ d2 ) ∧ (f1 ∨ b1 ∨ θ4 ∨ d2 )} such as θ1 , θ2 , θ3
+and θ4 correspond respectively to 0.8, 0.7, 0.4 and 0.2.
+To compute Π(f2 |d1 ), we should first compute Π(f2 , d1 ) using algorithm 3. The first step is to check if we have at least
+
+Algorithm 3: Explore Π-DNNF
+Data: a set of instances x, compiled representation ψpc
+Result: Π(x)
+begin
+if ∀ xi ∈ x, θxi |Ui is not a leaf node then
+Π(x) ← 1
+else
+y= {xi | ∀, θxi |Ui is a leaf node ∀ Ui ⊆ x}
+c
+ψp|y
+← Condition ψpc on y
+c
+ψpc ↓|y ← Forget ∆ from ψp|y
+c
+Applying Operators on ψp ↓|y
+Π(x) ← Root Value of ψpc ↓|y
+return Π(x)
+end
+
+one θ as a leaf node. In this example, we have θd1 |f2 ,b1
+and θd1 |f2 ,b2 as leaf nodes, hence conditioning should be
+performed. Then, a computation step is required by applying in a bottom-up way Min and Max operators on the
+forgotten Π-DNNF. Therefore, Π(f2 |d1 ) = Π(f2 , d1 ) = 0.4.
+
+4
+
+NEW POSSIBILISTIC
+INFERENCE ALGORITHM
+
+In (Benferhat et al., 2002), authors have been interested in the transition of possibilistic networks into
+possibilistic logic bases. The starting point is that the
+possibilistic base associated to a possibilistic network
+is the result of the fusion of elementary bases. Definition 4 presents the transformation of a min-based possibilistic network into a possibilistic knowledge base.
+Definition 4. A binary variable Xi of a possibilistic network can be expressed by a local possibilistic knowledge base as follows:
+ΣXi
+=
+{(¬xi ∨ ¬ui , αi ) : αi = 1 − π(xi |ui ) 6= 0}. The possibilistic knowledge base of the whole network is: Σmin =
+ΣX1 ∪ ΣX2 ∪ · · · ∪ ΣXn .
+In another angle, researchers in (Benferhat et al., 2007)
+have focused on the compilation of bases under the
+possibilistic logic policy in order to be able to process
+inference from it in a polynomial time. The combination of these methods allows us to propose a new
+alternative approach to possibilistic inference. This is
+justified by the fact that the possibilistic logic reasoning machinery can be applied to directed possibilistic
+networks (Benferhat et al., 2002).
+The idea is to encode the possibilistic knowledge base
+Σmin into a classical propositional base (CNF). Let
+A = {a1 , ..., an } with a1  ...  an the different
+weights used in Σmin . A set of additional propositional variables, denoted by Ai , which correspond exactly to the number of different weights, are incorporated and for each formula φi , ai will correspond the
+propositional formula φi ∨Ai . Hence, the propositional
+
+encoding of Σmin , denoted by KΣ is defined by:
+KΣ = {φi ∨ Ai : (φi , ai ) ∈ Σmin }
+
+(11)
+
+The following proposition shows that the CNF encoding KΣ recovers the min-joint possibility distribution.
+Proposition 9. Let πmin be the joint possibility
+distribution obtained using the chain rule with the
+minimum-based conditioning and let KΣ be the propositional base associated with the possibilistic network
+given by equation 11. Let φi be a propositional formula associated with a degree ai . Then ∀ω ∈ Ω,
+Π(ω) = 1 iff {¬A1 , ..., ¬An } ∧ ω ∧ KΣ is consistent.
+Π(ω) = ai iff {¬A1 , ..., ¬Ai } ∧ ω ∧ KΣ is inconsistent
+and {¬A1 , ..., ¬Ai−1 } ∧ ω ∧ KΣ is consistent.
+The CNF encoding KΣ is then compiled into a target
+compilation language in order to compute a-posteriori
+possibility degrees in an efficient way. Here, we are
+interested in a particular query useful for possibilistic networks, namely what is the possibility degree of
+an event A = a given an evidence E = e? Therefore, we propose to adapt the algorithm given in (Benferhat et al., 2007) in order to respond to this query
+as shown by algorithm 4. Proposition 10 shows that
+the possibility degree computed using algorithm 4 and
+the one computed using the min-based joint possibility distribution are equal. Note that this approach is
+qualified to be flexible since it takes advantage of existing propositional knowledge bases compilation methods (Benferhat et al., 2007). This method referred to
+DNNF-PKB is outlined by algorithm 4.
+Algorithm 4: Inference using DNNF
+Data: ΠGmin , instance of interest x, evidence e
+Result: Π(x|e)
+begin
+Transformation into KΣ
+Transform ΠGmin into Σmin using definition 4
+Transform Σmin into KΣ using equation 11
+Inference
+c
+KΣ
+← T arget(KΣ )
+c
+K ← KΣ
+StopCompute ← false
+i←1
+Π(x|e) ← 1
+while (K 2 Ai ∨ ¬e) and (i ≤ k) and (StopCompute=false) do
+K ← condition (K, ¬Ai )
+if K ¬x then
+StopCompute← true
+Π(x|e) ← 1-degree(i)
+else
+i←i+1
+return Π(x|e)
+end
+
+Proposition 10. Let ΠGmin be a possibilistic network. Let πmin be a joint distribution obtained by
+
+chain rule. Then for any a ∈ Da and e ∈ DE , we
+have Π(A = a|E = e) = Πmin (A = a|E = e) where
+Πmin (A = a|E = e) is obtained from πmin using equation 1 and Π(A = a|E = e) is obtained from Algo. 4.
+
+Indeed, in Π-DNNFP F , we associate propositional
+variables not only to possibility degrees (parameters),
+but also to each value xi of Xi . While in DNNF-PKB
+only m new variables are added (one variable per different degree).
+
+Example 4. To illustrate algorithm 4 we will consider
+
+Let us now analyze these three approaches from experimental points of view. Our experimentation is
+performed on random possibilistic networks. More
+precisely, we have compared DNNF-PKB and ΠDNNFP F on 100 possibilistic networks having from 10
+to 50 nodes. As mentioned that the approaches focus
+mainly on encoding the possibilistic network as a CNF
+then compile it into the appropriate language, hence,
+it should be interesting to compare the CNF parameters (the number of variables and clauses) and the
+DNNF parameters (the number of nodes and edges)
+for the two methods.
+
+the min-based possibilistic network represented in figure 2.
+The CNF encoding is as follows :
+KΣ
+=
+(d2 ∨ f1 ∨ b2 ∨ A1 ) , (b1 ∨ A2 ) , (d1 ∨ f2 ∨ b2 ∨ A2 ) ,
+(f2 ∨ A3 ) , (d2 ∨ f2 ∨ b1 ∨ A3 ) , (d2 ∨ f1 ∨ b1 ∨ A4 )
+such
+as A1 (0.8), A2 (0.6), A3 (0.3) and A4 (0.2) are
+propositional variables followed by their weights under
+c
+brackets. Compiling KΣ into DNNF results in: KΣ
+=
+((b2 ∧ A2 ) ∧ [(A3 ∧ f1 ) ∨ (f2 ∧ [d2 ∨ (A4 ∧ d1 )])]) ∨ (b1 ∧
+[[f2 ∧ (d2 ∨ (A1 ∨ d1 ))] ∨ [(f 1 ∧ A3 ) ∧ (d1 ∨ (A2 ∧ d2 ))]]).
+c
+The computation of Π(f2 |d1 ) using KΣ
+requires two
+iterations. Therefore, Π(f2 |d1 ) = 1 − degree(2) = 0.4.
+
+Due to the compilation step, this algorithm runs in
+polynomial time. Moreover, the number of additional
+variables is low since it corresponds exactly to the
+number of priority levels existing in the base.
+
+5
+
+COMPARATIVE AND
+EXPERIMENTAL STUDIES
+
+The paper analyzes three compilation-based methods,
+namely DNNF-PKB, Π-DNNF and Π-DNNFP F . The
+first dimension that differentiates the three approaches
+proposed in this paper is the CNF encoding. It consists
+of specifying the number of variables and clauses per
+approach.
+The CNF of DNNF-PKB is based on encoding ¬x
+where x is an instance of interest having a possibility degree different from 1. In Π-DNNF, we write
+implications relative to instances having 1 as possibility degree. We can notice that the local structure
+in both methods is exploited in semantically different
+ways. In DNNF-PKB, the encoding uses the number
+of different weights as the number of additional variables while the Π-DNNF encoding uses the number of
+the non-redundant possibility degrees different from 1
+in the distributions. Regarding the number of clauses,
+both methods handle possibility degrees different from
+1. This leads us to the following proposition:
+
+5.1
+
+CNF PARAMETERS
+
+First we propose to test the CNF encodings characterized by the number of variables and the number of
+clauses. Regarding DNNF-PKB, the number of additional variables correspond to the number of weights
+which are different. While in Π-DNNFP F , variables
+are both those associated to the possibility degrees
+of each distribution and those to variable’s instances.
+The number of clauses for each method is related to
+the CNF encoding itself. Figure 4 shows the results of
+this experimentation. Each approach is characterized
+by a curve for the average number of variables and a
+curve for the average number of clauses. It is clear
+that the higher the number of nodes considered in the
+possibilistic network, the higher the number of variables and clauses. Figure 4 shows that DNNF-PKB
+has the lower number of variables and clauses comparing to Π-DNNFP F , which confirms the theoretical
+results detailed above.
+
+Proposition 11. The CNF encodings of DNNF-PKB
+and Π-DNNF have the same number of variables and
+clauses.
+The CNF encoding of Π-DNNFP F is different from
+the ones of DNNF-PKB and Π-DNNF. Proposition 12
+shows the difference between Π-DNNFP F and DNNFPKB in terms of number of variables and clauses.
+Proposition 12. The number of variables and clauses
+in Π-DNNFP F is more important than those in
+DNNF-PKB.
+
+Figure 4: CNF parameters.
+
+5.2
+
+DNNF PARAMETERS
+
+Once we obtain the CNF encodings, it is important
+to compare the number of nodes and edges for each
+compiled base. Figure 5 represents the average size of
+the compiled bases for the two methods in terms of
+nodes and edges numbers. We remark that the number of nodes and edges depends deeply on CNF parameters. More precisely, the number of nodes and
+edges in DNNF-PKB is considered narrow comparing
+to Π-DNNFP F . This can be explained by the lower
+number of variables and clauses on CNFs and the local structure which shrinks the sizes of compiled bases.
+Comparing DNNF-PKB to Π-DNNFP F , the behavior
+of DNNF-PKB is important.
+
+(Pearl, 2000) (Benferhat and Smaoui, 2007).
+Acknowledgements
+We thank the anonymous reviewers for many interesting
+comments and suggestions. Also, we wish to thank Mark
+Chavira for our valuable discussions on this subject. The
+third author would like to thank the project ANR Placid.
+
+
+"− # $ %
+&
+$ $
+(
+!
+" − *+$ # &
+#$ $
+(
+!
+"−+
+$
+& #$
+"
+10" - −
++ & $
+)
+$
+
+!
+'
+,
+
+((
+)!
+- . ## #)
+)!
+/
+-0
+)!
+
+$
+
+"
++
+2
+
++
+4
+
+3
+4
+
++
++#
+
+#
+
++
+
+3
+
+4
+
++# 3
++
+
+$
++
+$(
++
++
+0
+
++
+
+$ 567
+
++
+
++
+8#
++
+
++#
+5 :7$
+8#
+#
+
++
+#
+
+#
+
++
+
+#
+
++
+
++
+
++#
+
++#
+8
+9( 0 39
++#
+#
++ +
+
++
+$;
+#
++#$ ; +
+#
+#
+
+# +
+#
++
+
++#
+
+$0
+
+4
+
+$ $
+
++
+
+#
+
++
+3$ $
++ +
+
++#
+
+#
+
++
+4
+
++#
++
+# +
+
+$.
+(
++
+
++
++
+
+#
++
++
+
+$
+
++
+5<75 =75 7
+
++
+5 '7$
+
++
+
+#
+#
+
+$
+
++
+
++ 3>"?4 #
+$
++
+
++
+
++
+
+8
+
++
+
++
+
++
+
+$
+
+#
+
+#
+
++
+
+#
+
+#
+
++
+
+$
+
+#
+
++
++
+
+3-
+
+4
++
+
++
+
+$
+
++
++
+#
+
++
+
++
+"
+
+#
+8#
++
+
+#
+
+$
+
++ +
+
++
+
+$
++
+#
+
++
+
+)
+
+8
+
+#
+
++
+$
+
+B
+
+@
+
+A
+
++
+! +
++
++
++ !C
++ D C$
+
+$ +
++ +
++
+$
+1
+B$ +
+
+B
+
+)+
+) "
+
++
+5/7$
+
++#
+
+8#
+
++
++# +
+# 8$
+
++ 8
+#
+#
++
+$"
+8#
++
+5G7$
+
+!
+
+,$
+
+)+
+
+2
+
++
++
++
+
+>
+
+#
+
++#
+
+" +
+
++ G=
+
++
+
+#
+-+
+1
+
++#
++#
+
+B
+
+"
+
+3
+
++
+
+B +
+D ID
+
+%
++
+
+B4
+#
+
+#
+$ $
+
+⊄B4 5 ,7$ "
+B
+#
+$
+
++
+E
+
++
+
++
+
++
+#
+#
+#
++
+)
+
+8
+
++
+
+$
+
++
+
+@
+
+#
+
++
+
+3 +
+π3! 4
+
++
+
++
+8
+
+3
+
+!
++
+# + D%
+
+$F + + +
+#
+#
++
+E
+# #
+*
+# 8
+#
+$
++#
+5:7
++# +
+# +
+
++
+
+K
+
++
++
+
++
++
+
+! I !#
+1
+$
++
+B4
+@
+AB 3
+)
+$
+
++
+
+J
+
+3
+
+; + +
+
+#
+
++
+
+B4
++
+
+#
+
+8
+
+B 3
+
+A
+
+5 =7$ +
+5 '7$
+
+4
+
+'$
+#
+# @E
+#
+3
+
+5H7
+
+3
+
+λ3D%4
+1
+
+4$ ;
+#
+
++
+4
++
+#
+
+#
+'4 5 ,7$
+
+U1
+
++
+
+A
+
+U2
+
+λ3B4
+
+π3! 4
+
+π3!'4
+
+λ3B4
+B
+
+λ3D 4
+π3B4
++
++
++
+8
+
+Y1
+
+1
+
+'
+
+π3B4
+λ3D'4
+Y2
+
+' (
+
++
+
+3
+
+4
+
+B
+
++
+
+) 31
+P#
+) 31
+Q#
+) 31
+
+#
+3 B4 L 3 BL8M 4 Lα λ 3 B4 π3 B4
+α
+
+;+
+
+# *
+π3 B4 L
+$
+λ3B4 L
+B +
++
+$ λ" 3B4
+#
+"
+
++
+#
+λ#
+
+λ3 4 = ∏ λ
+'=
+
++
+
+π #
+#
+π" 3B4
+#
+"
+##
++ 8
+π3B4
+3 M
+
+λ
+
+'
+
+)
+
+##
+
+*
+
++
++ #
+D4
++
+#
+
++
+
+!$
+$
+
+!4
+
+!
+
+%
+
+&
+
+#
+
++
+#
++
+
+#
+
+8
+
++#
+#
+
++
+#
+5 '7$
+
+#
+
++
+
+#
+-
+
+*$ ;
+
++
+
+)+
++ # %
+$
+
+"
+
++
++
+
+8
+
+5/7$
++
+
+2
+
++#
++
+
+#
+
+$ $
+
+$
+8
+
+@
+
+A 5 =7$
++#
+
+(=
+
++#
+
+)1
+NL
+λ384 L
++
+8 L O= +
+π384 L
++
+8 L O= +
+)1
++
+π384 L 384 )
+)1
++
++
+λ384 L
+# 3 # *
+
++#
+
+#
+
+3 + M , $$$ ,* 4∏ π -( ' 3,( 4
+
+2
+
+3 8
+D$
+B4
+3 8
+
+" " #
+
+*
+
+, $$$ ,*
+
++'
+
++
+B4
+
++
+
+3 4
+
+(≠ '
+
+'
+
++
+
+B
++
+
+#
+
+3 4 = απ 3 4∏ λ ( 3 4
+
+λ 3+'4
+
+3 4=
+
+B+
+
+B
+
+$
+
+#
+
+π
+
+B4
+#
+
+'=
+
++
+
++
+
++
+
+) 31
+
++
+
+4∏ π ! ' 3 ' 4
+
+$$$
+
+$$$
+
+B+
+
+λ #
+
+#
++
+
+#
+
+B4
+#
+
++
+
+#
+
+#
+
+π3 B4 L
+B +
+#
+$
++ π #
+$
++
+B
+
+#
+
+π3 4 =
+
+'
+
+λ3B4 L
+
++
+
++
+
++#$
+8
+
++
+
+#
+" +
+@ E )
+#
++
+# +
+E )
+8 #
+
+4
+
+,
+
+#
+
+#
++
+)+
+
+!
+
++
+
++
+
+8
++ +
+
+$ +
+2
++ # +
+*
++
+$
+# #*
+
+$
+
+8
+
++#
+A 5 /7
+
+#
+E
+
+# #
++
+
+#
+
+$
++#
+
++
+
+#
+
+8
+
+8
+E
+
++
+
++ +
+
+*
+#
+
++
+
+$
++
+#
+
+8#
+
++#
+8
+
++
++#
+
+#
+# +
+
++
+8
+
+$
+
+/$
++ @
+8#
++
+
+A3
+4
++#
++ +
++
+
+567$ + #
+#
+
++
+
+1
+
++
+3
+
+4$
+
++
+
++# #
++
+
+8
+
+,
+
+#
+B
+
+#
+
++
+3 4
+
++
+#
+#
+
+$
++
++#
+
+#
+
++
+
++ #
++
+
+3'4
+
+5 7$
+;
+
++
+
+#
+
+#
+8+
+
++
+
++#
+λD3B4
++
+πB3!4
+λB3B4
+;
+
++ #
+
+B
+
++
++
+
+#
+
+J
+3
+
+#
+1
+
+#
+B
+/4
+
+D$
++ #
+
+B
+
+#
+
+!$
+#
+B
+3B ∈ 4$
+#
++
+λ3 43B4
+#
++
+# *
+
++
+$
+
+#
+384 L αλ384π384 ≈
++
+
+3BL8M 4$
+
+#
+
++
+#
+
++
+
+#
+
+8+
+
++
+!LR! I ! S
+DLRD I D#S3
+1
+,4
+
+B
++
+
+1
+
+/
+
+/ F
+#
+B
+
+#
+J
+
++
+@#
+
++
+
+A
++
+$
+
+# 8)
+
+#
+
+#
+
++
++
++
+
+# )
+
+#
+
++ +
+#
+
+#
+
++
+
+$
++
+#
++
+
+#
++
+
++
+$ +
++
+
+# +
+
+#
+#
+;+
+
++
+
+#
+
++
+
++
++#
+
++
+**
++
++
+#
++ +
+# +
++
+
++
+
++
+3 $ $ =)/4 567$
+
++
+
+# +
+8
+#
+
+5'7$
++
+
+E
++
+
+$ 9
+
++
+
+#
+
+$
+$
++#
++
++
+3 D0"( >
+9( 04
+3" "0(
+9( 0)> 4
+567$ +
++
+8
+9( 0)>
++ +
++
++#
+$ +
+8
++
++
++
+#*
++ 9( 0)>
+$
++
+@# #
+#A #
+E
+'$
++
++
+# #
+#
++
++
+$ .
++
++ + +
++#
+E
+$
+
++
+
++
+
++
+#
+#
+#
+
+:$
+
+E
+
+E
++
+
+$ 9
+#
+
+$
+
+#
++
+9
++
+
+$
+E
++
+
+3
+
+#
+
+# #
+
+4$
+"
++
+
++
+#
+$ "
+#
+#
+
+#
+
+$N
+
++
+
+8
+
++
+
++
+
++
+
++
+
+**
++
+
+T
+>
+
+#
+
++ 5 H7
+5,7
+
+#
++
+
+E
+E
+
++
++
++
+
++ +
+
++
+
+8
+
+$
+
++
+
+;
+E
+
+$
+(
+
++
+#
+
+# #
++
+
+8#
+
++
+
+:
+
+?
+
++
++
+
+5'7$
+
+$ !
+
+$
+
+K
+
+H$ +
+
+<, <G,$
+567K$ $ ( +
+
++
++
+
++#
+
+"
+/6: <<<$
+5G7 $ > #
+
++#
+$ +
+
++
+8#
+
++#
+
++
++
+
+$
+8#
+
+$
+
+.
++
+$;
+
+#
+
++
+
+9( 0)>
+#
+#
+#
+
++
+
+#
+
++
++
+
++
+#
+
+$ ;
+#
+
++ +
+
++#
+2
+
+$
+
+0
+5 7"$ ?
+
+8-$
++
+
+$ + # % +# $
+#
+$
+- ##
+
+5'7 >$ >
+
+(
+K
+5,7>$
+5/7?$
+
+C
+<, <<,$
+.$
+$
++
++
+#
+)
+"
+$ >
+"
++ #
+"
+$
+>
++ N$ ,' $ ,:)HH '==
+>
+.$
+$
++
+# <GG$
+$ +
+#
+# 8
+
+<=)
+
+($ $ V
+$
+8#
+$
+/H6)
+
+#
+($
+
+$ "
+
+8#
+
+#
+!-
+
+$ !- "
+#
++
+G:==''
+30)/'4O "
+'< '/ W 'GG <GH$
+5 7 $V
+$N # $
+#
+)
+$ !- " #
++
+0
+GG==:' <GG$
+5 '7 $ V
+$
+0
+#
+$ (
+K #
++
+"
+<GG$
+5 ,7 $
+X# ).$ ;
+#
+$
+F$
+"$
+$ 0Y 8
+Y
+$
+'==/$
+5 /7 $ $
+*
+>$ V$
++
+$
+#
++
++
++
+8
+#
++ 0
+$ := :/)''6
+<GG$
+5 :7 $ $ V
+($ $ V
+$N
++ E#
+$ V
+"
+0
++ ='< ),'' <<<$
+5 H7 $ "$ T +$ 1 **
++
+$ 1 **
+# 3 <6G4 ,W'G$
+-#
+0
+
++
+#
+
++
+
+D$ ;
+
+)+ $ "
+H= / ) :, <<,$
+5<7 $ V
+$
+)
+# #
+$ ,'<W,,/ <G:$
+5 =7 $ V
+$ 1
+
++#
+
++
+
++
+
+? #
+
+2
+
+8
+
++ +
+
++ ;
+
+$
+
+$"
+/' ,<,)/=:
+<<=$
+5:7.$ ?
+;$ . "
++#
+) #
+""" UK>>U!" )'==' V
+;
++
+0 ) # >
+>
+#
+W ' '=='$
+5H7 V$ .$ K #
+V$
+$ " #
+#
+$
++ G+
+V
+"
+
+H
+
+>
+
+
+
+
+This paper presents and discusses several methods
+for reasoning from inconsistent knowledge bases.
+A so-called argumentative-consequence relation,
+taking into account the existence of consistent
+arguments in favor of a conclusion and the
+absence of consistent arguments in favor of its
+contrary, is particularly investigated. Flat
+knowledge bases, i.e. without any priority
+between their elements, as well as prioritized ones
+where some elements are considered as m ore
+strongly entrenched than others are studied under
+d i f f e r e n t consequence relations. L astly a
+paraconsistent-like treatment of prioritized
+knowledge bases is proposed, where both the level
+of entrenchment and the level of paraconsistency
+attached to a formula are propagated. The priority
+levels are handled in the framework of possibility
+theory.
+
+1. Introduction
+One of the emerging important problems pertaining to the
+management of knowledge-based systems is inconsistency
+handling. Inconsistency may be present for several
+reasons: the presence of general rules with exceptions, the
+existence of several possibly disagreeing sources feeding
+the knowledge base are among the most common ones.
+There are two attitudes in front of inconsistent knowledge.
+One is to revise the knowledge base and restore
+consistency. The other is to cope with inconsistency. The
+first approach meets two difficulties: there are several
+ways of restoring inconsistency yielding different results,
+and the problem is that part of the information is thrown
+away and we no longer have access to it. Coping with
+inconsistency bypasses these difficulties. However we must
+take a step beyond classical logic, since the presence of
+inconsistency enables anything to be entailed from a set of
+formulas.
+This paper investigates several methods for coping with
+inconsistency by suitable notions of consequence capable
+of inferring non-trivial conclusions from an inconsistent
+knowledge base. These consequence relationships coincide
+with the classical definition when the knowledge base is
+consistent. When the knowledge base is flat, i.e. made of
+
+equally reliable propositional formulas, the proposal made
+by Rescher and Manor [21] is very commonly used
+nowadays: compute the set of maximal consistent subsets
+of the knowledge base first, then a formula is accepted as
+a consequence when it can be classically inferred from all
+maximal consistent subsets of propositions or from at
+least one maximal consistent subset.
+However the first consequence relation is very
+conservative hence rather unproductive while the latter is
+too permissive may leads to pairs of mutually exclusive
+conclusions. A mild inference approach is proposed in this
+paper, that is more productive than the first consequence
+relation but do not lead to conclusions which are pairwise
+contradictory. It is based on the idea of arguments that
+goes back to Toulmin [25] and is related to previous
+proposals [19], [18], and [24] that were suggested in the
+framework of defeasible reasoning for handling exceptions.
+We suggest that a COtlclusion can be inferred from an
+inconsistent knowledge base if the latter contains an
+argument that supports this conclusion, but no argument
+that supports its negation.
+The paper is organised as follows. Section 2 deals with flat
+k n o w l e d g e b a s e s a n d c o m pares s e veral notion s o f
+consequence relations that are inconsistency-tolerant,
+including several ones that come from the non-monotonic
+
+logic literature. Section 3 contains a thorough analysis of
+our argumentative inference process. Section 4 extends the
+argumentative inference to layered knowledge bases where
+layers express degrees of certainty as in possibilistic logic
+[10]; it refines the flat case by allowing for pieces of
+information of various levels. Section 5 deals with a
+paraconsistent-like treatment of layered inconsistent
+knowledge bases, whereby a formula carries two weights:
+its degree of certainty and the degree of certainty of its
+negation. Lastly a new way of combining knowledge bases
+issued from several sources is suggested, inspired by the
+argumentative inference. Results are given without proofs
+due to space limitations. Proofs appear in the full report.
+
+2. Arguments in Flat Knowledge bases
+D efinition
+of
+2.1.
+Consequence Re lation
+
+an
+
+Argumentative
+
+For the sake of simplicity, we consider in this paper only
+a finite propositional language denoted by;£.,. We denote
+
+412
+
+Benferhat,
+
+Dubois, and Prade
+
+the set of classical interpretations by n, by t- the
+classical consequence relation. Let I. be a set of
+propositional formulas, possibly inconsistent but not
+deductively closed. OJ:D denotes the deductive closure of I..
+i.e.en(I.)={<!>e �, I. t- 4>}. W e also a s s ume that t h e
+knowledge bases manipulated in this section are flat, which
+means that all formulas in I. have the same reliability.
+
+From now on, we denote by Inc(I.) the set of
+propositions belonging to at least one minimal
+inconsistent sub-base of I., namely:
+Inc(I.) = {4>, 3 I.i � I., such that <1> e I.i and I.i is
+minimal inconsistent}
+
+We now introduce the notion of argument:
+
+The set Inc(I.) is somewhat related to the "base of
+nogoods" used in the terminology of the ATMS[12].
+Once Inc(I.) is computed, we remove from I. all elements
+of Inc(I.), the result base is called the free base of I,,
+denoted by Free(I.) [2]. In other words, Free(I.) contains
+all formulae which are not involved in any inconsistency
+of the knowledge base L. Now, let us introduce the
+notion of theFree consequence, denoted by t-Free:
+
+Def. 2: A sub-base Li of L is said to be an argument
+for a formula 4>, if it satisfies the following conditions:
+(i) I.i¥- .l, (ii) I.it-4>, and (iii) \i'Jfe Li, I.i-{'1'}¥- 4>.
+
+Def. 5: A formula <1> is said to be a free consequence (or a
+sound consequence) of I., denoted by I.t-�, iff 4> i s
+logically entailed fromFree(L). i.e. LI-Ftre<!> iffFree(I.)t-4>
+
+Notice that this notion of argument is identical to the one
+proposed in [24] and is also very similar to the notion of
+environment used in the terminology of the ATMS [12].
+
+TheFree-inference relation is very conservative as we will
+later. Let us now recall the approach first proposed in
+[21]. Let I. be a possibly inconsistent base, MC(I.) be
+the set of all maximal consistent sub-bases of I.. The
+universal (called also the inevitable) consequence relation
+is defined in [21] in this way:
+
+Def.l: A sub-base I.i of I. is said to be consistent if it
+is not possible to deduce a contradiction from I.i, and is
+said to be maximally consistent if adding any formula 4>
+from I.-I.i to I. i produces the inconsistency of I.iu{<1>}.
+
+Def. 3: A formula 4> is said to be an argumentative
+consequence of I., denoted by L t- �<!>. if and only if:
+(i) there exists an argument for <1> in I., and
+(ii) there is no argument for -,cj> in I..
+
+As a consequence of this defmition, if our knowledge base
+contains only the two contradictory statements {<!>.-.<!>}
+then the inference <!>A-.<!>t-bi 'I' does not hold. In other
+words, our approach is in agreement with the idea of
+paraconsistent logics [6], where they reject the principle
+"ex absurdo quodlibet" which allows the deduction of any
+formula from an inconsistent base.
+It is easy to verify that t- bi is non-monotonic.
+Moreover, if I. is consistent then I.t-4> iff I.t-8't.<l>· It
+means that the non-monotonicity only appears in the
+presence of inconsistency, and the argumentative
+consequence resorts to what Satoh [23] calls "lazy non­
+monotonic reasoning", an idea also proposed in [15].
+2.2. Comparative Study o f Inconsistency­
+Tolerant Consequence Relations
+
+In this sub-section we compare our approach to reasoning
+in the presence of inconsistency to the ones reviewed in
+[3]. We start this comparative study by presenting the
+different approaches from the most conservative ones to
+the most adventurous ones.But first we need some further
+definitions:
+Def. 4: A sub-base I.i of I. is said to be minimal
+inconsistent if and only if it satisfies the two following
+requirements: (i) Lit-.l, and (ii)\i <1> E Li, I.i-{4>}¥- .l.
+
+see
+
+Def. 6: A formula <1> is said to be a universal
+consequence or Me-consequence of L, denoted by Lt-V$,
+iff <1> is entailed from each element of MC(L), namely:
+I. 1- \i <I> iff \i Li E MC(I.), Li 1- <I>
+As it has been mentioned above, the Free consequence
+relation is more conservative than Me-consequence:
+Proposition 1: Each Free-consequence is also a Me­
+consequence. The converse is false.
+
+One way of finding the proof of the previous proposition
+is to notice that:
+Free(I.) = ni.i e MC(I.) Li
+since if a formula <1> does not belong to Free(L) then there
+exists a minimal inconsistent sub-base I.k containing 4>,
+and therefore there exists at least one maximally
+consistent sub-base which contains Lk but not 4>, which
+means that there exists at least one element of MC(L)
+which does not contain 4>, and consequently 4> does not
+belong to the intersection of the elements of Me(L). The
+converse is also true. Indeed, if <!>eo n L iE MC(I,)Li then
+there exists a sub-base Li such that c�>e: Li. and LiU{4>} is
+inconsistent, therefore 4> is not free. Then from the
+properties of en, we find:
+en(Free(I.))=Cn(ni.i e MC(I.)I.i)�n i. ie MC(I.)Cn(I.i).
+The next propositions compare the Me-consequence to
+the argumentative consequence:
+
+413
+
+Argumentative inference in uncertain and inconsistent knowledge bases
+
+Proposition 2: A formula ell is an argumentative
+consequence of I. iff (i) 3 Li E MC(I.), such that Li f-
+
+cj>, and (ii) :ji.j e MC(I.), such that I.j f- --,cp.
+
+Proposition 3: Each Me-consequence of I. is also an
+
+argumentative consequence of I.. The converse is false
+
+One of the main drawbacks of Me-consequence is the
+number of elements in MC(I.) which increases
+exponentially with the the number of conflicts in t he
+base and in general, it is not possible to take into account
+all the elements of MC(I.). In [9], it is proposed to select
+a non-empty subset of MC(I.), denoted by Lex(I.), and
+computed in the following manner:
+Li E Lex(I,) iff 'V I. j E MC(I.), I'L.il � I'L.jl
+where II.I is the cardinality of I.. This ordering is called
+the lexicographical ordering, and corresponds to the
+property of parsimony advocated in diagnostic problems
+[20]. A probabilistic justification ofLex(I,) can be found
+in [3].
+In order to generate the set of plausible inferences based
+onLex(I,) from an inconsistent knowledge base, we use a
+defmition similar to the Me-consequence:
+
+Def. 8: A formula 4> is said to be an existential
+consequence of I., denoted by I. f- 3«1>, iff there exists at
+
+least one element of MC(I.) which entails cj>, namely:
+iff
+3 Li E MC(L.). Li f-3 4>
+L f- 3 4>
+It is not hard to see that this approach is the most
+adventurous one, but unfortunately it has an important
+drawback, since this approach may lead to inconsistent set
+of results. Indeed, there may exists Li f- cj> and Ljf--,cj>,
+in which case both cj> and -,cj> will be deduced.
+The following hierarchy summarizes the links existing
+between the different consequence relations studied here,
+the edge means the inclusion-set relation between the set
+of results generated by each inference relation. The top of
+the diagram thus corresponds to the most conservative
+inferences. All inferences reduce to the classical one when
+I. is consistent.
+Figure 1: A comparative study of inference relations
+
+Def. 7: A formula cj> is said to be a Lex-consequence of
+
+L., denoted by Lf- Lex<!>. iff it is entailed from each
+element ofLex(I,), namely:
+'V Li E Lex(I,), Li f- cj>
+I. f-Lex 4>
+iff
+Proposition 4: Each Me-consequence of I. is also a
+Lex-consequence of I.. The converse is false.
+
+Argumentative-Consequence
+I-A
+
+TheLex-consequence and argumentative consequence are
+not comparable as we see in the following example:
+Example Let I.={A, ...,Bv...,A, B, ...,ev...,A, e, ...,AvD}
+We have Lex('L.)={ {--,Bv--,A, B, --.Cv-,A, C, --,AvD} }.
+Then -,A is a Lex-consequence of I. while it is not an
+argumentative consequence, since A is also present in L..
+In contrast, D is an argumentative consequence (it
+derives from {A, --,Av D}) while it is not a Lex­
+consequence.
+TheLex-consequence may appear as an arbitrary selection
+from MC(L.) if we consider a semantic point of view.
+Namely, the following situation may happen:
+LiELex(I,), LjE MC(I,)-Lex(I.) and one may define Lk
+logically equivalent to I. j but II.ki>I'L. i l. However all
+introduced consequence relations are syntax-sensitive since
+L. is not closed. Yet, the counterexample demonstrates
+that the Lex-consequence may implicitly delete some
+useful pieces of knowledge (here A). It may result in
+destroying some arguments, as well as some rebuttals
+(i.e. formulas whose presence ensure an argument for --,cj>
+that inhibits arguments for cj>).
+Another definition of the consequence relation, called
+existential relation is also proposed in [21], namely:
+
+3. Properties of
+
+t-
+
+9t,:
+
+Proposition 5 (failure of AND): We may have L.
+
+1-
+
+9t,
+
+<j>, I. f- 9t, ljl, and not I. 1- 9t, 4> A 'I'·
+Proposition 5 must not be seen as a major drawback of
+f- 9t, since in some cases we do not want to have the
+AND property. The f- 9t, consequence relation captures
+the cases when we believe in two mutually consistent
+properties of some object for conflicting reasons.
+Proposition 6: f- 9t, satisfies the property of Right
+Weakening, i.e.If cj>1- 'I' then I. 1- 9t, 4> implies I. 1- 8t, 'I'
+
+414
+
+Benferhat,
+
+Dubois,
+
+and Prade
+
+An important issue when reasoning with an inconsistent
+knowledge base L. is whether it is possible to construct
+some equivalent consistent base such that plausible
+inferences from L. are its logical consequences. In this
+section we try to construct such an equivalent knowledge
+base using the argumentative inference relation.
+Propositions 5 and 6 are very important to characterise the
+set of argumentative consequences of a knowledge base L,
+denoted by Cnc9't(L.); Cnc9't(L.)={c)l, L.1-c9't cjl}. The fact
+that the argumentative consequence is not closed under
+conjunction means that Cnc9't (L) is generally not equal to
+its closure under Cn , namely: Cnc9't(L) "#- Cn(Cnc9't(L))
+In this section, we assume that we use only the finite set
+of propositional symbols appearing in the base L..
+Def. 9: A formula q, is said to be a prime implicate of
+
+L with respect to the argumentative inference relation if
+and only if:(i) Ll-c9't q,, (ii) �q,·, such that cjl\--cjl a n d
+
+Ll-c9'tc)l'
+A prime implicate can be inferred from a maximal
+consistent subset of L. However, if LiE MC(L), then the
+conjunction of formulas in Li (also denoted by Li) is not
+a prime implicate since it can be defeated by other
+maximal consistent subsets of L. Indeed, V i"#j, Lii-•Lj.
+The construction of prime implicates can be achieved from
+the semantical point view. Indeed, let [Lil be the set of
+models of the maximal consistent sub-base Li· A given
+model <pL,i of [Lil can be viewed as a formula composed
+of the conjunction of literals it satisfies. Then it can be
+shown that the following expression is a prime implicate:
+
+i
+
+<pllV· · .Vq>I,i-l V L Vq>I.i+l V· · ·Vq>I,n
+Moreover, if each maximal consistent sub-base is
+complete (i.e. Vae :£,, either aE Li or -.aE LV there exists
+exactly one prime implicate, and in this case the
+argumentative consequence and MC-consequence are
+equivalent. But in general, the prime implicates can be
+numerous.
+Let R1, .. Rn be the set of prime implicates of L., then
+Cn�) can be seen as the union of the deductive closure of
+..
+
+each Ri under Cn, namely: Ch3t(L)=Cn(RI)u...uCn<Rn)
+And it is easy to check that V i, j = l ,n L ¥ c9't Ri "Rj
+Examples
+(1) let L = {-,A v B, A v C, A, -,A}.
+We have two maximal consistent sub-bases,
+Ll={-,AvB, AvC, A}, L2={--.AvB, AvC, -,A}
+Then:
+[Ll]={AABAC, AABA-,C}
+[L2]={-,AABAC, -,A/\-,BAC},
+Therefore we have four prime implicates:
+Rt=BA(CvA), R2=(AAB)v(-,BACA-,A)
+R3=CA(-.AvB), R.t=(-,A/\C)v(-,CAAAB)
+(2) Consider now L as:
+
+1:, = {-,A v B, A v B, A, -,A, C}.
+We have two maximal consistent sub-bases,
+Lt=hAvB, AvB, A,C}, L2={-.AvB, AvB, -,A, C}
+Then:
+rLI]={AABAC}, [LiJ={-,AABAC}
+The maximal consistent sub-bases are complete,
+therefore we have only one prime implicate:
+R=(AABAC)v(-,AABAC)=BAC
+Then:
+Cnc9't(L) = Cn({B "C})
+
+Let us now justify why the previous definition makes
+sense only if we restrict ourselves to the propositional
+symbols appearing in the knowledge base. Indeed, let us
+consider the following example L= {A,-.A}, we have only
+one prime implicate, the tautology T, and therefore it is
+not possible to deduce Av B from Cn(T) which is an
+argumentative consequence of the knowledge base.
+The situation: 'L l-,s4,R i, 'L 1-c9't R j and L¥ c9't R iARj
+can correspond to two cases: (i) No argument supporting
+RiARj can be found. In that case the arguments Li and Lj
+supporting R i and Rj respectively are inconsistent.
+Indeed, if L iULj is consistent then LiULji-RiARj and
+there would exist an argument supporting Ri AR j; (ii)
+There is an argument for -.Riv-,RjAnyway the arguments supporting the prime implicates
+can be viewed as a set of scenarii extracted from L, that
+express different points of views on what is the actual
+information contained in L.. These points of view are
+incompatible in the sense that the subsets L i and Lj
+supporting two prime implicates Ri and Rj should not be
+mixed (even if not inconsistent). The fact that Cnc9't (L)
+still reflects conflicts lying in L, can be seen as follows:
+the argumentative inference forbids that two prime
+implicates Ri and Rj be inconsistent. However the set
+{ R1, . . , Rn } can be globally inconsistent, namely one
+argumentative consequence of L can be defeated by other
+consequences grouped together.
+.
+
+Example
+Consider the set L.=[-,A, -.B, A, B, -,Cv-.D, -.AvB}
+The maximal consistent subsets of L are:
+Ll = {-,A, -,B, -,C v -,D, -,A v B}
+L 2 ={-.A, B, -,C v -.D, -,A v B}
+L3 = {A, B, -.C v -.D, -.A v B}
+L4 = {-,B, A, -.C v -,D}
+Consider the three formulas:
+c)l}=(-,A/\-,B A (-,Cv-,D)) v (-,CADA(AvB))
+c)l2=(-,A/\BA(-,Cv-,D))v(CA-,D A (A v -,B))
+c)l3=(AABA(-,Cv-,D))v(-,CA-,DA(-,A v -,B))
+It is easy to see that L ll-c)IJ, L21-c)l2 and L31-c)l3,
+but we never have L il--.cjlj for i#j. M o r e o v er
+c)l }Ac)l2 Ac)l31- .l.
+
+Argumentative inference in uncertain and inconsistent knowledge bases
+
+This result can be viewed as a weakness of the
+argumentative inference which avoids obvious direct
+contradictions, but does not escape hidden ones. It
+confmns the fact that Cn� (I,) is a heterogeneous set of
+properties that pertain to distinct views of the world. This
+means that a question-answering system whereby a
+question "is it true that cj>" is answered by yes or no after
+computing I. f-� ¢1 is not really informative enough.
+The system must also supply the argument for cj>. This
+way of coping with inconsistency looks natural,and the
+arguments for cj> and 'I' should enable the user to decide
+whether these two plausible conclusions can be accepted
+together or not.
+4. Arguments in prioritized knowledge
+bases
+
+The use of priorities among formulas is very important to
+appropriately revise inconsistent knowledge bases. For
+instance, it is proved in [14] that any revision process
+that satisfies natural requirements is implicitly based on
+such a set of priorities. Similarly a proper treatment of
+default rules also leads to prescribe priority levels, e.g.[16].
+In these two cases, the handling of priorities has been
+shown to be completely in agreement with possibilistic
+logic [10], [2]. Arguments of different levels are also
+manipulated in [13] in a way completely consistent with
+possibilistic logic.
+In the prioritized case, a knowledge base can be viewed as
+a layered knowledge base 'L=B1 u... u B n, such that
+formulas in Bi have the same level of priority or certainty
+and are more reliable than the ones in Bj where j > i. This
+stratification is modelled by attaching a weight a e [0,1]
+to each formula with the convention that (cj> <Xi) e Bi, Vi
+and a1 = 1 > a 2 > > <Xn > 0.
+. . .
+
+A sub-base
+
+Li= E1 u .. uEn of 'L = B1 u... uBn where
+V j 1,n, Ej�B j is said to be consistent if: 'Li¥- l. and is
+said to be maximal consistent if adding any formula from
+(I.-'Li) to Li produces an inconsistent knowledge base.
+.
+
+=
+
+Before introducing the notion of argument in prioritized
+knowledge base, let us define the notion of entailment in
+a layered base, named 1t-entailment:
+Def. 10: Let I. = B1 u... uBn be a layered knowledge
+
+base. A formula cj> is said to be a 1t-consequence of I.
+with weight <Xi, denoted by I. f-1t (4> <Xi). if and only if:
+(i)
+B1 u. .. uBi is consistent, and
+Btu... uBif- cj>
+(ii)
+V j <i, B1 u.. u Bj ¥- cj>
+(iii)
+.
+
+The definition of f-1t is identical to the one proposed in
+possibilistic logic [7], [8], [10]. It is clear that in the
+presence of inconsistency the 1t-entailment and the
+
+415
+
+classical entailment have not the same behaviour. Indeed
+in classical logic if our base I. is inconsistent then any
+formula can be deduced from I. and the base becomes
+useless. In a stratified base, the situation is better since it
+is possible to use only a consistent subbase of I. (in
+general not maximal), denoted by 1t(L), induced by the
+levels of priority and defined in this way:
+1t(L) = B1 u ... uBi, such that 1t(L) is consistent and
+Btu .. uB i+l is inconsistent
+.
+
+The remaining sub-base I. 1t(L) is simply inhibited. It
+is not hard to check that the following result holds:
+iff
+1t('L) f- c1>
+I. f-1t c1>
+-
+
+However, this way of dealing with inconsistency is not
+entirely satisfactory, since it suffers from a principal
+drawback named "drowning problem" in [3], as we can
+see in the following examples:
+Examples:
+Let I. be the following stratified knowledge base:
+L = {{-,A v -,B}, {A}, {B}, {C}}
+This notation of the form {B1, B2, ..., Bn}, where
+the weights are omitted is used for the sake of
+simplicity. This base is of course inconsistent, and
+only the subset Li = {{-.A v -.B}, {A} } is kept, and
+therefore C cannot be deduced despite the fact that C
+is outside the conflict.
+A particular case of the drowning effect is called
+"blocking property inheritance" [16]; [2]. This can be
+illustrated by the following set of stratified defaults:
+'L= {{p}, {-,p v b, -.p v -.f}, {-,b v f,-,b v w}}
+where p, b, f and w means respectively penguin, bird,
+fly and wings. From this base it is not possible for a
+penguin to inherit properties of birds (in our example
+to inherit property of having wings), while the only
+undesirable property for a penguin is "flying".
+•
+
+•
+
+One way of solving the drowning problem is to recover
+the inhibited free defaults, denoted by IFree(I,), and
+defined in this way:
+IFree('L) = Free(I,) n (L -1t(L))
+Then once the inhibited free set has been computed, we
+define the new inference relation in this way:
+Def. 11: A formula cj> is said to be a 1t+Free­
+consequence of I., iff it is logically entailed from 1t('L)u
+IFree(I,), namely: Lf-1t+freecl> iff 1t('L)uiFree('L.)f-cj>
+Proposition 7: Each 1t-consequence of I. is also a
+1t+Free-consequence of I..
+
+Brewka [4] (see also [22]) has proposed a more
+adventurous approach to reason with inconsistent and
+layered knowledge bases, the idea is to take advantage of
+the stratification of the base to rank -order the maximal
+consistent sub-bases of I. and keep only the best ones,
+namely the "so-called preferred sub-bases".
+
+416
+
+Benferhat, Dubois, and Prade
+
+Let L = B1 u ... u B n be a layered knowledge base. A
+preferred sub-base Li is constructed by starting with a
+maximal consistent sub-base of B 1, then we add to Li as
+many formulas of Bz as possible (wrt to consistency
+criterion),and so on. Formally,Li is a preferred sub-base
+of I. if it can be con' s tructed as f ollows:
+Lj=E l uEzu...uEn .where 'V j = 1 ,n, E1 u Ez u ... uEj
+is a maximal consistent sub-base of B 1 u Bzu...uB j.
+Preferred subbases have also been independently
+introduced in [9] in the setting of possibilistic logic under
+the name of strongly maximal consistent subbases. They
+are such that Lju{(cj> a.)}t--n(.l a.), 'V(cj> a.)e L-Li·
+Def. 12: Let Pref(I.) be the set of preferred sub-bases of
+I.. A formula cj> is said to be a preferred consequence of I.,
+denoted by Lt--preflll. iff it is entailed from each element
+of Pref(I.), namely: Lt--preflll iff 'VI.i E Pref(I.),Lit--e!>
+Proposition 8: Each 1t+Free-consequence of L is also
+a preferred consequence of I.. The converse is false
+The Lex-consequence relation described in the case of flat
+knowledge bases has also been proposed in the case of
+stratified knowledge bases [9]. The objective is to reduce
+the number of elements of Pref(I.), by selecting the
+elements which satisfy the following requirement:
+Li=E1u...uEneLex(I.) iff 'V I.j=E'1u ...uE'n ePref(I.),
+li, such that IE'i i>IEil and 'V j<i IE'ji=IEjl
+The definition of Lex-consequence is identical to the one
+presented in the case of a flat knowledge base,namely a
+formula cj> is a Lex-consequence of L if and only if it is
+entailed from each element of Lex(I.).
+Proposition 9: Each preferred-consequence of L is also
+a Lex-consequence of I.. The converse is false.
+Now,we propose to extend the argumentative inference to
+layered knowledge bases, and to compare it with the
+inferences proposed above.
+Def. 13: A sub-base Li of L is said to be an argument
+for a formula cj> with a weight a. if it satisfies the
+following conditions: (i) Li ¥ .l, (ii) Li 1---1t
+- (cj> a.), and
+(iii)'V(Ijl J3) E Li. Li- {('I' f3)} ¥ 1t (cj> a.)
+
+Def. 14: A formula cj> is said to be an argumentative
+consequence of I.. denoted by L 1---- J4, (cj> a.), iff:
+(i) there exists an argument for (cj> a.) in L , and
+(ii) for each argument of (---,cj> J3) in I.. we have a.>f3.
+We now sketch the procedure which determines if cj> is an
+argumentative consequence of a stratified knowledge base
+I.=B 1u...uB n. The procedure presupposes the existence
+of an algorithm which checks if there exists an argument
+for a given formula in some flat base. This can be achieved
+by using the variant of a refutation method proposed for
+example in [15].
+
+The procedure is based on a construction of the maximal
+argument of cj> and its contradiction. First we start with
+the sub-base B 1. and we check if there is a consistent sub­
+base of B1 which entails cj> or --.cj>. If the response is
+respectively Yes-No then cj> is an argumentative
+consequence of L with a weight a.1 = 1, by symmetry if
+the response is No-Yes then ---,cj> is in this case the
+argumentative consequence of I.. Now if the response is
+Yes-Yes then neither cj> nor ---,cj> are argumentative
+consequences. If the response corresponds to one of the
+answers given above then the algorithm stops. If the
+response is No-No we repeat the same cycle described
+above with B 1 uBz. The algorithm stops when we have
+used all the knowledge base I..
+As discussed in the case of a flat knowledge base, the
+inference relation 1---- � is non-monotonic, and if our
+knowledge base is consistent then the set of formulas
+generated by 1---- � is identical to the one generated by the
+"possibilistic" inference rule 1----1t.
+
+The next proposition shows that 1---- J4, is a faithful
+extension of the inference 1t-entailment
+
+Proposition 10: If L 1----1t (cj> a.) then L
+The converse is false.
+
+1----
+
+J4, (cj> a.).
+
+Proposition 11: Each 1t+Free-consequence of I. is also
+an argumentative consequence of I.. The converse is false
+The argumentative consequence is not comparable to the
+Pref-consequence nor the Lex-consequence, as we see in
+the following example:
+Example
+Let L = {{A,--.Bv--.A,B, C}. {---,Cv--.A}. {---, AvD}}
+We have:
+- Pref(I.) ={{{A,--.Bv---,A, C}. {---,A vD}}. {{A,B, C},
+{--.AvD}}. {{--.Bv--.A,B,C}. {---,Cv-.A}. {--.AvD}})
+- Lex(I.) = {{{--.Bv--.A,B,C},{---,C v---,A},{--.AvD}}}.
+Then -,A is a Lex-consequence of I. while it is not an
+argumentative consequence, since A is also present in
+I.. Note that one may object to the deletion of A from
+Lex(I.), given its high priority. Hence the Lex­
+consequence looks debatable. In contrast, D is an
+argumentative consequence (it derives from {A,-,A v
+D } while it is not a Pref-consequence nor a Lex­
+consequence. Again the Pref-consequence forgets the
+argument, because A and -.Av D do not belong to all
+preferred subbases.
+Let L = {{A}. {--.A}. {-,A v --. D, A v D}}. we have
+Pref(I.)={{A}, {--.Av---,D , AvD) } . In this case ---,D is a
+Pref-consequence, while it is not an argumentative
+consequence of I.. Again, the argument for D is killed
+by Pref(I.).
+•
+
+•
+
+As we have done in the non-stratified case,we summarize
+the relationships between the different consequence
+relations:
+
+Argumentative inference in uncertain and inconsistent knowledge bases
+
+Figure 2: Acomparative study of inference relations in
+stratified knowledge
+1t-Consequence
+l-1t
+
+Argumentative-Consequenc
+1-.14
+
+5. Paraconsistent -Like Reasoning
+Layered Knowledge Bases
+
+in
+
+In the preceding sections we have seen how in the case of
+flat and prioritized knowledge bases it is possible to use
+consistent subparts of it in order to define different types
+of consequences which are still meaningful. Levels of
+priority or of certainty attached to formulas have also
+been used to distinguish between strong and less strong
+arguments in favor of a proposition or of its contrary.
+However it is possible to go one step further in the use of
+the certainty or priority levels by i) attaching to a
+proposition cjl not only the (greatest) weight a attached to
+a logical proof of <jl (in the sense of section 4) from a
+consistent subbase, but also the weight � attached to the
+strongest argument in favor of -,cp if any, and ii) by
+continuing to infer from premises such (cjl, a , � )
+propagating the weights a and � . It will enable us to
+distinguish between consequences obtained only from
+"free" propositions in the knowledge base I. for which
+�=0 (i.e. propositions for which there is no argument in
+I. in favor of their negation), and consequences obtained
+using also propositions which are not free (for which
+there exist both a weighted argument in their favor and a
+weighted argument in favor of their negation).
+More formally, the idea is first to attach to any
+proposition in the considered stratified knowledge base I.
+two numbers reflecting the extent to which we have some
+certainty that the proposition is true and to what extent we
+have sopte certainty that the proposition is false, and then
+to provide some extended resolution rule enabling us to
+infer from such propositions. For each cjl, such that (cj>a) is
+in I., we compute the largest weight a' associated with
+an argument for <jl and the largest weight W associated
+with an argument for -,cp in the sense of Section 4. If
+there exists no argument in favor of -,cp, we will take
+
+417
+
+P'=O; it means in this case that (cjl a) is among the free
+elements of I. since cjl is not involved in the
+inconsistency of I. (otherwise there would exist an
+argument in favor of --.cjl).
+In the general case, we shall say that c1> has a level of
+"paraconsistency" equal to min(a',W). Classically and
+roughly speaking, the idea of paraconsistency, first
+introduced in [6], is to say that we have a paraconsistent
+knowledge about c1> if we both want to state cjl and to state
+-,cj>. It corresponds to the situation where we have
+conflicting information about cj>. In a paraconsistent logic
+we do no want to have every formula 'I' deducible as soon
+as the knowledge base contains cjl and -,cj> (as it is the case
+in classical logic). The idea of paraconsistency is "local"
+by constrast with the usual view of inconsistency which
+considers the knowledge base in a global way. It is why
+we speak here of paraconsistent information when
+min(a',P') > 0. Note that in this process we may improve
+the lower bound a into a larger one a' if 3 Li �I., Li
+consistent and Li1-7t(cj>a') (similarly for W if (-,cj> �) is
+already present in I.). Then I. is changed into a new
+knowledge base I.' where each formula (cj> a ) of I. is
+replaced by (cjl a' W). Moreover if a'< W. i.e. the
+certainty in favor of --.cj>is greater than the one in favor of
+cj>, we replace (cjl a' W ) by (--.cj> W a'). If c1> is under a
+clausal form, -.</)is a conjunction q>IA ... Aq>n ; in this
+case we will replace (--.cj>P' a') by the clauses (q>i P' a'),
+i=l,n in order to keep I.' under a clausal form if I. was
+under a clausal form. Let us consider an example
+.I.={(-,AvB a), (A�) (--.B0) (Bo), (-,BvC e), (-,C p)}.
+Then:
+I.' = {(-,Av B max(a,o) min(�,0)), (A� min(a,0 )),
+(-,B max(0, min(p,e)), max(o, min(a.�))),
+(Bmax(o, min(a.�)), max(0 , min(p,e))),
+(-,B v c e min(p,o)), (-,C p min(e,o)) }.
+Depending on the ordering between the weights we will
+keep either (-,B x y) or (By x) depending if x > y or y >
+x. If x = y we will keep both of them in I.'.
+In a second step an extended resolution rule can be
+proposed in order to infer from propositions in I.'. This
+rule expressed in clausal form is (see the full report for a
+proof, see [8] also):
+(A v B a' pt)
+(--.B v c o' o')
+(A v C e' p')
+e' = min(max(0',P'). max(a',B'))
+p' = max(W,o').
+When W=o'=O , i.e. the premises are not paraconsistent,
+we obtain e'=min(a',0 '), p'=O. Clearly we have e'�p·, i.e.
+the inference preserves the inequality between the
+weights. We also observe that the degree of
+paraconsistency o f the conclusion namely
+min(e',p')=max(W,B') is equal to the maximum of the
+degrees of paraconsistency of the two premises namely
+with
+
+418
+
+Benferhat, Dubois, and Prade
+
+min(a ',W)=W and min(� ,' o')=o'. Thus the inference rule
+extends the standard possibilistic resolution [7, 10] and in
+case of paraconsistent premise(s), propagates this
+paraconsistency to the conclusion. In the case where one
+of the premises is not paraconsistent, i.e. �' = 0 for
+instance, the degree of certainty e' = min(0 ', max(a',o'))
+of the conclusion is greater than its degree of
+paraconsistency p' o' only if the degree of certainty a'
+of the non-paraconsistent premise is greater than o' and
+�·>o' (i.e. � ':t:o'). Otherwise the conclusion which is
+obtained is SUCh that E' = p' = 0', i.e. nothing emerges
+from inconsistency.
+
+we have to choose between a highly certain but highly
+paraconsistent conclusion and a conclusion with low
+certainty and low paraconsistency. Lastly observe that for
+the formulae appearing explicitly in .L, the paraconsistent
+approach gives the same results as t- c54, They differ for
+other conclusions since the paraconsistent approach
+propagates the effects of local inconsistency.
+,
+
+•
+
+=
+
+Let us consider an example
+I.= {(A 1), (-,AvB 0.8), (-,B 0.6), (-.Ave 0.5), (-,0
+0.3), (-,AvO 0.4), (-,AvE 0.7), (-,FvG 0.5), (F 1), (-,F
+0.2), (--.Hvl 0.3), (I 0.4) }.
+Observe that I. 1-1t (..L 0.6), i.e. the global level of
+inconsistency of the base is 0.6. Then we have
+I.' = {(A 1 0.6), (--.AvB 0,8 0,6), (-,Ave 0.5 0), (0
+0.4 0.3), (-.AvO 0.4 0.3), (-,AvE 0.7 0), (-,FvG 0.5
+0), (F 1 0.2), (-.Hvl 0.3 0), (I 0.4 0) }.
+Applying the "paraconsistent" resolution rule yields
+(e 0.6 0.6), (E 0.7 0.6), (G 0.5 0.2), (I 0.3 0).
+This shows that
+-non-paraconsistent premises such as (-,Ave 0.5 0) with
+a rather low degree of certainty resolved with another
+premise (here (A 1 0.6)) whose level of paraconsistency is
+larger than this degree of certainty, lead to fully blurred
+paraconsistent conclusions, here (e 0.6 0.6). By
+contrast 1-Free+1t would enable to get (e 0.5), while the
+refutation procedure used in 1-1t yields (e 0.6), reflecting
+the global inconsistency of the base
+-if the non-paraconsistent premise is sufficiently certain
+with respect to the paraconsistency of the other premise,
+e.g. (-.AvE 0.7 0), and (A 1 0.6), the conclusion, here
+(E 0.7 0.6) is not completely blurred. This is true even
+if this certainty is less than the global level of
+inconsistency of the base (e.g. (G 0.5 0.2) obtained from
+(-.FvG 0.5 0), (F 1 0.2))
+-if the premises are not paraconsistent, (e.g. (-,H v I 0.3
+0), (H 0.4 0)), we obtain a non-paraconsistent conclusion,
+as with t-Free+1t• since we do not use refutation.
+Generally speaking, if a clause Av B is more
+paraconsistent than the clause -,BvC is certain, then AvC
+will be completely blurred by paraconsistency. Indeed
+from a logical point of view, being more certain that
+-.AA-,B is true than w e are certain that -,BvC is true,
+the entailment AvB, -,A/1.-,Bt-AvC applies with a greater
+level of certainty than AvB, -,Bve 1- AvC.
+We can observe that using the "paraconsistent" resolution
+rule locally in a knowledge base I.', may yield the same
+proposition with different weights, namely (<I> a' W), (<I>
+a"�"). In this case, a more certain and less paraconsistent
+conclusion should be preferred; this is less obvious when
+
+6. Combining knowledge bases
+In [1] several approaches are proposed to combine
+knowledge bases, and one of them is very similar to what
+[4] calls "preferred sub-theories". The idea is to assume a
+total ordering between different bases Lt>L 2> ... >Ln.
+such that Li is more reliable than Lj for j>i. A resulting
+base is constructed from I. 1 by adding as many formulas
+as possible fromi.2 (wrt consistency criterion), then as
+many formulas as possible from L 3, and so on. The
+principal problem is that the resulting base is not unique.
+Two approaches are proposed in [5] to merge bases
+according to suspicious attitude or to trusting attitude.
+The suspicious attitude is very conservative since for
+example the result of merging two knowledge bases
+L l>L 2 is equal to the union of the two bases if they are
+not conflictual, and is equal to I. 1 in other cases. In the
+trusting attitude, the approach is very similar to [1] and
+produces always one resulting base, but unfortunately the
+approach is very restrictive since the knowledges bases to
+be merged must be sets of literals.
+In the context of possibilistic logic, an approach has been
+proposed in [11] for the fusion of n knowledge bases
+L l, ... ,Ln· One way of defining the resulting base is to
+consider the intersection of the deductively closed bases
+en(I.i) •... , en(I.n) (by t-1t). It is clear that this approach
+is very cautious. In the same paper, another approach has
+been proposed considering now the union of the
+deductively closed bases Cn(Li),...,Cn(I. n). However
+when the resulting base is inconsistent, then some
+formulas will be inhibited by the drowning effect [3]
+We suggest a new approach to merge n knowledge bases
+l: t. ..., l:n . For this aim we use of a variation of the
+argumentative consequence relation, denoted by t- J4, Jvt,
+Jvt, for the multi-sources, and which is defined in the
+following way:
+l:1 •..., l:n t-.,sfUI{,(<I> a) iff:
+3I.i. such that Li 1- (<I> a), and
+
+�I.j. such that I.j t- (-.q, �) such that � > a.
+Then the resulting knowledge base is: I.result = {(<I> a) I
+Ll•..., In t-3tJI{, (<I> a ) } . B e c a u s e Lresult c an b e
+inconsistent, this approach should be used for question­
+answering purposes only, and each response should be
+accompanied with its argument.
+
+Argumentative inference in uncertain and inconsistent knowledge bases
+
+7.
+
+Conclusion
+
+The proposed notion of argumentative inference is
+appealing for several reasons. First it is an extension of
+classical inference (in the flat case) and possibilistic
+inference (in the layered case) that copes with
+inconsistency in a very "ecological" way. Namely it is
+very faithful to the actual contents of the knowledge base,
+and does not do away with information contained in it,as
+opposed to the approaches based on preferred and
+lexicographically preferred subbases. It avoids the
+drowning effect of standard possibilistic logic by
+salvaging sentences whose level of entrenchment is low
+but are not involved in any contradiction set. Another
+advantage is that it is amenable to efficient standard
+implementation methods based on classical resolution.
+Also it avoids outright contradictory responses (such that
+<!> and -,cj>), although several deduced sentences can be
+globally inconsistent. But as pointed out earlier, the
+arguments supporting a set of more than two globally
+contradictory sentences are distinct, so that the reality of
+this contradiction is debatable, and only reflects the
+presence of different points of view. Anyway it seems
+that it is the price to pay in order to remain faithful to an
+inconsistent knowledge base. Another result of the paper is
+the use of local contradictions as a specific weight
+attached to sentences. This approach only partially avoids
+the drowning effect, but leads to more informative
+responses than possibilistic logic since not only the
+certainty of the formula is evaluated, but also its level of
+conflict. In the future, the paraconsistent inference should
+be positioned with respect to the other inference modes in
+order to assess the benefits of carrying local weights of
+conflict.
+Lastly it would be interesting to apply the above result to
+default reasoning and compare in such a framework the
+argumentative inference and the one proposed by [24].
+
+
+
+Possibilistic logic offers a qualitative frame­
+work for representing pieces of information
+associated with levels of uncertainty or pri­
+ority. The fusion of multiple sources infor­
+mation is discussed in this setting. Differ­
+ent classes of merging operators are consid­
+ered including conjunctive, disjunctive, rein­
+forcement, adaptive and averaging operators.
+Then we propose to analyse these classes in
+terms of postulates. This is done by first ex­
+tending the postulates for merging classical
+bases to the case where priorities are avail­
+able.
+1
+
+Introduction
+
+Possibilistic logic (e.g. [8]) offers a framework for rea­
+soning with classical logic formulas associated with
+weights belonging to a totally ordered scale. Weights,
+which technically speaking are lower bounds of neces­
+sity measures, can either represent the certainty with
+which the associated formula is held for true, or the
+expression of a preference under the form of a level of
+priority. In this case the formula encodes a goal (rather
+than a piece of knowledge) which has to be considered.
+The fusion of information expressed in a logical form
+has raised an increasing interest in the recent past
+years [1, 6, 10, 11, 13, 14]. Indeed this problem nat­
+urally occurs when handling multiple sources of infor­
+mation, and trying to extract the common, conflict­
+free part of the information, or when trying to fuse the
+goals expressed by several agents. Clearly possibilis­
+tic logic, which offers a representation framework more
+expressive than the one of classical logic, by allowing
+for an explicit stratification of the sets of formulas, is
+well-suited for handling levels of certainty or priority in
+the fusion process. In recent works [3, 5], the authors
+have on the one hand provided a possibilistic syntactic
+
+counterpart of combination operations defined on pos­
+sibility distributions defined on sets of interpretations.
+On the other hand, taking advantage of the fact that
+a classical logic formula can be always associated with
+a stratified set of formulas (using Hamming distance
+as suggested by Dalal [7]) which reflects partial levels
+of satisfaction of the initial formula, the authors have
+shown the agreement of the possibilistic logic-based
+approach with the recent proposals on fusion in the
+classical logic setting.
+In this paper we make a step further by i) distinguish­
+ing between different classes of combination operations
+capable of coping with redundancy, or with drowning
+effects of "inconsistency-free" formulas [2] encountered
+in case of conflicts when weights are just combined by
+a simple operator like min, and ii) by analysing these
+classes firstly in terms of information sets that each
+class retains, and secondly in terms of postulates which
+are natural extensions of those recently proposed in the
+classical framework [10, 11, 12]. After briefly recalling
+the necessary background on possibilistic logic in Sec­
+tion 2, general classes of combination operators are
+introduced and studied in Section 3. The handling of
+the global reliability of the sources or of priorities be­
+tween agents is also briefly considered in this section.
+A discussion with respect to postulates is presented in
+Sections 4 and 5.
+2
+
+Possibilistic logic and fusion
+
+This section recalls some basic notions of possibilistic
+logic. See [8] for more details. Let .C be a finite propo­
+sitionnal language. f- denotes the classical consequence
+relation and n is the set of classical interpretations.
+2.1
+
+Possibility distributions
+
+At the semantic level, possibilistic logic is based on
+the notion of a possibility distribution, denoted by 1r,
+which is a mapping from n to [0,1] representing the
+available information. 1r(w) represents the degree of
+
+25
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+compatibility of the interpretation w with the avail­
+able beliefs about the real world if we are representing
+uncertain pieces of knowledge (or the degree of satis­
+faction of reaching state w if we are modelling pref­
+erences). By convention, 1r(w) = 1 means that it is
+totally possible for w to be the real world (or that w is
+fully satisfactory), 1 > 1r(w) > 0 means that w is only
+somewhat possible (or satisfactory), while 1r(w) = 0
+means that w is certainly not the real world (or not
+satisfactory at all). Associated with a possibility dis­
+tribution 1r is the necessity degree of any formula ¢:
+N (¢;) 1- II( •¢) which evaluates to what extent ¢; is
+entailed by the available beliefs, and defined from the
+consistency degree of a formula ¢; w.r.t. the available
+information, II(¢) = max{1r(w) : w E [¢]}, where [¢]
+denotes the set of all the models of ¢;.
+In the rest of the paper, a,b, c, ... reflect the possibility
+degrees of the interpretations.
+=
+
+2.2
+
+Possibilistic logic bases
+
+At the syntactic level, uncertain information is repre­
+sented by means of a possibilistic knowledge base which
+is a set of weighted formulas B {( ¢;;, a;) : i 1, n }
+where ¢;; is a classical formula and a; belongs to a
+totally ordered scale such as [0,1]. (¢;;, a ;) means
+that the certainty degree of ¢;; is at least equal to a;
+(N (¢;) 2: a;). We denote by B* the classical base as­
+sociated with B obtained by forgetting the weights. A
+possibilistic base B is consistent iff its classical base
+B* is consistent.
+In the following, a, /3, 1, ... reflect the necessity degrees
+associated with formulas.
+Given B, we can generate a unique possibility distribu­
+tion, denoted by 1TB, such that all the interpretations
+satisfying all the beliefs in B will have the highest pos­
+sibility degree, namely 1, and the other interpretations
+will be ranked w.r.t. the highest belief that they fal­
+sify, namely we get [8]:
+=
+
+Definition 1
+
+1TB
+
+=
+
+Vw E n,
+
+( ) = { 11
+iJ V (c/J; , a ) E B , w E [ c/J;]
+max{a;: w rf. [¢;]} othe ise .
+W
+
+;
+
+rw
+
+Inc( B) = max{a; : B?_a; is inconsistent} denotes
+the inconsistency degree of B. When B is consistent,
+we have Inc(B) = 0.
+Subsumption can now be defined:
+Definition 4 Let (¢;, a) be a belief in B. Then, (¢;,a)
+is said to be subsumed by B if (B- { (¢, a )})> a 1-¢.
+(¢,a) is said to be strictly subsumed by B if B>a 1- ¢.
+
+It can be checked that if (¢;, a) is subsumed, then B
+and B' = B- { (¢, a )} are equivalent [8].
+Lastly, weights are propagated in the inference process:
+possibilistic formula (¢;,a), with a >
+Inc(B), is said to be a consequence of B, denoted by
+B l-1r (¢, a), iffB?_a 1-¢;.
+Definition 5 A
+
+2.3
+
+Syntactic fusion
+
+We first recall a general result underlying the fusion
+process in possibilistic logic [5].
+Let B1, B2 be two possibilistic bases, and 1T1 and 1r2
+be their associated possibility distributions. Let EB be
+a two place function whose domain is [0,1] [0,1] (to
+be used for aggregating 1r1 (w) and 1r2(w)). The only
+requirements for EB are the following properties:
+i. 1 EB 1= 1,
+ii. If a 2: c, b 2: d then a EBb 2: c EB d (monotonicity).
+The first one acknowledges the fact that if two sources
+agree that w is fully possible (or satisfactory), then
+the result should confirm it. The second one expresses
+that a degree resulting from a combination cannot de­
+crease if the combined degrees increase.
+In [5], it has been shown that the syntactic counterpart
+of the fusion of 1T1 and 1r2 is the following possibilistic
+base, denoted by B$ (and sometimes by B1 EB B2) and
+which is made of the union of:
+- the initial bases with new weights defined by:
+x
+
+{(¢; ,1-( 1-a;)EIH): (¢;,a;)EB1}u
+{('1/>j, 1-1EB(1-.61)):(,Pj ,.6j)EB2} ( 1)
+
+- and the knowledge common to B1 and B2 defined by:
+{(</l;V'I/>1 ,1-( 1-a;)EB( 1-.6j)):(¢; , a;)EB! and ('l/>1,.61)EB2}
+
+It has been shown that 1TBal(w) = 1T1(w) EB1r2(w) where
+is the possibility distribution associated to B$ us­
+ing Definition 1.
+In the case of n sources, the syntactic computation
+of the resulting base can be easily applied when EB is
+associative. Note that it is also possible to provide
+syntactic counterpart for non-associative fusion oper­
+ator. In this case EB is no longer a binary operator,
+but a n-ary operator applied to vectors of possibil­
+ity distributions. The syntactic counterpart is as fol­
+lows: Let B= (B1 , ... , Bn) be a vector of possibilistic
+bases. Let (
+, 7rn) be their associated possibil­
+ity distributions and 1TBa:J be the result of combining
+7rBal
+
+Further definitions used in the paper are now given:
+Definition 2 Let B be a possibilistic kno wledge base,
+and a E [0,1]. We call the a-cut (resp. strict a-cut)
+of B, denoted by B?_a (resp. B>a), the set of classical
+formulas in B having a certainty degree at least equal
+to a (resp. strictly greater than a ).
+Definition 3 B and B' are said to be equivalent, de­
+noted by B =• B', iffVa E [0,1], B?.a = B�-a'
+where = is the classical equivalence.
+
+rr1,
+
+·
+
+·
+
+·
+
+26
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+( ... ) with Ef). Then, the base associated to 1l"l3Ell
+is: B!JJ ={(Dj,1- x1 Ef) ... Ef) ) j =1, n}, where Dj
+are disjunctions of size j between formulas taken from
+different B; 's ( i = 1, n) and x; is either equal to 1-o:;
+or to 1 depending if c/J; belongs to Dj or not.
+7rt,
+
+,?Tn
+
+Xn
+
+3
+
+:
+
+Possibilistic merging operators
+
+This section analyses several classes of Ef) which cope
+with different issues met in merging multiple sources
+information. In the rest of this paper, we assume that
+Ef) is associative.
+3.1
+
+Conjunctive operators
+
+One of the important aims in merging uncertain in­
+formation is to exploit complementarities between the
+sources in order to get a more complete and precise
+global point of view. Since we deal with prioritized
+information, two kinds of complementarities can be
+considered depending on whether we refer to formulas
+only, or to priorities attached to formulas. In this sub­
+section, we introduce conjunctive operators which ex­
+ploit the symbolic complementarities between sources.
+Definition 6
+
+Va E
+
+Ef) is said to be a conjunctive operator if
+
+[0, 1], a EB 1 = 1 Ef) a =a.
+
+The following proposition shows indeed that conjunc­
+tive operators, in case of consistent sources of infor­
+mation, exploit their complementarities by recovering
+all the symbolic information.
+Proposition 1 Let B1 and B2 be such that Bi 1\ B2
+is consistent. Let Ef) be a conjunctive operator. Then,
+B$= Bi 1\ B2 .
+
+An important feature of a conjunctive operator is its
+ability to give preference to more specific information.
+Namely, if an information source S1 contains all the
+information provided by S2, then combining St and
+S2 with a conjunctive operator leads simply to St:
+Proposition 2 Let B1 and B2 be such that V ( 'lj;, (3) E
+B2,B1 f-rr (¢,(3). Then, B(B:= Bi.
+
+An example of a conjunctive operator is the minimum
+(for short min), for which we can easily check that
+B!JJ = B1 U B2. Other examples are the product, and
+the geometric average defined by a Ef) b = ..fCib.
+3.2
+
+Disjunctive operators
+
+Another important issue in fusion information is how
+to deal with conflicts. When all the sources are equally
+reliable and conflicting, then one should avoid arbi­
+trary choice by inferring all information provided by
+
+one of the sources. Namely, if B1 U B2 is inconsistent,
+then one can require that B!JJ neither infers B1 nor
+B2. Such a behaviour cannot be captured by any con­
+junctive operator (See Section 5). This requirement is
+captured by the disjunctive operators defined by:
+Definition 7
+
+Va E
+
+Ef) is said to be a disjunctive operator if
+
+[0, 1], a EB 1 = 1 Ef) a = 1.
+
+Then, we have:
+Proposition 3 Let B1 and B2 be such that Bi 1\ B2
+is inconsistent. Then, there exist (c/J, o:) E B1 and
+(1j;, (3) E B2 such that B!JJiirr (c/J,o:) and B!JJiirr (¢,(3).
+
+Note that if Ef) is a disjunctive operator then B!JJ is of
+the form: B!JJ = {(c/J; V 1/Jj, 1- (1- o:;) Ef) (1- {3j))}.
+Now, a second natural requirement that one may ask
+for, in case of conflicts, is to recover the disjunction of
+all the symbolic information provided by the sources.
+Clearly, it is easy to find a disjunctive operator which
+does not satisfy this second requirement. A trivial case
+is to take the "vacuous" disjunctive operator defined
+by: Va, Vb,a Ef) b = 1.
+To satisfy this second requirement we define the notion
+of regular disjunctive operator:
+Definition 8 A
+
+regular if Va
+
+disjunctive operator Ef) is said to be
+
+-=F 1, Vb -=F 1, a Ef) b -=F 1.
+
+Then, we have:
+Proposition 4 Let B1 and B2 be two bases and Ef) be
+a regular disjunctive operator. Then, B$= Bi V B2 .
+
+Examples of regular disjunctive operators are the max,
+the so-called "probabilistic sum" defined by:
+a Ef) b = a+ b- ab, and the dual of the geometric av­
+erage defined by a Ef) b = 1- J(l- a) (l- b).
+Lastly, note that regular disjunctive operators are not
+appropriate in the case of consistency between sources;
+in particular they give preference to less specific infor­
+mation.
+3.3
+
+Idempotent operators
+
+Another important problem in fusing multiple sources
+information is how to deal with redundant informa­
+tion. There are two different situations: either we
+ignore the redundancies, which is suitable when the
+sources are not independent, or we view redundancy
+as a confirmation of the same information provided by
+independent sources. Idempotent operations are de­
+fined by:
+Definition 9 EB
+
+if "'a E
+
+is said to be an idempotent operator
+
+[0, 1], a Ef) a = a.
+
+27
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+Idempotent operators aim to ignore direct redundan­
+cies. Namely, if two sources of information entail the
+same formula ¢ to a degree a, then one may require
+that the fused base should not entail ¢ with a degree
+higher than a. However, such a requirement is strong
+since ¢ can be obtained from another path exploiting
+complementarities between higher level formulas pro­
+vided by the two sources. This is illustrated by the
+following example:
+Let B1 == { (,P, .9); (¢, .2)} and
+B2 == {(¢ V • 'If , .8); (¢, .2)}.
+Clearly B1 f-rr (¢, .2) and B2 f-rr (¢, .2). Now let EB be
+an ide mpotent operator defined by: a EB b == �.
+Then, B4 == { (,P, .45); (¢ V ,P, .55); (¢ V • 'If , .5)} after
+re moving subsumed for mulas. We can easily check that
+B4f-rr (¢, .5) with .5 ?: .2. This is mainly due to the
+two pieces of information (,P, .9) and (¢ V • 'If , .8), pro­
+vided separately by the sources.
+Example 1
+
+Now, the following proposition shows the cases where
+idempotent operators indeed ignore redundancies:
+Proposition 5 Let B1 and B2 be two bases, and EB
+be an ide mpotent operator. Let ¢ be such that B1 f-rr
+(¢,a); B2 f-rr (¢, (3) with (3::; a. Let r == Bl>a UB2>a·
+Then, iff If¢ then B4f-rr (¢, !'), with I'::; max (a,(J).
+
+Note that I' may be equal to 0 in case of inconsistency.
+r in this proposition is the set of classical formulas
+in B1 and B2 having a weight strictly greater than a.
+If ¢ cannot be deduced from r then the idempotent
+property only guarantees that the repeated informa­
+tion will not be inferred with a priority higher than
+the one with which it can be individually obtained
+from the different sources.
+3.4
+
+Reinforcement operators
+
+The aim of reinforcement operators is to view redun­
+dancy of information as a confirmation of this infor­
+mation. Namely, if the same piece of information is
+supported by two different sources, then the priority
+attached to this piece of information should be strictly
+greater than the one provided by the sources. A first
+formal class of reinforcement operators can be defined
+as follows:
+Definition 10 EB is said to be a reinforcement opera­
+tor if'Va, b# 1 and a, b# 0, a EBb< min( a, b).
+
+We can easily check that if we aggregate the two pieces
+of information (¢,a) and (¢,(3), then the resulting
+base is: {(¢, f (a, ,B))} where f (a, (3) == 1- (1- a) EB
+(1- (3)> max(a, (3) for a, (3 E (0, 1).
+Besides, one can require that reinforcement opera­
+tions recover all the common information with a higher
+
+weight. Namely if the same formula is a plausible con­
+sequence of each base, then this formula should be
+accepted in the fused base with a higher priority. The
+following proposition shows a first case where this re­
+sult holds:
+Proposition 6 Let B1 and B2 be such that Bt 1\ B2
+is consistent. Let ¢ be such that B1 f-rr (¢,a) and
+B2 f-" (¢, (3) where a and ,B are strictly positive. Let
+EB be a reinforce ment operator. Then, Btf!f-rr (¢, f'),
+with I'> max(a,(J) if a, (J E (0, 1), and/'== 1 if a== 1
+or (3== 1.
+
+Now, in case of conflicts, and more precisely, in case of
+a strong conflict, namely Inc(B1 U B2) == 1, then the
+above proposition does not hold.
+Indeed, let B1
+{(¢, 1), (,P,a)} and B2
+{(•¢, 1), (,P,(J)}. Then we can check that Inc(B4) ==
+1, so we cannot infer ,P from B4 since Inc(B1 UB2) 1.
+Even if we add (,P, 1) to B1 U B2 explicitly then ,P can­
+not be recovered. In possibilistic logic, when there is a
+strong conflict then only tautologies are plausible con­
+sequences. In this case it is better to use a regular
+disjunctive operation.
+So the first condition is to avoid that Inc(B1 UB2) 1.
+But this is not enough since even if Inc(B1 U B2) < 1
+one can have Inc(B4)= 1 due to the reinforcement
+effect which can push the priority of conflicting infor­
+mation to the maximal priority allowed. For instance
+let us consider the excessively optimistic reinforcement
+operator defined by:
+\Ia,'Vb, a# 1, b# 1, a EBb = b EB a== 0.
+Then we can check that as soon as there is a conflict
+between the bases to be merged, the inconsistency de­
+gree of the fuses base will reach the maximal value.
+The following definition focuses on a more interesting
+class of reinforcement operations:
+==
+
+=
+
+Definition 11 A reinforce ment operation EB is said to
+be progressive if \Ia, b# 0, a EBb# 0.
+
+The progressive operation guarantees that if some for­
+mula (¢, a) with a> 0 is inferred by the sources then
+this formula belongs to B4 with a weight (3 such that
+a < ,B < 1. However, this new weight (3 can be less
+than the inconsistency degree of B4 and therefore ¢
+will be drowned by the inconsistency of the database.
+This situation is illustrated by the following example:
+Example 2
+
+Let B1 = { (¢ V ,P, .9); (¢, .5); (,P, .5); (�, .1)} and B2 =
+{(•¢ v • 'If , .9); (•¢, .5); ( 'If .5); (�, .1)}.
+Clearly, each base entails � which is largely belo w the
+inconsistency degree of B1 U B2. Now, let us compute
+B1 EB B2 with the product operator which is a progres­
+sive operator. We get: B1 EB B2 = B1 U B2 U { (¢ V ,P V
+�' .91); ( •¢V • '!fV� , .91); (¢V•,P, .75); (•¢V,P, .75); (¢V
+•
+
+,
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+28
+
+�,.55); ('1/JV �,.55); (•¢V �,.55); (•1/J V �,.55); (�, .19)}.
+Note that there is a reinforce ment on � since its ne w
+weight is .55 (which can be obtained for instance fro m
+(¢V�, .55) and (•¢V�, .55)). However, this ne w weight
+is less than the inconsistency degree of Btf! which is of
+.75, higher than Inc(B1 U B2)= .5.
+
+The following proposition generalizes Proposition 6,
+and shows that if the inconsistency degree does not
+increase, then the common knowledge is entailed.
+Proposition 7 Let B 1 and B2 be such that Inc(B1 U
+B2) -=f 1. Let ¢ be such that B1 f-rr (¢, a) and
+B2 f-rr (¢, {3) with a > 0, f3 > 0. Let EB be a pro­
+gressive reinforce ment operation. Then,
+if Inc(Btf!)= Inc(B1 U B2) then, Btf!f-rr (¢,1)
+with 1 > max( a, {3), and 1= 1 if a = 1 or f3= 1.
+
+3.5
+
+Adaptive merging operators
+
+The regular disjunctive operators appear to be ap­
+propriate when the sources are completely conflicting.
+However, in the case of consistency, or of a low level
+of inconsistency regular disjunctive operators are very
+cautious. Besides, reinforcement is not appropriate in
+the case of complete conflicts.
+The aim of adaptive operators is to have a disjunctive
+behaviour in a case of complete contradiction and the
+progressive reinforcement behaviour in the other case.
+Let EBd and EBr be respectively a regular disjunctive
+and progressive reinforcement operators. Let h be ei­
+ther equal to 1 or to 0. Then we define an adaptive
+operation, denoted by EBh, as follows:
+a EBh b = max(min( h, (a EBd b)),min(1- h, (a EBr b))).
+
+Then we have the following result:
+Proposition 8 Let B1 and B2 be two possibilistic
+bases. Let h be equal to 1 if Inc(B1 UB2)= 1 and equal
+to 0 otherwise. Let EBh be an adaptive operator. If
+Inc(Btf!) = lnc(Bl U B2) then, V¢, if B1 f-rr (¢, a) and
+B2 f-rr (¢, {3) then we have: Btf!hf- (¢,1) with 1 > 0.
+
+3.6
+
+Averaging operators
+
+A last class of merging operators which is worth
+considering is the so-called averaging operation, well
+known for aggregating preferences, and defined by:
+is called an averaging operator if
+max( a,b)�a EBb�min( a, b),
+with EB -=f max and EB -=f min.
+
+Definition 12 EB
+
+One example of averaging operators is the arithmetic
+mean a EBb= �- In this case, at the syntactic level,
+the result of combining B1 and B2 writes:
+{(¢;, Y)} U {('1/Jj, 13{)} U {(¢; V '1/Jj, a;�f3i )}.
+From this writing, in case of consistency we can check
+
+3. 7
+
+Accounting for reliabilities of the sources
+
+The possibilistic logic framework enables us to take
+also into account priorities between sources (or
+agents). Here priority may mean either that the
+sources are decreasingly ordered according to their re­
+liability, or that a reliability degree is attached to each
+source. When we have just a reliability ordering and
+no commensurability assumption is made between the
+scales used for stratifying each source, the approach
+which can be used is known in social choice theory un­
+der the name of "dictatorship". The idea is to refine
+one ranking by the other. More precisely, let rr1 and rr2
+be two possibility distributions. Assume that 1r1 has
+priority over 1r2. The result of combination defined by:
+i. If 1r1(w) > 1r1(w') then 11"fll(w) > 11"fll(w')
+ii. If 1r1(w) 11"1(w') then 11"fll(w) � 11"fll(w') iff 1r2(w) � 11"2 (w').
+Clearly the combination result is simply the refinement
+of 1r1 (the dictator) by 1r2. Syntactic counterpart of
+this combination can be found in [5].
+When a reliability degree is associated with each
+source, we may use weighted counterparts of oper­
+ations EB. However in practice, it amounts to per­
+forming a preliminary modification of the degrees at­
+tached to formulas provided by each source and then
+to performing a non-weighted combination operation
+on the modified possibilistic bases. For instance, using
+the weighted min conjunction defined by Vw, 1rtf!(w) =
+mini=l,nmax(nj(w), 1 - Aj) (for Aj
+1, V j, the
+min combination is recovered). It amounts to per­
+forming the union of discounted bases of the form
+=
+
+=
+
+Discount(B;, >.;) = {(¢, >.;)1(¢,{3) E B; and f3 � >.;}
+U{(¢, /3)1(¢,{3) E B; and f3 < >.;}. It is worth point­
+
+ing out that discounting sources help solve conflicts
+between sources in a natural way.
+4
+
+Postulates for classical merging
+
+Let us first introduce some additional notations.
+Let E
+{K1, ... , Kn} (n � 1) be a multi-set of
+propositional bases to be merged. E is called an infor­
+mation set. 1\E (resp. VE) denotes the conjunction
+(resp. disjunction) of the propositional bases of E.
+The symbol U denotes the union on multi-sets.
+For the sake of simplicity, if [{ and /{1 are proposi­
+tional bases and E an information set we simply write
+EU[{ and KUK' instead of EU{K} and {K}U{K'} re­
+spectively. We will denote [{n the multi-set {K, ..., K}
+of size n. A classical merging operator .6. is a function
+applied on E and which returns a classical base denoted by .6. (E).
+Koniesczny and Pino Perez [10] have proposed a set of
+=
+
+n
+
+'
+
+29
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+basic properties that a merging operator has to satisfy:
+(At) D. (E) is consistent;
+(A2) If E is consistent, then D.(E) = 1\E;
+(A3) If E1 t+ E2, then 1-D. (E1) =: D.(E2);
+(A4) If K 1\ K' is inconsistent, then D.(K UK') If K;
+(A5) D.(E1) 1\ D.(E2) 1-D. (E1 U E2);
+(A6) If D. (E1) 1\ D. (E2) is consistent, then
+
+D.(E1 U E2) 1- D. (El) 1\ D. (E2);
+where E1 t+ E2 means that there exists a bijection
+f from E1 = {Kt, ...,K�} to E2 = {I<[, ...,Kn such
+that VK E E1, ::JK' E E2, f (K) =: K'.
+
+Liberatore [12], in the context of commutative belief
+revision, does not impose A1. He allows the result to
+be inconsistent if the bases to merge are individually
+inconsistent. Moreover, he gives another postulate in
+the same spirit as A4, namely:
+(A7) D.(I< U I<')
+
+1-
+
+I< V K'.
+
+Two classes of merging operators have been partic­
+ulary analysed in the literature: majority operators
+defined by: (Maj) VK, ::In, D. (E U K n) 1- I<,
+and arbitration operators defined by:
+(Arb) VK, Vn,D.(E UI< n) = D.(E U K).
+
+5
+
+Postulates for possibilistic merging
+
+This section relates the general classes of possibilis­
+tic merging operations to the rational postulates re­
+called in the previous section. But first we need an
+adaptation of these postulates in order to take into
+account the priorities attached to the information. A
+first immediate way of adapting the classical postu­
+lates is to require that the result of the merging be
+a classical base. If BtiJ denotes the result of merging
+B= {B1, ...,Bn} with EB, then the classical base result­
+ing from merging B; 's with EB is simply:
+D.tiJ (B)= {¢ : (¢,a) E BtiJ, a > Inc (BtiJ)}.
+However, restricting the result of merging prioritized
+bases to a classical base is not satisfactory. Indeed
+it leads to lose the associativity property of associa­
+tive operators. The natural question is how to de­
+fine D.tiJ (B1,D.tiJ (B2,B3)) since B1 is a stratified base,
+while D.tiJ(B2, B3) is a classical one. One way of en­
+forcing the iteration is to give to formulas of the result­
+ing classical base a weight equal to 1. However, this
+may violate the reliability of the formulas since formu­
+las in D. til (B1,B2) which were very uncertain become
+fully reliable. The loss of associativity property is il­
+lustrated by the following example:
+Let B= {B1, B2,B3} such that B1 =
+{ (¢,.8)}, B2 = { (•¢,.5); (�, .4)} and B3 = { (�,.3)}.
+Let EB = min. We have D.tiJ (B1,B2) = {¢}. To be able
+to merge this result with B3 we associate to ¢ a weight
+equal to 1, and we get D.tiJ (D.tiJ (Bl, B2), B3) = {¢,�}.
+We also have D.tiJ(B2,B3)
+{•¢, �} and
+Example 3
+
+D.tiJ (Bl,D.tiJ (B2,B3)) = {•¢, �}. Then,
+D.tiJ (D.tiJ(Bl,B2), B3) ;/= D.tiJ(B1, D.tiJ(B2, B3)).
+5.1
+
+Adapting classical postulates
+
+We focus on the approach where the result of the merg­
+ing operation is a stratified base. Therefore, the pro­
+cess of merging can be iterated. Let us now adapt the
+classical postulates recalled in Section 4.
+Let us adapt (A!). Possibilistic logic, contrary to clas­
+sical logic, does not infer anything in the presence of
+inconsistency. Hence a partially inconsistent base BtiJ
+(with Inc (BtiJ)< 1) can be still meaningful, since plau­
+sible conclusions can be inferred from it, by taking its
+consistent part, i.e. the set of formulas having a weight
+greater than Inc (BtiJ). Thus, the adaptation of (A!)
+can be weakened as follows:
+(Pi) BtiJ is not fully inconsistent,i.e., I nc(BtiJ) < 1.
+Note that if one insists on providing a consistent and
+stratified base as a result of fusion, then the associa­
+tivity can be lost for associative operations.
+Let us adapt the second postulate (A2). Requiring
+an equivalence between BtiJ and B1 U U Bn in the
+second postulate is very strong with stratified bases.
+For instance, assume that two identical formulas (¢,a)
+have to be aggregated. We have already seen that with
+a reinforcement operator we get ( ¢, j3) (j3 > a) as a re­
+sult of the merging. So, we do not recover the initial
+weight of ¢. We propose to weaken A2 as follow:
+(P2) If B1 U U Bn is consistent, then BtiJI-,. ( ¢, j3) iff
+B1 U
+U Bn 1-,. (¢,1), with j3 > 0 and 1 > 0.
+This postulate implies that if Bi 1\ ... 1\B� is consistent,
+then Bffi=: Bi 1\ 1\ B�.
+·
+
+·
+
+·
+
+·
+
+·
+
+·
+
+·
+
+·
+
+·
+
+·
+
+·
+
+·
+
+Postulates A3 and A4 have immediate counterparts:
+Let B= {B1, , Bn} and B'= {B�, , B�}.
+(P3) If B t+ B', then BtiJ=s B'tiJ,
+where B t+ B' means that there exists a bijection f
+from B to B' such that VB E B, ::IB' E B',f (B) B'.
+(P4) If B1 U B2 is inconsistent, then BtiJif,. B1 and
+·
+
+·
+
+·
+
+·
+
+·
+
+·
+
+=•
+
+BtiJif,. B2.
+
+Concerning postulates A5 and A6, notice that in clas­
+sical logic, when D. (E1) 1\ D. (E2) is inconsistent then
+A5 is trivially satisfied. Hence A5 is only meaningful
+when there is no conflict between the sources. There­
+fore A5 and A6 are adapted as follows:
+(P5) If BtiJ is consistent with B'tiJ, then
+(P6)
+
+BtiJUB'tiJI-,.(BUB')tiJ.
+
+If BtiJ is consistent with B'tiJ, then
+(BUB')tiJI-,. BtiJUB'tiJ
+
+·
+
+Let us now see how to adapt the postulate A7.
+The common knowledge in the prioritized case can be
+defined as follows: If B1 1-,. (¢ ,a) and B2 1-,. (¢, j3) ,
+then BtiJI-,. ( ¢,1 ) , with 1 > 0.
+Now, the question is how to fix the value of I Ob·
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+30
+
+viously 1 should not be greater than min (o:,{3). In­
+deed assume that c > a 2: b, and B1 = { (c/>,o:)} and
+B2 = { (c/>,{3)} . Then it can be checked that (c/>,1) is
+not a consequence of B2, which means that (c/>,1) can­
+not be considered as a common information of B1 and
+B2. Therefore the adaptation of A1 is as follows:
+(P7) Vc/>, if B1 f-rr (c/>, ) and B2 f-rr (c/>,{3) then
+BEJ)f-rr (c/>, 1) with 0 < 1:::; min (o:,{3).
+Lastly, arbitration and majority have immediate ex­
+tensions: (Arb) VB, Vn, (BuB n )4 '=s (BUB)4, and
+
+Let Bt = {(•¢,.6);(¢,.5)} and B2 = {(¢,.7)} .
+Since In c ( BEB)= .6, the useful information of BEB is
+
+{(¢,.7)} = B2. Then, ?4 is not satisfied.
+Let now B2 = {(¢,.7);(¢,.5)}. Then, (¢, .5) cannot
+be inferred from BEB, and P1 is not satisfied.
+min is idempotent, then it cannot be a majority op­
+erator.
+
+o:
+
+•
+
+Let B=
+
+{Bt} and B'= {B2} s.t. Bt = {(¢,.5)} and
+B2 = {(¢,.6)} . We have BEBUB'EB= {(¢,.5);(¢,.6)}
+and (BuB')EB= {(¢,.5);(¢,.6); (¢v¢, .8)}. (4>V¢,.8)
+cannot be inferred from BEBU B' EB. Then, Ps is not
+satisfied. We also have Bt EB B2 = {(¢, .5);(¢,.6);(4>V
+¢,.8)} and Bt EB B� = {(¢,.5);(¢,.84); (4> v ¢,.92)},
+then Arb is not satisfied.
+
+(Maj) VB,3n, (BuB n)4 f-rr B.
+
+5.2
+
+Properties of the fusion operations
+
+This section gives the properties of the classes of pos­
+sibilistic operators introduced in Section 3.
+Proposition 9 shows that EEl is syntax independent.
+Proposition 9
+
+satisfies P3.
+
+Any possibilistic merging operation
+
+The next proposition relates the property of idempo­
+tency to the idea of arbitration:
+Proposition 10 Any idempotent operation is an ar­
+bitration operation.
+
+The following proposition gives the properties of the
+regular disjunctive operations.
+Proposition 11 Let EEl be a regular disjunctive oper­
+ator. Then, EEl satisfies P1,P4,P5,P1 but may fail to
+satisfy P2,P6,Maj,Arb.
+: For P2, Ps and Maj we use the
+max which is a regular disjunctive operation:
+
+Counter-examples
+
+operator EB
+•
+
+•
+
+=
+
+P2, Ps: Let B= {Bt,B2} with Bt
+{(¢,.8)} and
+B2 = {(¢, .3}. Although BtU B2 is consistent, we
+have BEB = {(¢Vtjl,.3)} and we recover neither B; nor
+B;. Then, EB does not satisfy P2. It does not satisfy
+Ps for the same reason.
+=
+
+Maj: max is an idempotent operator, hence it is an
+arbitration operation, and cannot be a majority op­
+erator.
+
+The following proposition relates the property of ma­
+jority to the reinforcement property.
+Proposition 13 Let B1 be a possibilistic base, and B2
+another possibilistic base which is not conflicting with
+completely certain formulas of B1. Let EEl be a progres­
+sive reinforcement operator. Denote by B� the combi­
+nation of B2 n times with E£). Then, 3n,V ('1/J, {3) E B2,
+B1 EEl B� f-rr ('1/J, 1) with 1 > {3, (t = 1 if {3 = 1}.
+
+This proposition means that reinforcement operators
+are majority operators, in the sense that if the same
+piece of information is repeated enough times then this
+piece of information will be believed.
+This proposition does not hold if we only use rein­
+forcement operations which are not progressive. For
+instance, consider the Luckasie wicz t-norm defined by:
+a EEl b = max(O,a+ b- 1).
+Then, for instance consider the bases B1 { (c/>,.8)},
+B2 = { (c/>,.8)} and B = { (•c/>,.7)} which are not
+completely conflicting. Then, we can easily check
+that Inc (B1 EEl B2 EEl B 2)
+1 and hence B cannot
+be deduced. Indeed, we have B1 EEl B2 = { (c/>, 1)},
+B 2 = B EEl B = { (•c/>,1)} .
+We now give the properties of progressive reinforce­
+ment operators:
+=
+
+=
+
+Proposition 14 Let EEl be a progressive reinforcement
+operator. Then, EEl satisfies P1 (provided that Inc (B1 U
+U Bn) < 1}, P2,P6,P1 (provided that Inc(BEJ))=
+Inc (B1 U
+U Bn) and Inc (B1 U
+U Bn) < 1}, Maj
+but may fail to satisfy P4,P5,Arb.
+·
+
+Arb, consider the probabilistic sum defined by: a EBb=
+a+ b- ab.
+Let B
+{ (¢,a)}. Then, one can easily check that B EBB
+2
+{(¢,2a - a )} which is different from B ={(¢,a)}.
+For
+
+=
+
+=
+
+Let EEl be a conjunctive operator.
+Then, EEl satisfies P2,P6 but may fail to satisfy
+P4,P5, P1, Arb,Maj.
+Proposition 12
+
+Counter-examples:
+•
+
+For P4 and P1, let us use the
+junctive operator.
+
+·
+
+·
+
+·
+
+since it is a con­
+
+·
+
+·
+
+·
+
+·
+
+·
+
+Counter-example: Let us use the product which is a
+progressive reinforcement operator.
+•
+
+?4: Let Bt = {(¢,.6) } and B2 = {(•¢,.5)} . The
+useful information (above the level of inconsistency)
+of BEB is
+
+•
+
+min
+
+For P5 and Arb, let us consider the product which is
+a conjunctive operator.
+
+Ps,
+
+Arb:
+
+{(¢,.6)} = Bt.
+
+Then, ?4 is not satisfied.
+
+see the counter-example of Proposition 12.
+
+The following proposition summarizes the properties
+of averaging operators:
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+Proposition 15 The Averaging operator satisfies
+P2,P4, P5,P6 and Arb but may fail to satisfy P7 and
+Maj.
+
+Lastly, the following tree summarizes the considered
+operators, with the associated satisfied postulates:
+General operator {P3}
+./
+Conjunctive {P2, P6}
+./
+'\t
+Idempotent Progressive
+{Pt2, Arb} reinforcement
+{P [,P 13,Maj 4 }
+
+'\t
+Regular disjunctive
+{P1 1 ,P4, P5, P7}
++
+
+Idempotent{Arb}
+
+P2
+
+P3
+
+P4
+
+in the possibilistic setting provides a basis for design­
+ing fusion systems able to propose a synthesis of par­
+tially conflicting goals on the basis of some chosen type
+of combination, possibly taking into account priori­
+ties between agents or sources. Lastly, this paper has
+analysed the possibilistic merging operators in terms
+of postulates. A message from Table 1 is that some
+postulates which make sense in classical fusion, like
+A4, are not appropriate for merging prioritized bases.
+Clearly, future work is to study new postulates proper
+for prioritized bases.
+
+
+
+considered world in case it is a collection of weighted
+goals.
+
+Possibility theory offers either a qualitative,
+or a numerical framework for representing
+uncertainty, in terms of dual measures of pos­
+sibility and necessity. This leads to the ex­
+istence of two kinds of possibilistic causal
+graphs where the conditioning is either based
+on the minimum, or on the product opera­
+tor. Benferhat et al. [3] have investigated
+the connections between min-based graphs
+and possibilistic logic bases (made of classi­
+cal formulas weighted in terms of certainty ).
+This paper deals with a more difficult issue:
+the product-based graphical representation
+of possibilistic bases, which provides an easy
+structural reading of possibilistic bases.
+
+Apart from the syntactic representation provided by
+a possibilistic base, an other compact representation,
+sharing the same semantics is of interest, namely, pos­
+sibilistic directed acyclic graphs ( DAGs ) [12, 3]. The
+merit of the DAG representation is, as usual, to exhibit
+some independence structure (here in the possibilistic
+framework), and to provide a structured decomposi­
+tion of the possibility distribution underlying the base.
+However, the interest of working with different repre­
+sentation modes has been pointed out in several works
+[4, 16].
+
+Introduction
+
+Possibilistic logic offers a general framework for rep­
+resenting prioritized information by means of classical
+logical formulas which are associated with weights be­
+longing to a linearly ordered scale (and which are han­
+dled according to the laws of possibility theory [21]).
+This leads to a stratification of the information base
+into layers of formulas according to the strength of the
+associated weights. This framework can be useful for
+representing knowledge, and then a weight represents
+the certainty level with which the associated formula is
+held for true. A possibilistic logic base can also repre­
+sent desires or goals having different levels of priority.
+A set of weighted logical formulas, constituting a pos­
+sibilistic logic base is semantically equivalent to a
+possibility distribution which rank-orders the possible
+worlds according to their levels of possibility. These
+possibility levels are to be understood as plausibility
+or normality levels in case the base gathers pieces of
+knowledge, or as levels of satisfaction of reaching a
+
+Depending if we are using a numerical scale such as
+[0,1], or a simple linearly ordered scale, two types of
+conditioning can be defined in possibility theory; one
+based on the product which requires a numerical scale,
+and one based on minimum operation for which any
+linearly ordered scale fits. This corresponds to quan­
+titative and qualitative possibility theory respectively
+[9]. In quantitative possibility theory, possibility de­
+grees can be viewed as upper bounds of probabilities
+[8]. Until recently, quantitative possibility theory did
+not have any operational semantics strictly speaking,
+despite an early proposal by Giles [13] in the setting
+of upper and lower probabilities, recently taken over
+by Walley, De Cooman and Aeyels [20, 5]. One way to
+avoid the measurement problem is to develop a qual­
+itative epistemic possibility theory where only order­
+ing relations are used [9]. For quantitative (subjec­
+tive ) possibilities, an operational semantics has been
+recently proposed [18], [10] which differs from the up­
+per and lower probabilistic setting proposed by Giles
+and followers. It is based on the semantics of the trans­
+ferable belief model [17], itself based on betting odds.
+It can be shown that the least informative among the
+belief structures that are compatible with prescribed
+betting rates is a possibility measure. Then, it can
+be also proved that the min-based idempotent con­
+junctive combination of two possibility measures cor-
+
+which evaluates the extent to which ¢> is entailed
+by the available beliefs.
+
+responds to the hyper-cautious conjunctive combina­
+tion of the belief functions induced by the possibility
+measures.
+The translation of a possibilistic graph (product­
+based, or minimum-based) into a possibilistic logic
+base has been already provided [2], as well as the con­
+verse transformation for minimum-based possibilistic
+graphs [3]. The translation of a possibilistic logic base
+into a product-based graph, which is less straightfor­
+ward is now addressed in this paper. The transforma­
+tion is illustrated on a running example dealing with
+the goals of an agent.
+The paper is organized as follows. After a minimal
+background on possibility theory, possibilistic logic
+
+and possibilistic graphs, the transformation of a pos­
+sibilistic logic base into a product-based possibilistic
+graph is discussed in details in the rest of the paper.
+2
+
+Background
+
+2.1
+
+25
+
+BENFERHAT ET AL.
+
+UAI2001
+
+When dealing with knowledge, a statement ¢ is thus
+estimated in terms of two measures II and N wh ich
+enable us to differenciate between the certainty of -.cf>
+(N(-.¢) ::;;: 1) and the total lack of certainty in ¢>
+(N(¢) = 0). When dealing with desires N(cf>) refers
+to the imperativeness of goals ¢>, while II(¢) estimates
+how satisfactory is to reach ¢>.
+The definition of conditioning in possibility theory de­
+pends if we use an ordinal, or a numerical scale. In an
+ordinal setting, min-based conditioning is used and is
+defined as follows:
+if II(¢ II t/;) = II(cp)
+if Il(cfJ II t/J) < II(cfJ)
+In a numerical setting, the product-based conditioning
+is used:
+IT(¢> 1\ 1jJ)
+II(� lx ¢>) = II
+(¢>) ·
+
+Moreover, ifiT(cf>) = 0, then II('�/; I¢)= IT(-..,p I¢)=
+
+Possibility theory
+
+Let £ be a finite propositionnal language. 0 is the set
+of all classical interpretations. Greeck letters ¢>, '1/; · · ·
+denote formulas. The notation w f= ¢> means that w is
+a model of ¢>.
+A possibility distribution [21]7r is a function mapping
+a set of interpretations (or worlds) n into a linearly
+ordered scale, usually the interval [0, 1]. 1r(w) rep­
+resents the degree of compatibility of the interpreta­
+tion w with the available beliefs about the real world
+in a case of uncertain information, or the satisfaction
+degree of reaching a state w, when modelling prefer­
+ences. rr(w) = 1 means that it is totally possible for
+w to be the real world (or that w is fully satisfactory),
+1 > rr(w) > 0 means that w is only somewhat pos­
+sible (or satisfactory), while 1r(w) = 0 means that w
+is certainly not the real world (or not satisfactory at
+all). A possibility distribution is said to be normalized
+(or consistent) if 3w s.t. 1r(w) == 1. Only normalized
+distributions are considered here.
+Given a possibility distribution 1r, two dual measures
+are defined which rank order the formulas of the lan­
+guage:
+1. The possibility (or consistency) measure of a for­
+mula¢>:
+II(¢>):::::: max{1r(w) : w F ¢>},
+which evaluates the extent to which ¢is consistent
+with the available beliefs expressed by 1r.
+2. The necessity (or certainty) measure of a formula
+¢:
+N(¢>) 1- IT(-.¢>),
+=
+
+1.
+
+Both forms of conditioning satisfy an equation of the
+form: II(�) ::;;: D(IT(� I ¢>), II(¢>)), which is similar to
+Bayesian conditioning, for 0 = min or product. In
+this paper we privilege the numerical setting.
+It is clear that ;r'(w) = 1r(w I ¢), the result of con­
+ditioning a possibility distribution 1r with ¢ is always
+normalized.
+2.2
+
+Possibilistic knowledge bases
+
+A possibilistic knowledge base is a set of weighted for­
+: i = 1, n} where cp;
+is a classical formula and, a:; belongs to [0, 1] in a nu­
+merical setting and represents the level of certainty or
+priority attached to cf>;.
+mulas of the form�= {(¢;,a:;)
+
+Given a possibilistic base I:, we can generate a unique
+possibility distribution rr�, where interpretations will
+be ranked w.r.t. the highest formula that they falsify,
+namely [6]:
+Definition 1
+
+() {
+
+'Vw E 0,
+
+7rE w =
+
+1
+if\>'(¢;,a;)EI:,w!=¢;
+1- max{a;:(cfJ;,a;)EI: and w�¢;} otherwise.
+
+Example
+
+1 Let
+
+su,
+
+wi, se be
+
+three
+
+symbols
+
+which
+
+stand for "sun", "wind" and ''sea" respectively. Let
+I: be the following possibilistic base:
+{(su V -.wi, �), (-.wi V se,
+(su V se, �)}.
+
+I:=
+
+�),
+
+(wi V -.se, �),
+
+26
+
+BENFERHAT ET AL.
+
+These rules express the goals of somebody who likes
+basking in the sun, or going windsurfing (which re­
+quires wind and sea). The most prioritized formula
+expresses that the person strongly dislikes to have wind
+in a non-suny day, while the other less prioritary goals
+express that she dislikes situations with wind but with­
+out sea, or with sea without wind, or with neither sun
+nor sea.
+Let n = {wo = su /\ •wi /\ •se, wl = su /\ •Wi /\ s e ,
+w2 = su /\ wi /\ •se, ws = su /\ wi /\ se, w4 = -,su /\
+•wi /\ -,se, w5 = •su 1\ -,wi /\ se, w6 = -, su /\ wi 1\ •se,
+W7 = •su 1\ wi 1\ se}.
+Let 7rE be the possibility distribution associated with :E:
+7rE(wo) = 7rE(ws) = 1, 1rE(w1) = 7rE(w2) = 7rE(w4) =
+7rE(ws) = � and 7rE(w6) = 7rE(W 7 ) = �·
+The converse transformation from
+forward.
+
+Let
+
+1
+
+>
+
+/31
+
+ent weights used in
+
+>
+
+1r.
+
+· · ·
+
+1r
+
+to
+
+> f3n :;::: 0
+
+:E
+
+is straight­
+
+be the differ­
+
+Let r/J; be a classical formula
+
+wl;wse models are those having the weight /3; in
+E
+
+=
+
+{ (-.rp;, 1 - /3;) : i
+
+=
+
+1, n}.
+
+Then,
+
+1r.
+
+Let
+
+We now give further definitions which will be used lat­
+
+B,
+
+letter
+
+A
+
+we denote a variable which represents either
+
+the symbol
+
+a or its negation.
+
+An interpretation in this
+
+section will be simply denoted by
+
+Let :E be a possibilistic knowledge base,
+and a E [0, 1). We call the a-cut (resp. strict a-cut)
+of:E, denoted by :E>a (resp. :E>a), the set of classical
+formulas in :E havi;g a certainty degree at least equal
+to a (resp. strictly greater than a).
+is inconsistent} denotes the
+
+inconsistency degree of :E. When
+
+Inc( :E) = 0.
+
+:E
+
+is consistent, we
+
+·
+
+·
+
+An,
+
+or by
+
+w.
+
+Uncertainty is expressed at each node in the follow­
+ing way:
+- For root nodes
+
+A;
+
+(namely
+
+vide the prior possibility of
+
+a;
+
+Par(Ai) = 0)
+
+we pro­
+
+and of its negation
+
+-.a;.
+
+These priors should satisfy the normalization condi­
+tion:
+
+- For other nodes
+of
+
+aj
+
+Aj, we provide conditional possibility
+
+and of its negation -.ai given any complete in­
+
+stantiation of each variable of parents of
+
+Aj, wPar(Ai).
+
+These conditional possibilities should also satisfy the
+normalization condition:
+
+A product-based possibilistic graph, denoted by
+
+lTG,
+
+chain rule:
+Definition 4
+
+Let lTG be a product-based possibilistic
+graph. The joint possibility distribution associated with
+II G is computed with the following equation (called
+chain rule):
+rr(w) =*{II( a I WPar(A)) : w f= a and w f= WPar(A)},
+where * = product.
+
+The converse transformation from a possibility distri­
+
+Subsumption can now be defined:
+
+bution
+
+Let (rp, a) be a formula in E. Then,
+(rp,o:) is said to be subsumed in:E if (:E-{ (rp,a)}h<> f­
+rp. (rp, a) is said to be strictly subsumed in :E if
+E>a f- r/J.
+
+Definition 3
+
+Indeed, we have the following proposition
+
+[6]:
+
+Let :E be a possibilistic knowledge
+base, and (rp, a) be a subsumed formula in :E. Let
+:E' = :E- {(¢;, o:)}. Then, :E and :E' are equivalent
+I. e. 7rE = 7rE'.
+
+Proposition 1
+
+1r
+
+to a product-based graph is straightforward.
+
+Indeed, given an interpretation
+
+w = A1A2 ···An,
+
+we
+
+have:
+
+Applying repeatedly the Bayesian-like rule for an arbi­
+
+A1, ···,An between variables, we get:
+1r(A1 ···An)= 1r(A1 I A2 ···An)*
+1r(A2 I A3 ···An)*···* 7r(An-1 I An)* 7r(An)·
+
+trarily ordering
+
+This decomposition is possible since the product is as­
+sociative. The decomposition leads to a causal possi­
+bilistic graph where parent of
+
+2.3
+
+A1 ·
+
+induces a unique joint distribution using a so-called
+
+Definition 2
+
+have
+
+A to
+A is said to be a parent of B. The set of parents of
+a given node A is denoted by Par(A). By the capital
+
+between variables. When there exists a link from
+
+7rE = 1r.
+
+ter in the paper:
+
+Inc(:E) =max{a; : :E�a,
+
+UAI2001
+
+A;
+
+are
+
+{Ai+l, ···,An}·
+
+It is clear that for the same joint distribution, we can
+
+Possibilistic networks
+
+construct several causal possibilistic graphs depending
+
+Another possibilistic representation framework of un­
+
+on the choice of the ordering between variables.
+
+certain information is graphical and is based on con­
+
+In possibility theory, there are several definitions of in­
+
+ditioning. Information is then represented by possi­
+
+dependence relations (see e.g.
+
+bilistic DAGs (Directed Acyclic Graphs)
+
+since we deal with product-based conditioning, we will
+
+[3, 12], where
+
+[11),[1]).
+
+In this paper,
+
+nodes represent variables (in this paper, we assume
+
+use the following definition of independence, namely:
+
+that they are binary), and edges express influence links
+
+rp and 1./J are independent if II( 1./J
+
+I rp) = II( 1./J).
+
+UAI2001
+
+3
+
+BENFERHAT ET AL.
+
+Fro m possibilistic bases to
+
+4
+
+Computation of the marginalized
+
+product-based graphs : Basic ideas
+
+In [2], the authors have provided the transformation
+of possibilistic graphs to possibilistic bases. In [3], the
+transformation from 1: to a min-based graph, where
+conditioning is based on minimum operation rather
+than on the product, has been given.
+In the following, we provide the transformation from a
+possibilistic base 1: to a product-based graph IIG. This
+transformation is different from the transformation in
+case of conditioning based on the minimum operation.
+However there is one common step in both approaches
+which consists in putting the knowledge base into a
+clausal form and in removing tautologies.
+The following proposition shows how to put the base
+in a clausal form:
+{6} Let 1: be a possibilistic base. Let
+(¢,a) be a formula in 1:, and {¢1 , ·· · ,¢n } be the set of
+clauses encoding ¢. We define E' obtained by replac­
+ing each formula(¢, cr ) in E by {(¢1, a ) ,···,(¢n,a)}.
+Then, 1: and E' are equivalent i.e., 7rE = 7rE'.
+
+27
+
+base �c
+
+The computation of Ec involves three tasks:
+•
+
+decomposing a possibility distributions rr into its
+restriction on a1 and its negation ---, a1 (recall that
+at and ...,at are the two only instances of At),
+
+•
+
+marginalisation of these two distributions for get­
+ting rid of At,
+
+•
+
+the effective computation of
+
+4.1
+
+Decomposing
+
+The basic idea in the transformation from the knowl­
+edge base to a possibilistic graph is first to fix an ar­
+bitrarily ordering of variables A1, · · , An. This order­
+ing means that the parents of A; should be among
+A;+l, · · ·,An (however it can be empty). Then we
+proceed by successive decompositions of 1:, which is
+associated with the above decomposition of a possibil­
+·ity distribution rr, namely:
+·
+
+rr
+
+Let us first define two possibility distributions rra1 and
+rr-,a1 in the following way:
+rr
+
+a1 ( ) -
+
+_
+
+w
+
+Proposition 2
+
+The removing of tautologies is important since it
+avoids fictitious dependence relations between vari­
+ables. For example, the tautological formula ( ---,x V
+---,y V x, 1) might induce a link between X andY.
+
+Ec.
+
+11'.,a1 (w)
+
+=
+
+{ rr(w)
+
+if w f= a1
+
+{ rr(w)
+
+ifw f= -,at
+
+otherwise.
+
+0
+
+0
+
+otherwise.
+
+7ra1 (resp. rr.,aJ are very similar to conditioning ex­
+cept that we do not normalize after learning at (resp.
+-,at). 11'a1 and rr...,a1 are simply the decomposition of
+rr. Indeed, it can be checked that:
+7r(w)
+
+=
+
+max(11'a1 (w), 11'.,a1 (w)), 'Vw.
+
+Example 2
+
+We consider again the possibilistic base
+of Example 1. Let us compute rr•e and 1!'...,.6• We
+get:
+E
+
+1l'se(wo)
+1rse(w7)
+
+=
+=
+
+1l'se(w2)
+�; 1rse(wt )
+
+Also,
+
+rr...,,e(wt)
+
+rr.,,e w6
+
+7!'.,.e(wo)
+
+=
+
+=
+
+1l'se(w4)
+1l'se(ws) = �
+
+11'se(w6) = 0;
+
+and
+
+11'.e(w3)
+
+=
+
+1.
+
+1l'...,,e(w3) = 1l'....,.e(ws)
+11'.,,e(w7)
+� and
+�; rr.,.e(w2)
+1l'....,se(w4)
+
+=
+
+(
+
+0;
+
+=
+=
+
+=
+
+=
+
+)
+
+=
+
+=
+
+=
+
+1.
+
+Then, we can check that
+
+The result of each step i is a knowledge base associated
+with rr(A; ···An). Moreover, this resulting base will
+enable us to determine Par(A;) the set of parents of
+A; and to compute the conditional possibilities rr(A; I
+P a r (A;) ) .
+In the following, we will only consider the first step
+(i = 1), and we will denote by Ec (C for Current) the
+base associated with rr(A2 ···An )· The procedure of
+this first step can be then iterated at each step. Ec is
+called the marginalized base.
+The computation of Ec is provided in the next section,
+then in Section 5 we show how to determine parents
+of each node, and lastly in Section 6 we compute the
+conditional possibility degrees.
+
+'Vw, 1T'E(w)
+7rE
+
+= max(7r38(w), 7!'.,.6(w)) where
+is the possibility distribution associated with E.
+
+We can easily check that the possibilitic bases associ­
+ated with these distributions are given by:
+Proposition 3
+rra,
+
+(resp.
+
+The possibilistic base associated with
+
+..... a,) is l: U { ( a t, 1)} (resp. EU{(---,a1, 1)}}.
+
+rr
+
+Proof
+
+The proof is obvious. Indeed, we have two cases:
+•
+
+w p!: a1, then using Definition
+
+7l'Eu{(a1,1)}(w)
+= 1 - max { a; : (¢;, a; )
+= 0 (since w p!: al)
+
+E 1:
+
+1:
+
+U {(at, 1)}, w p!: <Pi}
+
+BENFERHAT ET AL.
+
+28
+
+•
+
+w f= at , then using Definition 1:
+7r�u{(a,,l)}(w) = 1 - max{a; : (¢>;, a ; ) E I: U
+{(at, l)},w � ¢>;}
+= 1- max{ a ;:(¢>;, a;) E I:,w �¢> ;}
+(since w f= at)
+0
+= 1rE(w)
+
+The two following lemmas give two simplifications of
+
+I: U {(at, 1)} ( resp. L U {(-.a1, 1)} ).
+
+Lemma 1 Let I:� = E U {(a1, 1)}. Let I:J.' = E!­
+{(at V x, a) : (a V x,a) E E} a base obtained from
+E! by removing clauses containing at. Then, I:! and
+EJ.' are equivalent, in the sense that they generate the
+same possibility distribution which is 1ra1•
+The proof is obvious since
+
+(a1, 1).
+
+(at V x, a)
+
+is subsumed by
+
+Let E! = EU{(at, 1)}. Let LJ.' be the possi­
+bilistic base obtained from E! by replacing each clause
+of the form (• at V x,a::) by (x,a:: ) . Then, E! and I:J.'
+are equivalent.
+
+Lemma 2
+
+The proof can be again easily checked. Indeed,
+
+(a1, 1)
+
+('at V x, a::) implies (x, a::) which can be added
+t.
+L And once (x,o:) is added, (• at V x, o:) can be
+retrieved since it is subsumed by (x, a):: .
+and
+
+to
+
+4.2
+
+Marginalisation
+
+In this section, we are interested in computing the
+
+( resp. 11"-.atl defined
+{A2,.. ·,An}·
+Let us denote La, (resp. L-.a,) the result of the ap­
+plication of Lemmas 1 and 2 to I: U {(at, 1)} ( resp.
+E U {(•at, 1)} ), namely the result of removing clauses
+of the form (x V at, a) from I: and the result of replac­
+ing (x V 'a t ,a:: ) by (x, a). Therefore, the only clause
+in I:a1 which contains a1 is (at, 1).
+Let us denote 1r:,', 1r��� the result of marginalisation
+of 7ra1 and 11"-.a, on {A2, ···,An}, namely:
+7r1/ (A2 ···An) =IIa, (A2 ···An)
+(resp. 1!"��1(A2"'An) =II...,a,(A2"'An)).
+marginal distributions from 7ra1
+
+on
+
+Let At = SE. Then,
+1r�eE (-,su A
+1l"�eE (-,su A wi) = �, 1r�eE (su A -,wi)
+-,wi) = �, and 1r�eE (su A wi) = 1.
+Also,
+7r�fe(-,suAwi) = �' 7r�fe(suAwi) = 7r�fe(-,suA-,wi) =
+� and 1r�fe(su A -,wi) = 1.
+Example 3
+
+NB. ITa, (A2 ···An)
+
+is the possibility measure associ­
+
+ated with 7ra1 defined on
+
+{At,···,An}·
+
+The following lemma provides the syntactic counterA1
+
+part of 1ra1
+
+( resp· 1rA
+•a' 1 ) ·
+·
+
+UAI2001
+
+1
+The possibilistic base associated with 1rA
+a,
+(resp. 1r,�) ts Ea, -{(at, 1)}
+(resp. E-.a1 - {( at, 1)}).
+
+Lemma 3
+A
+
+.
+
+'
+
+Proof
+The proof is obvious. First, note that the only clause
+
+at in Ea, is (a1, 1). Then,
+1r:,' (A2 ···An) =
+min{1-a;: (¢>; ,a;) E Ea, -{(a1, 1)}, A2 ···An�¢>;}
+=min{ I- a;: ( ¢>;, a::; ) E Ea1- {(at, 1)},
+atA2 ···An � ¢1;}
+=max{min{1- a::;: (¢I;, a; ) E Ea1,
+atA2 ···An�¢;},
+min{ I- a::; : (¢1;, a;) E La11
+'atA2 ···An�¢;}}
+(since min{l- a::; : (¢>;,a;) E I:a,,
+•a1A2 ···An � c/>;} =D)
+=max{7ra1 (atA2 ···An), 7l"a1('atA2 ···An))
+0
+=1l"a1 (A2 ···An)·
+
+containing
+
+4.3
+
+Effective computation of
+
+Given Lemma
+
+3
+
+I:c
+
+we are now able to provide the possi­
+
+bilistic base associated with
+
+1r(A2 ·· ·An)
+
+by noticing
+
+that:
+
+1r(A2 ···An) = max(1r:/ (A2 .. ·An),1!"��1 (A2 ..·An)).
+Example 4
+
+We again consider the possibility distri­
+butions 1r!eE and rr�fe computed in Example 3. We
+have:
+1r(su A -,wi) = rr(su A wi) = 1, 1r(...,su A -,wi) = � and
+1r(..,su 1\ wi) = �·
+Let Et = Ea, - {(at, 1)} and I:2 =
+1)
+•
+,
+L-.a
+{( at, }. The possibilistic base associated
+with 1r(A2,· ··,An) is:
+.Ec ={(4); V '1/Jj, min(a ;, /3j) :
+(¢I;, a;) E Et, ('I/Jj , /3j) E E2)}.
+Proposition 4
+
+Proof
+The proof is obvious, indeed:
+
+1 - max{min(a;,/3j) : (¢>;, a;)
+1t"r;c(w)
+.Et,('I/Jj,/3j) E L 2, w �¢1; V'I/Jj}
+= 1- min{max{a; :( ¢;,a:: ; ) E Et,W �¢;} ,
+max{f3J: ('I/Jj,/3j) E E2,w �'1/Jj}}
+=max{!- max{a::; : (¢;, a::; ) E .Et,w �¢;},
+1- max{fJJ : ('I/Jj,/3j) E E 2,w � '1/JJ}}
+0
+= max(rr111 (w), rr��� (w)).
+4.4
+
+E
+
+Summary
+
+Let us now summarize the computation of Ec:
+
+1. Add (a1, 1) ( resp. ('at, 1)) to E,
+
+2.
+
+at (resp. -,at )
+a) ( resp. ('at V x,a)),
+
+Remove clauses containing
+form
+
+(a1
+
+V
+
+x,
+
+of the
+
+BENFERHAT ET AL.
+
+UAI2001
+
+3.
+
+Let
+Ec
+
+Replace clauses of the form
+
+(at
+E1
+
+V x, a)) by
+
+(resp.
+
+(x, a).
+
+E2) the
+
+( 'at V x, a)
+
+(resp.
+
+whose observation influences the conditional possibil­
+ity
+
+TI(A1 I Par(At)).
+
+:
+
+3. Then,
+(¢>, o:) E Et- {(at, 1)},
+(.,P,,B) E E2 - {( ' at,1)}}.
+
+Let us consider our example again.
+Let {SE, WI, SU} be the ordering of the variables
+(namely At = SE, A2 = WI, and A3 = SU). We
+start with the variable SE.
+Let us compute Ec the possibilistic base associated
+with 1rB(A2A3) (namely, 11'E(WI A SU)).
+We first add "se" with a degree 1, we get:
+
+Example 5
+
+{(wi V -,se,k),(-,wi V se,k),(su V se,�),(su V
+-,wi, �), ( se, 1)} .
+
+Then we remove clauses containing se (except the
+added one), we get
+{(wi V -,se, k), ( su V --, wi , �), (se, 1)}.
+Then we replace all clauses of the form ( ¢> V •se, a) by
+(¢> , o: ) we get:
+E,e = {( wi, k) , (su V -,wi, j), (se, 1)}.
+Similarly, for -,se:
+E...,u = {(-,wi, k), (su, k), (su V -,wi, �), (-,se,1)}.
+Finally, using Proposition 3 we have:
+Et = {( wi , �), (su V -,wi, �)},
+E 2 = {(-,wi, �), ( su, �), (su V -,wi, � )} and
+Ec = {(su, �), (su V --,wi, �)}.
+It can be checked that 11'E0(WI 1\SU) = 11'(WI 1\SU),
+where 11' is the possibility distribution computed in Ex­
+ample 4.
+
+Let E = {(a2 V a t , .4), (a3, .7)}, then we
+can easily check in context -,a2, at is deduced to a
+degree .4, which means that TI( -,at I -,a2) = 1-.4 = .6.
+However, in context ....,a2...,a3 the certainty of a1 is now
+o, which means that n(...,ar 1 -.a2-.a3) = 1 - o = l(due
+to presence of a conflict in E U { 'a2 1\ ...,a3}). Hence
+A3 should also be considered as a parent of At, even if
+it is not directly involved. (see {6] for the presentation
+of the inference machinery in possibilistic logic).
+Example 6
+
+Algorithm 1 provides the computation of
+
+Data:
+
+[15].
+
+1. Finding immediate parents of At
+
+LA1 +-{(¢>;,a;):(¢>;, a;) E E
+at or -,at}.
+l.b. Par(At) +- {V: 3(¢;, o:;) E E A1
+l.a.
+
+and ¢>; contains either
+
+containing an instance of
+
+sical case, without levels of priorities. Both procedures
+are polynomial.
+
+V}
+
+2. Checking for hidden parents
+2.a. B +- E, let (xt,·· · , Xn) be an instance of
+
+Par(At)
+2.b. Remove from Beach clause containing
+
+x;,
+
+2.c. Replace in B e ach clause of the form
+
+(....,x, V --,Xj"' V ....,xk V ,P,o:) by (,P,o:)
+o: (resp. ,8) be the certainty degree of
+at (resp. -,at) from BU{(xt, 1), · · · , (xn, 1)}
+2 . e. if there exists ( ¢>, 7) E B such that 7 2: o:
+(resp. 7 2: ;3), then:
+Par(Al) = P a r (At) U
+{ V : ¢> contains an instance of V}
+2.d. Let
+
+Their ap­
+
+to compute the marginalization base. Another small
+
+At
+
+begin
+
+proach is more based on successive resolution in order
+
+difference is that their approach is proposed in the clas­
+
+E
+
+Result: Parents of
+
+The problem of finding a syntactic counterpart of
+marginalization problem addressed in
+
+Par(A1).
+
+Algorithm 1: Determining_Parents_oLAt
+
+the marginalization process is clearly similar to the
+
+5
+
+To show this, let us give the
+
+following illustration:
+
+result of the Step
+
+= {(¢> V 1/J, min(a, ,8))
+
+29
+
+Go to Step 2
+return
+
+Par(At)
+
+end
+Let us briefly explain this algorithm. The first step
+
+Determining parents of A1
+
+simply starts with parents of
+
+At, the set of variables
+At. Step 2 checks for
+At, namely if Pa r (At) can be ex­
+
+which are directly linked with
+We are interested in determining
+the parents of
+
+Par(A1)
+
+which are
+
+This set should be such that:
+
+At.
+
+TI(At I A2 An ) = TI(At I Par(Al)).
+At are determined, we compute the
+conditional possibility degrees TI(At I Par(At)) in Sec­
+tion 6 .
+The determination of parents of At is done in an incre­
+mental way. First, we take Par(At) as the set of vari­
+·
+
+·
+
+·
+
+Once parents of
+
+ables which are directly involved at least in one clause
+containing
+
+at or --,a1. Par(A1) are
+
+obvious parents of
+
+At. However, it may exist other "hidden" variables,
+
+hidden parents of
+tended or not.
+A set of variables
+
+V
+
+has to be added to
+
+there exists an instance
+that:
+(resp.
+where
+
+(x1, ·· , xn)
+·
+
+for
+
+Par(At), if
+Par(At) such
+
+II(at I X t X2 · · ·Xn) f- TI(at I XtX2 ···Xnv).
+TI(-.at I XtX2 · · ·Xn) =j:. II(--,at I XtX2 · ·xnv)),
+·
+
+v
+
+is an instance of
+
+V.
+
+The computation of
+
+II( 'at I Xt· Xn ) can be done syntactically from
+E U {(xt, 1), ···, (xn, 1)} (for a formal computation of
+IJ ( -, at I Xt···Xn) see Section 6).
+· ·
+
+BENFERHAT ET AL.
+
+30
+
+This is what it is done in Step 2, by checking
+if any additional variables can have influences on
+II(at I Xt · ·xn)· To achieve this goal, we first as­
+sume that (x1, 1), · · , (xn, 1) are true. Step 2.b re­
+moves (x; V </;,a) since the latter are subsumed. Step
+2.c replaces (-.x; V ·· · V -.xk V </;,a) by (</;,a) since
+(-.x; V···V-.xk V</;,a) and {(x;,1),···,(xk,1)} im­
+plies (</;,a) which subsumes (-.x; V· · · V -.xk V </;,a).
+·
+
+·
+
+Now, assume that B U {(xi, 1), ·, (xn, 1)} 1- (at, a)
+(Step 2.d and 2.e). Let (</;,J) E B, such that J > a.
+Then, variables which are in ¢1 should be added to
+Par(Al). Indeed, let ¢1 = v1 V · ·Vvn. Then, one can
+easily check that:
+II(at I Xt · · ·Xn-,V! ·-.vn) # IT(a1 I Xt · ·Xn),
+because B U { ( x i 1), . . · , ( -.vi, 1), · (-.vn, 1)} is in­
+consistent to a degree 2: J from which a1 can no longer
+be inferred.
+· ·
+
+·
+
+·
+
+UAl2001
+
+Example 7
+
+=
+
+c
+
+se,
+
+=
+
+Hence, II( -.se
+
+1\
+
+!f
+
+=
+
+wi
+
+1\
+
+su)
+
+=
+
+·
+
+se
+-.se
+
+..
+
+n
+
+·
+
+·
+
+·
+
+'
+
+·
+
+II(</;)= 1- Inc(L: U {(ql, 1)}).
+(We recall that L: is assumed to be consistent).
+
+Proposition 5
+
+The proof is immediate since II(ql) = 1 N ( -.q,), and
+that N(-.ql) = Inc(L: U {(¢, 1)}) (See [6]).
+Therefore, to compute II(at I Xt· · ·Xn):
+-
+
+1. Add {(x1, 1), ·· · , (xn, 1)} to :E. Let
+sult of this step.
+
+3. Add {(a1, 1)} to L:'. Let
+step.
+
+h1
+1
+II(atXt · ·Xn)). Then,
+II (al I Xt ... Xn) =
+·
+
+-
+
+L:'
+
+be the re­
+
+Inc(L:') ( h represents
+
+-
+
+su
+
+�
+
+1
+
+1
+
+1
+
+wz s u
+
+�
+
+1
+
+-.wz-.su
+1
+1
+
+WZSU
+
+1
+
+..�
+
+wi
+
+---.
+
+s
+
+u
+
+1
+1
+
+is the same as the one associated with the possibilistic
+
+This subsection shows how to compute II(A1
+Par(Al)) once Par(At) is fixed.
+Let (x1,· · ·,xn) be an instance of Par(At), and a1 an
+instance of A1• Recall that by definition:
+n a,:r, . z
+II(a! I XtX2 ... X n ) = TI(:r,···z,.
+and that II( at I XtX2 · · Xn) = 1 if II(xt Xn) = 0.
+The following proposition provides the computation of
+II(ql) syntactically:
+
+1
+
+---.su
+
+It can be checked that the possibility distribution asso­
+ciated with the constructed 11 G (using the chain rule)
+
+possibility degrees
+
+Compute
+
+Lastly: II(-,se
+
+II(SE I WI, SU)
+-.
+
+Computation of conditional
+
+4.
+
+�.
+
+IT(W IISU)
+
+w�
+
+=
+
+h
+
+=
+
+=
+
+-.wz
+
+=
+
+II(x1 · · · Xn ))
+
+)
+
+· ,
+
+Let us consider again the base L: = { (suV
+( -.wi V se, �), (wi V -.se, �), (su V se, �)}.
+
+2. Co mput e
+
+su
+
+l With a similar way, we get the
+
+IT(SU)
+
+Then, using the above algorithm we get:
+Par(SE) { WI, SU},
+Par(W I) = {SU} and Par(SU) 0.
+6
+
+1\
+
+following conditional possibilities:
+
+Example 7
+
+�),
+
+wi
+
+·
+
+·
+
+,
+
+-.wi,
+
+(continued)
+
+Let us illustrate the computation of IT(-.se I wi 1\ su).
+We add the instance {(wi,l),(su,l)} toE (Step 1).
+We get L:' {(wi, 1), (su, 1),(suV-.wi,i), (suVse, �),
+(-.wi V se, �),(wi V -,se, �)}.
+We have In ( L:') = 0. Then, h= 1 {Step 2).
+We now add (-.se, 1) to L:' (Step 3).
+We get L:"
+{(-.se, 1 ), (wi, 1), (su, 1), (su V
+-.wi, i), (su V se, �), (-.wi V
+�), (wi V -.se, �)}.
+We have Inc(L:11) �- Then, h' �·
+
+L:"
+
+I
+
+{
+
+be the result of this
+
+nc(L:") (h' represents
+1
+
+If
+
+ifh=O
+
+otherwise.
+
+base.
+Observe that we have chosen the ordering of the vari­
+ables in the example arbitrarily. Clearly each appli­
+cation suggests orderings which are the more natural
+ones, or which leads to a simple structure. Note also
+that the computation of the weights could be also han­
+dled symbolically.
+7
+
+Conclusion
+
+In the possibility theory framework, desires or knowl­
+edge can be equivalenty expressed in different formats.
+This paper has used two compact representations of
+possibility distribution: a possibilistic knowledge base
+and possibilistic graph.
+Each of these representations have been shown in pre­
+vious papers [3, 6] to be equivalent to a possibility
+distribution which rank-orders the possible worlds ac­
+cording to their level of plausibility. The framework
+may use a symbolic discrete linearly ordered scale, or
+can as well be interfaced with numerical settings by us­
+ing the unit interval as a scale, using a different type
+of conditioning in each case [9].
+This paper is on step further in establishing the rela­
+tionship between different compact representation of
+possibility distribution. The results presented in this
+paper would enable us also to translate a possibilistic
+logic base easily into a kappa function graph [14] since
+
+UAI2001
+
+BENFERHAT ET AL.
+
+there exists direct transformations [7] between possi­
+bility theory and Spohn's ordinal conditional functions
+[19].
+

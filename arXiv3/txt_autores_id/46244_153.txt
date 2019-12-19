@@ -1,0 +1,5010 @@
+. According to the Erdős discrepancy conjecture, for any infinite ±1
+sequence, there exists a homogeneous arithmetic progression of unbounded discrepancy. In other words, for any ±1 sequence
+(x1 , x2 , ...) and a discrepancy C,
+P
+there exist integers m and d such that | m
+i=1 xi·d | > C. This is an 80-year-old
+open problem and recent development proved that this conjecture is true for discrepancies up to 2. Paul Erdős also conjectured that this property of unbounded
+discrepancy even holds for the restricted case of completely multiplicative sequences (CMSs), namely sequences (x1 , x2 , ...) where xa·b = xa · xb for any
+a, b ≥ 1. The longest CMS with discrepancy 2 has been proven to be of size
+246. In this paper, we prove that any completely multiplicative sequence of size
+127, 646 or more has discrepancy at least 4, proving the Erdős discrepancy conjecture for CMSs of discrepancies up to 3. In addition, we prove that this bound is
+tight and increases the size of the longest known sequence of discrepancy 3 from
+17, 000 to 127, 645. Finally, we provide inductive construction rules as well as
+streamlining methods to improve the lower bounds for sequences of higher discrepancies.
+
+Introduction
+Discrepancy theory addresses the problem of distributing points uniformly over some
+geometric object, and studies how irregularities inevitably occur in these distributions.
+For example, this subfield of combinatorics aims to answer the following question: for
+a given set U of n elements, and a finite family S = {S1 , S2 , . . . , Sm } of subsets of U ,
+is it possible to color the elements of U in red or blue, such that the difference between
+the number of blue elements and red elements in any subset Si is small?
+Important contributions in discrepancy theory include the Beck-Fiala theorem [1]
+and Spencer’s Theorem [2]. The Beck-Fiala theorem guarantees that if each element
+appears at most t times in the sets of S, the elements can be colored so that the imbalance, or discrepancy, is no more than 2t
+p− 1. According to the Spencer’s theorem, the
+discrepancy of S grows at most as Ω( n log(2m/n)). Nevertheless, some important
+questions remain open.
+According to Paul Erdős himself, two of his oldest conjectures relate to the discrepancy of homogeneous arithmetic progressions (HAPs) [3]. Namely, a HAP of length
+k and of common difference d corresponds to the sequence (d, 2d, . . . , kd). The first
+conjecture can be formulated as follows:
+*Submitted on April 14, 2014 to the 20th International Conference on Principles and Practice
+of Constraint Programming.
+
+2
+
+Conjecture 1. Let (x1 , x2 , ...) be an arbitrary ±1 sequence. The discrepancy of x w.r.t.
+HAPs mustPbe unbounded, i.e. for any integer C there is an integer m and an integer d
+m
+such that | i=1 xi·d | > C.
+
+This problem has been open for over eighty years, as is the weaker form according
+to which one can restrict oneself to completely multiplicative functions. Namely, f is
+a completely multiplicative function if f (a · b) = f (a) · f (b) for any a, b. The second
+conjecture translates to:
+Conjecture 2. Let (x1 , x2 , ...) be an arbitrary completely multiplicative ±1 sequence.
+The discrepancy of xP
+w.r.t. HAPs must be unbounded, i.e. for any integer C there is a
+m
+m and a d such that | i=1 xi·d | > C.
+
+Hereinafter, when non-ambiguous, we refer to the discrepancy of a sequence as its
+discrepancy with respect
+P to homogeneous arithmetic progressions. Formally, we denote
+disc(x) = maxm,d | m
+i=1 xi·d |. We denote E1 (C) the length for which any sequence
+has discrepancy at least C + 1, or equivalently, one plus the maximum length of a
+sequence of discrepancy C. Similarly, we define E2 (C) the length for which any completely multiplicative sequence has discrepancy at least C + 1. 1
+A proof or disproof of these conjectures would constitute a major advancement in
+combinatorial number theory [4]. To date, both conjectures have been proven to hold
+for the case C ≤ 2. The values of E1 (1), E2 (1), and E2 (2) have been long proven to be
+12, 10, and 247 respectively, while recent development proved E1 (2) = 1161 [5]. Konev
+and Lisitsa [5] also provide a new lower bound for E1 (3). After 3 days of computation,
+a SAT solver was able to find a satisfying assignment for a sequence of length 13, 000.
+Yet, it would fail to find a solution of size 14, 000 in over 2 weeks of computation. They
+also report a solution of length 17, 000, the longest known sequence of discrepancy 3.
+In this paper, we substantially increase the size of the longest sequence of discrepancy
+3, from 17, 000 to 127, 645. In addition, we claim that E2 (3) = 127, 646, making this
+bound tight, as Plingeling was able to prove unsat and Lingeling generated an
+UNSAT proof in DRUP format [6].
+This paper is organized as follows. The next section formally defines the Erdos
+discrepancy problems (for the general case and the multiplicative case) and presents
+SAT encodings for both problems. We then investigate streamlined search techniques to
+boost the search for lower bounds of these two problems, and to characterize additional
+structures that appear in a subset of the solutions. Furthermore, in a subsequent section,
+we provide construction rules that are based on these streamliners and allow to generate
+larger sequences of limited discrepancy from smaller ones. The last section presents the
+results of these approaches.
+
+Problem Formulation
+In this section, we first formally define the two conjectures as decision problems and
+then propose encodings for these problems.
+1
+
+Note that, if Conjecture 1 (resp. Conjecture 2) were to be rejected, E1 (C) (resp. E2 (C) ) would
+correspond to infinity.
+
+3
+
+Definition 1 (EDP1 ). Given
+Pm two integers n and C, does there exist a ±1 sequence
+(x1 , . . . , xn ) such that | i=1 xi·d | ≤ C for any 1 ≤ d ≤ n, m ≤ n/d.
+
+Konev and Lisitsa [5] provide a SAT encoding for this problem that uses an automaton accepting any sub-sequence of discrepancy exceeding C. A state sj of the
+automaton corresponds to the sum of the input sequence, while the accepting state
+sB captures whether the sequence has exceeded the discrepancy C. A proposition
+Pm−1
+(m,d)
+is true whenever the automaton is in state i=1 xi·d after reading the sequence
+sj
+(xd , . . . , x(m−1)d ). Let pi be the proposition corresponding to xi = +1. A proposition
+that tracks the state of the automaton for an input sequence (xd , x2d , . . . , x⌊n/d⌋d ) can
+be formulated as:
+n/d
+
+φ(n, C, d) =
+
+(1,d)
+s0
+
+^ 
+
+m=1
+
+(m+1,d) 
+
+(m,d)
+
+∧ pid → sj+1
+
+(m,d)
+
+∧ pid → sj+1
+
+^
+
+sj
+
+^
+
+sj
+
+−C≤j<C
+
+∧
+
+(m+1,d) 
+
+−C<j≤C
+
+∧
+
+(m,d)
+
+
+∧ pid → sB ∧
+
+
+(m,d)
+s−C ∧ pid → sB
+sC
+
+(1)
+
+In addition, we need to encode that the automaton is in exactly one state at any point
+in time. Formally, we define this proposition as:
+
+χ(n, C) =
+
+^
+
+1≤d≤n/C,1≤m≤n/d
+
+
+
+_
+
+(i,d)
+
+sj
+
+^
+
+∧
+
+−C≤j≤C
+
+(i,d)
+
+sj1
+
+−C≤j1 ,j2 ≤C
+
+
+
+(i,d) 
+
+∨ sj2
+
+(2)
+
+Finally, we can encode the Erdős Discrepancy Problem as follows:
+EDP1 (n, C) : sB ∧ χ(n, C) ∧
+
+n
+^
+
+φ(n, C, d)
+
+(3)
+
+d=1
+(m,d)
+
+of the automaton do not
+Furthermore, as the authors of [5], the actual states sj
+require 2C + 1 binary variables to represent the 2C + 1 values of the states. Instead,
+one can modify this formulation and use ⌈log2 (2C + 1)⌉ binary variables to encode the
+automaton states.
+For the completely multiplicative case, we introduce additional constraints to capture the multiplicative property of any element of the sequence, i.e. xid = xi xd for any
+1 ≤ d ≤ n, 1 ≤ i ≤ n/d. With respect to the boolean variables pi , pd and pid , such a
+constraint acts as XNOR gate of input pi and pd and of output pid . Formally, we denote
+this proposition M(i, d) and define:
+M(i, d) = (pi ∨ pd ∨ pid ) ∧ (pi ∨ pd ∨ pid ) ∧ (pi ∨ pd ∨ pid ) ∧ (pi ∨ pd ∨ pid ) (4)
+
+4
+
+Importantly, for completely multiplicative sequences, the discrepancy of the subsequence (xd , ..., xmd ) of length m and common difference d will bePthe same as
+m
+the
+discrepancy of the P
+subsequence (x
+Pm
+P1m, ..., xm ). Indeed , we have | i=1 xi·d | =
+m
+| i=1 xi xd | = P
+|xd | · | i=1 xi | = | i=1 xi |. Therefore, one needs only check that
+m
+the partial sums i=1 xi , 1 ≤ m ≤ n never exceed C nor go below −C. Furthermore,
+note that a completely multiplicative sequence is entirely characterized by the values it
+takes at prime positions, i.e. {xp |p is prime}. In addition, if there exists a completely
+multiplicative sequence sequence (x1 , ..., xp−1 ) of discrepancy C with p prime, then
+1Pm
+the sequence (x1 , ..., xp−1 , (−1) i=1 xi ≥0 ) will also be a CMS of discrepancy C. As
+a result, E 2 (C) cannot be a prime number.
+Overall, for the completely multiplicative case, we obtain:
+^
+M(i, d)
+(5)
+EDP2 (n, C) : sB ∧ χ(n, C) ∧ φ(n, C, 1)
+1≤d≤n,1≤i≤n/d
+
+Streamlined Search
+The encoding of EDP1 given in the previous section has successfully led to prove a
+tight bound for the case C = 2 [5]. On an Intel Core i5-2500K CPU, it takes about 800
+seconds for Plingeling [7] to find a satisfying assignment for EDP1 (1160, 2) and
+less than 6 hours for Glucose [8] to generate a proof of E1 (2) = 1, 161. Nevertheless,
+for the case C = 3, it requires more than 3 days of computation for Plingeling to
+find a sequence of size n = 13, 000, and fails to find a sequence of size 14, 000 in over
+two weeks of computation.
+In this section, in order to improve this lower bound and acquire a better understanding of the solution space, we explore streamlining techniques that identifies additional
+structure occurring in a subset of the solutions. Among the solutions of a combinatorial problem, there might be solutions that possess regularities beyond the structure of
+the combinatorial problem itself. Streamlining [9] is an effective combinatorial search
+strategy that exploits these additional regularities. By intentionally imposing additional
+structure to a combinatorial problem, it focuses the search on a highly structured subspace and triggers increased constraint reasoning and propagation. This search technique is sometimes referred to as “tunneling” [10]. In other words, a streamlined search
+consists in adding specific desired or observed regularities, such as a partial pattern that
+appears in a solution, to the combinatorial solver. These additional regularities boost
+the solver that may find more effectively larger solutions that contain these regularities.
+If no solution is found, the observed regularities were likely accidental. Otherwise, one
+can analyze these new solutions and suggests new regularities. This methodology has
+been successfully applied to find efficient constructions for different combinatorial objects, such as spatially-balanced Latin squares [11], or graceful double-wheel graphs
+[12].
+When analyzing solutions of EDP1 (n, 2) for n ∈ [1, 1160], there is a feature that
+visually stands out of the solutions. When looking at a solution as a 2D-matrix with
+entries in {−, +} and changing the dimensions of the matrix, there seems to be clear
+preferred matrix dimensions (say m-by-p) such that the m rows are mostly identical for
+
+5
+
+the columns 1 to p − 1, suggesting that xi = xi mod p for 1 ≤ i ≤ p − 1. We denote
+period(x, p, t) the streamliner that enforces this observation and define:
+period(x, p, t) : xi = xi mod p ∀1 ≤ i ≤ t, i 6≡ 0 mod p
+
+(6)
+
+First, while this observation by itself did not allow to improve the current best lower
+bound for E1 (3), it led to the formulation of the construction of the next section. Second,
+it also led to the re-discovery of the so-called ’improved Walters sequence’ [13], defined
+as follows:
+
+
+if i is 1 mod 3
++1,
+µ3 (i) = −1,
+(7)
+if i is 2 mod 3
+
+
+−µ3 (i/3), otherwise.
+
+In the following, we denote walters(x, w) the streamliner imposing that the first w
+elements of a sequence x follow the improved Walters sequence, i.e.:
+walters(x, w) : xi = µ3 (i) ∀1 ≤ i ≤ w
+
+(8)
+
+One can easily see that the improved Walters sequence is a special case of the periodic sequence defined previously. Namely, for any sequence x where walters(x, w)
+holds true, then we have period(x, 9, w).
+Finally, another striking feature of the solutions of EDP1 (n, 2) is that they tend to
+follow a multiplicative sequence. Interesting, EDP2 restricts EDP1 to the special case
+of multiplicative functions and we observe for the case C = 2 that this restriction
+substantially impacts the value of the best bound possible (i.e. E1 (2) = 1, 161 whereas
+E2 (2) = 247). Nevertheless, the solutions of EDP1 (n, 2) exhibit a partial multiplicative
+property and we define:
+mult(x, m, l) : xi·d = xi xd ∀2 ≤ d ≤ m, 1 ≤ i ≤ n/d, i ≤ l
+
+(9)
+
+In the experimental section, we show the speed-ups that are triggered using these
+streamliners, and how the best lower bound for EDP1 (n, 2) gets greatly improved.
+
+Construction Rule
+In this section, we show how we used insights from the period(x, p, t) streamliner in
+order to generate an inductive construction rule for sequences of discrepancy C from
+sequences of lower discrepancy.
+Consider a sequence x that is periodic of period p, as defined in the previous section,
+i.e. period(x, p, |x|) holds true, and is of length n = p ∗ k. Then, the sequence x can be
+written as:
+x = (y1 , y2 , . . . , yp−2 , yp−1 , z1
+y1 , y2 , . . . , yp−2 , yp−1 , z2
+...
+y1 , y2 , . . . , yp−2 , yp−1 , zk )
+
+(10)
+
+6
+′
+Let C be
+discrepancy
+Pthe
+Pmof z = (z1 , z2 , ..., zk ) and C the discrepancy of (y1 , ..., yp−1 ).
+m
+Given that i=1 xip = i=1 zi for any 1 ≤ m ≤ k, we have disc(x) ≥ C. Note that
+if x was completely multiplicative, then it would hold disc(x) = C. We study the general case where x is not necessarily multiplicative, and investigate the conditions under
+which disc(x) is guaranteed to be less or equal to C + C ′ .
+For a given common difference d and length m, we consider the subsequence
+p
+. Given the definition 10 of x, the subsequence
+(xd , x2d , ..., xmd ). Let q = gcd(d,p)
+(xd , x2d , ..., xmd ) corresponds to:
+
+(yd mod p , y2d mod p , ..., y(q−1)d mod p , zq ,
+yd mod p , y2d mod p , ..., y(q−1)d mod p , z2q ,
+yd mod p , ...)
+
+(11)
+(12)
+(13)
+
+Note that if p divides d or d divides p, this subsequence becomes (zq , z2q , ..., zqm )
+and is of discrepancy at most C. As a result, a sufficient condition for x to be of discrepancy at most C + C ′ is to have yd mod p , y2d mod p , ..., y(q−1)d mod p of discrepancy
+C ′ and summing to 0. We say that such a sequence has a discrepancy modp of C ′ .
+Formally, we define the problem of finding such sequences as follows:
+Definition 2 (Discrepancy mod p). Given two integers p and C ′ , does there exist a ±1
+sequence (y1 , . . . , yp−1 ) such that:
+|
+
+m
+X
+
+yi·d mod p | ≤ C ′ , ∀1 ≤ d ≤ n, m <
+
+i=1
+
+p
+gcd(d, p)
+
+(14)
+
+p
+−1
+gcd(d,p)
+
+X
+
+yi·d mod p = 0, ∀1 ≤ d ≤ n
+
+(15)
+
+i=1
+
+Notice that, given the equation 15, p should be odd for such a sequence to exist.
+We encode this problem as a Constraint Satisfaction Problem (CSP) in a natural way
+from the problem definition. We provide the experimental results in the next section.
+
+Results
+All experiments were run on a Linux (version 2.6.18) cluster where each node has an
+Intel Xeon Processor X5670, with dual-CPU, hex-core @2.93GHz, 12M Cache, 48GB
+RAM. Unless otherwise noted, the results were obtained using the parallel SAT solver
+Plingeling, version ats1 for the SAT encodings, and using IBM ILOG CPLEX
+CP Optimizer, release 12.5.1 for the CP encodings.
+First, we evaluate the proposed streamliners for the two problems. Table 1 reports
+the length of the sequences that were successfully generated, as well as the computation
+time. The first clear observation is that, for EDP1 , the streamlined search based on the
+partial multiplicative property significantly boosts the search and allows to generate
+solutions that appear to be out of reach of the standard search approach. For example,
+while it takes about 10 days to find a solution of length 13, 900 without streamliners, the
+
+7
+
+streamlined search generates a substantially-large satisfying assignment of size 31, 500
+in about 15 hours. Next, we study streamliners that were used for EDP2 , i.e. partially
+imposing the walters sequence. The results clearly show the speed up triggered by the
+combination of the new encoding for EDP2 with the walters streamliners. Interestingly,
+the longest walters sequence of discrepancy 3 is of size 819. Nevertheless, one can
+successfully impose the first 800 elements of the walters sequence and still expand it to
+a sequence of length 108, 000. Furthermore, when imposing walters(730), it takes less
+than 1 hour and an half to find a satisfying assignment for a sequence of size 127, 645.
+Moreover, without additional streamliners, it takes about 60 hours to prove unsat for the
+case 127, 646 and allows us to claim that this bound is tight. Nevertheless, the solver
+generates a DRUP proof of size 335GB, which lies beyond the reach of traditional
+checkers [6].
+
+Encoding
+
+EDP1
+
+EDP2
+
+Streamliners
+
+Size of sequence Runtime (in sec)
+
+mult(120,2000)
+mult(150,2000)
+mult(200,1000)
+mult(700,10000)
+mult(700,20000)
+
+13,000
+13,500
+13,900
+15,600
+18,800
+23,900
+27,000
+31,500
+
+286,247
+560,663
+770,122
+4,535
+8,744
+12,608
+45,773
+51,144
+
+walters(800)
+walters(800)
+walters(700)
+walters(730)
+
+81,000
+108,000
+112,000
+127,645
+
+1,364
+4,333
+5,459
+4,501
+
+Table 1: Solution runtimes of searches with and without streamliners. The streamlined
+search leads to new lower bounds for the 2 EDP problems.
+
+In terms of the inductive construction described in the previous section, we can generate sequences whose discrepancy modp is 1, for p in 1, 3, 5, 7, and 9, while it also
+generates sequences of discrepancy modp equal to 2 for p in 11, 13, 15, 17, 25, 27, 45,
+and 81. Overall, this proves that one can take any sequence x of length |x| and discrepancy C and generate one of length 9|x| and of discrepancy C + 1, or of length
+81|x| and of discrepancy C + 2. As a result, this provides a new bound for the case
+of discrepancy 4, and proves E1 (4) > 9 ∗ 127645 = 1, 148, 805. Interestingly, such a
+long sequence suggests that the proof of the Erdos conjecture for C > 3 may require
+additional insights and analytical proof, beyond the approach proposed in this work.
+
+Conclusions
+In this paper, we address the Erdos discrepancy problem for general sequences as well
+as for completely multiplicative sequences. We adapt a SAT encoding previously pro-
+
+8
+
+posed and investigate streamlining methods to speed up the solving time and understand additional structures that occur in some solutions. Overall, we substantially improve the best known lower bound for discrepancy 3 from 17, 001 to 127, 646. In addition, we claim that this bound is tight, as suggested by the unsat proof generated
+by Lingeling. Finally, we propose construction rules to inductively generate longer
+sequences of limited discrepancy.
+
+Acknowledgments
+This work was supported by the National Science Foundation (NSF IIS award, grant
+1344201). The experiments were run on an infrastructure supported by the NSF Computing research infrastructure for Computational Sustainability grant (grant 1059284).
+
+
+
+Stochastic algorithms are among the best for
+solving computationally hard search and rea­
+soning problems. The runtime of such pro­
+cedures is characterized by a random vari­
+able. Different algorithms give rise to differ­
+ent probability distributions. One can take
+advantage of such differences by combining
+several algorithms into a portfolio, and run­
+ning them in parallel or interleaving them
+on a single processor.
+We provide a de­
+tailed evaluation of the portfolio approach
+on distributions of hard combinatorial search
+problems. We show under what conditions
+the portfolio approach can have a dramatic
+computational advantage over the best tra­
+ditional methods.
+
+1
+
+Introduction
+
+Randomized algorithms are among the best current
+algorithms for solving computationally hard problem.
+Most local search methods for solving combinatorial
+optimization problems have a stochastic component,
+both to generate an initial candidate solution, as well
+as to choose among good local improvements during
+the search. Complete backtrack-style search methods
+often also use an element of randomness in their value
+and variable selection in case of ties. The runtime of
+these algorithms varies per run on the same problem
+instance, and therefore can be characterized by a prob­
+ability distribution. The performance of algorithms
+can also vary dramatically among different problem
+instances. In this case, we want to consider the per­
+formance profile of the algorithm over a spectrum of
+problem instances.
+Carla P. Gomes works for Rome Laboratory
+search Associate.
+
+as
+
+a Re­
+
+Given the diversity in performance profiles among
+algorithms, various approaches have been developed
+to combine different algorithms to take into account
+the computational resource constraints and to opti­
+mize the overall performance. These considerations
+led to the development of anytime algorithms (Dean
+and Boddy 1988), decision theoretic metareasoning
+and related approaches (Horvitz and Zilberstein 1996;
+Russell and Norvig 1995), and algorithm portfolio de­
+sign (Huberman et al. 1997). Despite the numer­
+ous results obtained in these areas, so far they have
+not been exploited much by the traditional commu­
+nities that study hard computational problems, such
+as operations research (OR), constraint satisfaction
+(CSP), theorem proving, and the experimental algo­
+rithms community.
+In order to bridge this gap, we study the possibility of
+combining algorithms in the context of the recent re­
+sults concerning the inherent complexity of computa­
+tionally hard search and reasoning problems. We will
+provide a rigorous empirical study of the performance
+profiles of several of the state-of-the-art search meth­
+ods on a distribution of hard search problems. Our
+search problems are based on the so-called quasigroup
+completion task, defined below. For this particular
+combinatorial search problem, we can vary the compu­
+tational difficulty and the amount of inherent problem
+structure in a controlled manner. This enables us to
+study different aspects of the algorithm performance
+profiles.
+Our studies reveal that in many cases the performance
+of a single algorithm dominates all others, on the prob­
+lem class under consideration. This may be due to
+the fact that heuristics are often highly tuned for par­
+ticular problem domains. Having a single algorithm
+that dominates over the whole spectrum of problem in­
+stances prevents any possible payoff of combining dif­
+ferent algorithms. However, we also identify several in­
+teresting problem classes where no single method dom­
+inates. We will show that on those problem classes,
+
+Algorithm Portfolio Design: Theory vs. Practice
+
+191
+
+designing a portfolio of several algorithms gives a dra­
+
+to the original problem of finding an arbitrary latin
+
+matic improvement in terms of overall performance.
+
+square.
+
+In addition, we also show that a good strategy for de­
+
+values is as a set of additional problem constraints to
+
+signing a portfolio is to combine many short runs of
+
+the basic structure of the quasigroup.
+
+the same algorithm.
+
+The effectiveness of such port­
+
+folios explains the common practice of "restarts" for
+stochastic procedures, where the same algorithm is run
+repeatedly with different initial seeds for the random
+number generator. (For related work on the effective­
+ness of restarts, see e.g., Aldous and Vazirani 1994;
+Ertel 1991; Selman and Kirkpatrick 1996.)
+
+Another way to look at these pre-assigned
+
+There is a natural formulation of the problem as a
+Constraint Satisfaction Problem. We have a variable
+
+for each of the N2 entries in the multiplication table of
+the quasigroup, and we use constraints to capture the
+requirement of having no repeated values in any row or
+column. All variables have the same domain, namely
+the set of elements Q of the quasigroup. Pre-assigned
+
+Our results suggest that the various ideas on flexible
+
+values are captured by fixing the value of some of the
+
+computation can indeed play a significant role in al­
+
+variables.
+
+gorithm design, complementing the more traditional
+methods for computationally hard search and reason­
+ing problems.
+
+Colbourn (1983) showed the quasigroup completion
+problem to be NP-complete.
+
+In previous work, we
+
+identified a clear phase transition phenomenon for the
+
+The paper is organized as follows.
+
+In the next sec­
+
+quasigroup completion problem (Gomes and Selman
+
+tion, we introduce our benchmark problem domain:
+
+1997).
+
+the quasigroup completion problem. We also discuss
+
+observe that the costs peak roughly around the same
+
+See Figures 1 and 2.
+
+From the figures, we
+
+the theoretical complexity of the problem. In section
+
+ratio (approximately 42% pre--assignment) for differ­
+
+3, we give the performance distribution profiles for sev­
+
+ent values of N. (Each data point is generated using
+
+eral complete stochastic search methods on our prob­
+
+1,000 problem instances. The pre-assigned values were
+
+lem domain. Section 4, we design and evaluate various
+
+randomly generated.) This phase transition with the
+
+algorithm portfolios. In section 5, we summarize our
+
+corresponding cost profile allows us to tune the diffi­
+
+results and discuss future directions.
+
+culty of our problem class by varying the percentage
+of pre-assigned values.
+
+2
+
+A Structured Hard Search Problem
+
+An interesting application area of latin squares is the
+design of statistical experiments. The purpose of latin
+squares is to eliminate the effect of certain system­
+
+In order to study the performance profile of differ­
+
+atic dependency among the data (Denes and Keedwell
+
+ent search strategies, we derive generic distributions
+
+197 4). Another interesting application is in scheduling
+
+of hard combinatorial search problems from the do­
+
+and timetabling. For example, latin squares are useful
+
+main of finite algerbra. In particular, we consider the
+
+in determining intricate schedules involving pairwise
+
+quasigroup domain. A quasigroup is an ordered pair
+
+meetings among the members of a group (Anderson
+
+( Q,
+
+·
+
+)
+
+,
+
+where Q is a set and
+
+()
+
+on Q such that the equations
+
+·
+
+a
+
+is a binary operation
+·
+
+x =
+
+b and
+
+y
+
+·
+
+a
+
+::: b
+
+a, b in
+Q. The order N of the quasigroup is the cardinality of
+the set Q. The best way to understand the structure
+of a quasigroup is to consider the N by N multipli­
+
+are uniquely solvable for every pair of elements
+
+cation table as defined by its binary operation. The
+constraints on
+
+a
+
+quasigroup are such that its multipli­
+
+cation table defines a Latin square. This means that in
+each row of the table, each element of the set Q occurs
+
+1985).
+
+The natural perturbation of this problem is
+
+the problem of completing a schedule given a set pre­
+assigned meetings.
+The quasigroup domain has also been extensively used
+in the area of automated theorem proving.
+
+In this
+
+community, the main interest in this domain has been
+driven by questions regarding the existence and nonex­
+istence of quasigroups with additional mathematical
+properties (Fujita et al. 1993; Lam et al. 1989).
+
+exactly once; similarly, in each column, each element
+occurs exactly once (Denes and Keedwell 1974).
+An incomplete
+
+or
+
+partial latin square
+
+3
+
+Computational Cost Profiles
+
+P is a partially
+
+filled N by N table such that no symbol occurs twice
+
+We will now consider the computational cost of solv­
+
+in a row or a column.
+
+ing the completion problem for different search strate­
+
+The Quasigroup Completion
+
+Problem is the problem of determining whether the
+
+gies. As our basic search procedure, we use a complete
+
+remaining entries of the table can be filled in such a
+
+backtrack-style search method.
+
+way that we obtain a complete latin square, that is, a
+
+such procedures can vary dramatically depending on
+
+full multiplication table of a quasigroup. We view the
+
+the way one selects the next variable to branch on (the
+
+pre-assigned values of the latin square as a perturbation
+
+"variable selection strategy") and in what order the
+
+The performance of
+
+192
+
+Gomes and Selman
+
+crdu- 11-+­
+order 12 -+-­
+order lJ. ·B··
+order U ..��:.­
+order lS ..-...•
+
+lOGO
+
+100
+
+'·'
+0.5
+f.r.action. of prEo-asaigned eluents
+
+Figure
+
+1:
+
+0.7
+
+0.6
+
+The Complexity of Quasigroup Completion
+
+oL-�--�--�--��---L--�_j
+0
+
+0 .•
+
+10
+
+lS.
+20
+25
+30
+JS
+-40
+tl.l.Wbollr of backtra-cks for first solution
+
+45
+
+50
+
+.-------.---..--.---r---,
+
+(Log Scale)
+
+.-·
+
+order 12 +­
+order 'LJ -+-··
+
+order H ·B··
+order 15 ·IC·"''
+
+0.8
+
+.
+
+�
+
+i
+
+0.6
+
+'
+
+�
+0
+
+�
+
+�
+
+0.1
+
+o L-----�----L--�--�
+0
+
+'
+.
+nuab.lt:r of ba.ektra.ek$ fQt :fit.:;:t soll.ltiQt\
+
+10
+
+0.2
+
+Figure 3: Finding quasigroups of order 20 (no pre­
+0.1
+
+0.2
+
+0.3
+0' -4
+0. 5
+0. �
+faction of proe-assiqned el1111ents
+
+0. 7
+
+0'
+
+�
+
+0. 9
+
+assigned values).
+
+1979).
+
+Figure 2: Phase Transition for the Completion Prob­
+
+called the Brelaz heuristics (Brelaz
+
+lem
+
+laz heuristic was originally introduced for graph color­
+
+The Bre­
+
+ing procedures. It provides one of the most powerful
+possible values are assigned to a variable (the "value
+selection strategy"). There is a large body of work in
+
+graph-coloring and general CSP heuristics (Trick and
+Johnson
+
+1996).
+
+both the CSP and OR communities exploring different
+
+The Brelaz heuristic specifies a way for breaking ties in
+
+search strategies.
+
+the First-fail rule: If two variables have equally small
+
+One of the most effective strategies is the so-called
+First-Fail heuristic.1
+
+In the First-Fail heuristic, the
+
+next variable to branch on is the one with the small­
+est remaining domain (i.e., in choosing a value for the
+variable during the backtrack search, the search pro­
+cedure has the fewest possible options left to explore
+- leading to the smallest branching factor). We con­
+sider a popular extension of the First-Fail heuristic,
+1It's really a prerequisit for any reasonable bactrack­
+In theorem proving and Boolean
+style search method.
+satisfiability, the rule corresponds to the powerful unit­
+propagation heuristic.
+
+remaining domains, the Brelaz heuristic proposes to
+select the variable that shares constraints with the
+largest number of the remaining unassigned variables.
+A natural variation on this tie-breaking rule is what we
+call the "reverse Berlaz" heuristic, in which preference
+is given to the variable that shares constraints with
+the smallest number of unassigned variables. Any re­
+maining ties after the (reverse) Brelaz rule are resolved
+randomly. One final issue left to specify in our search
+procedure is the order in which the values are assigned
+to a variable. In the standard Brelaz, value assignment
+is done in lexicographical order
+
+(i.e.,
+
+systematic). In
+
+our experiments, we consider four stragies:
+
+193
+
+Algorithm Portfolio Design: Theory vs. Practice
+
+0.9
+0.8
+o.1
+
+...
+o.s
+
+..
+
+�:::=======::·=··�----·---
+
+yrr
+
+brel.tzs .......
+brela.z:t
+rbrelus
+rbrel4zr
+
+-+-··
+·�··
+
+·EJ··
+
+0.1
+0.1
+0.2
+0.1
+
+. �--��--�--�
+{'I
+
+10
+
+15
+20
+2S30
+JS
+-to
+nwWer of be.c:hrac:k:s for Ur5t solution
+
+45
+
+1000
+')-QO
+numbe:r of ba-ck:tra-:ks fQr
+
+SO
+
+0.1
+
+...
+
+first
+
+I
+
+1500
+solution
+
+"
+
+/
+
+o.J
+
+0.2
+
+.
+
+'
+
+number of �cktuclcs for hrst sohotic>n
+
+10
+
+0 �--��--�---L--�
+'
+8
+Hl
+12
+14
+U.
+!8
+20
+0
+nll;JUlll!r (lf b«cku·ac:ks for first solutiQ:n
+
+F igure 4: Find ing quasigroups of order 20 with 10%
+
+Fi gure 5: Finding quasigroups of order 20 with 20%
+
+pre-assigned values.
+
+pre-assigned values.
+
+•
+
+Berlaz-S
+
+- Berlaz with systematic value selec­
+
+tion,
+
+part of the p rofile .
+
+•
+
+Berlaz-R-- Berlaz with random value selection,
+
+•
+
+R-Berlaz-S
+
+•
+
+the overall profile; the bottom part gives the initial
+
+- Reverse Berlaz with systematic
+
+First, we note that that R-Brelaz-R dominates R­
+Brelaz-S over the full profile. In other words, the cu­
+mulative relative frequency curve for R-Brelaz-R lies
+
+value selection, and
+
+above that of R-Brelaz-S at every point along the x­
+
+R-berlaz-R- Reverse Brelaz with random value
+
+As we will see below, we often encounter such pat­
+
+selecti on .
+
+terns, where one strategy simply consistently outper­
+
+axis. R-Berlaz-S, in turn, strictly dominates Brelaz-R.
+
+forms strategies.
+Figure 3, shows the performance profile of our four
+
+strategies for the problem of finding a quasigroup of
+order 20 (no pre-assigned values).
+
+Each curve gives
+
+the cumulative distribution obtained for each strat­
+
+egy by solving the problem 10,000 times.
+
+The cost
+
+(horizontal axis) is measured in number of backtracks,
+which is directly proportional to the total runtime of
+our strategies. For exampl e, the figure shows that R­
+Berlaz-R, finished roughly 80% of the 10,000 runs in 15
+b ackt racks or less. The top panel of the figure shows
+
+Unfortunately, this leaves no room
+for combining strategies: one simply picks the best
+strategy.
+
+This may explain why some of the ideas
+
+about combining algorithms has not received as much
+attention in the traditional communities that deal with
+hard computational problems.2
+From the perspective of combining algorithms, what is
+most interesting, however, is that in the initial part of
+2There is still the issue of multiple runs with the same
+method. We'll retum to this below.
+
+194
+
+Gomes and Selman
+
+showing the inconsistency of a quasigroup comple­
+tion problem. The instance in question has 43% pre­
+assigned values. Here we again obeserve that Brelaz-S
+
+br-elus ......_
+brelaz::r -+-­
+rbrel4Z.S ·El··
+rbroel.,.-zr ·-M
+
+0.9.0
+o.u
+
+is somewhat better at finding inconsistencies quickly
+but again R-Brelaz-R dominates for most of the pro­
+file. Again, the good initial performance of Brelaz-S
+
+0.9.2
+
+can be exploited by combining many short runs, as we
+
+0.9
+
+will see below.
+
+o0.88
+'0.86
+0.84
+0.82
+0.8
+
+brel.'!.%5 +-r-brelazr -t--·
+
+Q.g
+
+,_.
+
+t.......--'---�----1.--�_j
+
+0
+
+500
+
+1000
+1500
+.2Q{l{l
+numbe:r of N-::k.tr-!!1-cks for tint �olution
+
+3000
+
+2500
+
+0.7
+
+g
+
+!
+0.7
+
+b-tli!h.n:
+brl!laH
+rbrehc;s
+rbrehzr
+
+0.6
+
+0.!
+0.5
+0.4
+
+-+­
+-+-·
+-O·
+-)1(�
+
+0.3
+0.2
+
+0.1
+
+0.3
+
+nuaber ot backtrae.ks
+
+0.3
+
+1000
+
+0.1
+0 '-----�----�--�
+10
+t
+'
+0
+n>aber of b•cktncks for first solution
+
+1
+
+0.15
+
+.
+
+.<>
+�
+0
+
+Figure 6: Finding quasigroups of order 10 at the phase
+transition.
+
+1
+
+<
+.
+..,
+
+�
+
+0.1
+
+0.0'5
+
+the profile (see bottom panel, Figure 3), Brelaz-S dom­
+inates the R-Brelaz-R. Intuitively, Brelaz-S is better
+than R-Berlaz-R at finding solutions quickly.
+
+How­
+
+ever, in the latter part of the cumulative distribution
+
+ntmber of backt:rac:ks
+
+(for more than five backtracks), R-Brelaz-R dominates
+Brelaz-S. In a sense, R-Brelaz-R gets relatively better
+when the search gets harder. As we will see in the next
+section, we can exploit this in our algorithm portfolio
+
+Figure 7: Showing inconsistency of quasigroups com­
+pletion (order 10 with 43% preassigned values).
+
+design.
+Figure 4, shows the performance profiles for quasi­
+groups with 10% pre-assigned values.
+
+We see essen­
+
+4
+
+Portfolio Design
+
+A
+
+portfolio of algorithms is
+
+tially the same pattern as in Figure 3, but the re­
+gion where Brelaz-S dominates is relatively smaller.
+When we increase the percentage of pre-assigned val­
+ues (20% pre-assigned, Figure
+
+5), we see that R-Brelaz­
+
+a collection of different al­
+
+gorithms and/or different copies of the same algorithm
+running on different processors.3 Here we consider the
+
+R completely dominates the other strategies over the
+
+case of independent runs without interprocess commu­
+
+whole problem spectrum. This pattern continues for
+
+nication.
+
+the higher numbers of pre-assigned values (Figure 6, at
+the phase transition with roughly 40% pre-assigned).
+Finally, Figure 7 gives the performance profile for
+
+30ne can also consider the somewhat more general case
+of interleaving the execution of algorithms on one or more
+processors.
+
+195
+
+Algorithm Portfolio Design: Theory vs. Practice
+Portfolio for 2 processors
+
+" " ,-----,---,--.--,---.----T---,----,---.--.---,
+2
+
+bnl�zs.
+
+{l
+
+Portfolio for 2{l
+
+0•
+
+processors
+
+., ,------.--,---.--.,--..--,
+0
+
+rbu-la r
+
+1400
+
+br�lazs,
+
+20 r-
+
+@'1 zr
+
+0.<
+
+�
+
+1200
+
+O.JS
+
+]
+�
+
+lODO
+
+900
+
+�'
+
+'"
+
+��
+
+<00
+
+O.J
+
+O.lS
+
+�
+
+1
+
+iOO
+
+O.i
+btelazs,
+
+1 rbrel4zr
+
+0.15
+
+L----L.--'--�---'--�--'---'--�---'--...__j
+___
+20
+
+o.:t6
+
+lns,
+
+o.38
+
+0 rbnlaz:r
+
+ru.
+
+{l.42
+
+standard deviation {risk!
+
+o.u
+
+Figure 8: Portfolio for two processors combining Bre­
+
+Figure
+
+laz and R-Brelaz-R.
+
+Brelaz and R-Brelaz-R.
+Portfolio for
+
+5
+
+\l.t6
+
+o.u
+
+..t•n-dll.rd d"vi�tion
+
+processors5
+
+o.s
+
+o.s�
+
+o.s4
+
+o.s-s
+
+o.ss
+
+lriskJ
+
+10: Portfolio for twenty processors combining
+
+within a set that is the best, both in terms of expected
+br�ltJ:u,
+
+r-br� a:z r
+
+value and risk. This set of portfolios corresponds to the
+efficient set or efficient frontier, following terminology
+
+'·'
+
+used in the theory of mathematical finance.
+
+Within
+
+this set, in order to minimize the risk, one has to dete­
+riorate the expected value or, in order to improve the
+expected value of the portfolio, one has to increase the
+risk.
+In this context, where we characterize a portfolio in
+'(l
+
+bt�laz�,
+
+'i
+
+terms of its mean and variance, combining different
+
+rbrdll.zr
+
+algorithms into a portfolio only makes sense if they
+exhibit different probability profiles and none of them
+
+2 brel<!�zs, J rbr-elatr
+I L--����-�-�-�-�-�-�
+0
+
+'SO
+
+lOti
+
+l'i-D
+
+JC.D
+
+250
+
+standar-d deviation
+
+300.
+
+�risk.l
+
+J'SO
+
+400
+
+.t'iO
+
+Figure 9: Portfolio for five processors combining Bre­
+laz and R-Brelaz-R.
+
+dominates the others over the whole spectrum of prob­
+lem instances.
+
+As noted earlier, algorithm
+
+bution of algorithm
+
+We are considering Las Vegas type algorithms, i.e.,
+
+A domi­
+
+nates algorithm B if the cumulative frequency distri­
+
+A lies above the cumulative fre­
+
+quency distribution of algorithm B for all points.4
+
+stochastic algorithms that always return a model sat­
+
+Let us consider a set of two algorithms, algorithm 1
+
+isfying the constraints of the search problem or demon­
+
+and algorithm 2. Let us associate a random variable
+
+strate that no such model exists (Motwani and Ragha­
+
+with each algorithm: AI -the number of backtracks
+
+van 1995). The computational cost of the portfolio is
+
+that algorithm 1 takes to find the first solution or to
+
+therefore a random variable. The expected computa­
+
+prove that a solution does not exist; A2 -the number
+
+tional cost of the portfolio is simply the expected value
+
+of backtracks that algorithm 2 takes to find the first
+
+of the random variable associated with the portfolio
+
+solution or to prove that a solution does not exist.
+
+and its standard deviation is a measure of the "disper­
+sion" of the computational cost obtained when using
+the portfolio of algorithms.
+
+In this sense, the stan­
+
+dard deviation is a measure of the risk inherent to the
+portfolio.
+
+Let us assume that we have
+
+N processors and that we
+
+design a portfolio using n1 processors with algorithm
+1 and n2 processors with algorithm 2. So,
+
+N
+
+=
+
+nl +
+
+n2. Let us define the random variable associ�ted with
+this portfolio: X - the number of backtracks that the
+
+The main motivation to combine different algorithms
+
+portfolio takes to find the first solution or to prove that
+
+into a portfolio is to improve on the performance of the
+
+a solution does not exist.
+
+component algorithms, mainly in terms of expected
+computational cost but also in terms of the overall risk.
+As we will show, some portfolios are strictly preferrable
+to others, in the sense that they provide a lower risk
+and also a lower expected computational cost.
+
+How­
+
+ever, in some cases, we cannot identify any portfolio
+
+The probability distribution of X is a "weighted" prob­
+ability distribution of the probability distributions of
+algorithm 1 and algorithm 2.
+4 Another
+
+More precisely, the
+
+criterion for combining algorithms into a port­
+
+folio is given by the algorithm covariance.
+
+196
+
+Gomes and Selman
+
+probability that X = x is given by the probability
+that one processor takes exactly x backtracks and all
+the other ones take x or more backtracks to find a
+solution or to prove that a solution does not exist.
+Let us assume that we have N processors and our port­
+folio consists of N copies of algorithm 1. In this case,
+P[X=x] is given by the probability that one proces­
+sor take exactly x backtracks and the other N
+1
+take more than x backtracks, plus the probability that
+two processors take exactly x backtracks and the other
+-
+
+(N-2) one takes more than x backtracks, etc., plus the
+probability that all the processors take exactly x back­
+tracks to find a solution or to prove that a solution does
+not exist. The following expression gives the probabil­
+ity function for such a portfolio.
+
+N and n2
+
+Given N processors, and let nl
+P[X=x] is given by
+
+{; ( � ) P[Al
+N
+
+=
+
+x]i P[Al
+
+>
+
+0.
+
+x](N-i)
+
+To consider two algorithms, we have to generalize the
+above expression, considering that X = x can occur
+just within the processors that use algorithm 1, or just
+within the processors that use algorithm 2 or within
+both. As a result, the probability function for a port­
+folio with two algorithms, is given by the following
+expressiOn:
+Given N processors, n1 such that 0 <= nl <= N ,
+and n2
+N - nl, P[X=x] is given by
+=
+
+�} P[Al
+EE ( )
+N
+
+nl
+
+( 7,;) P[A2
+
+=
+
+xfP[Al > x](nl-i')x
+
+=
+
+xf P[A2 > x](n2-i")j
+
+The value of i11 is given by i11 = i i', and the term in
+the summation is 0 whenever i11 < 0 or i11 > n2.
+-
+
+In the case of a portfolio involving two algorithms the
+probability distribution of the portfolio is a summation
+of a product of two expressions, each one correspond­
+ing to one algorithm. In the case of a portfolio com­
+prising M different algorithms, this probability func­
+tion can be easily generalized, by having a summation
+of a product of M expressions, each corresponding to
+an algorithm.
+Once we derive the probability distribution for the ran­
+dom variable associated with the portfolio, the calcu­
+lation of the its expected valt.�e and standard deviation
+is straightforward.
+
+4.1
+
+Empirical results for portfolio design
+
+We now design different portfolios based on our perfor­
+mance profiles from Section 3. We focus on the case of
+finding a quasigroup of order 20 with no-preassigned
+values. The performance profiles are given in Figure
+3. Note that this is an interesting case from the port­
+folio design perspective because Brelaz-S dominates in
+the initial part of the distribution, whereas R-Brelaz-R
+dominates in the latter part.
+Figures 8, 9, and 10 give the expected values and the
+standard deviations of portfolios for 2, 5, and 20 pro­
+cessors, respectively. (Results derived using the for­
+mula given above.) We see that for 2 processors (Fig­
+ure 8), the portfolio consisting of two copies of the
+R-Brelaz-R has the best expected value and the low­
+est standard deviation. This portfolio dominates the
+two other 2-processor portfolios.
+When we increase the number of processors, we ob­
+serve an interesting shift in the optimal portfolio mix.
+For example, for 5 processors, using 2 Brelaz-S gives a
+better expected value at only a slight increase in the
+risk (standard deviation) compared to zero Brelaz-S.
+In this case, the efficient set comprises three portfo.­
+lios. One with 5 R-Brelaz-R, one with 1 Brelaz-S and
+4 R-Brelaz-R, and one with 2 Brelaz-S and 3 R-Brelaz­
+R. The situation changes even more dramatically if
+we go to yet more processors. In particular, with 20
+processors (Figure 10), the best portfolio corresponds
+to using all processors to run the Brelaz-S strategy
+(the lowest expected value and the lowest standard
+deviation). The intuitive explanantion for this is that
+by running many copies of Brelaz-S, we have a good
+chance that at least one of them will find a solution
+quickly. This result is consistent with the common
+use of "random restarts" in stochastic search methods
+in practical applications. Our portfolio analysis also
+gives the somewhat counter-intuitive result that, even
+when given two stochastic algorithms, where neither
+strictly dominates the other, running multiple copies
+of a single algorithm is preferrable to a mix of algo­
+rithms (Figure 8 and Figure 10).
+
+5
+
+Conclusions and Future Work
+
+We have provided concrete empirical results showing
+the computational advantage of a portfolio approach
+for dealing with hard combinatorial search and rea­
+soning problems as compared to the best more tra­
+ditional single algorithm methods. Our analysis also
+showed what properties of the problem instance distri­
+butions lead to the largest payoff for using a portfolio
+approach in practice. Finally, we saw how the use of
+random restarts of a good stochastic method is often
+
+Algorithm Portfolio Design: Theory vs. Practice
+
+the optimal strategy. These results suggest that ideas
+developed in the flexible computation community can
+play a significant role in practical algorithm design.
+Acknowledgments
+
+We would like to thank Karen Alguire for developing
+an exciting tool for experimenting with the quasigroup
+completion problem. We also would like to thank Nort
+Fowler for many useful suggestions and discussions,
+and Neal Glassman for suggesting the domain of com­
+binatorial design as a potential benchmark domain.
+The first author is a research associate with Rome
+Laboratory and is funded by the Air Force Office of
+Scientific Research, under the New World Vistas Ini­
+tiative (F30602-97-C-0037 and AFOSR NWV project
+2304, LIRL 97RL005N25).
+
+Horvitz, E. and Klein, A. (1995) Reasoning, metareason­
+ing, and mathematical truth: studies of theorem prov­
+ing under limited resources.
+Proc. of the Eleventh
+Conference on Uncertainty in Artificial Intelligence
+(UAI-95}, August 1995.
+Horvitz, E. and Z ilberstein S. (1996) ( Eds. ) Proceedings of
+Flexible Computation, AAAI Fall Symposium, Cam­
+bridge, MA, 1996.
+Huberman, B.A., Lukose, R.M., and Hogg, T. (1997). An
+economics approach to hard computational problems.
+Science, 265, 51-54.
+Hogg, T., Huberman, B.A., and W illiams , C.P. (Eds.)
+(1996). Phase Transitions and Complexity. Artificial
+Intelligence, 81 (Spec. Issue; 1996)
+Kirkpatrick, S. and Selman, B. (1994) Critical Behavior
+in the Satisfiability of Random Boolean Expressions.
+Science, 264 (May 1994) 1297-1301.
+Lam, C., Thiel, L., and Swiercz, S. (1989) Can. J. Math.,
+Vol. XLI, 6, 1989, 1117-1123.
+
+
+
+
+We describe research and results centering on
+the construction and use of Bayesian mod­
+els that can predict the run time of problem
+solvers. Our efforts are motivated by observa­
+tions of high variance in the time required to
+solve instances for several challenging prob­
+lems. The methods have application to the
+decision-theoretic control of hard search and
+reasoning algorithms. We illustrate the ap­
+proach with a focus on the task of predict­
+ing run time for general and domain-specific
+solvers on a hard class of structured con­
+straint satisfaction problems. We review the
+use of learned models to predict the ultimate
+
+length of a trial, based on observing the be­
+havior of the search algorithm during an early
+phase of a problem session. Finally, we dis­
+cuss how we can employ the models to inform
+dynamic run-time decisions.
+1
+
+Introduction
+
+The design of procedures for solving difficult problems
+relies on a combination of insight, observation, and it­
+erative refinements that take into consideration the be­
+havior of algorithms on problem instances. Complex,
+impenetrable relationships often arise in the process of
+problem solving, and such complexity le ads to uncer­
+tainty about the basis for observed efficiencies and in­
+effi.ciences associated with specific problem instances.
+We believe that recent advances in Bayesian methods
+for learning predictive models from data offer valuable
+tools for designing, controlling, and understanding au­
+tomated reasoning methods.
+We focus on using machine learning to characterize
+variation in the run time of instances observed in in­
+herently exponential search and reasoning problems.
+Predictive models for run time in this domain could
+
+Design, real-rime control,
+
+World, Context
+
+j
+
+Contex.tual
+
+evidence
+
+insights
+
+Run time
+
+Structural
+evidence
+
+Ex.ecution
+evidence
+
+GQlliJ
+
+Feature refinement, insights
+
+Figure 1: Bayesian approach to problem solver design
+and optimization. We seek to learn predictive mod­
+els to refine and control computational procedures as
+well as to gain insights about problem structure and
+hardness.
+
+provide the basis for more optimal decision making at
+the microstructure of algorithmic activity as well as
+inform higher-level policies that guide the allocation
+of resources.
+Our overall methodology is highlighted in Fig. 1. We
+seek to develop models for predicting execution time
+by considering dependencies between execution time
+and one or more classes of observations. Such classes
+include evidence about the nat ure of the generator that
+has provided instances, about the structural properties
+of instances noted before problem solving, and about
+the run-time behaviors of solvers as they struggle to
+solve the instances.
+The research is fundamentally iterative in nature. We
+exploit learning methods to identify and continue to
+
+refine observational variables and models, balancing
+the predictive power of multiple observations with the
+cost of the real-time evaluation of such evidential dis-
+
+HORVITZ ET AL.
+
+236
+
+tinctions. We seek ultimately to harness the learned
+models to optimize the performance of automated rea­
+soning procedures. Beyond this direct goal, the overall
+exploratory process promises to be useful for providing
+new insights about problem hardness.
+We first provide background on the problem solving
+domains we have been focusing on. Then, we describe
+our efforts to instrument problem solvers and to learn
+predictive models for run time. We describe the for­
+mulation of variables we used in data collection and
+model construction and review the accuracy of the in­
+ferred models. Finally, we discuss opportunities for
+exploiting the models. We focus on the sample appli­
+cation of generating context-sensitive restart policies
+in randomized search algorithms.
+2
+
+Hard Search Problems
+
+UAI2001
+
+distinct symbols in which some cells may be empty
+but no row or column contains the same element twice.
+The Quasigroup Completion Problem (QCP) can be
+stated as follows: Given a partial quasigroup of order
+n can it be completed to a quasigroup of the same
+order?
+
+n
+
+Figure 2: Graphical representation of the quasigroup
+problem. Left: A quasigroup instance with its comple­
+tion. Right: A balanced instance with two holes per
+row/column.
+
+We have focused on applying learning methods to char­
+
+acterize run times observed in backtracking search pro­
+cedures for solving NP-complete problems encoded as
+constraint satisfaction (CSP) and Boolean satisfiabil­
+ity (SAT). For these problems, it has proven extremely
+difficult to predict the particular sensitivities of run
+time to changes in instances, initialization settings,
+and solution policies. Numerous studies have demon­
+strated that the probability distribution over run times
+exhibit so-called heavy-tails [1 0 ]. Restart strategies
+have been used in an attempt to find settings for an
+instance that allow it to be solved rapidly, by avoiding
+costly journeys into a long tail of run time. Restarts
+are introduced by way of a parameter that terminates
+the run and restarts the search from the root with a
+new random seed after some specified amount of time
+passes, measured in choices or backtracks.
+Progress on the design and study of algorithms for
+SAT and CSP has been aided by the recent devel­
+opment of new methods for generating hard random
+problem instances. Pure random instances, such as
+k-Sat, have played a key role in the development of al­
+gorithms for propositional deduction and satisfiability
+testing. However, they lack the structure that char­
+acterizes real world domains. Gomes and Selman [9]
+introduced a new benchmark domain based on Quasi­
+groups, the Quasigroup Completion Problem (QCP) .
+QCP captures the structure that occurs in a variety of
+real world problems such as timetabling, routing, and
+statistical experimental design.
+A quasigroup is a discrete structure whose multipli­
+cation table corresponds to a Latin Square. A Latin
+Square of order n is an n x n array in which n dis­
+tinct symbols are arranged so that each symbol occurs
+once in each row and column. A partial quaisgroup (or
+Latin Square) of order n is an n x n array based on
+
+QCP is an NP-complete problem [5] and random in­
+stances have been found to exhibit a peak in prob­
+lem hardness as a function of the ratio of the number
+of uncolored cells to the total number of cells. The
+peak occurs over a particular range of values of this
+parameter, referred to as a region of phase transition
+[9, 2]. A variant of the QCP problem, Quasigroup with
+Holes (QWH) [ 2] , includes only satisfiable instances.
+The QWH instance-generation procedure essentially
+inverts the completion task: it begins with a randomly­
+generated completed Latin square, and then erases col­
+ors or "pokes holes." Completing QWH is NP-Hard
+[2]. A structural property that affects hardness of in­
+stances significantly is the pattern of the holes in row
+and columns. Balancing the number holes in each row
+and column of instances has been found to significantly
+increase the hardness of the problems [1].
+3
+
+Experiments with Problem Solvers
+
+We performed a number of experiments with Bayesian
+learning methods to elucidate previously hidden dis­
+tinctions and relationships in SAT and CSP reason­
+ers. We experimented with both a randomized SAT
+algorithm running on Boolean encodings of the QWH
+and a randomized CSP solver for QWH. The SAT al­
+gorithm was Satz-Rand [11], a randomized version of
+the Satz system of Li and Anbulagan [20]. Satz is the
+fastest known complete SAT algorithm for hard ran­
+dom 3-SAT problems, and is well suited to many inter­
+esting classes of structured satisfiability problems, in­
+cluding SAT encodings of quasigroup completion prob­
+lems [10] and planning problems [17]. The solver is a
+version of the classic Davis-Putnam (DPLL) algorithm
+[7] augmented with one-step lookahead and a sophisti-
+
+UAI2001
+
+cated variable
+
+HORVITZ ET AL.
+
+choice heuristic. The lookahead opera­
+
+3.1
+
+237
+
+Formulating Evidential Variables
+
+tion is invoked at most choice points and finds any
+
+choices that would immediately lead
+contradiction after unit propagation; for these,
+the opposite variable assignment can be immediately
+made. The variable ch oice heuristic is based on picking
+a variable that if set would cause the greatest number
+of ternary clauses to be reduced to binary clauses. The
+variable choice set was enlarged by a noise parameter
+of 30%, and value selection was performed determin­
+istically by always branching on 'true' first.
+
+variable/value
+to a
+
+The second backtrack search algorithm we studied is
+randomized version of a specialized CSP solver for
+quasigroup completion problem s, written using the
+ILOG solver constraint programming library. The
+backtrack search algorithm uses as a variable choice
+heuristic a variant of the Brelaz heuristic. Further­
+more, it uses a sophisticated propagation method to
+enforce the constraints that assert that all the colors
+in a row/ column must be different. We refer to such
+a constraint as alldiff. The propagation of the alldiff
+constraint corresponds to solving a matching problem
+on a bipartite graph using a network-flow algorithm
+[9, 26, 24].
+a
+
+learned predictive models for run-time, motivated
+two different classes of target problems. For the
+first class of problem, we assume that a solver is chal­
+lenged by a n instance and must solve that specific
+problem as quickly as possible. We term this the Sin­
+gle Instance problem. In a second class of problem,
+we draw cases from a distribution of instances and are
+required to solve any instance as soon as possible, or
+as many instances as possible for any amount of time
+allocated. We call these challenges Multiple Instance
+problems, and the subproblems as the Any Instance
+and Max Instances problems , respectively.
+We
+
+by
+
+We collected evidence and built models for CSP and
+Satz solvers applied to the QWH problem for both
+the Single In st an ce and Multiple Instances challenge.
+We shall refer to the four problem-solving experiments
+as CSP-QWH-Single, CSP-QWH-Multi, Satz -QW H ­
+Single, and S atz-Q WH- Multi. Building predictive
+Bayesian models for the CSP- Q WH-S ingle and Satz­
+QWH-Single problems centered on gathering data on
+the probabilistic relationships between observational
+variables and run time for single instances with ran­
+domized restarts. Experiments for the CSP-QWH­
+Multi and S atz -Q WH- Multi problems centered on per­
+forming single runs on multiple instances drawn from
+the same instance generator.
+
+We worked to define variables that we believed could
+provide information on problem-solving progress for a
+period of observation in an early phase of runs that we
+refer to as th e observation horizon. The defin iti on of
+variables was initially guided by intuition. However,
+results from our early experiments helped us to refine
+sets of variables and to propose additional candidates.
+We initially explored a large number of variables, in­
+cluding those that were difficult to compute. Although
+we planned ultimately to avoid the use of costly ob­
+servations in real-time forecasting settings, we were
+interested in probing the predictive power and inter­
+dependencies among features regardless of cost. Un­
+der st andin g such informational dependencies promised
+to be useful in understanding the potential losses in
+predictive power with the removal of costly features,
+or substitution of expensive evidence with less expen­
+sive, approximate observations. We eventually limited
+the features explored to those that could be computed
+with low (constant) overhead.
+We sought to collect information about base values as
+well as several variants and combinations of these val­
+ues. For example, we formulated features that could
+capture higher-l evel patterns and dynamics of the state
+of a prob l em solver that could serve as useful probes
+of solution progress. Beyond exploring base observa­
+tions about the program state at particular points in
+a case, we defined new families of observations such as
+first and second derivatives of the base variables, and
+summaries of the status of variables over time.
+
+Rather than include a separate variable in the model
+for each feature at each choice point-which would
+have led to an explosion in the number of variables
+and severely limited generalization-features and their
+dynamics were represented by variables for their sum­
+mary statistics over the observation horizon. The sum­
+mary statistics included initial, final, average, mini­
+mum, and maximum values of the features during the
+observation period. For example, at each choice point,
+the SAT solver recorded the current number of binary
+clauses. The training data would thus included a vari­
+able for the average first derivative of t he number of
+binary clauses during the observation period. Finally,
+for several of the features, we also computed a sum­
+mary statistic that measured the number of times the
+sign of the feature changed from negative to positive
+or vice-versa.
+We developed distinct sets of observational var iables
+for the CSP and Satz solvers. The features for the
+CSP solver included some that were generic to any
+constraint satisfaction problem, such as the number
+of backtracks, the depth of the search tree, and the
+
+HORVITZ ET AL.
+
+238
+
+average domain size of the unbound CSP variables.
+Other features, such as the variance in the distribution
+of unbound CSP variables between different columns
+of the square, were specific to Latin squares. As we
+will see below, the inclusion of such domain-specific
+features was important in learning strongly predictive
+models. The CSP solver recorded 18 basic features
+at each choice point which were summarized by a to­
+tal of 135 variables. The variables that turned out
+to be most informative for prediction are described in
+Sec. 4.1 below.
+The features recorded by Satz-Rand were largely
+generic to SAT. We included a feature for the num­
+ber of Boolean variables that had been set positively;
+this feature is problem specific in the sense that under
+the SAT encoding we used, only a positive Boolean
+variable corresponds to a bound CSP variable (i.e. a
+colored squared). Some features measured the current
+problem size (e.g. the number of unbound variables),
+others the size of the search tree, and still others the
+effectiveness of unit propagation and lookahead.
+We also calculated two other features of special note.
+One was the logarithm of the total number of possible
+truth assignments (models) that had been ruled out
+at any point in the search; this quantity can be effi­
+ciently calculated by examining the stack of assumed
+and proven Boolean variable managed by the DPLL
+algorithm. The other is a quantity from the theory of
+random graphs called .\, that measures the degree of
+interaction between the binary clauses of the formula
+(23]. In all Satz recorded 25 basic features that were
+summarized in 127 variables.
+
+4
+
+Collecting Run-Time Data
+
+For all experiments, observational variables were col­
+lected over an observational horizon of 1000 solver
+choice points. Choice points are states in search pnr
+cedures where the algorithm assigns a value to vari­
+ables heuristically, per the policies implemented in the
+problem solver. Such points do not include the cases
+where variable assignment is forced via propagation of
+previous set values, as occurs with unit propagation,
+backtracking, lookahead, and forward-checking.
+For the studies described, we represented run time as a
+binary variable with discrete states short versus long.
+We defined short runs as cases completed before the
+median of the run times for all cases in each data set.
+Instances with run times shorter than the observation
+horizon were not considered in the analyses.
+
+Models and Results
+
+We employed Bayesian structure learning to infer pre­
+dictive models from data and to identify key variables
+from the larger set of observations we collected. Over
+the last decade, there has been steady progress on
+methods for inferring Bayesian networks from data
+[6, 27, 12, 13]. Given a dataset, the methods typically
+perform heuristic search over a space of dependency
+models and employ a Bayesian score to identify mod­
+els with the greatest ability to predict the data. The
+Bayesian score estimates p(modelldata) by approxi­
+mating p( data lmodel)p( model). Chickering, Hecker­
+man and Meek [4] show how to evaluate the Bayesian
+score for models in which the conditional distributions
+are decision trees. This Bayesian score requires a prior
+distribution over both the parameters and the struc­
+ture of the model. In our experiments, we used a uni­
+form parameter prior. Chickering et al. suggest using
+a structure prior of the form: p(model) r;,fP, where
+0 < ,.. :::; 1 and fp is the number of free parameters in
+the model. Intuitively, smaller values of r;, make large
+trees unlikely a priori, and thus ,.. can be used to help
+avoid overfitting. We used this prior, and tuned r;, as
+described below.
+=
+
+We employed the methods of Chickering et a!. to infer
+models and to build decision trees for run time from
+the data collected in experiments with CSP and Satz
+problem solvers applied to QWH problem instances.
+We shall describe sample results from the data col­
+lection and four learning experiments, focusing on the
+CSP-QWH-Single case in detail.
+4.1
+
+3.2
+
+UAI2001
+
+CSP-QWH-Single Problem
+
+For a sample CSP-QWH-Single problem, we built a
+training set by selecting nonbalanced QWH problem
+instance of order 34 with 380 unassigned variables. We
+solved this instance 4000 times for the training set and
+1000 times for the test data set, initiating each run
+with a random seed. We collected run time data and
+the states of multiple variables for each case over an
+observational horizon of 1000 choice points. We also
+created a marginal model, capturing the overall run­
+time statistics for the training set.
+We optimized the r;, parameter used in the structure
+prior of the Bayesian score by splitting the training set
+70/30 into training and holdout data sets, respectively.
+We selected a kappa value by identifying a soft peak
+in the Bayesian score. This value was used to build a
+dependency model and decision tree for run time from
+the full training set. We then tested the abilities of the
+marginal model and the learned decision tree to pre­
+dict the outcomes in the test data set. We computed
+a classification accuracy for the learned and marginal
+
+UAI2001
+
+HORVITZ ET AL.
+
+models to characterize the power of these models. The
+classification accuracy is the likelihood that the classi­
+fier will correctly identify the run time of cases in the
+test set. We also computed an average log score for
+the models.
+Fig. 3 displays the learned Bayesian network for this
+dataset. The figure highlights key dependencies and
+variables discovered for the data set. Fig. 4 shows the
+decision tree for run time.
+The classification accuracy for the learned model is
+0.963 in contrast with a classification accuracy of 0.489
+for the marginal model. The average log score of the
+learned model is -0.134 a.nd the average log score of
+the marginal model was -0.693.
+Because this was both the strongest and most com­
+pact model we learned, we will discuss the features it
+involves in more detail. Following Fig. 4 from left to
+right, these are:
+VarRowColumn measures the variance in the number
+of uncolored cells in the QWH instance across rows
+and across columns. A low variance indicates the open
+cells are evenly balanced throughout the square. As
+noted earlier, balanced instances are harder to solve
+than unbalanced ones [1]. A rather complex summary
+statistic of this quantity appears at the root of the de­
+cision tree, namely the minimum of the first derivative
+of this quantity during the observation period. In fu­
+ture work we will be examining this feature carefully
+in order to determine why this particular statistic was
+most relevant.
+AvgColumn measures the ratio of the number of uncol­
+ored cells and the number of columns or rows. A low
+value for this feature indicates that the quasigroup is
+nearly complete. The decision tree shows that a run is
+likely to be fast if the min i mum value of this quantity
+over the entire observation period is small.
+MinDepth is the minimum depth of all leaves of the
+search tree, and the summary statistic is simply the fi­
+nal value of this quantity. The third and fourth nodes
+of the decision tree show that short runs are associ­
+ated with high minimum depth and long runs with
+low minimum depth. This may be interpreted as in­
+dicating the search trees for the shorter runs have a
+more regular shape.
+AvgDepth is the average depth of a node in the search
+tree. The model discovers that short runs are associ­
+ated with a high frequency in the change of the sign
+of the first derivative of the average depth. In other
+words, frequent fluctuations up and down in the aver­
+age depth indicate a short run. We do not yet have an
+intuitive explanation for this phenomena.
+
+239
+
+VarRowColumn appears again as the last node in the
+decision tree. Here we see that if the maximum vari­
+ance of the number of uncolored cells in the QWH
+instance across rows and columns is low (i.e., the prob­
+lem remains balanced) then the run is long, as might
+be expected.
+4.2
+
+CSP-QWH-Multi Problem
+
+For a CSP-QWH-Multi problem, we built training and
+test sets by selecting instances of nonbalanced QWH
+problems of order 34 with 380 unassigned variables.
+We collected data on 4000 instances for the training
+set and 1000 instances for the test set.
+As we were running instances of potentially different
+fundamental hardnesses, we normalized the feature
+measurements by the size of the instance (measured in
+CSP variables) after the instances were initially sim­
+plified by forward-checking. That is, although all the
+instances originally had the same number of uncolored
+cells, polynomial time preprocessing fills in some of the
+cells, thus revealing the true size of the instance.
+We collected run time data for each instance over
+an observational horizon of 1000 choice points. The
+learned model was found to have a classification accu­
+racy of 0.715 in comparison to the marginal model ac­
+curacy of 0.539. The average log score for the learned
+model was found to be -0.562 and the average log score
+for the marginal model was -0.690.
+4.3
+
+Satz-QWH-Single Problem
+
+We performed analogous studies with the Satz solver.
+In a study of the Satz-QWH-Single problem, we stud­
+ied a single QWH instance (bqwh-34-410-16). We
+found that the learned model had a classification ac­
+curacy of 0.603, in comparison to a classification accu­
+racy of 0.517 for the marginal model. The average log
+score of the learned model was found to be -0.651 and
+the log score of the marginal model was -0.693.
+The predictive power of the SAT model was less than
+that of the corresponding CSP model. This is reason­
+able since the CSP model had access to features that
+more precisely captured special features of quasigroup
+problems (such as balance). The decision tree was still
+relatively small, containing 12 nodes that referred to
+10 different summary variables.
+Observations that turned out to be most relevant for
+the SAT model included:
+•
+
+The maximum number of variables set to 'true'
+during the observation period. As noted earlier,
+this corresponds to the number of CSP variables
+that would be bound in the direct CSP encoding.
+
+HORVITZ ET AL.
+
+240
+
+UAl 2001
+
+Figure 3: The learned Bayesian network for a sample CSP-QWH-Single problem. Key dependencies and variables
+are highlighted.
+
+I:Y'· •I
+/
+
+6
+
+/-
+
+/
+
+Nat< -5.03 (1174)
+
+Nat< 233 (187]
+
+Not< 19.S (543)
+
+. } ,:,1
+/
+........
+
+< -5.03 (22�)
+
+Nat < 3 .33 (897)
+
+<3.33(1
+
+�
+
+< 19.S (354]
+
+Not< 18.9 (322)
+
+�
+
+•18.9[
+
+1.3(�)
+
+<21.3
+
+�
+
+Figure 4: The decision tree inferred for run time from data gathered in a CSP-QWH-Single experiment. The
+probability of a short run is captured by the light component of the bargraphs displayed at the leaves.
+
+UAI2001
+
+HORVITZ ET AL.
+
+•
+
+The number of models ruled out.
+
+•
+
+The number of unit propagations performed.
+
+•
+
+•
+
+4.4
+
+The number of variables eliminated by Satz's
+lookahead component: that is, the effectiveness
+o f lookahead.
+The quantity ..\ described in Sec. 3.1 above, a mea­
+sure of the constrainedness of the binary clause
+subproblem.
+Satz-QWH-Multi Problem
+
+For the experiment with the Satz-QWH-Multi prob­
+lem, we executed single runs of QWH instances
+with the same parameters as the instance studied in
+the Satz-QWH-Single Problem (bqwh-34-410) for the
+training and test sets. Run time and observational
+variables were normalized in the same manner as for
+the CSP-QWH-Multi problem. The classification ac­
+curacy of the learned model was found to be 0. 715.
+The classification accuracy of the marginal model was
+found to be 0.526. The average log score for the model
+was -0.557 and the average log score for the marginal
+model was -0.692.
+4.5
+
+Toward Larger Studies
+
+For broad application in guiding computational prob­
+lem solving, it is important to develop an understand­
+ing of how results for sample instances, such as the
+problems described in Sections 4.1 through 4.4, gener­
+alize to new instances within and across distinct classes
+of problems. We have been working to build insights
+about generalizability by exploring the statistics of the
+performance of classifiers on sets of problem instances.
+The work on studies with larger numbers of data sets
+has been limited by the amount of time required to
+generate data sets for the hard problems being stud­
+ied. With our computing platforms, several days of
+computational effort were typically required to pro­
+duce each data set.
+As an example of our work on generalization, we re­
+view the statistics of model quality and classification
+accuracy, and the regularity of discriminatory features
+for additional data sets of instances in the CSP-QWH­
+Single problem class.
+We defined ten additional nonbalanced QWH problem
+instances, parameterized in the same manner as the
+CSP problem described in Section 4.1 (order 34 with
+380 unassigned variables). We employed the same data
+generation and analysis procedures as before, building
+and testing ten separate models. Generating data for
+these analyses using the ILOG libary executed on an
+
+241
+
+Intel Pentium III (running at 600 Mhz) required ap­
+proximately twenty-four hours per 1000 runs. Thus,
+each CSP dataset required approximately five days of
+computation.
+In summary, we found significant boosts in classi­
+fication accuracy for all of the instances. For the
+ten datasets, the mean classification accuracy for the
+learned models was 0.812 with a standard deviation of
+0.101. The average log score for the models was -0.388
+with a standard deviation of 0.167. The predictive
+power of the learned models stands in contrast to the
+classification accuracy of using background statistics;
+the mean classification accuracy of the marginal mod­
+els was 0.497 with a standard deviation of 0.025. The
+average log score for the marginal models was -0.693
+with a standard deviation of 0.001. Thus, we observed
+relatively consistent predictive power of the methods
+across the new instances.
+We observed variation in the tree structure and dis­
+criminatory features across the ten learned models.
+Nevertheless, several features appeared as valuable
+discriminators in multiple models, including statistics
+based on measures of VarRowColumn, AvgColumn,
+AvgDepth, and MinDepth. Some of the evidential fea­
+tures recurred for different problems, showing signifi­
+cant predictive value across models with greater fre­
+quency than others. For example, measures of the
+maximum variation in the number of uncolored cells
+in the QWH instance across rows and columns (Max­
+VarRowColumn) appeared as being an important dis­
+criminator in many of the models.
+5
+
+Generalizing Observation Policies
+
+For the experiments described in Sections 3 and 4, we
+employed a policy of gathering evidence over an obser­
+vation horizon of the initial 1000 choice points. This
+observational policy can be generalized in several ways.
+For example, in addition to harvesting evidence within
+the observation horizon, we can consider the amount
+of time expended so far during a run as an explicit
+observation. Also, evidence gathering can be general­
+ized to consider the status of variables and statistics
+of variables at progressively later times during a run.
+Beyond experimenting with different observational
+policies, we believe that there is potential for harness­
+ing value-of-information analyses to optimize the gath­
+ering of information. For example, there is opportu­
+nity for employing affine analysis and optimization to
+generate tractable real-time observation policies that
+dictate which evidence to evaluate at different times
+during a run, conditioned on evidence that has already
+been observed during that run.
+
+242
+
+5.1
+
+HORVITZ ET AL.
+
+Time Expended
+
+as
+
+Evidence
+
+In the process of exploring alternate observation
+policies, we investigated the value of extending the
+bounded-horizon policy described in Section 3, with
+a consideration of the status of time expended so far
+during a run. To probe potential boosts with inclusion
+of time expended, we divided several of the data sets
+explored in Section 4.5 into subsets based on whether
+runs with the data set had exceeded specific run-time
+boundaries. Then, we built distinct run-time-specific
+models and tested the predictive power of these models
+on test sets containing instances of appropriate mini­
+mal length. Such time-specific models could be used
+in practice as a cascade of models, depending on the
+amount of time that had already been expended on a
+run.
+We typically found boosts in the predictive power of
+models built with such temporal decompositions. As
+we had expected, the boosts are greatest for models
+conditioned on the largest amounts of expended time.
+As an example, let us consider one of the data sets
+generated for the study in Section 4.5. The model
+that had been built previously with all of the data
+had a classification accuracy of 0. 793. The median
+time for the runs represented in the set was nearly
+18,000 choice points. We created three separate sub­
+sets of the complete set of runs: the set of runs that
+exceeded 5,000 choice points, the set that exceeded
+8,000 choice points, and the set that had exceeded
+11,000 choice points. We created distinct predictive
+models for each training set and tested these mod­
+els with cases drawn from test sets containing runs of
+appropriate minimal length. The classification accu­
+racies of the models for the low, medium, and high
+time expenditure were 0.779, 0.799, and 0.850 respec­
+tively. We shall be continuing to study the use of time
+allocated as a predictive variable.
+6
+
+Application: Dynamic Restart
+Policies
+
+A predictive model can be used in several ways to
+control a solver. For example, the variable selection
+heuristic used to decompose the problem instance can
+be designed to minimize the expected solution time
+of the subproblems. Another application centers on
+building distinct models to predict the run time as­
+sociated with different global strategies. As an ex­
+ample, we can learn to predict the relative perfor­
+mance of ordinary chronological backtrack search and
+dependency-directed backtracking with clause learn­
+ing [16]. Such a predictive model could be used to
+decide whether the overhead of clause learning would
+be worthwhile for a particular instance.
+
+UA12001
+
+Problem and instance-specific predictions of run time
+can also be used to drive dynamic cutoff decisions on
+when to suspend a current case and restart with a new
+random seed or new problem instance, depending on
+the class of problem. For example, consider a greedy
+analysis, where we deliberate about the value of ceas­
+ing a run that is in progress and performing a restart
+on that instance or another instance, given predictions
+about run time. The predictive models described in
+this paper can provide the expected time remaining
+until completion of a current run. Initiating a new
+run will have an expected run time provided by the
+statistics of the marginal model. From the perspec­
+tive of a single-step analysis, when the expected time
+remaining for the current instance is greater than the
+expected time of the next instance, as defined by the
+background marginal model, it is better to cease ac­
+tivity and perform a restart. More generally, we can
+construct richer multistep analyses that provide the
+fastest solutions to a particular instance or the highest
+rate of completed solutions with computational effort.
+We can also use the predictive models to perform com­
+parative analyses with previous policies. Luby et al.
+[21] have shown that the optimal restart policy, as­
+suming full knowledge of the distribution, is one with
+a fixed cutoff. They also provide a universal strat­
+egy ( using gradually increasing cutoffs) for minimizing
+the expected cost of randomized procedures, assum­
+ing no prior knowledge of the probability distribution.
+They show that the universal strategy is within a log
+factor of optimal. These results essential settle the
+distribution-free case.
+Consider now the following dynamic policy: Observe a
+run for 0 steps. If a solution is not found, then predict
+whether the run will complete within a total of L steps.
+If the prediction is negative, then immediately restart;
+otherwise continue to run for up to a total of L steps
+before restarting if no solution is found.
+An upper bound on the expected run of this policy can
+be calculated in terms of the model accuracy A and the
+probability Pi of a single run successfully ending in i
+or fewer steps. For simplicity of exposition we assume
+that the model's accuracy in predicting long or short
+runs is identical. The expected number of runs until
+a solution is found is E(N)
+1/(A(PL- Po)+ Po).
+An upper bound on the expected number of steps in
+a single run can be calculated by assuming that runs
+that end within 0 steps take exactly 0 steps, and that
+runs that end in 0+ 1 to L steps take exactly L steps.
+The probability that the policy continues a run past 0
+steps (i.e., the prediction was positive) is APL + (1A) ( 1- PL). An upper bound on the expected length of
+a single run is Eub(R) 0 + (L- O)(APL + (1- A) (1PL)). Thus, an upper bound on the expected time to
+=
+
+=
+
+UAI2001
+
+solve a
+
+HORVITZ ET AL.
+
+proble m
+
+E(N)Eub(R).
+
+using the policy is
+
+It is important to note that the expected time depends
+on both the accuracy of the model and the prediction
+point L; in general, one would want to vary L in or­
+der to optimize the solution time.
+
+Furthermore, in
+
+general, it would be better to design more sophisti­
+cated dynamic policies that made use of all informa­
+tion gathered over a run, rather than just during the
+first 0 steps. But even a non-optimized policy based
+directly on the models discussed in this paper can out­
+perform the optimal fixed policy. For example, in the
+CSP-QWH-single problem case, the optimal fixed pol­
+icy has an expected solution
+
+time of 38,000 steps, while
+
+the dynamic policy has an expected solution time of
+only
+
+27,000
+
+steps. Optimizing the choice of L should
+
+provide about an order of magnitude further improve­
+ment.
+
+243
+
+c1s1ons about the partition of resources
+
+formulation and inference.
+and Klein
+
+[14]
+
+between
+
+re­
+
+In other work, Horvitz
+
+constructed Bayesian models consid­
+
+ering the time expended so far in theorem proving.
+They monitored the progress of search in a proposi­
+tional theorem prover and used measures of progress
+in updating the probability of truth or falsity of as­
+
+sertions. A Bayesian model was harnessed to update
+belief about different outcomes as a function of the
+amount of time that problem solving continued with­
+out halting. Stepping back to view the larger body of
+work on the decision-theoretic control of computation,
+measures of
+
+expected value of computation [15,
+
+8,
+
+25],
+
+employed to guide problem solving, rely on forecasts
+of the refinements of partial results with future com­
+putation. More generally, representations of problem­
+solving progress have been central in research on flex­
+ible or anytime methods-procedures that exhibit a
+
+While it may not be surprising that a dynamic policy
+
+relatively smooth surface of performance
+
+can outperform the optimal fixed policy, it is interest­
+
+location of computational resources.
+
+with the al­
+
+ing to note that this can occur when the observation
+time 0 is
+
+greater
+
+than the fixed cutoff.
+
+That is, for
+
+proper values of L and A, it may be worthwhile to ob­
+serve each run for
+
+1000 steps
+
+even if the optimal fixed
+
+strategy is to cutoff after 500 st eps. These and other
+
+issues concerning applications of prediction models to
+restart policies are examined in detail in a forthcoming
+paper.
+
+8
+
+Future Work and Directions
+
+This work represents a vector in a space of ongoing re­
+search. We are pursuing several lines of research with
+the goals of enhancing the power and generalizing the
+applicability of the predictive methods. We are explor­
+ing the modeling of run time at a finer grain through
+the use of continuous variables and prototypical named
+
+7
+
+distributions. We are also exploring the value of de­
+
+Related Work
+
+composing the learning problem into models that pre­
+
+Learning methods have been employed in previous re­
+search in a attempt to enhance the performance opti­
+mize reasoning systems. In work on "speed-up learn­
+ing," investigators have attempted to increase plan­
+ning efficiency by learn i ng goal-specific preferences for
+
+plan operators
+
+[22, 19].
+
+Khardon and Roth explored
+
+the offline reformulation of representations based on
+experiences with problem solving in an environment
+to enhance run-time efficiency
+
+[18].
+
+Our work on using
+
+probabilistic models to learn about algorithmic perfor­
+m ance and to guide problem solving is most c losely re­
+
+lated to research on flexible computation and decision­
+theoretic control. Related work in this arena focused
+on the use of predictive models to control computa­
+tion, Breese and Horvitz [3] collected data about the
+
+dict the average execution times seen with multiple
+runs and models that predict how well a particular in­
+stance will do relative to the overall hardness of the
+problem.
+
+In other extensions, we are exploring the
+
+feasibility of inferring the likelihood that an instance
+is solvable versus unsolvable and building models that
+forecast the overall expected run time to completion
+by conditioning on each situation. We are also inter­
+ested in pursuing more general, dynamic observational
+policies and in harnessing the value of information to
+identify a set of conditional decisions about the pattern
+and timing of monitoring. F inally, we are continuing
+to investigate the formulation and testing of ideal poli­
+cies for harnessing the predictive models to optimize
+restart policies.
+
+progress of search for graph cliquing and of cutset anal­
+ysis for use in minimizing the time of probabilistic in­
+
+ference with Bayesian networks.
+
+9
+
+Summary
+
+The work was mo­
+
+tivated by the challenge of identifying the ideal time
+
+We presented a methodology for characterizing the run
+
+for preprocessing graphical models for faster inference
+before initiating inference, trading off reformulation
+
+time of problem instances for randomized backtrack­
+style search algorithms that have been developed to
+
+time for inference time.
+
+Trajectories of progress as
+
+solve a hard class of structured constraint-satisfaction
+
+a function of
+
+of Bayesian network prob­
+
+parameter s
+
+lem instances were learned for use in dynamic de-
+
+problems. The methods are motivated
+
+by recent suc­
+
+cesses with using fixed restart policies to address the
+
+HORVITZ ET AL.
+
+244
+
+UAI 2001
+
+high variance in running time typically exhibited by
+
+[12]
+
+backtracking search algorithms. We described two dis­
+tinct formulations of problem-solving goals and b uilt
+
+D. Beckerman , J. Breese, and K . Rommelse. Decision­
+theoretic troubleshooting. CA CM, 38:3:49-57, 1995.
+
+[13]
+
+D . Beckerman, D . M . Chickering, C. Meek, R. Roun­
+thwaite, and C. Kadie. Dependency networks for den­
+sity estimation, collaborative filtering, and data visu­
+alization. In Proceedings of UA I-2000, Stanford, CA,
+pages 82-88. 2000.
+
+[14]
+
+E. Horvitz and A. Klein. Reasoning, metareasoning,
+and mathematical truth: Studies of theorem proving
+under limited resources. In Proceedings of UA I- 95,
+pages 306-314, Montreal, Canada, August 1995. Mor­
+gan Kaufmann, San Francisco.
+
+[15]
+
+E . J . Horvitz. Reasoning under varying and uncer­
+tain resource constraints. In Proceedings of A A A I-88,
+pages 1 1 1-1 16. Morgan Kaufmann, San Mateo, CA,
+August 1988.
+
+butions and feedback.
+
+[16]
+
+
+
+We introduce a new optimization framework
+to maximize the expected spread of cascades
+in networks. Our model allows a rich set of
+actions that directly manipulate cascade dynamics by adding nodes or edges to the network. Our motivating application is one in
+spatial conservation planning, where a cascade models the dispersal of wild animals
+through a fragmented landscape. We propose
+a mixed integer programming (MIP) formulation that combines elements from network
+design and stochastic optimization. Our approach results in solutions with stochastic optimality guarantees and points to conservation strategies that are fundamentally different from naive approaches.
+
+1
+
+INTRODUCTION
+
+Many natural processes — such as the diffusion of information in a social network or the spread of animals
+through a fragmented landscape — can be described as
+a network diffusion process or cascade. For example,
+an individual who buys a new product or adopts a new
+technology may trigger similar behavior in friends; if
+this process gains momentum it can cascade through
+a significant portion of a social network. The study
+of cascading behavior in networks is most familiar in
+social or epidemiological settings (Goldenberg et al.,
+2001; Leskovec et al., 2007a; Anderson and May, 1992;
+Chakrabarti et al., 2008). However, a similar framework called metapopulation modeling exists in ecology
+to describe the occupancy pattern of habitat patches
+in a fragmented landscape (Hanski, 1999).
+One would often like to intervene to steer the course
+of a cascade toward some goal, e.g., to maximize its
+spread through the network. However, a cascade is
+a complex stochastic process and it is typically not
+
+possible to directly control the outcome, but only to
+influence certain underlying or initial conditions, such
+as where to initiate a cascade. This leaves great uncertainty as to the actual outcome of a given intervention.
+In this paper, we contribute a new optimization framework to maximize the expected spread of a cascade
+under a very general class of interventions.
+The problem of maximizing the spread of a cascade is
+of great practical import. In the social network setting,
+Domingos and Richardson (2001) posed the problem
+of targeting individuals to maximize the effectiveness
+of a viral marketing strategy. Kempe, Kleinberg, and
+Tardos (2003) later showed that for several different
+cascade models, finding the optimal set of k individuals to initiate a cascade in order to maximize its eventual spread is NP-hard, but because it is a submodular
+optimization problem, a greedy approach finds approximate solutions with strong performance guarantees.
+In a conservation setting, maximizing the spread of a
+target species through the landscape given a limited
+management budget is a central problem in the newly
+emerging field of computational sustainability (Gomes,
+2009). In this case, the management tools consist of
+augmenting the network of habitat patches through
+conservation or land acquisition. Unlike the social network example, the initial locations for the cascade are
+predetermined by the current spatial distribution of
+the species, which is difficult to manipulate. Moreover, metapopulation models predict that long-term
+population dynamics are determined by properties of
+the landscape much more so than initial occupancy
+(Ovaskainen and Hanski, 2001).
+Motivated by these considerations, we introduce a
+much more general optimization framework for cascades. In our model, one may choose from a rich set of
+management actions to manipulate a cascade: in addition to choosing where to initiate the cascade, actions
+may also intervene directly in the network to change
+cascade dynamics by adding nodes. This model is general enough to also capture adding edges, or increasing
+
+the local probability of propagating the cascade.
+The objective function is no longer submodular with
+respect to this more general decision space, so optimization becomes more difficult. We formulate
+the problem as mixed integer program (MIP) that
+combines elements from deterministic network design
+problems and stochastic optimization.
+One of our main computational tools is sample average approximation (SAA): we find a solution that is
+optimal in hindsight for a number of training cascades
+that are simulated in advance. The SAA optimum
+may overfit for a small set of training cascades, but
+converges to the true optimum with increasing training samples, and provides a stochastic bound on the
+optimality gap. Moreover, because the set of training
+cascades are known prior to optimization, SAA allows
+significant computational savings compared with other
+simulation-based optimization methods.
+In addition to the MIP-based SAA approach, we contribute a set of preprocessing techniques to reduce
+computation time for SAA and other algorithms that
+repeatedly reason about a fixed set of training cascades. Our method compresses each training cascade
+into a smaller cascade that is identical for reasoning
+about the effects of management actions. Our experiments show that running times are greatly reduced by
+preprocessing, both for the saa approach and for two
+greedy baselines. adapted from Kempe et al. (2003)
+and Leskovec et al. (2007b). After preprocessing, our
+SAA problem instances are amenable to solution by
+branch-and-bound MIP solvers, even though they are
+instances of an NP-hard network design problem.
+We apply our model to a sustainability problem that
+is part of an ongoing collaboration with The Conservation Fund to optimize the conservation of land
+to assist in the recovery of the Red-cockaded Woodpecker (RCW), a federally listed rare and endangered
+species. Unlike heuristic methods that are often used
+in conservation planning, our method directly models
+desired conservation outcome. For the RCW problem,
+we find solutions with stochastic optimality guarantees
+that demonstrate conservation strategies fundamentally different from those found by naive approaches.
+
+2
+
+PROBLEM STATEMENT
+
+We begin by stating the generic optimization problem for progressive cascades; these serve as the foundation for all of our modeling. Specifics of our conservation application — which uses a variant called a
+non-progressive cascade — are given in Section 2.3.
+A progressive cascade is a stochastic process in a graph
+G = (V, E) that begins with an initial set of active
+
+nodes; these proceed to activate new nodes over time
+according to local activation rules among neighbors
+until no more activations are possible. Given a limited
+budget and a set of target nodes, we wish to select from
+a set of management actions that affect the activation
+dynamics in order to maximize the expected number
+of target nodes that become active.
+Let A = {1, . . . , L} be a set of management actions,
+and let c` be the cost of action `. Let y be a strategy
+vector that indicates which actions are to be taken:
+y is a 0-1 vector where y` = 1 if and only if action
+` is taken. Strategy y results in a particular cascade
+process based on the specification of the cascade model
+and management actions. Let {Xv (y)}v∈V be random
+variables capturing the outcome of a cascade under
+strategy y — the variable Xv (y) is 0 or 1 indicating
+whether or not v is activated. Let B be the budget,
+and let T be a set of target nodes. The formal problem
+statement is
+max
+y
+
+X
+
+E[Xv (y)] s.t.
+
+v∈T
+
+L
+X
+
+c` y` ≤ B.
+
+(1)
+
+`=1
+
+In the remainder of this section we discuss the details
+of the cascade model and management actions.
+2.1
+
+CASCADE MODEL
+
+Our model is the independent cascade model (Goldenberg et al., 2001; Kempe et al., 2003). Consider
+a graph G = (V, E) with activation probabilities pvw
+for all (v, w) ∈ E. Notationally, we sometimes write
+p(v, w) for clarity, and adopt the convention that
+pvw = 0 for (v, w) ∈
+/ E.
+A (progressive) cascade proceeds is a sequence of activations. To begin, each node in a given source set S is
+activated. When any node v is first activated, it has a
+single chance to activate each neighbor w. It succeeds
+with probability pvw independent of the history of the
+process so far. If the attempt succeeds and w was not
+already active, then w becomes newly activated, and
+will have a chance to activate its neighbors in subsequent rounds. If the attempt fails, v will never attempt
+to activate w again. Pending activation attempts are
+sequenced arbitrarily.
+In their proofs, Kempe et al. (2003) argue that the following procedure is an equivalent, albeit impractical,
+way of simulating a cascade. For each edge (v, w) ∈ E,
+flip a coin with probability pvw to decide whether the
+edge is live. Then the set of activated nodes are those
+that are reachable from S by live edges. This is tantamount to simulating the cascade, but flipping the coins
+for each possible activation attempt in advance. Let
+the subgraph G0 consisting of live edges be called the
+
+cascade graph. The SAA method presented in Section
+4 will optimize over a fixed set of cascade graphs that
+are simulated in advance.
+Non-progressive cascades. In a progressive cascade, an activated node remains so forever (even
+though it only attempts to activate its neighbors once).
+This is appropriate for social settings where a person
+adopts a new technology or buys a new product only
+once. However, patch occupancy in a metapopulation
+is non-progressive: empty habitat patches may become
+unoccupied and then occupied again many times, and
+occupied patches may colonize others during any time
+step, not only upon their first activation. To model
+this, suppose that all activations are batched in rounds
+corresponding to discrete time steps, and that an active node i has probability βi of becoming inactive
+during each time step.
+i
+
+pij
+
+i
+
+i
+
+j
+
+1−β
+
+j
+
+j
+
+k
+
+pkj
+
+t=1
+
+k
+
+k
+
+t=2
+
+t=3
+
+Figure 1: Cascade in layered graph
+Kempe et al. showed how to reduce a non-progressive
+cascade in graph H = (V, E) to a progressive cascade
+in the layered graph G = (V T , E 0 ), where nodes are
+replicated for each time step, and the nodes at time t
+connect only to those at time t + 1 (see Figure 1). Let
+vi,t ∈ V T represent the node i ∈ V at time t. The nonprogressive cascade in H is equivalent to a progressive
+cascade in G with probabilities:
+p(vi,t , vj,t+1 ) = pij ,
+
+p(vi,t , vi,t+1 ) = 1 − βi ,
+
+and p(v, w) = 0 for all other v, w ∈ V T . We think
+of this as node i at time t activating itself at time
+t + 1 with probability 1 − βi , and failing to do so with
+probability βi so that it becomes inactive. (However it
+will remain active if it is also activated by a neighbor
+in the same time step).
+2.2
+
+MANAGEMENT ACTIONS
+
+Management actions in our model consist of predefined
+sets of nodes that may be added to the network for a
+cost. Consider the problem of augmenting a graph G0
+on vertex set V0 to optimize for the spread of cascades.
+Let V` be the S
+set of nodes
+purchased by action `, and
+
+L
+let V = V0 ∪
+V
+be
+the
+complete set of vertices.
+`
+`=1
+Let G be the corresponding graph on vertex set V ,
+and assume that activation probabilities pvw for each
+v, w ∈ V are known input parameters.
+
+Given a strategy y, a cascade may proceed through
+nodes that are part of the resulting network, either
+because they belong to V0 or because some action
+was
+ purchase the node. Let V (y) = V0 ∪
+S taken to
+V
+be the set of nodes purchased by y, and
+`
+`:y` =1
+let G(y) be the corresponding subgraph of G. The
+cascade process is then fully specified by letting Xv (y)
+be equal to one if v is reachable by live edges from S
+in the subgraph G(y), when each edge (v, w) ∈ E is
+chosen to be live independently with probability pvw .
+A model that purchases sets of nodes is sufficiently
+general to model other interesting management actions
+such as the purchase of edges or sources. For example,
+to purchase edges, modify the graph as follows: replace edge (v, w) by two edges (v, e) and (e, v), where
+e is a new node representing the edge purchase. Let
+p0 (v, e) = p(v, w), p0 (e, w) = 1. Then the cascade proceeds from v to w in the new graph with probability
+pvw , only if node e is purchased. Similar ideas can
+be used to model actions that purchase sources, so
+that the submodular influence-maximization problem
+of Kempe et al. can be seen as a special case of our
+optimization problem.
+2.3
+
+CONSERVATION APPLICATION
+
+Here we describe how this model of cascades and management actions relates to metapopulations and a conservation planning problem. A metapopulation model
+is a non-progressive cascade that describes the occupancy of different habitat patches over some time horizon T . Node vi,t represents habitat patch i at time t.
+For i 6= j, the activation or colonization probability
+pij represents the probability that an individual from
+patch i will colonize patch j in one time step. The extinction probability βi is the probability that the local
+population in patch i will go extinct in one time step.
+We assume that colonization and extinction probabilities are specified in advance, although in practice they
+are very difficult to know precisely.
+Patches are grouped into non-overlapping parcels
+P1 , . . . , PL ; some are already conserved, and the others
+are available for purchase at time 0. For each unconserved parcel P` , there is a corresponding management
+action with node set V` containing the nodes vi,t for
+all patches i ∈ P` and for all t. The set V0 consists of
+nodes representing patches in parcels that are already
+under conservation. In other words, the target species
+may only occupy patches that fall within conserved
+parcels, and the land manager may choose additional
+parcels to purchase for conservation. The fact that
+the species may not exist outside of conserved parcels
+is a simplification, but there is flexibility in defining
+“conserved”, which is adequate for our purposes.
+
+The sources consist of nodes vi,0 such that patch i is
+occupied at the beginning of the time horizon. The
+target set is T = {vi,T }, i.e., the objective is to maximize the expected number of occupied patches at the
+end of the time horizon.
+2.4
+
+NON-SUBMODULARITY
+
+Our problem shares the same objective as the submodular influence-maximization problem. However, with
+respect to our expanded set of actions, the objective
+is not submodular. A set function f is submodular if
+for all S ⊆ T and for all m, the following holds:
+f (S ∪ {m}) − f (S) ≥ f (T ∪ {m}) − f (T ).
+This is a diminishing returns property: for any m, the
+marginal gain from adding m to a set T is no more
+than the gain of adding m to a subset S of T .
+It is easy to see that submodularity does not hold for
+the expanded set of actions in our problem, and that
+the greedy solution can perform arbitrarily worse than
+optimal. This is true because an instance may contain
+a high payoff action that is only enabled by first taking
+a low payoff action.
+1
+2
+
+a4
+
+a1
+
+3
+
+s
+
+a3
+
+a2
+
+S
+{a1 , a2 }
+{a3 }
+{a4 }
+{a3 , a4 }
+
+f (S)
+4
+1
+0
+c+1
+
+c
+
+Figure 2: Example of non-submodularity.
+Consider the example in Figure 2, with a single source
+node s, unit cost actions, and where activation probabilities are equal to 1 for all edges. Action a4 has
+payoff of c, but only if action a3 is also taken. Hence,
+the marginal gain of adding a4 to {a3 } is greater than
+that of adding a4 to the empty set, so the objective is
+not submodular. For a budget of 2, the greedy algorithm will select {a1 , a2 } for a total reward of 4, but
+the optimal solution {a3 , a4 } has objective value c + 1.
+
+3
+
+(1) provide bounds in the case of non-uniform sensor
+costs and (2) greatly improve performance by introducing the CELF algorithm, which makes the same
+selections as a naive greedy algorithm with many fewer
+function evaluations by taking advantage of submodularity to avoid unnecessary evaluations.
+
+RELATED WORK
+
+Cascades. Cascade optimization has also been considered by Leskovec et al. (2007b) and Krause et al.
+(2008) in their work on optimal sensor placement for
+outbreak detection in networks. They seek the optimal
+selection of nodes to detect cascades that occur in a
+network, and show that this problem is also submodular so can be approximated well by a greedy approach.
+They make improvements to the greedy approach to:
+
+Stochastic Optimization. Stochastic optimization
+problems have long been considered to be significantly
+harder computational problems than their deterministic counterparts. E.g., it is easy to show even in extremely simple settings that certain classes of stochastic linear programs are #P -hard (Dyer and Stougie,
+2006). Only in the last two decades has substantial attention been paid to solving stochastic integer programs as well (see, e.g., the survey of Ahmed
+(2004)), and the sample average approximation (SAA)
+has been instrumental in recent advances. The survey
+of Shapiro (2003) outlines the range of convergence results for SAA that can be proved for a wide swath of
+stochastic optimization problems. The SAA also yields
+surprising strong approximation algorithm results, for
+both structured linear and integer programming problems, as surveyed by Swamy and Shmoys (2006). This
+approach has recently been applied to other large-scale
+stochastic combinatorial optimization problems, such
+as was done in the work of Verweij et al. (2003).
+
+4
+
+METHODOLOGY
+
+In this section, we describe our method to solve the
+cascade optimization problem (1). A major challenge
+is the fact that the objective itself is very difficult to
+compute. Even for a fixed strategy y, the problem of
+computing E[Xv (y)] for a single node v is equivalent to
+the #P -complete s-t reliability problem of computing
+the probability that two terminals remain connected
+in a graph with random edge failures (Valiant, 1979).
+4.1
+
+SAA
+
+The sample average approximation method (Shapiro,
+2003; Verweij et al., 2003) is a technique for solving
+stochastic optimization problems by sampling from the
+underlying distribution to generate a finite number
+of scenarios and reducing the stochastic optimization
+problem to a deterministic analogue. In our setting,
+instead of maximizing the expected value in Problem
+(1) directly, the SAA method maximizes the empirical
+average over a fixed set of samples from the underlying
+probability space. It is important to note that the random variables Xv (y) can be measured in a fixed probability space defined over subgraphs of G that does not
+depend on the particular strategy y. In other words, to
+simulate a cascade in G(y), one can first flip coins for
+
+all edges in G to construct a subgraph G0 (the cascade
+graph), and then compute reachability in G0 (y).
+Let G01 , . . . , G0N ⊆ G be a set of training cascades produced in this fashion, and let ξvk (y) be a deterministic
+value that indicates whether or not node v is reachable
+in G0k (y). The sample average approximation of (1) is
+N
+L
+X
+1 XX k
+ξv (y) s.t.
+max
+c` y` ≤ B.
+y N
+k=1 v∈T
+
+Solve M independent SAA problems of size N
+to produce candidate solutions y1 , . . . , P
+yM , and
+M
+1
+upper bounds Z̄1 , . . . , Z̄M . Set Z̄ = M
+i=1 Z̄i .
+
+2
+
+Choose the best solution y∗ from y1 , . . . , yM by
+re-estimating the objective value of each using
+Nvalid independent validation cascades.
+
+3
+
+Compute Z(y∗ ) using Ntest independent testing
+cascades. The estimated upper bound on the
+optimality gap is Z̄ − Z(y∗ ).
+
+(2)
+
+N
+1 XX k
+xv
+max
+x,y N
+k=1 v∈T
+L
+X
+
+1
+
+`=1
+
+To encode this as a MIP, we introduce reachability
+variables xkv to represent the values ξvk (y), and a set of
+linear constraints that enforce consistency among the
+x and y variables such that they have the intended
+meaning. Let A(v) be the subset of actions that purchase node v. To match our application, we use the
+following formulation tailored to non-progressive cascades, for which G0k is guaranteed to be acyclic, though
+this is not a fundamental limitation.
+
+s.t.
+
+Algorithm 1: The SAA procedure.
+Input: M samples of N training cascades, Nvalid
+validation cascades, Ntest testing cascades
+
+routing links (and nodes) that can be purchased to
+provide a specified quality of service, and the aim is to
+do this at minimum cost. Our formulation is similar
+to standard flow-variable based network design MIPs
+(e.g., see Magnanti and Wong (1984)), but since the
+input graphs are acyclic and purchases are made on
+nodes instead of edges, we can utilize a more compact
+formulation without any edge variables.
+
+c` y` ≤ B
+
+`=1
+
+xkv ≤
+
+X
+
+y` ,
+
+∀v ∈
+/ V0 , ∀k (3)
+
+`∈A(v)
+
+xkv ≤
+
+X
+
+xku ,
+
+∀v ∈
+/ S, ∀k (4)
+
+(u,v)∈Ek
+
+0 ≤ xkv ≤ 1, y` ∈ {0, 1}.
+Consider a fixed y. We say that node v is purchased if
+P
+`∈A(v) y` ≥ 1. The constraints (3) and (4) together
+imply that xkv > 0 only if there is a path in G0k from
+the sources S to v consisting of purchased nodes. In
+this case, the constraints are redundant and xku may be
+set to the upper bound of 1 for all nodes u on the path.
+If there is no path to v, then an inductive argument
+shows that xkv must be equal to 0. Otherwise, by (4),
+there must be some node u such that xku > 0 and
+(u, v) ∈ Ek . By induction, we can build a reverse path
+from v comprised of nodes w such that xkw > 0. Such
+a path must end at a source (recall that G0k is acyclic),
+contradicting the fact that v is not reachable.
+Relationship to Network Design. After sampling the
+training cascades, our problem is a deterministic network design problem: which sets of nodes should be
+purchased to connect the most targets? Network design is one of the most well-studied classes of deterministic combinatorial optimization problems. Traditionally, these problems arise in applications such as
+telecommunication networks and supply chains, where
+there is a given input graph that specifies potential
+
+Bounding Sub-Optimality of SAA. The SAA
+optimum converges to the true optimum of (1) as
+N → ∞, but for small N the optimal value may be optimistic, and the solution sub-optimal. Verweij et al.
+describe the following methodology to derive stochastic bounds on the quality of the SAA solution compared with the true optimum (Verweij et al., 2003).
+Let OPT be the true optimal value of problem (1), and
+let Z̄ be the optimal value of the SAA problem (2) for
+a fixed set of N training cascades. For any solution
+y (typically the SAA optimum), let Z(y) be an estimate of the objective value of solution y for problem
+(1) made by simulating Ntest cascades in G(y). The
+bounds are based on the fact that
+E[Z(y)] ≤ OPT ≤ E[Z̄].
+The value E[Z̄ − Z(y)] is then an upper bound on the
+optimality gap OPT − E[Z(y)], and the random variable Z̄ − Z(y) is an unbiased estimate of the upper
+bound. To reduce the variance, one solves the SAA
+problem many times with independent samples and
+lets Z̄ be the average of the upper bounds obtained
+in this way. This also gives many candidate solutions,
+of which the best is selected using validation samples.
+The overall procedure is specified in Algorithm 1. Note
+that if the SAA problem in line 1 is not solved optimally, the upper bound Z̄i is the best upper found
+during optimization, not the objective value of yi .
+
+4.2
+
+PREPROCESSING
+
+Because the SAA problem optimizes over a fixed set
+of training cascades that are sampled in advance, it
+is possible to achieve significant computational savings by preprocessing the cascades to accelerate later
+computations. For example, we defined the training
+cascade G0k to be a subgraph of G obtained by retaining each edge (u, v) independently with probability
+p(u, v). However, this may be an inefficient representation of a cascade. A more compact representation is
+attained by simulating the cascade forward from S so
+that nodes and edges that are not reachable under any
+strategy are never explored. Such a simulation results
+in a graph that is equivalent for computing reachability from S under any strategy y.
+In general, during preprocessing of a cascade we will
+consider arbitrary transformations of the problem data
+for each training cascade — originally consisting of
+the tuple (S, T , A, G0k ) — to a more compact representation that preserves computation of the objective for any strategy y. This is done separately for
+each training cascade resulting in parameters Sk , Tk ,
+and Ak that are now specific to the kth training cascade; the MIP formulation is modified in the obvious way to accommodate this. We first introduce
+one generalization: let the reward vector rk replace
+the target
+set T so that the objective is computed as
+P P
+(1/N ) k v∈V k rvk xkv . Initially, rvk = 1 for v ∈ T ,
+and 0 otherwise. There are two elementary preprocessing steps: pruning and collapsing sources.
+Pruning. We exclude any nodes that are not reachable
+from S by generating the cascade graph via forward
+simulation from S. We additionally prune all nodes v
+with no path to T .
+Collapsing Sources. If there is a path from S to v
+consisting exclusively of nodes from V0 , then v will be
+reachable for any strategy y. In this case, v is added
+to Sk as a new source. The set S is collapsed to a
+single source node s with an outgoing edge (s, v) for
+each (u, v) ∈ Ek such that u ∈ S.
+We also contribute a method to find sets of nodes that
+can be collapsed into singletons because the fates of
+all nodes in the set are tied together — i.e, for any
+strategy, whenever one node in the group is reachable,
+all are. The simplest example of this is a strongly
+connected component consisting of nodes purchased
+by the same action(s). In general, let u ⇒ v denote
+the situation in which, for any strategy y, if node u
+is reachable, then node v is also reachable. There are
+two basic cases that guarantee that u ⇒ v:
+1. (u, v) ∈ E and A(u) ⊆ A(v). I.e., u links to v,
+and whenever u is purchased v is also purchased.
+
+2. (v, u) ∈ E and 6 ∃w : (w, u) ∈ E. I.e., the only
+link to u comes through v; hence, any path that
+reaches v must go through u.
+The relation u ⇒ v is clearly transitive, so to find all
+pairs such that u ⇔ v, we build a graph with directed
+edges corresponding to the two basic cases above and
+compute its strongly connected components (SCCs).
+Once we have computed the SCCs, we form the quotient graph by collapsing each strongly-connected component C into a single node and updating the edge
+set accordingly. We must also update the other parameters of the problem. Let vC be the node corresponding to component C. Then: (i) vC becomes a
+source if any node in C was originally a source, (ii)
+the reward of vC is equal to the sum of rewards for
+the original nodes
+T in C, and (iii) the new action set of
+vC is A(vC ) = u∈C A(u). To justify (iii), note that
+any strategy under which all of C is reachable must
+purchase everyT
+node in C: the set of actions that does
+this is exactly u∈C A(u).
+These preprocessing steps may be repeated until no
+additional progress is made and we have obtained a reduced cascade. Because preprocessing results in training cascades that are completely equivalent for reasoning about the objective values of strategies, they may
+be used in conjunction with any algorithm.
+4.3
+
+GREEDY BASELINES
+
+In our experiments, we use two greedy algorithms
+adapted from Kempe et al. (2003) and Leskovec et al.
+(2007b) as baselines. Each starts with an empty set
+of actions, and repeatedly adds the “best” action that
+does not violate the budget. The algorithm greedyuc (for uniform cost) chooses the action that results
+in the greatest increase in objective value. The algorithm greedy-cb (for cost-benefit) chooses the action
+with the highest ratio of increase in objective value to
+cost.
+In each step, the increase in objective value is evaluated for each possible action by simulating N cascades. For our problem instances, it is prohibitively
+time consuming to simulate new cascades for each objective function evaluation. Instead, we reuse a set
+of N pre-sampled training cascades as in the SAA
+method. Simulations in pre-sampled cascades require
+many fewer edge explorations, because only live edges
+from the original cascade are considered. We may also
+apply our preprocessing techniques in this case. The
+incremental nature of the greedy algorithms allow for
+an additional optimization: after action ` is selected
+in some step, every subsequent strategy will include
+action `. Hence we may modify the problem by moving the nodes of V` to V0 so that they become part of
+
+the “original” graph to be augmented, and then repeat
+preprocessing. The accumulated speedups from these
+optimizations are quite significant: as much as 1000x
+in our experiments.
+
+5
+
+EXPERIMENTS
+
+Our application is part of an ongoing collaboration
+with The Conservation Fund to optimize land conservation to assist the recovery of the Red-cockaded
+Woodpecker (RCW), a federally listed rare and endangered species. RCW are a “keystone species” in
+the southeastern US: they excavate tree cavities used
+by at least 27 other vertebrate species (USFWS, 2003).
+However, habitat degradation has led to severe population declines, and existing populations are highly
+fragmented (Conner et al., 2001). As a result, habitat conservation and management are crucial to the
+continued viability of RCW.
+We use the RCW recovery problem as a test bed for
+the computational approaches developed in this work.
+The scientific and political issues surrounding endangered species are complex, and great care must be
+taken when developing models that predict their fate.
+Although we use real data for this study, some parameter choices and assumptions have not been thoroughly verified with respect to RCW ecology. Hence
+one should not draw specific conclusions about RCW
+conservation planning from the particular results presented here. We stress instead the general applicability
+of the computational model to a variety of specific conservation problems: coupled with diffusion parameters
+tailored to a given target species, our model can provide decision makers with key information about balancing management options and resource constraints.
+"
+
+!"#$%#
+
+Figure 3: The study area. Left: spatial layout of
+parcels; dark parcels are conserved. Inset: circles indicate territories; filled circles are occupied. There are
+no occupied territories outside the inset area.
+The study area for these experiments consists of 443
+non-overlapping parcels of land within a coastal area
+in the southeastern United States (see Figure 3); each
+
+parcel is at least 125 acres in area (the estimated minimum size to support a RCW territory). The cost to
+conserve a new parcel is equal to its assessed property
+value, while already-conserved parcels are free.
+RCWs live in small groups in a well-defined territory
+(i.e., patch) that is centered around a cluster of cavity
+trees where the individual birds roost (Letcher et al.,
+1998). Presently, the study area contains 63 occupied
+RCW territories (these determine the sources S), the
+vast majority of which fall within conserved parcels.
+We identify almost 2500 potential RCW territories satisfying minimum habitat and area requirements, using a 30 by 30 km habitat suitability raster of the
+study area that is calculated using land cover type,
+hurricane/climate change risk, and development risk.
+The fact that these territories are specified in advance
+and assumed to exist at time zero is a simplification,
+but compatible with RCW ecology and management
+strategies. Because of restrictive requirements for cavity trees (live old-growth pines 80 to 150 years old)
+and significant time investments to excavate cavities
+(one to six years), the locations of territories are stable over time: it is far more common for an individual
+to fill a vacancy in an existing territory than to build
+a new one (Letcher et al., 1998). Further, it is a common management practice for land managers to drill
+or install artificial cavities to construct a new territory (USFWS, 2003), which is compatible with the assumption that potential territory locations are chosen
+in advance of them becoming populated.
+The parcel composition can be seen on the left of Figure 3, while the location of active and potential RCW
+territories can be seen on the right of Figure 3. Given
+a specific budget, the goal is to decide which parcels
+to conserve in order to maximize the expected number
+of active territories at a 100 year time horizon.
+To model the dispersal process among RCW territories, we utilize a simple parametric form for colonization probabilities based on previous theoretical work
+about metapopulations, and the parameter values are
+adapted to loosely match an individual-based model
+for the RCW (Letcher et al., 1998). In particular, the
+probability that some individual from an active territory i colonizes an unoccupied territory j in one year
+is computed according to Equation 5.
+(
+1/Ci
+d(i, j) ≤ r0
+p(i, j) =
+(5)
+α exp(−γ · d(i, j)) d(i, j) > r0
+When the distance d(i, j) between territories i and j is
+within the species foraging radius r0 , the colonization
+probability is inversely proportional to the number Ci
+of neighboring territories within distance r0 . When
+d(i, j) > r0 , the colonization probability decays ex-
+
+700
+
+730
+
+600
+500
+400
+saa−ub
+saa
+greedy−cb
+greedy−uc
+
+300
+200
+0
+
+1
+
+2
+
+3
+4
+Budget
+
+5
+
+6
+
+greedy−cb
+saa−ub
+saa
+
+720
+710
+700
+690
+680
+
+7
+8
+
+670
+0
+
+700
+Occupied Territories
+
+740
+
+Occupied Territories
+
+Occupied Territories
+
+800
+
+600
+
+500
+
+400
+
+saa−ub
+saa
+greedy−cb
+greedy−uc
+
+300
+5
+
+x 10
+
+(a)
+
+10
+
+15
+
+20
+
+1.5
+
+2
+
+N
+
+(b)
+
+2.5
+3
+Budget
+
+3.5
+
+4
+8
+x 10
+
+(c)
+
+Figure 4: (a) Objective values for saa and greedy, and saa upper bound, for various budgets. (b) Upper and
+lower bounds on objective as a function of training size N. (c) Results for mod instance, K=20.
+ponentially with distance. In our study, the foraging
+radius is r0 = 3 km, and the other parameter values
+are α = 0.1 and γ =7.69e-4. The single-year extinction
+probability is βi = 0.29 for all territories i.
+5.1
+
+PERFORMANCE AND BOUNDS
+
+We compared the quality of the solutions that the algorithms saa, greedy-uc and greedy-cb found for
+our test instance for a range of different budgets. For
+the algorithm saa, we solved M = 50 SAA problems
+on samples of size N = 10 training cascades using the
+CPLEX optimization software, with the best solution
+chosen using Nvalid = 500 validation cascades, and finally evaluated using Ntest = 500 test cascades (see
+Algorithm 1). The greedy algorithms were run with
+100 training cascades and then evaluated using the
+same 500 test cascades used for saa. Performance is
+measured as the number of occupied territories at the
+end of 100 years, averaged over the test cascades.
+In Figure 4, we plot performance versus budget for
+the three algorithms, and also the stochastic upper
+bound (‘saa-ub’) obtained from saa. The saa solutions are very close to this upper bound which indicates that they are essentially optimal. The saa algorithm outperforms both greedy approaches, although
+greedy-cb also performs very well in this case. Later
+we will see that certain problem instances exhibit a
+much bigger performance gap between saa and the
+greedy algorithms. Also note that greedy-cb outperforms greedy-uc, which indicates the importance
+of considering the benefit of each parcel in conjunction
+with its cost.
+To test whether the number of training cascades we
+used was sufficient, we evaluated the performance as
+a function of N at a fixed budget of $398M (10% of
+the total parcel cost). Figure 4(b) shows the estimated
+upper and lower bounds on the objective obtained for
+each training size. Note that the gaps are quite small:
+
+for N = 10 the upper bound is 696.07 and the lower
+bound is 687.97, only a 1.16% gap. Moreover, the gap
+does not decrease significantly for N > 10, indicating
+that N = 10 is a large enough sample size for saa
+to obtain high quality solutions. The error bars in
+the figure represent 95% confidence intervals that are
+computed over the M training samples averaged to
+obtain the upper bound, and the Ntest cascades for
+the lower bound. These indicate high confidence that
+saa is close to the true optimum for the stochastic
+optimization problem. Error bars for Figure 4(a) are
+of similar size, but are omitted because they are too
+small to be seen relative to the scale of the figure.
+
+5.2
+
+PREPROCESSING
+
+Preprocessing is critical to the running time of our
+algorithms. Our average training cascade has 44K
+nodes after pruning (of 256K possible nodes). The
+additional preprocessing steps reduce the average cascade size to under 20K nodes and 43K edges. We
+measured the running time savings by solving SAA
+instances (T = 20, N = 10) with and without preprocessing (see Figure 5(a)). Running time is typically
+reduced by a factor of 3–10 for the range of budgets.
+We also evaluated the benefits of preprocessing on the
+running time of the greedy algorithms, as illustrated
+in Figure 5(b). The lines are labeled as follows: ‘fresh’
+is the variant of the greedy algorithm that evaluates
+the marginal benefit of each action by simulating a
+fresh set of training cascades each time; ‘reuse’ is the
+variant where training cascades are simulated in advance as in SAA; ‘reuse+pre’ also includes preprocessing of the training cascades; and ‘reuse+pre+repeat’
+reapplies the preprocessing step each time the greedy
+algorithm commits to a management action. The results indicate the dramatic runtime savings accrued
+by: (1) generating training cascades in advance and
+(2) preprocessing cascades to reduce their size.
+
+30
+
+saa
+saa+pre
+
+Runing Time (seconds)
+
+25
+20
+15
+10
+5
+0
+0
+
+2
+
+4
+Budget
+
+6
+
+8
+8
+
+x 10
+
+(a)
+4000
+
+Runing Time (seconds)
+
+3500
+3000
+2500
+
+fresh
+reuse
+reuse+pre
+reuse+pre+repeat
+
+2000
+1500
+1000
+500
+0
+0
+
+2
+
+4
+Budget
+
+6
+
+8
+8
+x 10
+
+(b)
+Figure 5: Run times with different levels of preprocessing: (a) saa, (b) greedy-uc.
+
+6
+
+this is not the case. We have modified the problem
+instance to demonstrate this point, by taking many
+of the parcels in the northeast quadrant out of conservation and assigning them costs, and then making
+many of the parcels farther to the west and southwest
+conserved (i.e., available at no cost). This reflects a
+situation where an existing population is located at
+some distance from a reservoir of conservation land
+that is suitable for habitation, or could be made suitable by low-cost management strategies. All other details of the problem such as colonization probabilities
+and time horizon remain the same.
+In Figure 4(c), we evaluate performance of saa,
+greedy-cb and greedy-ub across different budgets
+for the modified instance. In this case, unlike in Figure
+4(a), there is a substantial performance gap between
+saa and both greedy approaches.
+Figure 6 illustrates the actual strategies of greedy-cb
+and saa on this modified instance. We can see qualitatively different strategies between the two. In this
+case, greedy-cb continues to follow the myopic conservation strategy of building outward from the initial
+population, while saa recognizes that there is a high
+available payoff by connecting to existing conservation
+land and builds a path in that direction.
+
+DISCUSSION
+
+In Section 2.4, we presented an example that showed
+that the greedy algorithm can perform arbitrarily
+worse than optimal. However, in Figure 4(a), greedycb is often competitive with saa. Upon investigation,
+we found that our study area is very well suited to a
+myopic strategy such as greedy. The diffusion behavior
+of the RCW given by Equation (5) is such that short
+range colonizations with hops smaller than the foraging radius r0 are much more common than long range
+colonizations. Hence, any good solution is effectively
+constrained to buy parcels that are contiguous with the
+initially occupied territories, so new parcels can be colonized by short hops. However, the greedy algorithms
+build outwards myopically, never caring what lies beyond the current parcel they are purchasing, while the
+saa algorithm is capable of setting goals, e.g., to build
+a path from the sources to another area that is highly
+favorable. However, one can see from Figure 3 that
+the most favorable area is actually very close to the
+sources: there is a large block of conserved, but unoccupied, territories in the northeast quadrant of the
+study area that can support an increased population at
+no additional cost if they are connected to the sources.
+Hence, due to the proximity, the greedy algorithm easily discovers a near-optimal solution even though it is
+behaving myopically.
+It is easy to imagine real conservation scenarios where
+
+7
+
+CONCLUSION
+
+In this work, we addressed the problem of maximizing
+the spread of cascades under budget restrictions. Our
+problem formulation allows a powerful class of management actions that add nodes to the network. However, the cascade is a complex stochastic process so
+the outcome of any particular action is uncertain, and
+unlike other cascade optimization problems, this one
+cannot be provably approximated by a naive greedy
+approach. We proposed a sample average approximation approach to reduce the stochastic problem to a
+deterministic network design problem, while still retaining stochastic optimality guarantees. We evaluated our methodology on a key problem from the field
+of computational sustainability: spatial conservation
+planning for species population growth. The SAA approach scaled well to this large real-world instance and
+found better solutions than greedy baselines while also
+providing optimality bounds. Moreover, preprocessing techniques resulted in a dramatic runtime speedup
+for both the SAA and greedy algorithms. Most importantly, our results show that the optimal solutions
+generated by the SAA approach can be qualitatively
+different than the ones obtained by a myopic greedy
+approach. A promising avenue of future research is to
+evaluate this methodology for other conservation and
+cascade optimization problems.
+
+$ 150M
+
+$ 260M
+
+$ 320M
+
+$ 400M
+
+Figure 6: Illustration of conservation strategies for different budget levels obtained by greedy (top row) and
+saa (bottom row). The expected number of active territories is given for each solution.
+
+Acknowledgments
+This work was supported by the National Science
+Foundation (grants IIS-0832782, IIS-0514429, and
+DBI-0905885) and the Air Force Office of Scientific
+Research (grant FA9550-04-1-0151).
+
+
+
+In this paper we introduce a class of Markov decision processes that arise as a natural model for
+many renewable resource allocation problems.
+Upon extending results from the inventory control literature, we prove that they admit a closed
+form solution and we show how to exploit this
+structure to speed up its computation.
+We consider the application of the proposed
+framework to several problems arising in very
+different domains, and as part of the ongoing effort in the emerging field of Computational Sustainability we discuss in detail its application to
+the Northern Pacific Halibut marine fishery. Our
+approach is applied to a model based on real
+world data, obtaining a policy with a guaranteed
+lower bound on the utility function that is structurally very different from the one currently employed.
+
+1
+
+Introduction
+
+The problem of devising policies to optimally allocate resources over time is a fundamental decision theoretic problem with applications arising in many different fields. In
+fact, such decisions may involve a variety of different resources such as time, energy, natural and financial resources, in allocation problems arising in domains as diverse as natural resources management, crowdsourcing,
+supply chain management, QoS and routing in networks,
+vaccine distribution and pollution management.
+A particularly interesting class of such problems involves
+policies for the allocation of renewable resources. A key
+and unique aspect of such a resource type is the fact that, by
+definition, its stock is constantly replenished by an intrinsic
+growth process. The most common example are perhaps
+living resources, such as fish populations or forests, that increase constantly by natural growth and reproduction, but
+less conventional resources such as users in a social com-
+
+Carla Gomes, Bart Selman
+Department of Computer Science
+Cornell University
+{gomes,selman}@cs.cornell.edu
+
+munity or in a crowdsourcing project share the same intrinsic growth feature due to social interactions.
+A common feature of the growth processes presented is that
+they are density dependent, in the sense that the growth
+rate depends on the amount of resource available. This fact
+creates a challenging management problem when the aim
+of the intervention is to optimally use the resource, for instance by harvesting a fish population or by requiring some
+effort from a crowdsourcing community, especially when
+economic aspects are factored in. We face a similar challenge in vaccine distribution problems, where the growth
+rate of infections is again density dependent and the objective is to reduce its spreading.
+This study, in particular, has been motivated by the alarming consideration that many natural resources are endangered due to over-exploitation and generally poorly managed. For instance, the Food and Agricultural Organization
+estimates in their most recent report that 7% of marine fish
+stocks are already depleted, 1% are recovering from depletion, 52% are fully exploited and 17% are overexploited
+([1]).
+One of the most fundamental aspects of the problem seems
+to be the lack of an effective way to handle the uncertainty
+affecting the complex dynamics involved. While in most of
+the works in the literature [6, 7] these growth processes are
+modeled with deterministic first-order difference or differential equations, this approach often represents an oversimplification. In fact their intrinsic growth is often affected
+by many variables and unpredictable factors. For example,
+in the case of animal populations such as fisheries, both
+weather and climate conditions are known to affect both
+the growth and the mortality in the population. Other variable ecological factors such as the availability of food or
+the interaction with other species also influence their natural dynamics to the point that it is very difficult even to
+obtain reliable mathematical models to describe their dynamics.
+On the other hand, stochastic differential equations can easily incorporate these variable factors and therefore represent a more robust description. However, obtaining a prob-
+
+abilistic description of such systems is far from easy. In
+fact, even if in principle uncertainty could be reduced by
+collecting and analyzing more data, it is generally believed
+that complex and stochastic systems, such a marine environments, could never become predictable (to the point
+that the authors of [13] believe that “predictability of anything as complex as marine ecosystem will forever remain
+a chimera”).
+Moreover, there are situations of “radical uncertainty” ([8])
+or ambiguity where a stochastic description is not feasible
+because the probabilities are not quantifiable. For instance,
+many fundamental environmental issues that we are facing, such as those surrounding the climate change debate,
+involve ambiguity in the sense of scientific controversies or
+irreducible beliefs that cannot be resolved.
+In the context of stochastic optimization, there are two
+main ways to deal with uncertainty. The first one involves
+a risk management approach, where it is assumed that the
+probabilities of the stochastic events are known a priori or
+are learned from experience through statistical data analysis. Within this framework, decisions are taken according
+to stochastic control methods. Using tools such as risksensitive Markov decision processes ([12, 15]), it is also
+possible to encode into the problem the attitude towards
+risk of the decision maker by using an appropriate utility
+function. In particular the degree of risk aversion can be
+controlled by sufficiently penalizing undesirable outcomes
+with the utility function. When a fine grained stochastic description is not available, worst-case game theoretic frameworks, that are inherently risk averse, play a fundamental role because it is often crucial to devise policies that
+avoid catastrophic depletion. This type of approach, where
+the problem of data uncertainty is addressed by guaranteeing the optimality of the solution for the worst realizations
+of the parameters, is also known in the literature as robust
+optimization ([3, 5]), and has been successfully applied to
+uncertain linear, conic quadratic and semidefinite programming.
+In this paper, we present a class of Markov decision processes that arise as a natural model for many resource management problems. Instead of formulating the optimization problem in a traditional form as a maximization of an
+expected utility, we tackle the management problems in a
+game theoretic framework, where the optimization problem
+is equivalent to a dynamic game against nature. This formulation is a particular type of Markov game [14] (sometimes called a stochastic game [16]) where there are only
+two agents (the manager and nature) and they have diametrically opposed goals.
+As mentioned before, although this formulation is more
+conservative, it also eliminates the very difficult task of estimating the probabilities of the stochastic events affecting
+the system. In a context where the emphasis in the literature has traditionally been on the study of expected utilities,
+
+this approach represents a new perspective. Moreover, the
+policies thus obtained provide a lower bound on the utility
+that can be guaranteed to be achieved, no matter the outcomes of the stochastic events. For this class of problems,
+we are able to completely characterize the optimal policy
+with a theoretical analysis that extends results from the inventory control literature, obtaining a closed form solution
+for the optimal policy.
+As part of the new exciting research area of Computational
+Sustainability ([10]), where techniques from computer science and related fields are applied to solve the pressing sustainability challenges of our time, we present an application
+of the proposed framework to the Northern Pacific Halibut
+fishery, one of the largest and most lucrative fisheries of the
+Northwestern coast. In particular, our method suggests the
+use of a cyclic scheme that involves periodic closures of the
+fishery, a policy that is structurally different from the one
+usually employed, that instead tries to maintain the stock
+at a given size with appropriate yearly harvests. However,
+this framework is interesting in its own right and, as briefly
+mentioned before, it applies to a variety of other problems
+that share a similar mathematical structure and that arise
+in very different domains. For example, we can apply our
+framework to pollution problems, where a stock of pollutants is evolving over time due to human action, and the
+objective is to minimize the total costs deriving from the
+presence of a certain stock of pollutants and the costs incurred with cleanups, but also to crowdsourcing and other
+problems.
+
+2
+
+MDP Formulation
+
+In this section, we will formulate the optimization problem
+as discrete time, continuous space Markov decision process. Whenever possible, we will use a notation consistent
+with the one used in [4]. Even if we will consider only a
+finite horizon problem, the results can be extended to the
+infinite horizon case with limiting arguments. To make the
+description concrete, the model will be mostly described
+having a natural resource management problem in mind.
+We consider a dynamical system evolving over time according to
+xn+1 = f (xn − hn , wn ),
+(1)
+where xn ∈ R denotes the stock of a renewable resource
+at time n. By using a discrete time model we implicitly assume that replacement or birth processes occur in regular,
+well defined “breeding seasons”, where f (·) is a reproduction function that maps the stock level at the end of one
+season to the new stock level level at the beginning of the
+next season. The control or decision variable at year n is
+the harvest level hn (occurring between two consecutive
+breeding seasons), that must satisfy 0 ≤ hn ≤ xn .
+As mentioned in the introduction, the function f (·) cap-
+
+tures the intrinsic replenishment ability of renewable resources, that in many practical applications (such as fisheries or forestry) is density dependent: growth rate is high
+when the habitat is underutilized but it decreases when
+the stock is larger and intraspecific competition intensifies.
+Specific properties of reproduction functions f (·) will be
+discussed in detail later, but we will always assume that
+there is a finite maximum stock level denoted by m.
+To compensate for the higher level description of the complex biological process we are modeling, we introduce uncertainty into the model through wn , a random variable that
+might capture, for example, the temperature of the water,
+an uncontrollable factor that influences the growth of the
+resource. Given the worst case framework we are considering, we will never make assumptions on the probability distribution of wn but only on its support (or, in other words,
+on the possible outcomes). In fact in an adversarial setting
+it is sufficient to consider all possible scenarios, each one
+corresponding to an action that nature can take against the
+policy maker, without assigning them a weight in a probabilistic sense.
+Given the presence of stochasticity, it is convenient to consider closed loop optimization approaches, where decisions
+are made in stages and the manager is allowed to gather information about the system between stages. In particular,
+we assume that the state of the system xn ∈ R is completely observable. For example, in the context of fisheries
+this means that we assume to know exactly the level of the
+stock xn when the harvest level hn is to be chosen. In
+this context, a policy is a sequence of rules used to select
+at each period a harvest level for each possible stock size.
+In particular, an admissible policy π = {µ1 , . . . , µN } is a
+sequence of functions, each one mapping stocks sizes x to
+harvests h, so that for all x and for all i
+0 ≤ µi (x) ≤ x.
+
+(2)
+
+We assume that the marginal harvesting cost g(x) increases
+as the stock size x decreases. We include time preference
+into the model by considering a fixed discount factor α =
+1/(1 + δ) ( 0 ≤ α ≤ 1), where δ > 0 is a discount rate.
+For any given horizon length N , we consider the problem
+of finding an admissible policy π = {µi }i∈[1,N ] that maximizes
+π
+(x) =
+CN
+
+min
+w1 , . . . , wN
+wi ∈ W (xi )
+
+N
+X
+
+αn (R(xn ) − R(xn − hn ) − Kδ0 (hn ))
+
+n=1
+
+where xn is subject to (1) and hn = µn (xn ), with initial
+condition x1 = x and
+
+1 if x > 0,
+δ0 (x) =
+0 otherwise.
+This is a Max-Min formulation of the optimization problem, where the goal is to optimize the utility in a worst-case
+scenario. As opposed to the maximization of an expected
+utility ([17, 18]), this formulation is inherently risk averse.
+An advantage of this formulation is that there is no need to
+characterize the probability distribution of the random variables wk explicitly, but only to determine their support. In
+fact, one should consider all the possible scenarios, without
+worrying about the probabilities of their occurrence.
+
+3
+
+Main Results
+
+3.1
+
+Minimax Dynamic Programming
+
+π
+A policy π is called an optimal N -period policy if CN
+(x)
+attains its supremum over all admissible policies at π for
+all x. We call
+π
+CN (x) = sup CN
+(x),
+
+2.1
+
+π∈Π
+
+Resource Economics
+
+We now consider the economic aspects of the model. We
+suppose that the revenue obtained from a harvest h is proportional to h through a fixed price p, and that harvesting
+is costly. In particular we assume that there is
+
+the optimal value function, where Π represents the set of
+all admissible policies.
+As a consequence of the principle of optimality([4]), the
+dynamic programming equation for this problem reads:
+C0 (x)
+Cn (x)
+
+• a fixed set-up cost K each time a harvest is undertaken
+• a marginal harvest cost g(x) per unit harvested when
+the stock size is x
+It follows that the utility derived from a harvest h from an
+initial stock x is
+Z x
+g(y)dy − K , R(x) − R(x − h) − K, (3)
+ph −
+
+R(x) = px −
+
+Z
+
+x
+
+g(y)dy.
+0
+
+0,
+max
+
+min R(xn ) − R(xn − hn )
+
+0≤hn ≤x wn ∈W
+
+−Kδ0 (hn ) + αCn−1 (f (x − hn , wn ))
+for all n > 0. The latter equation can be rewritten in terms
+of the remaining stock z = x − hn (the post decision state)
+as
+
+x−h
+
+where
+
+=
+=
+
+
+
+Cn (x) = α max
+0≤z≤x
+
+R(x) − R(z) − Kδ0 (x − z) + min Cn−1 (f (z, wn )) .
+wn ∈W
+
+(4)
+
+This formulation of the problem is effectively analogous
+to a game against nature in the context of a two-person
+zero-sum game. The objective is in fact devising the value
+of z that maximizes the utility, but assuming that nature
+is actively playing against the manager with the opposite
+intention.
+It can be shown (see [4]) that Cn (x), the revenue function
+associated with an optimal policy, is the (unique) solution
+to equation (4). From equation (4) we see that an optimal
+policy, when there are n periods left and the stock level is
+x, undertakes a harvest if and only if there exists 0 ≤ z ≤ x
+such that
+
+• If β(·) is nondecreasing and concave on I
+and ψ(·) is nondecreasing and K-concave on
+[inf x∈I β(x), supx∈I β(x)] then the composition
+ψ ◦ β is K-concave on I.
+• Let β1 (x), . . . , βN (x) be a family of functions such
+that βi (x) is Ki -concave. Then γ(x) = mini βi (x) is
+(maxi Ki )-concave.
+• If β(·) is a continuous, K-concave function on the interval [0, m], then there exists scalars 0 ≤ S ≤ s ≤ m
+such that
+– β(S) ≥ β(q) for all q ∈ [0, m].
+– Either s = m and β(S) − K ≤ β(m) or s < m
+and β(S) − K = β(s) ≥ β(q) for all q ∈ [s, m).
+– β(·) is a decreasing function on [s, m].
+– For all x ≤ y ≤ s, β(x) − K ≤ β(y).
+
+R(x) − R(z) − K + α min Cn−1 (f (z, wn )) >
+wn ∈W
+
+α min Cn−1 (f (x, wn )).
+wn ∈W
+
+In fact, an action should be taken if and only if its associated benefits are sufficient to compensate the fixed cost
+incurred. By defining
+(5)
+
+The proof is not reported here for space reasons, but can
+be found in [9]. Similar results for K-convex functions are
+proved in [4].
+
+we have that an optimal policy, when there are n periods
+left and the stock level is x, undertakes a harvest if and
+only if there exists 0 ≤ z ≤ x such that
+
+In the following section we will prove by induction the Kconcavity of the functions Pn (x), n = 1, . . . , N . This will
+allow us to characterize the structure of the optimal policy
+by using the last assertion of Lemma 1.
+
+Pn (x) = −R(x) + α min Cn−1 (f (x, wn )),
+wn ∈W
+
+Pn (z) − K > Pn (x).
+
+(6)
+
+To examine this kind of relationship it is useful to introduce
+the notion of K-concavity, a natural extension of the Kconvexity property originally introduced by Scarf in [19]
+to study inventory control problems.
+3.2
+
+Preliminaries on K-concavity
+
+A function β(·) is K-concave if given three points x < y <
+z, β(y) exceeds the secant approximation to β(y) obtained
+using the points β(x) − K and β(z). Therefore for K = 0
+no slack is allowed and one recovers the standard definition
+of concavity. Formally
+Definition 1. A real valued function β(·) is K-concave if
+for all x, y, x < y, and for all b > 0
+β(x) − β(y) − (x − y)
+
+β(y + b) − β(y)
+≤ K.
+b
+
+(7)
+
+We state some useful results concerning K-concavity:
+Lemma 1. The following properties hold:
+• A concave function is 0-concave and hence Kconcave for all K ≥ 0 .
+• If β1 (q) and β2 (q) are respectively K1 -concave and
+K2 -concave for constants K1 ≥ 0 and K2 ≥ 0,
+then aβ1 (q) + bβ2 (q) is (aK1 + bK2 )-concave for any
+scalars a > 0 and b > 0.
+
+3.3
+
+On the Optimality of (S − s) policies
+
+Suppose that we can prove that Pn (x) is continuous and
+strictly K-concave. Then by Lemma 1 there exists Sn , sn
+with the properties proved in the last point of the Lemma.
+It is easy to see that condition (6) is satisfied only if x > s,
+in which case the optimal value of the remaining stock
+z would be precisely Sn . In conclusion, if we can prove
+the continuity and K-concavity of the functions Pn (x),
+n = 1, . . . , N , then following feedback control law, known
+as a nonstationary (S − s) policy, is optimal:
+At period n, a harvest is undertaken if and only if the
+current stock level is greater than sn ; in that case the stock
+is harvested down to Sn .
+This policy is known in the inventory control literature as a
+nonstationary (S −s) policy 1 , because the levels Sn and sn
+are time dependent. Since it is assumed that the marginal
+harvest cost g(x) is a non increasing function, we define x0
+to be the zero profit level such that g(x0 ) = p. If g(x) < p
+for all x, we define x0 = 0. As a consequence for all
+x > x0 we have that R′ (x) ≥ 0 so that R (defined in
+equation (3)) is non decreasing. Moreover if the marginal
+harvest cost g(x) is a non increasing function, then R is
+convex.
+1
+For the sake of consistency, we call sn the threshold value
+that governs the decision, even if in our case Sn ≤ sn .
+
+We also need to make an assumption on the concavity of
+R(·). In particular the marginal cost function g is allowed
+to decrease but not by too much. Let m Rbe an upper bound
+x
+on the possible values of x and G(x) = 0 g(t)dt, then we
+need
+
+
+1−α
+,
+(8)
+τ = G(m) − mg(m) < K
+α
+
+nondecreasing, consider the case 0 ≤ x1 < x2 ≤ sn+1 :
+
+α
+
+Cn+1 (x2 ) − Cn+1 (x1 ) =
+
+min Cn (f (x2 , wn )) − min Cn (f (x1 , wn )) .
+
+wn ∈W
+
+min
+
+wn ∈W (x2 )
+
+The main result is the following theorem, where we show
+that if some assumptions are satisfied, the optimal policy is
+of (S − s) type. The key point of this inductive proof is
+to show that the K-concavity property is preserved by the
+Dynamic Programming operator.
+Theorem 1. For any setup cost K > 0 and any positive
+integer N , if f (·, w) is nondecreasing and concave for any
+w and if g is non increasing and satisfies condition (8),
+then the functions Pn (x) defined as in (5) are continuous
+and K-concave for all n = 1, . . . , N . Hence there exists a
+non-stationary (S − s) policy that is optimal. The resulting optimal present value functions Cn (x) are continuous,
+nondecreasing and K-concave for all n = 1, . . . , N .
+Proof. From equation (8) we know that there exists a number k such that
+(9)
+
+The proof is by induction on N . The base case N = 0
+is trivial because C0 (x) = 0 for all x, and therefore it
+is continuous, nondecreasing and k-concave. Now we
+assume that Cn (x) is continuous, nondecreasing and kconcave, and we show that Pn+1 (x) is continuous and Kconcave, and that Cn+1 (x) is continuous, nondecreasing
+and k-concave.
+Since f (·, w) is nondecreasing and concave for all w,
+Cn (f (z, wn )) is K-concave by Lemma (1). By Lemma
+1
+
+wn ∈W
+
+If for all x2 > x1 ≥ 0,
+
+a condition that implies the τ -concavity of R.
+
+(K + τ )α < k < K.
+
+
+
+f (x2 , wn ) ≥
+
+min
+
+wn ∈W (x1 )
+
+f (x1 , wn ),
+
+then Cn+1 (x2 ) − Cn+1 (x1 ) ≥ 0 because Cn (x) is nondecreasing. For the case sn+1 < x1 < x2 and sn+1 ≥ x0 :
+Cn+1 (x2 ) − Cn+1 (x1 ) = α(R(x2 ) − R(x1 )) ≥ 0,
+because R is nondecreasing on that interval. It must be the
+case that Sn+1 > x0 because harvesting below x0 is not
+profitable and reduces the marginal growth of the stock, so
+given that sn+1 ≥ Sn+1 ≥ x0 we conclude that Cn+1 (x)
+is nondecreasing. It remains to show that Cn+1 (x) is kconcave, and by equation (9) it is sufficient to show that it
+is (K + τ )α-concave. To show that definition (7) holds for
+Cn+1 (x), we consider several cases.
+When x < y ≤ sn+1 , according to equation (10) we have
+that Cn+1 (x) = α(Pn+1 (x) + R(x)) and therefore equation (7) holds by Lemma 1 because Pn+1 is K-concave and
+R(·) is τ -concave. Similarly when sn+1 < x < y, equation (7) holds because R(·) is τ -concave.
+When x ≤ sn+1 < y equation (7) reads
+Cn+1 (y + b) − Cn+1 (y)
+≤
+Cn+1 (x) − Cn+1 (y) − (x − y)
+b
+
+
+R(y + b) − R(y)
+≤
+α K + R(x) − R(y) − (x − y)
+b
+α(K + τ ).
+because Pn+1 (x) ≤ Pn+1 (Sn+1 ) and R(·) is τ -concave.
+
+4
+
+Consistency and Complexity
+
+min Cn−1 (f (z, wn ))
+
+wn ∈W
+
+Even if Theorem 1 completely describes the structure of the
+optimal policy, in general there is no closed form solution
+for the values of Sn and sn , that need to be computed numerically. In order to use the standard dynamic programming approach, the state, control and disturbance spaces
+must be discretized, for instance using an evenly spaced
+grid. Since we are assuming that those spaces are bounded,
+we obtain in this way discretized sets with a finite number
+of elements. We can then write DP like equations for those
+
+α(Pn+1 (x) + R(x))
+if x ≤ sn+1 , points, using an interpolation of the value function for the
+Cn+1 (x) =
+α(Pn+1 (Sn+1 ) + R(x) − K) if x > sn+1 . points that are not on the grid. The equations can be then
+solved recursively, obtaining the semi-optimal action to be
+(10)
+taken for each point of the grid, that can then be extended
+The continuity of Cn+1 (x) descends from the continuby interpolation to obtain an approximate solution to the
+ity of Pn+1 (x) and because by definition Pn+1 (sn+1 ) +
+original problem.
+R(sn+1 ) = Pn+1 (Sn+1 ) + R(sn+1 ) − K. To show it is
+
+is also K-concave. Again using Lemma 1, if −R(x)
+is concave, then by equation (5) Pn+1 (x) is K-concave.
+The continuity of Pn+1 (x) is implied by the continuity of
+Cn (x) and R(x).
+Given that Pn+1 (x) is K-concave and continuous, the optimal action is to harvest down to Sn+1 if and only if the
+current stock level is greater than sn+1 , so we have
+
+The standard dynamic programming algorithm involves
+O(|X||W ||U ||T |) arithmetic operations, where |X| is the
+number of discretized states, |W | the number of possible
+outcomes of the (discretized) uncontrollable events, |U | the
+maximum number of possible discretized actions that can
+be taken in any given state and T is the length of the time
+horizon. However, the priori knowledge of the structure of
+the optimal policy can be used to speed up the computation. In fact it is sufficient to find s (for example by bisection) and compute the optimal control associated with any
+state larger than s to completely characterize the policy for
+a given time step. The complexity of this latter algorithm
+is O(|W ||U ||T | log |X|).
+
+5
+
+Case Study: the Pacific Halibut
+
+As part of the ongoing effort in the emerging field of Computational Sustainability, we consider an application of our
+framework to the Pacific Halibut fishery.
+The commercial exploitation of the Pacific halibut on the
+Northwestern coastline of North America dates back to the
+late 1800s, and it is today one of the region’s largest and
+most profitable fisheries.The fishery developed so quickly
+that by the early 20th century it was starting to exhibit
+signs of overfishing. After the publication of scientific reports which demonstrated conclusively a sharp decline of
+the stocks, governments of the U.S. and Canada signed a
+treaty creating the International Pacific Halibut Commission (IPHC) to rationally manage the resource. The IPHC
+commission controls the amount of fish caught annually by
+deciding each year’s total allowable catch (TAC), that is
+precisely the decision variable hn of our optimization problem.
+5.1
+
+Management Problem Formulation
+
+To develop a bioeconomic model of the fishery, we have
+extracted data 2 from the IPHC annual reports on estimated
+biomass xt , harvest ht and effort Et (measured in thousands of skate soaks) for Area 3A (one of the major regulatory areas in which waters are divided) for a 33 years period
+from 1975 to 2007. To model the population dynamics, we
+2
+
+Data is available from the authors upon request.
+
+200
+Effort H1000 sk. soaksL , Stock H10^6 poundsL
+
+As with all discretization schemes, we need to discuss the
+consistency of the method. In particular, we would like
+(uniform) convergence to the solution of the original problem in the limit as the discretization becomes finer. It is
+well known that in general this property does not hold.
+However in this case Theorem 1 guarantees the continuity
+of Cn , that in turn implies the consistency of the method,
+even if the policy itself is not continuous as a function of
+the state([4]). Intuitively, discrepancies are possible only
+around the threshold sn , so that they tend to disappear as
+the discretization becomes finer.
+
+hist. stock
+150
+
+est. stock
+hist. effort
+est. effort
+
+100
+
+50
+
+0
+1975
+
+1980
+
+1985
+
+1990
+
+1995
+
+2000
+
+2005
+
+Year
+
+Figure 1: Fitted models (11) and (13) compared to historical data (in bold).
+consider the Beverton-Holt model that uses the following
+reproduction function
+xn+1 = f (sn ) = (1 − m)sn +
+
+r0 sn
+,
+1 + sn /M
+
+(11)
+
+where sn = xn −hn is the stock remaining after fishing (escapement) in year n. This model can be considered as a discretization of the continuous-time logistic equation. Here,
+parameter m represents a natural mortality coefficient, r0
+can be interpreted as a reproduction rate and M (r0 −m)/m
+is the carrying capacity of the environment. The (a priori)
+mortality coefficient we use is m = 0.15, that is the current
+working value used by the IPHC. The values of r0 and M
+are estimated by ordinary least square fitting to the historical data. Estimated values thus obtained are reported in
+table 1, while the fitted curve is shown in figure 1.
+Parameter
+q
+b
+p
+K
+c
+δ
+m
+M
+r0
+
+Value
+9.07979 10−7
+2.55465
+4, 300, 000$ / (106 pounds)
+5, 000, 000$
+200, 000$ / 1000 skate soaks
+0.05
+0.15
+196.3923 106 pounds
+0.543365
+
+Table 1: Base case parameter set.
+Following [18], we suppose that the system is affected by
+stochasticity in the form of seasonal shocks wn that influence only the new recruitment part
+xn+1 = f (sn , wn ) = (1 − m)sn + wn
+
+r0 sn
+. (12)
+1 + sn /M
+
+Instead of assuming an a priori probability distribution for
+wn or trying to learn one from data (that in our case would
+not be feasible given current scarce data availability), we
+will make use of the framework developed in the previous
+sections. In particular we will (a priori) assume that wn are
+random variables all having the same finite support that we
+will learn from data, but we will not make any assumption
+on the actual weight distribution. With our data, we obtain
+that wn ∈ [1 − 0.11, 1 + 0.06] = Iw .
+For the economic part of the model, we start by modeling
+the relationship between a harvest ht that brings the population level from xt to xt − ht and the effort Et needed to
+accomplish this result. We will a priori assume that there is
+a marginal effort involved, so that
+
+5.2
+
+Optimal Policy
+
+By using the dynamic programming approach on the problem discretized with a step size of 0.25 × 106 pounds,
+we compute the optimal policy for a management horizon of N = 33 years, that is the length of our original
+time series. As predicted by Theorem 1, the optimal policy
+π ∗ = {µ1 , . . . , µN } for the model we constructed for area
+3A is a non stationary (S − s) policy. In figure 2(a) we plot
+the function µ1 (·) to be used in the first year (the values of
+S1 and s1 are 133 and 176.75 respectively). In words, the
+optimal policy dictates that at period n a harvest is to be
+undertaken if and only if the current stock level is greater
+than sn ; in that case the stock is harvested down to Sn .
+Optimal policy and escapement
+500
+
+Et =
+
+Z
+
+xt
+xt −ht
+
+1
+dy
+qy b
+
+harvest
+escapement
+
+450
+
+(13)
+
+400
+
+6
+
+stock (10 pounds)
+
+350
+300
+250
+200
+150
+
+S
+
+100
+50
+0
+
+s
+0
+
+100
+
+200
+
+300
+
+400
+
+500
+
+600
+
+stock (106 pounds)
+
+(a) Optimal rule for selecting harvests in the first year.
+Optimal state and control trajectories
+200
+180
+160
+140
+
+6
+
+stock (10 pounds)
+
+for some q and b. This is inspired by the fact that less effort is required when the stock is abundant, and can also
+be interpreted as an integral of infinitesimal Cobb-Douglas
+production functions (a standard economic model for productivity) where b and g are the corresponding elasticities.
+Estimated values obtained by least squares fitting are reported in table 1, while the resulting curve is compared with
+historical data in figure 1.
+Costs involved in the Halibut fishery are divided into two
+categories: fixed costs and variable costs. Fixed costs include costs that are independent of the number and the duration of the trips a vessel makes (therefore generically independent from the effort Et ). For example, vessel repairs
+costs, license and insurance fees, mooring and dockage fees
+are typically considered fixed costs. We will denote with
+K the sum of all the fixed costs, that will be incurred if and
+only if a harvest is undertaken.
+Variable costs include all the expenses that are dependent
+on the effort level. Variable costs typically include fuel,
+maintenance, crew wages, gear repair and replacement. We
+assume that the total variable costs are proportional to the
+effort Et (measured in skate soaks) according to a constant
+c. Parameter c is set to 200, 000$ for 1000 skate soaks
+(200$/skate) as estimated in [2]. Following the analysis of
+the historical variable and fixed costs for the halibut fishery
+carried on in [11], we assume K = 5, 000, 000$ for area
+3A. The unit price p for the halibut is set to 4, 300, 000$/
+106 pounds, as in [2].
+If we further assume a fixed discount rate δ = 0.05, we
+obtain a formulation of management problem for the Halibut fishery in Area 3A that fits into the framework described in the previous section. In particular, the problem for an N years horizon is that of finding an admissible policy π = {µi }i∈[1,N ] that maximizes the revenue
+π
+CN
+(x) where xRn is subject to (12), hn = µn (xn ) and
+x
+R(x) = px − c 0 qy1b dy.
+
+stock
+harvest
+
+120
+100
+80
+60
+40
+20
+0
+
+0
+
+5
+
+10
+
+15
+20
+time (years)
+
+25
+
+30
+
+35
+
+(b) Stock trajectory and corresponding optimal harvests.
+
+Figure 2: The optimal policy.
+The trajectory of the system when it is managed using the
+optimal policy is shown in figure 2, together with the corresponding optimal harvests. As we can see, the optimal policy is pulsing, in the sense that it involves periodic closures
+of the fishery, when no harvest should be undertaken so that
+
+the fish stock has time to recover. Of course, this kind of
+policy could be acceptable in practice only in combination
+with some rotation scheme among the different Areas, so
+that a constant yearly production can be sustained.
+
+Optimal state and control trajectories with rolling horizon
+200
+180
+160
+140
+
+To see the advantage of the optimal (S − s) policy, we
+compare it with the historical harvest proportions and with
+a CPP policy that uses the historical average harvest rate
+a = 0.1277. Table 2 summarizes the discounted revenues
+corresponding to an initial stock size x1 = 90.989 million
+pounds, that is the estimated stock size in 1975.
+Policy
+Optimal S − s
+Historical rates
+Average CPP
+Rolling Horizon
+
+Disc. revenue ($)
+9.05141 × 108
+7.06866 × 108
+6.51849 × 108
+8.73605 × 108
+
+Loss ($)
+−
+1.98275 × 108
+2.53292 × 108
+3.1536 × 107
+
+Table 2: Policy Comparison
+Compared to the historical policy or the CPP policy, revenues for the optimal (S − s) policy are about 35% higher,
+as reported in table 2. Notice that the comparison is done
+assuming a worst case realization of the stochasticity, or in
+other words that the nature is actively playing against the
+manager.
+Notice that the large harvest prescribed by the optimal
+(S − s) policy in the last year is an artifact of the finite
+horizon effect, caused by the fact that there is no reason
+not to exhaust the resource at the end of the management
+horizon (as long as it is profitable to harvest it). However
+it does not affect the comparison significantly due to the
+discount rate. In fact the (discounted) revenue for the entire last large harvest only accounts for less than 8% of the
+total revenue. This is confirmed by looking at the results
+obtained with a rolling horizon strategy that always picks
+the optimal action with a 33-years long management horizon in mind. As shown in figure 3, this (suboptimal) strategy is not affected by the finite horizon effect. The rolling
+horizon strategy still involves periodic closures of the fishery and significantly outperforms the historical policies, as
+reported in table 2.
+To further clarify that the pulsing nature of the optimal harvests is not an artifact of the finite horizon, it is also interesting to notice that the theoretical results on the optimality of (S − s) policies and the corresponding pulsing
+
+stock (106 pounds)
+
+This scheme is very different from the Constant Proportional Policy (CPP) that has been traditionally used to manage the Halibut fishery. In fact a CPP works by choosing
+the yearly TAC as a fixed fraction of the current stock level
+xt , and is aimed at maintaining the exploited stock size
+(the escapement) at a given fixed level. This policy can
+be seen as a simplified version of an (S − s) policy where
+the two levels do not depend on the stage n and coincide,
+thus defining the target stock size.
+
+stock
+harvest
+
+120
+100
+80
+60
+40
+20
+0
+
+0
+
+5
+
+10
+
+15
+20
+time (years)
+
+25
+
+30
+
+35
+
+Figure 3: Harvests and stock trajectory with the rolling
+horizon strategy.
+
+harvests can be carried over to the infinite horizon case via
+limiting arguments. The high level argument is that the optimal value function Cn (x) converges uniformly to C(x)
+as n → ∞, while Pn (x) converges uniformly to a function
+P (x) as n → ∞. Given that by Theorem 1 Pn (x) is continuous and K-concave for all n, we have that P (x) must be
+also continuous and K-concave. Using an argument similar to the one developed in section 3.3 and by using Lemma
+1, one can show that there exists S and s such that the optimal stationary policy for the infinite horizon problem is an
+(S − s) policy.
+
+6
+
+Conclusions
+
+In this paper, we have analyzed the optimality of (S−s) polices for a fairly general class of stochastic discrete-time resource allocation problems. When a non stationary (S − s)
+policy is used, a harvest is undertaken at period n if and
+only if the current stock level is greater than sn ; in that case
+the stock is harvested down to Sn . The framework developed is quite general and can be applied to problems arising
+in very different domains, such as natural resource management, crowdsourcing, pollution management. When assumptions of Theorem 1 are met, we have shown that there
+exists a non stationary (S − s) policy that maximizes the
+utility in a worst case scenario.
+A fundamental advantage of the game theoretic approach
+is that it completely avoids the problem of evaluating the
+probability distributions of the random variables describing the uncertainty affecting those systems, a task that is
+difficult or even impossible to accomplish in many practical circumstances. Given the consensus reached by the scientific community on the importance of understanding the
+role of uncertainty when dealing with renewable resources,
+we believe that worst-case scenario frameworks such as the
+
+one described here provide new insights and will become
+increasingly important.
+To contribute to the effort of the Computational Sustainability community in tackling the fundamental sustainability challenges of our time, we consider an application of
+our model to a marine natural resource. This type of natural resources are in fact widely believed to be endangered
+due to over exploitation and generally poorly managed. Using Gulf of Alaska Pacific halibut data from the International Pacific halibut Commission (IPHC) annual reports,
+we formulated a real world case study problem that fits into
+our framework. In particular, our approach defines a policy
+with a guaranteed lower bound on the utility function that is
+structurally very different from the one currently employed.
+As a future direction, we plan to study the effects of partial observability on the optimal policies by moving into a
+POMDP framework. Moreover, we aim at extending the
+results presented here to the multidimensional case by extending the theory on the so-called (σ, S) policies from the
+inventory control literature.
+
+7
+
+Acknowledgments
+
+This research is funded by NSF Expeditions in Computing
+grant 0832782.
+
+

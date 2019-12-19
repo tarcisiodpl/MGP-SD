@@ -1,0 +1,853 @@
+
+Bayesian optimisation has gained great popularity as a tool for optimising the parameters of machine learning algorithms and models. Somewhat ironically, setting
+up the hyper-parameters of Bayesian optimisation methods is notoriously hard.
+While reasonable practical solutions have been advanced, they can often fail to
+find the best optima. Surprisingly, there is little theoretical analysis of this crucial
+problem in the literature. To address this, we derive a cumulative regret bound
+for Bayesian optimisation with Gaussian processes and unknown kernel hyperparameters in the stochastic setting. The bound, which applies to the expected
+improvement acquisition function and sub-Gaussian observation noise, provides
+us with guidelines on how to design hyper-parameter estimation methods. A simple simulation demonstrates the importance of following these guidelines.
+
+1
+
+Introduction
+
+Bayesian optimisation has become an important area of research and development in the field of
+machine learning, as evidenced by recent media coverage [7] and a blossoming range of applications to interactive user-interfaces [4], robotics [16, 19], environmental monitoring [18], information
+extraction [27], combinatorial optimisation [13, 28], automatic machine learning [3, 23, 25, 26, 11],
+sensor networks [8, 24], adaptive Monte Carlo [17], experimental design [1] and reinforcement
+learning [5].
+In Bayesian optimisation, Gaussian processes are one of the preferred priors for quantifying the
+uncertainty in the objective function [5]. However, estimating the hyper-parameters of the Gaussian
+process kernel with very few objective function evaluations is a daunting task, often with disastrous
+results as illustrated by a simple example in [2]. The typical estimation of the hyper-parameters by
+maximising the marginal likelihood [22, 15] can easily fall into traps; as shown in [6]. To circumvent
+this, [28] introduced adaptive bounds on the range of hyper-parameter values.
+Several authors have proposed to integrate out the hyper-parameters using quadrature and Monte
+Carlo methods [21, 4, 23]. Despite the advantages brought in by this more sophisticated treatment
+of uncertainty, Bayesian optimisation can still fall in traps, as illustrated with a simple simulation
+example in this paper.
+To the best of our knowledge, the work of Bull [6] provides the only known regret bound for
+Bayesian optimisation when the hyper-parameters are unknown. By introducing lower and upper
+bounds on the possible range of hyper-parameters values, Bull obtains convergence rates for deterministic objective functions, when estimating the hyper-parameters by maximum likelihood. Here,
+we extend the work of Bull to stochastic objective functions. Our results apply to sub-Gaussian
+noise, e.g., symmetric Gaussian, Bernoulli, or uniform noise.
+1
+
+2
+
+Bayesian optimisation
+
+We consider a sequential decision approach to global optimization of smooth functions f (·) : X 7→
+R over an index set X ⊂ Rd . At the t-th decision round, we select an input xt ∈ X and observe the
+value of a black-box reward function f (xt ). The returned value may be deterministic, yt = f (xt ),
+PT
+or stochastic, yt = f (xt ) + t . Our goal is to maximise the cumulative rewards t=1 f (xt ). That
+is, we wish to approach the performance of the optimiser x∗ = arg maxx∈X f (x) rapidly. Since the
+optimiser is unknown, we have to trade-off exploitation and exploration in the search process.
+This sequential optimisation approach is natural when the function does not have an obvious mathematical representation (e.g., when querying people to maximize some objective) or when the function is too expensive to evaluate (e.g., as in control problems and automatic algorithm configuration
+with massive datasets and models).
+Although the function is unknown, we assume that it is smooth. It is natural to adopt a Bayesian
+modelling approach whereby one introduces a prior to encode our beliefs over the smoothness of
+the function, and an observation model to describe the data Dt = {x1:t , y1:t } up to the t-th round.
+Using these two models and the rules of probability, we derive a posterior distribution p(f (·)|Dt )
+from which we can carry out inference about properties of f (·) in light of the data, such as the
+location of its maxima.
+2.1
+
+Bayesian optimisation with Gaussian processes
+
+A Gaussian processes (GP) offer a flexible and relatively simple way of placing priors over functions;
+we refer the reader to [22] for details on these stochastic processes. Such priors are completely
+characterised by a mean function m(·) and a covariance kernel k(·, ·) on the index sets X and
+X ⊗ X . In particular, given any finite collection of inputs x1:t the outputs are jointly Gaussian,
+f (x1:t )|θ ∼ N (m(x1:t ), Kθ (x1:t , x1:t )),
+where Kθ (x1:t , x1:t )ij = k θ (xi , xj ) is the covariance matrix (parametrised by θ) and m(x1:t )i =
+m(xi ) the mean vector. For convenience, we assume a zero-mean prior. We consider the following
+types of covariance kernels
+θ
+kSE
+(x, x0 )
+
+=
+
+θ
+kMatérn(5/2)
+(x, x0 )
+
+=
+
+where r
+
+=
+
+exp(− 12 r2 )
+√
+√
+exp(− 5r)(1 + 5r + 53 r2 )
+2 −1
+
+(x − x0 )T diag(θ )
+
+(1)
+(2)
+
+(x − x0 ).
+
+Both kernels are parametrised by d length-scale hyper-parameters θi . These kernels work well in
+situations where little is known about the space in question, although the Matérn tends to make less
+stringent smoothness assumptions, thus making it a good fit for Bayesian optimization.
+We assume that the observations of the function at any point xt are corrupted by σ-sub-Gaussian
+noise yt = f (xt ) + t . Our theoretical results cover this general type of noise, which encompasses
+symmetric Gaussian and Bernoulli noise. However, for ease of presentation, we will focus on the
+tractable case of Gaussian noise t ∼ N (0, σ 2 ) in this section. We refer the reader to [4] for an
+example of discrete noise, which necessitates the introduction of approximate inference methods.
+Given the data Dt = {x1:t , y1:t }, the joint distribution of the data and an arbitrary evaluation point
+x is
+
+
+  θ
+
+y1:t
+Kt + σ 2 I kθt (x)
+θ ∼ N 0,
+.
+f (x)
+kθt (x)T
+k θ (x, x)
+where Kθt = Kθ (x1:t , x1:t ) and kθt (x) = kθ (x1:t , x). It is well known that the predictive posterior
+distribution of any evaluation point x is marginally Gaussian f (x)|Dt , θ ∼ N (µt (x; θ), σt (x; θ))2 ,
+where
+µt (x; θ)
+Ktθ (x, x0 )
+σt (x; θ)2
+
+=
+
+E [f (x)|Dt ] = kθt (x)T (Kθt + σ 2 I)−1 y1:t ,
+0
+
+θ
+
+0
+
+= E [f (x)f (x )|Dt ] = k (x, x ) −
+=
+
+Ktθ (x, x).
+
+kθt (x)T (Kθt
+
+(3)
++σ
+
+2
+
+I)−1 kθt (x0 )
+
+(4)
+(5)
+
+2
+
+Having specified a distribution over the target function and a mechanism for updating this distribution as data arrives, we turn our attention to the problem of selecting an acquisition function α(·|Dt )
+for choosing the next query point,
+xt+1 = arg max α(x|Dt ).
+x∈X
+
+The choice of acquisition function is crucial. It must be efficiently computable since it will be
+optimized at every decision round. More subtly, it must use the statistics of p(f (x)|Dt , θ) to tradeoff exploitation (where µt (x; θ) is high) and exploration (where σt (x; θ) is high) effectively.
+Although many acquisition functions have been proposed (see for example [20, 14, 10, 9, 23, 11]),
+the expected improvement (EI) criterion remains a default choice in popular Bayesian optimisation
+packages, such as SMAC and Spearmint [13, 23]. If we let x+
+t = arg maxi≤t f (xi ; θ) denote the
+current incumbent, the EI acquisition function can be written in closed form as
+αθEI(f) (x|Dt ) = E[max{0, f (x) − f (x+ )}|Dt ] = σt (x; θ)[aΦ(a) + φ(a)]
+with a =
+
+µt (x;θ)−f (x+ )
+,
+σt (x;θ)
+
+(6)
+
+and φ and Φ are the standard normal density and distribution functions
+
+respectively. In the special case of σt (x; θ) = 0, we set αθEI(f) (x|Dt ) = 0. The expected improvement is best understood as a family of one-step-decision heuristics [5], with many members in this
+family. While the above member is reasonable for deterministic optimization, the noise in the evaluation of the incumbent, f (x+ ), causes it to be brittle in the stochastic case. In the stochastic setting,
+the improvement over the best mean value µ+
+θ = maxx∈X µt (x; θ) seems to be a more reasonable
+alternative. For this choice, we obtain a similar expression for EI,
+αθEI(µ) (x|Dt ) = E[max{0, f (x) − µ+
+θ }|Dt ] = σt (x; θ)[uΦ(u) + φ(u)],
+where u =
+
+µt (x;θ)−µ+
+θ
+σt (x;θ)
+
+(7)
+
+. In this paper, we will consider a re-scaled version of this criterion:
+
+u
+u u
+(8)
+αθEI (x|Dt ) = E[max{0, f (x) − µ+
+θ }|Dt ] = νσt (x; θ)[ Φ( ) + φ( )]
+ν ν
+ν
+where ν is a parameter must be estimated. Intuitively, this parameter enables us to rescale the
+kernel. In the deterministic case, it plays an equivalent role to multiplying the kernel by an unknown
+coefficient ν. (For notational simplicity, we are not making dependence of EI on ν explicitly in the
+expression αθEI (x|Dt ).)
+2.2
+
+An algorithm inspired by the theory
+
+Our main theorem (Theorem 1) establishes sufficient conditions to guarantee that the regret of a
+Bayesian optimisation algorithm with EI and hyper-parameter estimation, vanishes as the number
+of function evaluations increases. To illustrate the value of Theorem 1, we use its guidelines to
+construct an algorithm in this section.
+For Theorem 1 to hold, it is necessary that we adapt the hyper-parameters in a particular manner.
+First, we must ensure that that there exist upper-bounds on the hyper-parameters θ, which we group
+in the vector θ U ,such that the objective function f (·) is an element of the reproducing kernel Hilbert
+space induced by this narrower kernel HθU (X ) (these spaces will be explained in Section 3.4).
+Figure 1 (right) shows what happens to the confidence intervals as the entries of θ U shrink with t,
+by narrowing the kernel.
+In practice, it is difficult to assess this condition. To surmount this difficulty, we draw inspiration
+from [28], and propose to reduce the upper bound of the length scales θ U when the algorithm
+becomes over confident. In particular, we adaptively reduce θ U whenever the model repeatedly
+samples points of low posterior variance in comparison to the noise variance σ 2 . Once the algorithm
+optimizes to the precision of the noise variance, it suffers from a slower convergence rate.
+By choosing to lower the upper bound as proposed in Algorithm 1, we essentially enable the algorithm to explore more, as opposed to over-exploiting a local mode. This is illustrated in Figure 1,
+which depicts the result of running the proposed algorithm and a standard Bayesian optimisation
+scheme. We will explain the experiment in more detail at the end of this section.
+3
+
+Algorithm 1 Bayesian Optimization with Hyper-parameter Optimization.
+input Threshold tσ > 0, percentage of reduction parameter p ∈ (0, 1), and c2 > c1 > 0.
+input Lower and upper bounds θ L , θ U for the hyper-parameters.
+input Initial length scale hyper-parameter θ L ≤ θ 1 ≤ θ U .
+1: Initialize E = 0
+2: for t = 1, 2, . . . do
+3:
+Select xt = arg maxx∈X αθEIt (x|Dt−1 )
+2
+4:
+if σt−1
+(xt ; θt ) < tσ σ 2 then
+5:
+E =E+1
+6:
+else
+7:
+E=0
+8:
+end if
+9:
+Augment the data Dt = Dt−1 ∪ (xt , yt )
+10:
+if E = 5 then
+
+
+
+11:
+Restrict θ U such that θiU = max min p maxj {θjU }, θiU , θiL
+12:
+E=0
+13:
+end if
+14:
+Choose hyper-parameters θ t+1 such that θ L ≤ θ t+1 ≤ θ U .
+θ
+θ t+1
+θ t+1
+θ t+1
+15:
+Choose hyper-parameter νt t+1 such that c1 ξt+1
+≤ νt+1
+≤ c2 ξt+1
+, where ξtθt is defined in
+Equation (9).
+16: end for
+As θ U is successively decreased, after a finite number of iterations, we can ensure that f (·) ∈
+HθU (X ) as long as there exists θ ≥ θ L such that f (·) ∈ Hθ (X ). In practice, we advocate a
+conservative choice of θ L whenever we have little knowledge of the range of possible values of θ.
+Theorem 1 also imposes a condition on ν. To satisfy it, we constrain νtθt to be in the interval
+c1 ξtθt ≤ νtθt ≤ c2 ξtθt , where
+
+
+p
+ξtθt = Iθt (yt−1 ; ft−1 ) + log1/2 (2t2 π 2 /3δ) Iθt (yt−1 ; ft−1 ) + log(t2 π 2 /3δ) .
+(9)
+(The information gain will be defined in Section 3.3.) The careful reader may have noticed that
+the above condition does not match perfectly the condition detailed in Theorem 1. Upon closer
+examination, however, we see that replacing the maximum information gain γTθ with Iθ (yT ; fT )
+does not break the convergence result. We have used γTθ in Theorem 1 instead of Iθ (yT ; fT ) simply
+to simplify the presentation.
+In practice, we could use a number of strategies for estimating the hyper-parameters, provided they
+fall within the bounds set by Theorem 1. In particular, we could use maximum likelihood to estimate
+the hyper-parameters in this constrained space. Note that the ν parameter could also be treated as a
+kernel hyper-parameter (kernel scale), therefore removing the need of estimating it separately.
+Finally, the astute reader would have noticed the parameters tσ , p, c2 and c1 in the algorithm. If
+we want to achieve an accuracy comparable to the noise variance, we should set tσ = 1. The other
+parameters simply determine how fast the algorithm converges and should be set to reasonable fixed
+values, e.g. p = 0.5, c2 = 1 and c1 = 0.001. Provided tσ > 0, p ∈ (0, 1) and c2 > c1 > 0, the
+theory is satisfied.
+If we have strong beliefs about our GP prior model, it may seem unnecessary to estimate our parameters with Algorithm 1. When our prior belief is misplaced, however, we could fail to converge if
+we were to follow the traditional probabilistic approach. We provide an illustration of this effect by
+optimize the following stochastic function:
+1
+2
+f (x) = 2kθSE
+(x1 , x) + 4kθSE
+(x2 , x) + 
+
+over the interval [0, 1], where θ1 = 0.1, θ2 = 0.01, x1 = 0.1, x2 = 0.9, and  is zero-mean Gaussian
+with 10−2 standard deviation. Figure 1 compares Algorithm 1 against standard Bayesian optimisation with the same EI function, but using slice sampling to infer the kernel hyper-parameters (without
+imposing the theoretical bounds on the hyper-parameters). We see that, in the absence of reasonable
+4
+
+4
+
+4
+
+3
+
+3
+
+2
+
+2
+
+1
+
+1
+
+0
+
+0
+
+1
+
+1
+
+2
+0.0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+2
+0.0
+
+1.0
+
+4
+
+4
+
+3
+
+3
+
+2
+
+2
+
+1
+
+1
+
+0
+
+0
+
+1
+
+1
+
+2
+0.0
+
+2
+0.0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1.0
+
+4
+
+4
+
+3
+
+3
+
+2
+
+2
+
+1
+
+1
+
+0
+
+0
+
+1
+
+1
+
+2
+0.0
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+2
+0.0
+
+1.0
+
+t = 20
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1.0
+
+t = 40
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1.0
+
+t = 60
+
+0.2
+
+0.4
+
+0.6
+
+0.8
+
+1.0
+
+Figure 1: Convergence of EI with slice sampling over the kernel hyper-parameters [left] and EI
+using Algorithm 1 [right] at three function evaluation steps (t). The objective function (in blue)
+was constructed so that it has a trap. Unless EI with slice sampling hits the narrow optimum by
+random chance, it becomes too confident and fails to converge after 60 evaluations. In contrast,
+the confidence bounds for Algorithm 1 can increase enabling it to sample the function in a more
+reasonable way and thus find the optimum.
+
+prior beliefs, conditions like the ones detailed in our theoretical results are necessary to guarantee
+reasonable sampling of the objective function. (The same behaviour for the plot on the left is observed if we replace slice sampling with maximum likelihood estimation of the hyper-parameters.)
+While heteroskedastic GP approaches could mitigate this problem, there are no theoretical results to
+guarantee this to the best of our knowledge.
+
+3
+
+Theoretical analysis
+
+Our theoretical analysis uses regret to measure convergence and information gain to measure how
+informative the samples are about f (·). It assumes that the noise process t is sub-Gaussian, and
+that the function f (·) is smooth according to the reproducing kernel Hilbert space (RKHS) associated with the GP kernel k θ (·, ·). Before presenting our main result, we briefly review these four
+background areas.
+5
+
+3.1
+
+Background: Regret
+
+As in [24], we will measure the performance of the Bayesian optimization algorithm using regret.
+The instantaneous regret at iteration t is defined as rt = f (x∗ ) − f (xt ). The corresponding cumulaPT
+tive regret after T iterations is RT = t=1 rt . While the regret measures are never revealed to the
+algorithm, bounds on these enable us to assess how rapidly the algorithm is converging.
+3.2
+
+Background: Sub-Gaussian noise
+
+We assume independent σ-sub-Gaussian noise. Formally, we say t is σ-sub-Gaussian if there exists
+a σ ≥ 0 such that
+ 2 2
+ρ σ
+E [exp(ρt )] ≤ exp
+∀ρ ∈ R.
+2
+In other works, t is σ-sub-Gaussian if its Laplace transform is dominated by the Laplace transform
+of a Gaussian random variable with zero mean and variance σ 2 . It is easy to show that if t is
+sub-Gaussian, then E[t ] = 0 and Var[t ] ≤ σ 2 .
+There are many examples of sub-Gaussian variables, including zero-mean Gaussian random variables with variance σ 2 , symmetric Bernoulli random variables and symmetric uniform distributions.
+3.3
+
+Background: Information gain
+
+To measure the reduction in uncertainty about f (·) from observing yA for a set of sampling points
+A ⊂ X , we need to introduce the concept of information gain, which is defined as the mutual
+information between f (·) and a set of observations yA :
+I(yA ; f (·)) = H(yA ) − H(yA |f (·)).
+
+(10)
+
+This concept plays a central role in the results of [24], who also define the maximum information
+gain γT after T decision rounds as
+γT =
+
+I(y1:t ; f (·)).
+
+(11)
+
+1
+log |I + σ −2 KθA |.
+2
+
+(12)
+
+max
+
+A⊂X :|A|=T
+
+Note that for Gaussian distributions,
+γTθ =
+
+max
+
+A⊂X :|A|=T
+
+Our regret bounds will be given in terms of γTθ . It should perhaps be clarified that the bounds apply
+to σ-sub-Gaussian noise, despite the appearance of the variable γTθ in their statements.
+3.4
+
+Background: Reproducing kernel Hilbert spaces
+
+To discuss convergence, we must state formally what we mean by f (·) being smooth. In short, we
+assume that f (·) is an element of an RKHS with reproducing kernel k(·, ·). For an intuitive grasp
+of this formalisation of smoothness, we need to briefly review some RKHS fundamentals. These
+fundamentals are also evoked in our proofs.
+Let Lx be an evaluation functional: Lx f (·) = f (x). A (real) RKHS H is a Hilbert space of real
+valued functions with the property that for each x ∈ X , the evaluation functional is bounded. That
+is, there exists a positive constant M = Mx such that |Lx f (·)| = |f (x)| ≤ M kf (·)kH for all
+functions f (·) ∈ H, where k · kH denotes the norm in the Hilbert space. If H is an RKHS, by the
+Riesz Representation Theorem, there exists an element k(·, x) ∈ H with the property,
+f (x) = Lx f (·) = hk(·, x), f (·)i
+
+(13)
+
+for all x ∈ X and f (·) ∈ H, where h·, ·i denotes the inner product in H.
+Pn
+To construct H, we consider the linear manifold t=1 λt k(·, xt ) for all choices of n, λ1 , . . . , λn
+and x1 , . . . , xn ∈ X , with inner product
+n
+n
+n X
+n
+n
+X
+X
+X
+X
+h
+λi k(·, xi ),
+λj k(·, xj )i =
+λi k(xi , xj )λj = k
+λi k(·, xi )k2H ≥ 0.
+i=1
+
+j=1
+
+i=1 j=1
+
+i=1
+
+6
+
+(14)
+
+The above norm is non-negative because of the positive-definiteness of k(·, ·). Clearly, for any
+element f (·) of this linear manifold,
+n
+n
+X
+X
+f (xj ) = hf (·), k(·, xj )i = h
+λi k(·, xi ), k(·, xj )i =
+λi k(xi , xj )
+i=1
+
+(15)
+
+i=1
+
+A consequence of this is that for any Cauchy sequence {fn (·)}, we have the following bound by
+Cauchy-Schwartz: |fn (x)−f (x)| = hfn (·)−f (·), k(·, x)i ≤ kfn (·)−f (·)kH kk(·, x)kH . In words,
+norm convergence implies point-wise convergence.
+The preceding steps illustrate that we can construct a unique RKHS for any positive definite kernel
+k(·, ·). The converse is also true (Moore-Aronszajn Theorem).
+A positive definite function k(·, ·), under general Rconditions,
+has an eigenvector-eigenvalue deR
+composition. Suppose k(·, ·) is continuous and X X k 2 (x, y)dxdy < ∞, then there exists
+an orthonormal sequence of continuous
+eigenfunctions q1 (·), q2 (·), . . . and eigenvalues ∆1 ≥
+P∞
+∆2 ≥ . P
+. . ≥ 0, with k(x, y) = ν=1 ∆ν qν (x)q
+R ν (y). Next, consider the orthonormal expansion
+∞
+f (·) = ν=1 fν qν (·) with coefficients fν = X f (x)qν (x)dx. It is easy to prove that f (·) is an
+element of the RKHS associated with k(·, ·) if and only if
+kf (·)k2H =
+
+∞
+X
+fν2
+< ∞.
+∆ν
+ν=1
+
+(16)
+
+To obtain the above finiteness condition, the coefficients fν of the expansion of f (·) must decay
+quickly. For the kernels we consider in this paper, elements of RKHS can uniformly approximate any
+continuous function with compact support. Therefore, RKHS is well suited as a tool for analyzing
+convergence behaviors of Bayesian optimization algorithms.
+3.5
+
+Main result
+
+In this section, we present our regret bound and sketch its proof. For space considerations, detailed
+proofs appear in the appendix provided in the supplementary material.
+As discussed when presenting the algorithm, our theorem assumes bounds on the kernel hyperparameters of the form θ L ≤ θ t ≤ θ U for all t ≥ 1 with f (·) ∈ HθU (X ). While we could recall
+all the conditions on the kernel function necessary for our theorem to apply, we simply restrict the
+family of kernels to one that satisfies the conditions detailed in [6]. Without loss of generality, we
+assume that k(x, x)= 1.
+Our theorem characterising the growth in the cumulative regret RT with the number of function
+evaluations T follows.
+Qd θU
+Theorem 1. Let C2 := i=1 θiL . Suppose θ L ≤ θ t ≤ θ U for all t ≥ 1 and f (·) ∈ HθU (X ). If
+i
+q
+
+
+
+1/2
+θ 2
+θ
+2 2
+θ
+νt = Θ γt−1 + log (2t π /3δ) γt−1
++ log(t2 π 2 /3δ) for all t ≥ 1. Then with probability at least 1 − δ, the cumulative regret obeys the following rate:
+ q
+
+L
+θ
+RT = O βT γT T ,
+(17)
+where βT = 2 log
+C2 kf k2H
+
+θU
+
+T
+σ2
+
+
+
+L
+
+γTθ −1 +
+
+√
+
+8 log
+
+T
+σ2
+
+
+
+log1/2 (4T 2 π 2 /6δ)
+
+
+√
+
+C2 kf kHθU (X ) +
+
+
+q
+L
+γTθ −1 +
+
+(X ) .
+
+Our result is analogous to Theorem 3 of [24] which proves convergence rates for the GP-UCB
+algorithm in the agnostic setting. Their result, however, does not allow for the estimation of hyperparameters. In addition, our algorithm does not require explicit knowledge of the RKHS norm of
+the objective function while GP-UCB does require this.
+Using the results of Srinivas et al. we can further detail these rates as follows.
+Theorem 2 (Theorem 5 of [24]). Let X ⊆ Rd be compact and convex, d ∈ N. Assume the kernel
+function satisfies k(x, x0 ) ≤ 1.
+7
+
+
+1. Exponential spectral decay. For the squared Exponential kernel: γTθ = O (log T )d+1 .
+θ
+2. Power law spectral decay. For
+ Matérn kernels with degree of freedom ν > 1: γT =
+d(d+1)/(2ν+d(d+1))
+O T
+log T .
+
+The proof of Theorem 1 is provided in the appendix. We sketch the main ideas here. Our proof
+methodology is inspired by the works of [24] and [6].
+We start the proof-sketch by considering the instantaneous regret:
+rt
+
+= f (x∗ ) − f (xt )
+=
+
++
+(f (x∗ ) − µ+
+θ t ) − (f (xt ) − µθ t )
+
+EI
+where µ+
+θ t = maxx∈X µt−1 (x; θ t ) and xt = arg maxx∈X αθ t (x|Dt−1 ). T
+
+The first challenge of the proof is to bound the difference between the posterior mean of the GP and
+the objective function. Such a bound allows us to quantify the difference between our belief about
+the objective function and the true objective. Specifically, we bound |µt−1 (x, θ t ) − f (x)| ∀x ∈ X
+in each iteration with high probability. By way of the Cauchy-Schwarz inequality,
+
+1/2
+θt
+|µt−1 (x, θ t ) − f (x)| ≤
+Kt−1
+(x, x)
+kµt−1 (·; θ) − f (·)kKθt
+t−1
+
+≤
+
+σt−1 (x; θ t )kµt−1 (·; θ) − f (·)kKθt .
+t−1
+
+The first part of our proof (Section A.1 in the appendix) is then dedicated to providing a probabilistic bound for kµt−1 (·; θ) − f (·)kKθt by means of concentration inequalities. In more detail,
+t−1
+
+Lemma 3 and 4 bound separate terms that appear in kµt−1 (·; θ) − f (·)kKθt using properties of ret−1
+producing kernel Hilbert spaces and concentration results for sub-Gaussian random variables [12].
+Proposition 1 combines the aforementioned results via a union bound.
+The second challenge of the proof is to relate EI with quantities that are easier to analyse, such as
+the posterior variance and the improvement function Itθ (x) = max{0, f (x) − µ+
+θ }. To bound the
+instantaneous regret, we observe that
+i
+h
+θt
++
++
+θ
+σ
+(x
+;
+θ
+)
+.
+−
+µ
+(x
+;
+θ
+))
++
+ϕ
+)
+≤
+I
+(x)
++
+(µ
+)
+−
+(f
+(x
+)
+−
+µ
+(f (x∗ ) − µ+
+t−1
+t
+t
+t−1
+t
+t
+t
+t
+t
+θt
+θt
+θt
+(Here ϕθt t is a quantity that arises in the concentration bound of Proposition 1.) The improvement function is upper-bounded by a constant times the expected improvement αθEIt (xt |Dt−1 ) via
+Lemma 9, which builds on results by [6]. The expected improvement is in turn bounded by a multiple of the posterior standard deviation σt−1 (xt ; θ t ).
+Next, we turn our attention to the term (µ+
+− µt−1 (xt ; θ t )). We bound this term in Lemma 10,
+pθt
+log(t
+− 1 + σ 2 ) − log(σ 2 )νσt−1 (xt ; θ t ).
+which states that µt−1 (xt ; θ t ) − µ+
+≤
+θt
+By now, we have bounded the instantaneous regret in each iteration by a multiple of the pos2
+terior variance σt−1
+(x; θ L ). Finally, we can sum over t and use Lemma 7, which states that
+PT
+L
+2
+2
+θL
+t=t0 σt−1 (x; θ ) ≤ log(1+σ 2 ) γT , and subsequently bound the cumulative regret by the maximal information gain, which as we said is related to the posterior variance of the GP (Lemma 5). To
+accommodate different hyper-parameters, we make use of Lemma 8 from [6].
+
+4
+
+Conclusion
+
+Despite the rapidly growing literature on Bayesian optimisation and the proliferation of software
+packages that learn the kernel hyper-parameters, to the best of our knowledge, only Bull [6] and us
+have attacked the question of convergence of GP-based Bayesian optimisation with unknown hyperparameters. Bull’s results focused on deterministic objective functions. Our new results apply to the
+abundant class of noisy objective functions.
+
+8
+
+

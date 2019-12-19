@@ -1,0 +1,924 @@
+
+Bayesian optimization is a powerful global optimization technique for expensive black-box
+functions. One of its shortcomings is that it requires auxiliary optimization of an acquisition
+function at each iteration. This auxiliary optimization can be costly and very hard to carry out
+in practice. Moreover, it creates serious theoretical concerns, as most of the convergence results
+assume that the exact optimum of the acquisition
+function can be found. In this paper, we introduce a new technique for efficient global optimization that combines Gaussian process confidence bounds and treed simultaneous optimistic
+optimization to eliminate the need for auxiliary
+optimization of acquisition functions. The experiments with global optimization benchmarks and
+a novel application to automatic information extraction demonstrate that the resulting technique
+is more efficient than the two approaches from
+which it draws inspiration. Unlike most theoretical analyses of Bayesian optimization with
+Gaussian processes, our finite-time convergence
+rate proofs do not require exact optimization of
+an acquisition function. That is, our approach
+eliminates the unsatisfactory assumption that a
+difficult, potentially NP-hard, problem has to be
+solved in order to obtain vanishing regret rates.
+
+1
+
+Introduction
+
+We consider the problem of approximating the maximizer
+of a deterministic black-box function f : X 7→ R. The
+function f can be evaluated point-wise, but it is assumed to
+be expensive to evaluate. More precisely, we assume that
+we are given a finite budget of n possible function evaluations.
+Appearing in Proceedings of the 17th International Conference on
+Artificial Intelligence and Statistics (AISTATS) 2014, Reykjavik,
+Iceland. JMLR: W&CP volume 33. Copyright 2014 by the authors.
+
+Lin Jin
+Rocket Gaming Systems
+
+Nando de Freitas
+University of Oxford
+
+This global optimization problem can be treated within
+the framework of sequential design.
+In this context, by allowing xt ∈ X to depend on previous
+points and corresponding function evaluations Dt−1 =
+{(x1 , f (x1 )), . . . , (xt−1 , f (xt−1 ))}, the algorithm constructs a sequence x1:n = (x1 , x2 , . . . , xn ) and returns the
+element x(n) of highest possible value. That is, it returns
+the value x(n) that minimizes the loss:
+rn = sup f (x) − f (x(n)).
+x∈X
+
+This loss is not the same as the cumulative regret used often
+in
+Pnthe online learning literature: Rn = n supx∈X f (x) −
+t=1 f (x(t)).
+Bayesian optimization (BO) is a popular sequential design
+strategy for global optimization; see Brochu et al. (2009)
+for an introductory treatment. Since the objective function
+f is unknown, the Bayesian strategy is to treat it as a random function and place a prior over it. The prior captures
+our beliefs about the behaviour of the function. After gathering the function evaluations Dt−1 , the prior is updated to
+form the posterior distribution over f . The posterior distribution, in turn, is used to construct an acquisition function
+that determines what the next query point xt should be.
+Examples of acquisition functions include probability of
+improvement, expected improvement, Bayesian expected
+losses, upper confidence bounds (UCB), and dynamic portfolios of these (Močkus, 1982; Jones, 2001; Garnett et al.,
+2010; Srinivas et al., 2010; Chen et al., 2012; Hoffman
+et al., 2011). If we were to implement Thompson sampling strategies (May et al., 2011; Kaufmann et al., 2012;
+Agrawal & Goyal, 2013) for Gaussian processes (GPs), we
+would also encounter the difficult problem of having to find
+the maximizer of a sample from the GP at each iteration,
+unless we were considering only a finite set of query points
+(Hoffman et al., 2014).
+The maximum of the acquisition function is typically found
+by resorting to discretisation or by means of an auxiliary optimizer. For example, Snoek et al. (2012) use discretisation, Bardenet & Kégl (2010) use adaptive grids,
+Brochu et al. (2007); Martinez-Cantin et al. (2007) and
+Mahendran et al. (2012) use the DIRECT algorithm of
+Jones et al. (1993), Lizotte et al. (2011) use a combination
+of random discretisation and quasi-Newton hill-climbing,
+
+Bayesian Multi-Scale Optimistic Optimization
+
+Bergstra et al. (2011) and Wang et al. (2013) use the CMAES method of Hansen & Ostermeier (2001), Hutter et al.
+(2011) apply multi-start local search. (Approaches within
+the framework of Bayesian nonlinear experimental design,
+such as (Hennig & Schuler, 2012) for finding maxima
+and (Kueck et al., 2006, 2009; Hoffman et al., 2009) for
+learning functions and Markov decision processes, have to
+rely on expensive approximate inference for computing intractable integrals. An analysis of these approaches is beyond the scope of this paper.)
+
+inates the need for auxiliary optimization of the acquisition function in BO. We derive theoretical guarantees for
+the method that do not depend on the assumption that
+the acquisition function needs to be optimized exactly.
+The method uses SOO to optimize the objective function directly, but eliminates the need for SOO to sample
+points that are deemed unfit by Gaussian process posterior
+bounds. That is, BaMSOO uses the posterior distribution
+to reduce the number of function evaluations in SOO, thus
+increasing the efficiency of SOO substantially.
+
+The auxiliary optimization methodology is problematic for
+several reasons. First, it is difficult to assess whether the
+auxiliary optimizer has found the maximum of the acquisition function in practice. This creates important theoretical
+concerns about the behaviour of BO algorithms because the
+typical theoretical convergence guarantees are only valid
+on the assumption that the optimum of the acquisition function can be found exactly; see for example Srinivas et al.
+(2010); Vazquez & Bect (2010) and Bull (2011). Second,
+running an auxiliary optimizer at each iteration of the BO
+algorithm can be unnecessarily costly. For any two consecutive iterations, the acquisition function may not change
+drastically. This questions the necessity of re-starting the
+auxiliary optimization at each iteration.
+
+The experiments with benchmarks from the global optimization literature demonstrate that BaMSOO outperforms
+both GP-UCB and SOO. The paper also introduces a novel
+application in the domain of knowledge discovery and information extraction. Finally, our theoretical results show
+that BaMSOO can attain, up to log factors, a polynomial
+finite sample convergence rate.
+
+Recent optimistic optimization methods provide a viable alternative to BO (Kocsis & Szepesvári, 2006; Bubeck et al.,
+2011; Munos, 2011). Instead of estimating a posterior distribution over the unknown objective function, these methods build space partitioning trees by expanding leaves with
+high function values or upper-bounds. The term optimistic,
+in this context, is used to refer to the fact that the algorithms expand at each round leaves that may contain the
+optimum. Remarkably, a variant of these methods, Simultaneous Optimistic Optimization (SOO) by Munos (2011),
+is able to optimize an objective function globally without
+knowledge of the function’s smoothness. SOO is optimistic
+at all scales in the sense that it expands several leaves simultaneously, with at most one leaf per level. For this reason, instead of adopting the term “Simultaneous OO” we
+opt for the descriptive term “Multi-Scale OO”.
+We will describe SOO in more detail in Section 3. We also
+note that a stochastic variant of SOO has been recently proposed by Valko et al. (2013), but we restrict the focus of this
+paper to the deterministic case.
+
+2
+
+BO with GP confidence bounds
+
+Classical BO approaches have two ingredients that need to
+be specified: The prior and the acquisition function. In this
+work, as in most other works, we adopt Gaussian process
+(GP) priors. We review GPs very briefly and refer the interested reader to the book of Rasmussen & Williams (2006)
+for an in-depth treatment. A GP is a distribution over functions specified by its mean function m(·) and covariance
+κ(·, ·). More specifically, given a set of points x1:t , with
+xi ∈ X ⊆ RD , we have
+f (x1:t ) ∼ N (m(x1:t ), K),
+where K, with entries Ki,j = κ(xi , xj ), is the covariance
+matrix. A common choice of κ in the BO literature is the
+anisotropic kernel with a vector of known hyper-parameters
+
+κ(xi , xj ) = κ
+e −(xi − xj )T D(xi − xj ) , (1)
+where κ
+e is an isotropic kernel and D is a diagonal matrix
+with positive hyper-parameters along the diagonal and zeros elsewhere. Our results apply to squared exponential
+kernels and Matérn kernels with parameter ν ≥ 2. In this
+paper, we assume that the hyper-parameters are fixed and
+known in advance. We refer the reader to Martinez-Cantin
+et al. (2007); Brochu et al. (2010); Wang et al. (2013);
+Snoek et al. (2012) for different practical approaches to estimate the hyper-parameters.
+
+These optimistic optimization methods do not require the
+auxiliary optimization of acquisition functions. However,
+due to the lack of a posterior that interpolates between the
+sampled points, it is conceivable that these methods may
+not be as competitive as BO in practical domains where
+prior knowledge is available. This claim does not seem to
+have been backed up by empirical evidence in the past.
+
+An advantage of using GPs lies in their analytical tractability. In particular, given observations Dt = {x1:t , f1:t },
+where fi = f (xi ), and a new point xt+1 , the joint distribution is given by:
+
+
+
+
+
+K
+k
+f1:t
+∼ N m(x1:t+1 ), T
+ft+1
+k
+κ(xt+1 , xt+1 )
+
+This paper introduces a new algorithm, BaMSOO, which
+combines elements of BO and SOO. Importantly, it elim-
+
+where kT = [κ(xt+1 , x1 ) · · · κ(xt+1 , xt )]. For simplicity,
+we assume that m(·) = 0. Using the Sherman-Morrison-
+
+Ziyu Wang, Babak Shakibi, Lin Jin, Nando de Freitas
+
+Woodbury formula, one can easily arrive at the posterior
+predictive distribution:
+f+
+
+ft+1 |Dt , xt+1 ∼ N (µ(xt+1 |Dt ), σ 2 (xt+1 |Dt )),
+with mean µ(xt+1 |Dt ) = kT K−1 f1:t and variance
+σ 2 (xt+1 |Dt ) = κ(xt+1 , xt+1 ) − kT K−1 k. We can compute the posterior predictive mean µ(·) and variance σ 2 (·)
+exactly for any point xt+1 .
+At each iteration of BO, one has to re-compute the predictive mean and variance. These two quantities are used
+to construct the second ingredient of BO: The acquisition function (or utility function). In this work, we report
+results for the
+√ GP-UCB acquisition function U(x|Dt ) =
+µ(x|Dt ) + Bt σ(x|Dt ), which is the upper confidence
+bound (UCB) on the objective function (Srinivas et al.,
+2010; de Freitas et al., 2012). We also make use of
+the lower confidence bound
+√ (LCB) which is defined as
+L(x|Dt ) = µ(x|Dt ) − Bt σ(x|Dt ). In these definitions, Bt is such that f (x) is bounded above and below
+by U(x|Dt ) and L(x|Dt ) with high probability (de Freitas
+et al., 2012).
+BO selects the next query point by optimizing the acquisition function U(x|Dt ). Note that our choice of utility
+favours the selection of points with high variance (points
+in regions not well explored) and points with high mean
+value (points worth exploiting). As mentioned in the introduction, the optimization of the closed-form acquisition
+function is often carried out by off-the-shelf global optimization procedures, such as DIRECT and CMA-ES.
+Many other acquisition functions have been proposed, but
+they often yield similar results; see for example the works
+of Močkus (1982) and Jones (2001). The idea of learning portfolios of acquisition functions online was explored
+by Hoffman et al. (2011). We do not consider these acquisition functions for brevity. The BO procedure is summarized in Algorithm 1.
+Algorithm 1 GP-UCB
+for t = 1, 2, . . . do
+xt+1 = arg maxx∈X U(x|Dt ).
+Augment the data Dt+1 = {Dt , (xt+1 , f (xt+1 ))}
+end for
+
+Finite sample bounds for GP-UCB were derived by Srinivas et al. (2010). However, the bounds depend on the algorithm being able to optimize the UCB acquisition function,
+at each iteration, exactly. Unless the action set is discrete, it
+is unlikely that we will be able to find the global optimum
+of the UCB with a fixed budget optimization method. That
+is, we may not be able to guarantee that we can find the exact optimum of the UCB, and hence the theoretical bounds
+seem to make a very strong assumption in this regard.
+
+True Objective.
+Discarded Region.
+Confidence Region.
+Sampled Points.
+
+Figure 1: The global shrinking method of de Freitas et al.
+(2012). If the unknown objective function lies within the
+(green) confidence bounds with high probability, we can
+discard regions of the space where the upper bound is lower
+than the best lower bound encountered thus far.
+2.1
+
+Shrinking feasible regions
+
+de Freitas et al. (2012) introduced a different GP-based
+scheme to trade off exploration and exploitation. Instead
+of optimizing the acquisition function, they proposed to
+sample the objective function using a finite lattice within
+a feasible region R. The feasible region at the tth iteration
+is defined as
+Rt = {x : µt (x) + Bt σt (x) > sup µt (x) − Bt σt (x)}.
+x∈Rt−1
+
+That is, one should only search in the region where the upper bound is greater than the best lower bound encountered
+thus far, as illustrated in Figure 1. With high probability,
+the optimizer lies within Rt .
+de Freitas et al. (2012) proved that if we double the density
+of points in the lattice at each iteration, the feasible region
+shrinks very quickly. More precisely, they showed that the
+simple regret vanishes at an exponential rate and that the
+cumulative regret is bounded by a constant.
+With this approach, they did not have to resort to optimizing an acquisition function. However, even in moderate dimensions, their algorithm is impractical since the lattice often becomes too large to be sampled in a reasonable amount
+of time.
+In this paper, we will argue that to overcome this problem,
+an optimistic strategy may have to be employed. Such a
+strategy enables us to sample the most promising regions
+first, so as to avoid the computational cost associated with
+covering the whole space. In the next section, we begin our
+discussion of optimistic strategies.
+
+3
+
+Simultaneous optimistic optimization
+
+Deterministic optimistic optimization (DOO) and simultaneous optimistic optimization (SOO) are tree-based space
+
+Bayesian Multi-Scale Optimistic Optimization
+Tree Built by SOO
+
+Algorithm 2 SOO
+Evaluate f (x0,0 )
+Initialize the tree T1 = {0, 0}
+Set n = 1
+while true do
+Set νmax = −∞
+for h = 0 : min{depth(Tn ), hmax (n)} do
+Select (h, j) = arg maxj∈{j|(h,j)∈Ln } f (xh,j )
+if f (xh,j ) > νmax then
+Evaluate the children of (h, j)
+Add the children of (h, j) to Tn
+Set νmax = f (xh,j )
+Set n = n + 1
+end if
+end for
+end while
+
+partitioning methods for black-box function optimization
+(Munos, 2011, 2014). They were inspired by the UCT algorithm, which enjoyed great success in planning (Kocsis &
+Szepesvári, 2006). UCT was shown to have no finite-time
+guarantees by Coquelin & Munos (2007). This prompted
+the development of a range of optimistic, in the face of uncertainty, approaches. The term optimism, here, refers to
+the fact that the strategies expand at each round tree cells
+that may contain the optimum.
+DOO and SOO partition the space X hierarchically by
+building a tree. Let us assume that each node of the tree
+has k children. A node (h, j) at level h of the tree has children {(h + 1, kj + i)}0≤i<k−1 . The children partition the
+parent cell Xh,j into cells {Xh+1,kj+i , 0 ≤ i < k − 1}.
+The root cell is the entire space X . A node is always evaluated at the center of the cell, which we denote as xh,j .
+Instead of assuming that the target function is a sample
+from a GP, DOO and SOO assume the existence of a symmetric semi-metric ` such that f (x∗ ) − f (x) ≤ `(x, x∗ )
+where x∗ is the maximizer of f . Although, SOO assumes
+that ` exists, it does not require explicit knowledge of it.
+DOO on the other hand does require knowledge of `. DOO
+builds a tree Tn incrementally, where n denotes the index over node expansions. DOO expands a leaf (h, j)
+from the set of leaves Ln (nodes whose children are not
+in Tn ) if it has the the highest upper bound: f (xh,j ) +
+supx∈Xh,j `(xh,j , x). This value for any cell containing x∗
+upper bounds the best function value f ∗ . The performance
+of DOO depends crucially on our knowledge of the true local smoothness of f . SOO aims to overcome the difficulty
+of having to know the true local smoothness.
+SOO, as summarized in Algorithm 2, expands several
+leaves simultaneously. When a node is expanded, its children are evaluated. At each round, SOO expands at most
+one leaf per level, and a leaf is expanded only if it has
+the largest value among all leaves of the same or lower
+depths. The SOO algorithm takes as input a function
+
+Sampled Points.
+
+Tree Built by BaMSOO
+
+Sampled Points.
+
+Figure 2: [TOP]: The tree built by SOO when optimizing
+the function f (x) = 12 sin(15x) sin(27x) in [0, 1]. [BOTTOM]: The tree built by BaMSOO. The 20 blue dots represent nodes where the objective was evaluated. BaMSOO, in comparison, does not evaluate the objective function for points known to be sub-optimal with high probability. Hence, BaMSOO can achieve a better coverage of the
+search space with the same number of function evaluations
+as SOO.
+
+n → hmax (n), which limits the maximum height of the
+tree after n node expansions. hmax (n) defines a tradeoff
+between deep versus broad exploration. At the end of the
+finite horizon, SOO returns the x with the highest objective
+function value. Figure 2 illustrates the application of SOO
+to a simple 1-dimensional optimization problem.
+
+4
+
+BaMSOO
+
+SOO offers a different way of trading off exploration and
+exploitation that does not require the optimization of an
+acquisition function. However, it does not utilize all the
+information brought in by the previously evaluated points
+effectively. To improve upon SOO in practice, we consider
+the additional assumption that the objective function is a
+sample from a GP prior.
+We define the LCB and UCB to be LN (x|Dt ) = µ(x|Dt )−
+BN σ(x|Dt ) and
+p UN (x|Dt ) = µ(x|Dt ) + BN σ(x|Dt )
+where BN = 2 log(π 2 N 2 /6η) and η ∈ (0, 1).
+
+Ziyu Wang, Babak Shakibi, Lin Jin, Nando de Freitas
+
+The BaMSOO algorithm is very similar to SOO. As with
+SOO, we only evaluate the cell at the center point. However, when a node’s UCB is less than the function value
+of the best point already sampled, denoted f + , we do not
+evaluate the objective function at this node because with
+high probability the center point is sub-optimal. Instead,
+we simply assign to this node its LCB value. Note that if
+the center-point of a cell is sub-optimal, the cell may still
+contain the optimizer. Hence this cell must also be further
+expanded in subsequent iterations. To manage these two
+types of node in the pseudo-code (see Algorithm 3), we introduce a place-holder function g which is set to f when
+the UCB of the cell of interest is bigger than f + , and it is
+set to the LCB of the node otherwise. For clarity, we remind the reader that the indices N, k, t and n are over node
+evaluations, branches (children), function evaluations and
+node expansions respectively.
+In the pseudocode, we have highlighted in blue the additional lines of code brought in by BaMSOO. Effectively,
+BamSOO only involves a slight modification of SOO (Algorithm 2) provided we have GP routines to evaluate the
+LCB and UCB.
+We found the assignment of the LCB values to nodes that
+do worse than f + to work well in practice. For this reason our presentation, experiments and theory focus on this
+choice.
+BaMSOO improves upon SOO by making use of the available information more efficiently. Moreover, by using an
+optimistic proposal, it avoids the need to sample exhaustively before shrinking the feasible region as in (de Freitas
+et al., 2012). Figure 2 illustrates how BaMSOO can cover
+the search space more effectively, even though it incurs the
+same number of expensive function evaluations as SOO.
+
+5
+
+Analysis
+
+In this section, we provide an overview of the theoretical
+analysis of BaMSOO, which appears in the Appendix. Our
+discussion here will focus on our assumptions. At the end
+of this section, we will present the main result and sketch
+the proof coarsely.
+We denote the global maximum by f ∗ = supx∈X f (x) and
+the maximizer by x∗ = arg maxx∈X f (x).
+We make similar assumptions to those made by de Freitas
+et al. (2012). As in their case, we make the global assumption that the objective function is a sample from a GP and
+a local assumption about the behavior of the objective near
+the optimum.
+D
+
+Assumption 1 (Conditions on the GP kernel). X ⊆ R is
+a compact set, and κ is a kernel on RD that is twice differentiable along the diagonal such that ∂x ∂x0 κ(x, x0 )|x=x0
+exists.
+
+Algorithm 3 BaMSOO
+1:
+2:
+3:
+4:
+5:
+6:
+7:
+8:
+9:
+10:
+11:
+12:
+13:
+14:
+15:
+16:
+17:
+18:
+19:
+20:
+21:
+22:
+23:
+24:
+25:
+26:
+27:
+28:
+
+Set g0,0 = f (x0,0 )
+Set f + = g0,0
+Initialize the tree T1 = {0, 0}
+Set t = 1, n = 1, N = 1, and Dt = {(x0,0 , g(x0,0 ))}
+while true do
+Set νmax = −∞.
+for h = 0 to min{depth(Tn ), hmax (n)} do
+Select (h, j) = arg maxj∈{j|(h,j)∈Ln } g(xh,j )
+if g(xh,j ) > νmax then
+for i = 0 to k − 1 do
+Set N = N + 1
+if UN (xh+1,kj+i |Dt ) ≥ f + then
+Set g(xh+1,kj+i ) = f (xh+1,kj+i )
+Set t = t + 1
+Dt = {Dt−1 , (xh+1,kj+i , g(xh+1,kj+i ))}
+else
+Set g(xh+1,kj+i ) = LN (xh+1,kj+i |Dt )
+end if
+if g(xh+1,kj+i ) > f + then
+Set f + = g(xh+1,kj+i )
+end if
+end for
+Add the children of (h, j) to Tn
+Set νmax = g(xh,j )
+Set n = n + 1
+end if
+end for
+end while
+
+Assumption 2 (Local smoothness of f ). f ∼ GP(0, κ) is
+a continuous sample on X that has a unique global maximum x∗ , such that f ∗ − c1 kx − x∗ kα
+2 ≤ f (x) ∀x ∈ X
+and f (x) ≤ f ∗ − c2 kx − x∗ k22 ∀x ∈ B(x∗ , ρ) for
+some constants c1 , c2 , ρ > 0 and α ∈ {1, 2}. Also
+f ∗ − maxx∈X \B(x∗ ,ρ) f (x) > 0 for some 0 > 0.
+As argued by de Freitas et al. (2012), in many practical
+cases the local conditions follow almost surely from the
+global condition. For example, if we were to employ the
+Matern kernel with ν > 2 or a kernel that is 6 times differentiable along the diagonal, we would have that the samples
+of the GPs are twice differentiable with probability one.
+The first case was shown by (Adler & Taylor, 2007, Theorem 1.4.2) and (Stein, 1999, §2.6), while the second result
+was shown by (Ghosal & Roy, 2006, Theorem 5). If the x∗
+lies in the interior of X , then the Hessian of f at x∗ would
+be almost surely non-singular as at least one of the eigenvalues of the Hessian is a co-dimension 1 condition in the
+space of all functions that are smooth at a given point (de
+Freitas et al., 2012). In this case, we would have that
+∗
+∗ 2
+f ∗ − c1 kx − x∗ kα
+2 ≤ f (x) ≤ f − c2 kx − x k2
+
+with α = 2.
+If x∗ lies on the boundary of X which we assume to be
+smooth, then ∇f (x∗ ) 6= 0 since the additional event of
+the vanishing of ∇f (x∗ ) is a co-dimension d phenomenon
+in the space of functions with global maximum at x∗ (de
+
+Bayesian Multi-Scale Optimistic Optimization
+
+Freitas et al., 2012). In this case, we would have that
+∗
+∗ 2
+f ∗ − c1 kx − x∗ kα
+2 ≤ f (x) ≤ f − c2 kx − x k2
+
+with α = 1.
+Finally, a sample from a GP on a compact domain has a
+unique maximum with probability one. This is because the
+space of continuous functions on a compact domain that
+attain their global maximum at more than one point have
+co-dimension 1 in the space of all continuous functions on
+that domain (de Freitas et al., 2012).
+The subsequent assumptions are about the hierarchical partitioning of the search space. They are the same as Assumptions 3 and 4 in Munos (2011).
+Assumption 3 (Bounded diameters). There exists a decreasing sequence δ(h) > 0, such that for any depth
+h ≥ 0, for any cell Xh,i of depth h, we have
+supx∈Xh,i `(xh,i , x) ≤ δ(h). Here `(x, y) := c1 kx − ykα
+2
+where α ∈ {1, 2} and δ(h) = cγ h for some constant c > 0
+and γ ∈ (0, 1).
+Assumption 4 (Well-shaped cells). There exists ν > 0
+such that for any depth h ≥ 0, any cell Xh,i contains an
+`-ball of radius νδ(h) centered in Xh,i .
+Note that depending on the value of α, γ would have to take
+on a different value for Assumptions 3 and 4 to be satisfied.
+Regardless of the choice of α and as illustrated in Example
+1 of Bubeck et al. (2011), Assumptions 3 and 4 are easy to
+satisfy in practice; for example when x ∈ [0, 1]D and the
+split is done along the largest dimension of a cell. This is
+the case in all our experiments.
+Assumption 2 together with Assumptions 3 and 4 impose a
+“near optimality” condition as defined by Munos (2011).
+We can now present our main result, which is in the form
+of a corollary to Theorem 1 in the Appendix.
+Corollary 1. Let d = −(D/4 − D/α) and hmax (n) =
+n . Given Assumptions 1 − 4, we have that with
+probability
+ η, the loss of BaMSOO is
+ 1− at αleast 1 −
+O n− d log 4−α (n2 /η) .
+It is worth pointing out that the result presented in Corollary 1 is based on the number of node expansions n instead of the number of function evaluations. The theory
+can therefore be strengthened.
+If α = 2 and  = 1/2, then the above result trans2
+lates to O n− D log(n2 /η) . If α = 1 with  being
+thesame as before, then
+ the rate of convergence becomes
+1
+2
+− 3D
+2
+3
+O n
+log (n /η) .
+The structure of the proof follows that in Munos (2011).
+Let x∗h denote the optimal node at level h (that is, the node
+at height h in the branch that contains the optimum x∗ ).
+
+Our proof shows that once x∗h is expanded, it does not take
+long for x∗h+1 to be expanded. Once an optimal node x∗h is
+expanded, by Assumptions 2 and 3, we have that the loss
+of BaMSOO is no worse than δ(h) .
+The main difficulty of the proof lies in the fact that we
+sometimes do not sample nodes when their UCB values
+are less than the best observed value. In this case, we can
+no longer make the claim that an optimal node is expanded
+soon after its parent. This is because when a node is not
+expanded, its LCB can be very low due to a high standard
+deviation. Fortunately, we can show that this is not the case
+for optimal nodes in the optimal region. This is accomplished by showing that the standard deviation at a point is
+no more than its distance to the nearest sampled point up
+to a constant factor (shown in Lemma 3). This enables us
+to show that every optimal node in the optimal region must
+have a low standard deviation. Given this result, we can
+adopt the proof structure outlined in Munos (2011).
+
+6
+
+Experiments with global optimization
+benchmarks
+
+In this section, we validate the proposed algorithm with
+a series of experiments that compare the three algorithms
+(GP-UCB, SOO, BaMSOO) on global optimization benchmarks. We have omitted the feasible region shrinking
+algorithm (described in Section 2.1) as it is not practical for problems of even moderate dimensions. We have
+also omitted comparisons to PI and EI as these appear in
+Hoffman et al. (2011) for the optimization benchmarks described in this paper.
+In our experiments, we used the same hyper-parameters in
+GP-UCB and BaMSOO for each test function. We also
+randomized the initial sample point for BaMSOO and GPUCB so that they are not deterministic. To optimize the acquisition function for GP-UCB, we used DIRECT followed
+by a local optimization method using gradients.
+We use 5 test functions: Branin, Rosenbrock, Hartmann3,
+Hartmann6, and Shekel. All of these test functions are
+common in the global optimization literature and with the
+exception of the Rosenbrock, they are all multi-modal. 1
+We rescaled the domain of each function to the [0, 1]D
+hypercube, and we used the log distance to the true optimum as our evaluation metric. This metric is defined as
+log10 (f ∗ − f + ) where f + is the best objective value sampled so far and f ∗ is the true maximum value of the objective. For each test function, we repeat our experiments
+50 times for GP-UCB and BaMSOO and run SOO once as
+SOO is a deterministic strategy. We plot the mean and a
+confidence bound of one standard deviation of our metric
+1
+
+Detailed information about the test functions is available
+at the following website: http://www-optima.amp.i.kyoto-u.ac.jp/
+member/student/hedar/Hedar_files/TestGO_files/Page364.htm.
+
+Ziyu Wang, Babak Shakibi, Lin Jin, Nando de Freitas
+GP-UCB
+SOO-UCB
+SOO
+
+6
+
+0
+
+−2
+
+−4
+
+−6
+
+−8
+
+4
+
+2
+
+0
+
+−2
+
+−4
+
+−6
+
+−10
+
+50
+
+100
+
+150
+
+200
+
+−8
+
+50
+
+No. of Iterations (t)
+
+100
+
+150
+
+No. of Iterations (t)
+
+200
+
+GP-UCB
+SOO-UCB
+SOO
+
+2
+
+Log Distance to optimal
+
+GP-UCB
+SOO-UCB
+SOO
+
+2
+
+Log Distance to optimal
+
+Log Distance to optimal
+
+4
+
+0
+
+−2
+
+−4
+
+−6
+
+−8
+
+−10
+
+50
+
+100
+
+150
+
+200
+
+No. of Iterations (t)
+
+Figure 3: Comparison of GP-UCB, SOO, and BaMSOO on multi-modal test functions of low dimensionality (Branin,
+Rosenbrock and Hartmann3D). GP-UCB and BaMSOO perform similarly whereas SOO does poorly. The poor performance of SOO is caused by having weaker assumptions on the smoothness of the objective function. The good performance
+of GP-UCB indicates that when the dimensionality is low optimizing the acquisition function is reasonable.
+
+across all the runs for all the tests.
+For simplicity, we only consider binary-trees for space partitioning in SOO and BaMSOO. Specifically, the largest dimension in the parent’s cell is split to create two children.
+First, we test the global optimization schemes on 3 test
+functions with low dimensionality: Branin, Rosenbrock
+and Hartmann3. The Branin function (Jones, 2001) is a
+common benchmark for Bayesian optimization and has 2
+dimensions. The Rosenbrock function is a commonly used
+
+Log Distance to optimal
+
+4
+
+GP-UCB
+SOO-UCB
+SOO
+
+2
+
+0
+
+−2
+
+−4
+
+−6
+
+−8
+
+100
+
+200
+
+300
+
+400
+
+500
+
+No. of Iterations (t)
+GP-UCB
+SOO-UCB
+SOO
+
+Log Distance to optimal
+
+2
+
+0
+
+−2
+
+−4
+
+−6
+
+100
+
+200
+
+300
+
+400
+
+500
+
+No. of Iterations (t)
+
+Figure 4: Comparison of GP-UCB, SOO, and BaMSOO on
+multi-modal test functions of moderate dimensionality: 4D
+Shekel function (top) and 6D Hartmann function (bottom).
+Here, GP-UCB performs poorly. This is due in part to the
+hardness of optimizing the acquisition function.
+
+non-convex test function for local optimization algorithms,
+and although it is unimodal, its optimum lies in a long
+narrow valley, which makes the function hard to optimize.
+Finally, the Hartmann3 function is 3-dimensional and has
+four local optima.
+As we can see from Figure 3, BaMSOO performs competitively against GP-UCB on these low dimensional test
+functions. Both BaMSOO and GP-UCB achieve very high
+accuracies of up to 10−8 in terms of the distance to the optimal objective value. In comparison, SOO, due to the lack
+of a strong prior assumption, cannot take advantage of the
+points sampled and thus is lagging behind.
+In the experiments shown in Figure 4, we compare the approaches in consideration on the Shekel function and the
+Hartmann6 function. The Shekel function is 4-dimensional
+and has 10 local optima. The Hartmann6 function is 6dimensional, as the name suggests, and has 6 local optima.
+On these higher dimensional problems, the performance of
+GP-UCB begins to dwindle. Despite the increase in dimensionality, BaMSOO is still able to optimize the test functions to a relatively high precision. SOO does not perform
+as well as BaMSOO again because of its weak assumptions. The poor performance of GP-UCB on these two test
+functions may be due in part to the inability of a global optimizer to optimize the acquisition function exactly in each
+iteration. As the dimensionality increases, so is the difficulty of optimizing a non-convex function globally as the
+cost of covering the space grows exponentially. The optimization of the acquisition function through algorithms
+like DIRECT demands the repartitioning of the space in
+each iteration. To reach a finer granularity, we either have
+to sacrifice speed by building very fine partitions in each
+iteration or accuracy by using coarser partitions.
+The proposed approach is not only competitive with GPUCB in terms of effectiveness, it is also more computationally efficient. As we can see in Table 1, BaMSOO is
+about 10-40 times faster than GP-UCB on the test func-
+
+Bayesian Multi-Scale Optimistic Optimization
+
+Table 1: Time required for the test functions measured in seconds. SOO is very fast as it does not maintain a GP. BaMSOO
+maintains a GP to produce more accurate posterior estimates and is hence slower. The rejection of proposals also results
+in bigger trees, further slowing down the algorithm. GP-UCB is slow compared to the other two algorithms as it not only
+maintains a GP but also optimizes its acquisition function at each iteration.
+Branin
+29.9438
+3.0680
+0.1810
+
+Rosenbrock
+29.5716
+3.4693
+0.1835
+
+tions that we have experimented with. This is because instead of optimizing the acquisition function in each iteration the SOO algorithm, that sits inside, only optimizes
+once. BaMSOO, however, is much slower than SOO. This
+is because BaMSOO also employs a GP to reject points
+proposed by SOO. To sample one point, SOO may have to
+propose many points before one is accepted. For this reason, BaMSOO would build much bigger trees compared to
+SOO and it is therefore slower.
+
+Hartmann3
+34.0311
+3.9722
+0.1871
+
+Hartmann6
+115.2402
+2.0918
+0.4313
+
+Shekel
+100.7770
+3.8951
+0.4350
+
+0.70
+
+0.65
+
+F-score
+
+Algorithm
+GP-UCB
+BaMSOO
+SOO
+
+0.60
+
+0.55
+
+0.50
+
+7
+
+Application to term extraction
+
+In this section, we evaluate the performance of the BaMSOO algorithm on optimizing the parameters in a term extraction algorithm. Term extraction is the process of analyzing a text corpus to find terms, where terms correspond
+to cohesive sequences of words describing entities of interest. Term extraction tools are widely used in industrial
+text mining and play a fundamental role in the construction
+of knowledge graphs and semantic search products. Recently Parameswaran et al. (2010) proposed a term extraction method, and showed that it outperforms state-of-theart competitors, but their method has many free parameters that require manual adjustment. Here, we compare the
+performance of BaMSOO, GP-UCB and SOO in automatically tuning the 4 primary free parameters of the algorithm
+(support-thresholds). We define our deterministic objective
+function to be the F-score of the extracted terms, which is a
+weighted average of precision and recall. Precision is calculated using a predefined set of correct terms and recall is
+estimated by simply normalizing the number of extracted
+correct terms to be in the range [0,1]. We run the experiment on the GENIA corpus (Kim et al., 2003), which is a
+collection of 2000 abstracts from biomedical articles. The
+results of the experiment are shown in Figure 5. It is evident from this figure that BaMSOO outperforms GP-UCB
+and SOO in this application.
+
+8
+
+Discussion
+
+This paper introduced a new global optimization algorithm
+BaMSOO, which does not require the auxiliary optimization of either acquisition functions or samples from the GP.
+In trials with benchmark functions from the global opti-
+
+0.45
+0
+
+GP-UCB
+SOO
+BaMSOO
+50
+
+100
+
+150
+
+No. of function evaluations (t)
+
+Figure 5: Comparison of GP-UCB, SOO, and BaMSOO on optimizing 4 parameters in term extraction from
+the GENIA corpus using a term extraction algorithm by
+(Parameswaran et al., 2010). In this plot, higher is better.
+
+mization literature, the new algorithm outperforms standard BO with GPs and SOO, while being computationally
+efficient. The paper also provided a theoretical analysis
+proving that the loss of BaMSOO decreases polynomially.
+The careful reader may have noticed that, despite the effectiveness of BaMSOO in the experiments, the convergence rate of BaMSOO is not as good as that of SOO for
+α = 2. This is because we were only able to prove that the
+standard deviation at a point decreases linearly, instead of
+quadratically, when a nearby point is sampled (Lemma 3
+in the Appendix). Since by assumption the objective function behaves quadratically in the optimal region, the linear decrease of the standard deviation gives rise to a suboptimal convergence rate. It is also interesting to note that
+the same type of bound on the standard deviation was used
+by Bull (2011), who achieved similar convergence rates to
+the ones in this paper. de Freitas et al. (2012) showed that
+if the samples form a δ-cover on a subset of D ⊆ X , then
+the standard deviation of all points on D is bounded by
+2
+a quadratic term Q
+4 δ . Via this observation, the authors
+achieved a geometric convergence rate. The requirement
+of the δ-cover, however, renders their algorithm impractical. Finding a practical GP-based algorithm that achieves
+geometric convergence rates remains an open problem.
+
+Ziyu Wang, Babak Shakibi, Lin Jin, Nando de Freitas
+
+Acknowledgements
+We would like to thank Remi Munos for many valuable
+discussions. We also thank NSERC and the University of
+Oxford for financial support.
+

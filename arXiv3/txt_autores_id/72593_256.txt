@@ -1,0 +1,3315 @@
+
+We describe an expert system, Maies, under development for analysing forensic identification problems involving DNA mixture
+traces using quantitative peak area information. Peak area information is represented by conditional Gaussian distributions,
+and inference based on exact junction tree
+propagation ascertains whether individuals,
+whose profiles have been measured, have contributed to the mixture. The system can also
+be used to predict DNA profiles of unknown
+contributors by separating the mixture into
+its individual components. The use of the
+system is illustrated with an application to a
+real world example. The system implements
+a novel MAP (maximum a posteriori) search
+algorithm that is briefly described.
+
+1
+
+Introduction
+
+Probabilistic expert systems (PES) for evaluating
+DNA evidence were introduced in [1]. This paper is
+concerned with describing the current status of a computer software system called Maies (Mixture Analysis
+in Expert Systems) that analyses mixed traces where
+several individuals may have contributed to a DNA
+sample left at a scene of crime. In [2] it was shown how
+to construct a PES using information about which alleles were present in the mixture, and we refer to this
+article for a general description of the problem and for
+genetic background information. (A brief summary to
+genetic terminology is given in Appendix A.)
+The results of a DNA analysis are usually represented
+as an electropherogram (EPG) measuring responses in
+relative fluorescence units (RFU) and the alleles in the
+mixture correspond to peaks with a given height and
+area around each allele, see Figure 1. The band intensity around each allele in the relative fluorescence
+
+Julia Mortera
+Dipartimento di Economia
+Università Roma Tre
+Via Ostiense, 139
+00154 Roma, Italy.
+
+units represented, for example, through their peak areas, contains important information about the composition of the mixture.
+
+Figure 1: An electropherogram (EPG) of marker VWA
+from a mixture. Peaks represent alleles at 15, 17 and
+18 and the areas and height of the peaks express the
+quantities of each. Since the peak around allelic position 17 is the highest this indicates that the 17 allele
+is likely to be a homozygote or a shared allele between
+two heterozygotes. This image is supplied courtesy of
+LGC Limited, 2004.
+The main focus of the present paper is to describe the
+current status of a computer package called Maies,
+which automatically builds Bayesian network models
+for mixture traces based on conditional Gaussian distributions [3] for the peak areas, given the composition
+of the true DNA mixtures. Currently the program only
+considers a DNA mixture from exactly two contributors, which seems to be the most common scenario in
+forensic casework [4], and the program ignores other
+important complications such as stutter, dropout alleles, etc.
+
+We distinguish two types of calculations that Maies
+can perform. One type is evidential calculation, in
+which a suspect with known genotype is held and we
+want to determine the likelihood ratio for the hypothesis that the suspect has contributed to the mixture
+vs. the hypothesis that the contributor is a randomly
+chosen individual. We distinguish two cases: the other
+contributor could be a victim with a known genotype
+or a contaminator with an unknown genotype, possibly without a direct relation to the crime. This could
+be a laboratory contamination or any other source
+of contamination from an unknown contributor. The
+other type calculation that Maies can perform is the
+separation of profiles, i.e. identifying the genotype of
+each of the possibly unknown contributors to the mixture, the evidential calculation playing a secondary
+role. Both types of calculation are illustrated in § 5.
+
+of DNA in a mixture sample. The model is idealized in
+that it ignores complicating artefacts such as stutter,
+drop-out alleles and so on, and assumes that the mixture is made up of DNA from two people, who we refer
+to as p1 and p2. Typically, prior to amplification in a
+laboratory, a DNA mixture sample will contain an unknown number of cells from p1 and a further unknown
+number of cells from p2. Hence there is an unknown
+common fraction, or proportion, across the markers
+of the amount of DNA from p1, that we denote by
+θ. In an ideal amplification apparatus, during each
+amplification cycle the proportion of alleles of each allelic type would be preserved without error. We model
+departures from this ideal as random variation using
+the Gaussian distributions, and we introduce an additional variance term to represent other measurement
+error, represented by ω 2 .
+
+Previous related work includes that of [5] and [6] who
+respectively developed numerical methods known as
+Linear Mixture Analysis (LMA) and Least Square Deconvolution (LSD) for separating mixture profiles using peak area information. Both methods are based
+on least squares heuristics that assume the mixture
+proportion of the contributors’ DNA in the sample is
+constant across markers. A computer program has
+been written [7] for estimating the proportion of the
+individual contributions in two-person mixtures and to
+rank the genotype combinations based on minimizing
+a residual sum of squares. More recently, [8] describes
+PENDULUM, a computer package to automate guidelines in [9] and [7]. None of the methods described
+above utilizing peak area information are probabilistic in nature, nor do they use information about allele
+frequency. In contrast, the methodology proposed in
+[10] combines a model using the gene frequencies with
+a model describing variability in scaled peak areas to
+calculate likelihood ratios and study their sensitivity
+to assumptions about the mixture proportions.
+
+The post-amplification proportions of alleles for each
+marker are represented in the peak area information,
+which we include in the analysis through the relative
+peak weight. The (absolute) peak weight wa of an allele
+with repeat number a is defined by scaling the peak
+area with the repeat number as wa = aαa , where αa
+is the peak area around allele a. Multiplying the area
+with the repeat number is a crude way of correcting for
+the fact that alleles with a high repeat number tend to
+be less amplified than alleles with a low repeat number.
+For issues concerning heterozygous imbalance see [11].
+
+The plan of the rest of the paper is as follows. In
+the following section we describe the mathematical
+assumptions underlying the Bayesian networks that
+Maies generates for analysing two-person DNA mixtures. We then describe the components that Maies
+uses to build up the networks. This is followed by a
+description of a simple MAP search algorithm, implemented in Maies for separation of profiles. We then
+illustrate the use of Maies on a real life example, and
+then summarize future work required to make Maies
+into a tool for routine casework.
+
+To avoid the arbitrariness in scaling used to measure
+the areas, we consider the observed relative peak weight
+ra , obtained by scaling with the total peak weight as
+X
+ra = wa /w+ , w+ =
+wa ,
+
+2
+
+The mathematical model
+
+Our PES is a probabilistic model for relating the preamplification and post-amplification relative amounts
+
+We further assume that
+• The peak weight for an allele is approximately
+proportional to the amount of DNA of that allelic
+type;
+• The peak weight for an allele possessed by both
+contributors is the sum of the corresponding
+weights for the two contributors.
+
+a
+
+so that then
+
+P
+
+a ra
+
+= 1.
+
+For the relative peak weight, denoted by the random
+variable Ra , we assume a Gaussian error distribution
+Ra ∼ N (µa , τa2 ),
+
+(2)
+µa = {θn(1)
+a + (1 − θ)na }/2, (1)
+
+where θ is the proportion, or fraction, of DNA in the
+(i)
+mixture originating from the first contributor, na is
+the number of alleles with repeat number a possessed
+(i)
+by person i. Note that na ∈ {0, 1, 2} and hence µa ∈
+[0, 1].
+
+We assume an error variance for τa2 of the form
+τa2
+2
+
+2
+
+= σ µa (1 − µa ) + ω
+
+2
+
+(2)
+
+for U.S. Caucasians for the analysis in § 5 of data taken
+from [9]2
+
+2
+
+where σ and ω are variance factors for the contributions to the variation from the amplification and measurement processes.1 Note that if µa = 0 then τa2 = ω 2
+and Ra ∼ N (0, ω 2 ). The interpretation of this is that
+if there are no alleles of type a in the mixture prior
+to amplification, then any detected post-amplification
+can be ascribed to measurement error. Similarly if
+µa = 1 , which means that for the given marker all
+alleles are of type a in the mixture before amplification, then Ra ∼ N (1, ω 2 ), that is post amplification
+all alleles for the given marker are of type a, up to
+measurement error.
+However the Bayesian networks that Maies constructs
+uses the variance structure
+τa2 = σ 2 µa + ω 2 .
+
+(3)
+
+The reason is that we need to consider the correlation
+between weights due to the fact that they must add
+up to unity. It turns out, perhaps surprisingly, that
+the
+P likelihood obtained using (3) when conditioned on
+a ra = 1 has precisely the form as would be obtained
+using the likelihood based on (2) used in our model if
+we ignore measurement error by setting ω 2 = 0, and
+2
+the likelihoods are
+P very close numerically for small ω .
+This constraint a ra = 1 is imposed when we enter
+the complete set of observed peak weights as evidence
+in our networks. The proof, too long for this paper,
+may be found in [12].
+In our example in § 5 we used σ 2 = 0.01 and ω 2 =
+0.001, corresponding approximately to a standard
+deviation
+for the observed relative weight of about
+p
+0.01/4 + 0.001 = 0.06 for µa = 0.5 substituted into
+(2). These parameter values imply that when amplifying DNA from one heterozygous individual (for which
+µa = 0.5), an ra value at two standard deviations from
+the mean would give a value of 0.38/0.62 = 0.61 for
+the ratio of the minor to the major peak area; this is
+about the limit of variability in peak imbalance that
+has been reported in the literature [13], and suggests
+that our chosen parameter values are perhaps conservative.
+In general the variance factors may depend on the
+marker and on the amount of DNA analysed, but for
+simplicity we use the values above. (Our PES model is
+robust to small changes in these parameter estimates.)
+Finally, we assume known gene frequencies of single
+STR alleles; in particular we use those reported in [14]
+
+3
+
+Maies
+
+The basic form of our Bayesian network models is
+fairly straightforward, but the networks can grow large
+when modelling the ten or so markers typical in a
+mixture problem. (In the example in § 5 the network
+has 237 nodes.) One way to manage this complexity is to use object-oriented Bayesian network software, as we describe in detail in [12]. Here we describe Maies, a purpose built program that, after entering peak area information and available genetic information (if available) about the potential contributors, automatically constructs a single conditionalGaussian Bayesian network on which the probability
+calculations are performed. Maies implements the local propagation scheme of [15]. Peak areas are automatically converted to normalized weights and entered
+as evidence in the relevant nodes by the program.
+An example of a network generated for a single marker
+with two alleles observed in the mixture is shown in
+Figure 2. The figure illustrates the repetitive modular
+structure that makes it possible for Maies to create
+the much larger Bayesian networks required to analyse
+mixtures on several markers. We now describe these
+various structures and how they interrelate, working
+from top to bottom in Figure 2.
+u1mg
+
+u1pg
+
+smg
+
+u1gt
+
+spg
+
+vmg
+
+sgt
+
+vpg
+
+u2mg
+
+vgt
+p1 = s?
+
+p1gt
+
+u2pg
+
+u2gt
+
+p2 = v?
+
+target
+
+p2gt
+
+jointgt
+p1 8
+
+p1 9
+
+p1 x
+
+p2 8
+
+8 inmix ?
+
+p2 9
+
+p2 x
+
+x inmix ?
+9 inmix ?
+
+8 weight
+
+9 weight
+
+x weight
+
+9 weightobs
+
+x weightobs
+
+p1 frac
+8 weightobs
+
+sym
+
+Figure 2: The structure of a Bayesian network generated by MAIES for a single marker, in which two allele
+peaks (8 and 9) were observed.
+
+1
+
+The first term in the variance structure in (2) can be
+seen as a second order approximation to a more sophisticated model based on gamma distributions for the absolute
+scaled peak weights to be discussed elsewhere.
+
+2
+This dataset has an observed allele 36 of the marker
+D21. As none of the 302 subjects in [14] had this allele, we
+chose to use 1/604=0.00166 as its frequency.
+
+3.1
+
+Top level people
+
+Maies currently models mixtures only for DNA from
+two individuals. Thus it sets up nodes for four individuals who are paired up, prefixed by s (for suspect),
+v (for victim), and u1 and u2 representing two unspecified persons from the population. Corresponding
+to each of these individuals is a triple of nodes representing their genotype (gt) on the marker, and the
+individuals’ paternal (pg) and maternal (mg) genes.
+The probability tables associated with the maternal
+and paternal genes contain the allele frequencies of the
+observed alleles, whilst the conditional probability table associated with the genotype node is the logical
+combination of the maternal and paternal gene.
+3.2
+
+3.4
+
+Repeat number nodes
+
+On the level below the allele counting nodes are the repeat number nodes, labelled 8 inmix?, 9 inmix? and
+x inmix?. These are (yes,no) binary valued nodes
+representing whether or not the particular alleles are
+present in the mixture: thus for example allele 8 is
+present in the mixture if either of the allele counting nodes p1 8 or p2 8 takes a non-zero value. For
+the node x inmix? the x refers to all of the alleles
+in the marker that are not observed. When using repeat number information as evidence the repeat number nodes present in the mixture will be given the value
+yes and x inmix? will be given the value no.
+
+Actual contributors to the mixture
+
+The genotypes on the marker of the two individuals
+p1 and p2 whose DNA is in the mixture are the nodes
+labelled p1gt and p2gt. Node p1gt has incoming arrows from nodes u1gt, sgt and a (yes,no) valued
+binary node labelled p1 = s?. The function of this
+latter node is to set the genotype of node p1gt to be
+that of sgt if p1 = s? takes the value yes, otherwise
+to set the genotype of node p1gt to be that of u1gt.
+An equivalent relationship holds between the genotype
+nodes p2gt, vgt, u2gt and p2 = v?. Uniform priors
+are placed on the nodes p1 = s? and p2 = v?.
+The node labelled target represents the four possible combinations of values of the two nodes p1 = s?
+and p2 = v?, with a conditional probability table of
+zeros and ones representing the logical identities. The
+marginal posterior distribution of this node is used to
+calculate likelihood ratios in evidential calculations.
+The network also has a node representing the joint
+genotypes of individuals p1 and p2, which is labelled
+jointgt, with incoming arrows from p1gt and p2gt;
+the (quite big) conditional probability table associated
+with this node has entries that are either of zero or one.
+The most likely configuration of the marginal distribution in all joint genotype nodes across all markers is
+required for separating the mixture, and is found using
+the MAP search algorithm described in § 4.
+3.3
+
+(i)
+
+These nodes model the na variables introduced in (1).
+
+Allele counting nodes
+
+On the level below the genotype nodes for p1 and p2
+is a set of nodes representing the number of alleles
+(taking the value of 0, 1 or 2) of a certain type in
+each individual. Thus, for example, the node p1 8
+counts the number of alleles of repeat number 8 in the
+genotype of individual p1 for the given marker: this
+value only depends upon the genotype of the individual
+p1 and hence there is an arrow from p1gt to p1 8.
+
+3.5
+
+True and observed weight nodes
+
+These nodes are represented by the elliptical shapes.
+The nodes 8 weight, 9 weight and x weight represent the true relative peak weights r8 , r9 and rx respectively of the alleles 8, 9 and x in the amplified DNA
+sample. Each true-weight node is given a conditionalGaussian distribution as in (1), where the fraction θ
+of DNA from p1 in the mixture is modelled in the
+network by a discrete distribution in the node labelled
+p1 frac. The variance is taken to be σ 2 µa . The nodes
+8 weightobs, 9 weightobs and x weightobs represent the measured weights. The observed weight is
+given a conditional-Gaussian distribution with mean
+the true weight, and measurement variance ω 2 , hence
+leading to the variance (3).
+When using peak area information as evidence the
+nodes representing the observed weights will have their
+values set to the relative peak weights. The sym node
+is only used for separating a mixture of two unknown
+contributors, to break the symmetry between p1 and
+p2 (see § 5.2).
+3.6
+
+Networks with more than one marker
+
+The network displayed in Figure 2 generated by
+Maies is for a single marker; for mixture problems
+involving several markers the structure is similar but
+more complex because the number of nodes grows with
+the number of markers. In such a network the nodes
+shaded in Figure 2 occur only once. The unshaded
+nodes are replicated once for each marker, with each
+node having text in their labels to identify the marker
+that the allele or genotype nodes refer to. There will
+also be extra repeat number, allele counting and allele
+weight nodes in each marker having more than two
+observed alleles in the mixture, extending the pattern
+for the one-marker network in the obvious manner.
+
+4
+
+A simple MAP search algorithm
+
+It is well known that the most likely configuration of a
+set of discrete variables is not necessarily the same as
+found by picking the most likely states in the individual marginals of the variables (see for example [16]).
+The basis of the MAP search algorithm in Maies is to
+assume that this is close.
+Specifically, after entering and propagating evidence,
+one finds the individual marginals of the set of MAP
+variables M of interest. There are then two variants
+of the MAP algorithm, batch and sequential.
+In the batch variant, one finds for some reasonable
+number n (say n = 5000) the top n most likely configurations of the joint probability given by the product of the individual marginals of MAP variables.
+This is done by constructing a disconnected graph
+in the MAP variables, and using the efficient algorithm of [17]. These configurations are stored in an
+list (c1 , c2 , . . . , cn ) ordered by decreasing probability
+according to the independence graph. Now returning to the original Bayesian network, one propagates
+the available evidence E and finds the normalization
+constant P (E) and stores this in rp, say (short for
+“remainder probability”). One then processes the
+(c1 , c2 , . . . , cn ) configurations as additional evidence in
+the original Bayesian network and finds from the normalization constant each of their probabilities P (ci , E).
+After processing each configuration, one keeps track
+of the highest probability configuration found and its
+probability, bp. One also subtracts p(ci , E) from rp,
+so that if it ever happens bp > rp then the MAP
+has been found. If one stores all of the probabilities
+p(ci , E), i = 1, . . . , k for all of the configurations that
+have been processed, then perhaps the second, third
+etc. most likely configurations may
+Pk be identified if
+their probabilities exceed P (E) − i=1 P (ci , E). The
+sequential variant proceeds similarly, the difference is
+that the candidates c1 , c2 , . . ., are generated one at a
+time as required. The following is pseudo-code for the
+sequential variant for finding the MAP.
+
+the second, third, fourth etc., most likely configurations.
+
+5
+
+A criminal case example
+
+Our example is taken from Appendix B of [9] and illustrates the use of the amelogenin marker in the analysis
+of DNA mixtures when the individual contributors are
+of opposite sex.
+Peak area analysis of the amelogenin marker in DNA
+recovered from a condom used in a rape attack indicated an approximate 2:1 ratio for the amount of female to male DNA contributing to the mixture. Peak
+area information was available on six other markers,
+the information is shown in Table 1; we shall refer to
+this as the Clayton data. (Further examples are illustrated in [12] and [18].)
+Table 1: Clayton data of [9] showing mixture composition, peak areas and relative weights together with
+the DNA profiles of both victim (v) and suspect (s).
+For the marker D21 the allele designation in brackets
+is as given in [9] using the labelling convention of [19]
+Marker
+
+Alleles
+
+Amelogenin
+
+X
+Y
+13
+14
+15
+14
+15
+16
+18
+(61)
+(65)
+(70)
+(77)
+22
+23
+5
+7
+15
+16
+17
+19
+
+D8
+D18
+
+D21
+
+FGA
+THO
+VWA
+
+• Initialize: i = j = 1, bp = 0, and rp = P (E).
+• While bp < rp do:
+– Find ci and P (ci , E);
+– If p(ci , E) > bp set bp = P (ci , E) and j = i;
+– Set rp := rp − P (ci , E) and i := i + 1;
+• cj is the MAP configuration.
+For purely discrete networks, this algorithm does not
+appear to be as efficient as that described in [16]. However it is neither clear that the latter can be applied to
+finding the MAP of a set of discrete variables in a conditional Gaussian network, nor that it could identify
+
+5.1
+
+28
+30
+32.2
+36
+
+Peak
+area
+1277
+262
+3234
+752
+894
+1339
+1465
+2895
+2288
+373
+590
+615
+356
+534
+2792
+5735
+10769
+1247
+1193
+2279
+2000
+
+Relative
+weight
+0.8298
+0.1702
+0.6372
+0.1596
+0.2032
+0.1462
+0.1714
+0.3612
+0.3212
+0.1719
+0.2913
+0.3259
+0.2109
+0.1547
+0.8453
+0.2756
+0.7244
+0.1633
+0.1667
+0.3383
+0.3318
+
+s
+
+v
+
+X
+Y
+
+X
+13
+
+14
+15
+14
+15
+16
+18
+28
+30
+32.2
+36
+22
+23
+7
+15
+16
+
+23
+5
+7
+17
+19
+
+Evidential calculation
+
+One possible use of the system to the Clayton data
+would be to compare the two hypotheses:
+• H0 : the suspect and victim both contributed to
+the mixture
+• H1 : the victim and an unknown contributor contributed to the mixture
+
+In a courtroom setting, the null hypothesis, H0 , would
+be a prosecution’s case, whilst H1 would represent the
+defence’s case. (It is standard procedure in court for
+likelihood ratios of these hypotheses to be reported.)
+
+of genotypes of the two contributors to the mixture,
+but other less likely but also plausible combinations.
+Maies achieves this with the MAP search algorithm
+described in § 4.
+
+To do this calculation in Maies, evidence is entered
+in the observed relative peak area nodes, the repeat
+number nodes, and information on the suspect and
+victim genotypes. After propagating the evidence the
+marginal on the target is examined. This has the
+following values (taken from Maies):
+
+For separating a mixture, we may or may not have genetic information about one of the contributors. For
+our rape example, suppose that we have the genotype
+of the victim. Then using Maies we may enter as evidence the victim’s genotype, the relative peak areas
+and the repeat number information. We also select the
+value yes in the p2 = v? node. We then select the set
+of joint genotype nodes, and perform the MAP search.
+Maies returns two configuration, the most likely having posterior probability 0.997594, with the genotype
+p1 matching our suspect profile in Table 1. The second
+most likely combination has a posterior probability of
+0.00239796, and differs from the true profile in the
+marker FGA where a homozygous (22, 22) genotype
+is predicted. All remaining possible genotype combinations have a total probability mass of less than
+8 × 10−6 .
+
+u1 & u2
+v and u
+s and u
+s and v
+
+4.2701211814389×10−21,
+4.1040333719867×10−11,
+3.660791624072×10−11,
+0.99999999992235.
+
+From this the likelihood ratio of H0 to H1 is calculated
+to be P (s and v | E)/P (s and u | E) = 2.73 × 1010 ,
+where E denotes the complete set of evidence.
+(Note that because we have placed
+uniform priors on the nodes p1 = s?
+and
+p2 = v?, then P (E | s and v)/P (E | s and u)
+=
+P (s and v | E)/P (s and u | E).)
+It may be that only DNA from a suspect is available,
+but not from a victim. In such a situation we could
+use Maies to compare the following two hypotheses:
+• H0 : the suspect and an unknown contributor contributed to the mixture
+• H1 : two unknown contributors contributed to the
+mixture
+Again in a courtroom setting these could represent
+prosecution and defence cases respectively. The calculation proceeds as before, but with the victim profile
+omitted from the evidence. This time the marginal on
+the target node is given by
+u1 & u2
+v and u
+s and u
+s and v
+
+5.8322374221768×10−11,
+5.8322374221768×10−11,
+0.49999999994168,
+0.49999999994168,
+
+and the likelihood ratio of H0 vs. H1 is given by
+P (s and u | E)/P (u1 and u2 | E) = 8.57 × 109 .
+5.2
+
+Mixture separation calculations
+
+The other type of calculation that may be performed
+with Maies is that of separating a two-person mixture
+into genotypes of the contributors. The output from
+such a decomposition could be used to find a match
+in a DNA database search. For such a search it is
+useful to have not just the most likely combination
+
+The second possibility is that no genotypic information is available on either contributor to the mixture.
+To do this calculation, evidence on the observed relative peak areas and the repeat number information
+is entered. To overcome the symmetry in the network
+between p1 and p2, we enter evidence on the sym node
+that p1 frac is ≥ 0.5. Then, selecting the joint genotype nodes as before, we perform a MAP search. The
+result is shown in Table 2. All markers are correctly
+identified. Note in particular that the genotypes for
+the marker THO are identified correctly. In [9] this
+was only possible to do so after the victim’s profile
+was taken into account.
+Table 2: Most likely genotype combination of both
+contributors for Clayton data. The victim (here p1)
+and male suspect (p2) is correctly identified on every
+marker. The final column indicates the marginal probabilities for the genotype pairs on individual markers, with the figure in parenthesis the product of these
+marginals.
+Marker
+Amelogenin
+D8
+D18
+D21
+FGA
+THO
+VWA
+joint
+
+Genotype Genotype
+p1
+p2
+XX
+XY
+13 13
+14 15
+16 18
+14 15
+30 32.2
+28 36
+23 23
+22 23
+57
+77
+17 19
+15 16
+0.701988
+
+Posterior
+probability
+0.983115
+0.903013
+0.993166
+0.945235
+0.989090
+0.845031
+0.992738
+(0.691517)
+
+For this example, the Maies MAP search algorithm
+identifies the next three most likely combinations
+
+0.05
+
+Posterior density
+
+0.10
+
+0.15
+
+sumed correct. Such methods could also be useful for
+calibrating the variance parameters σ 2 and ω 2 . We
+are pursuing ways that this could be accomplished using an EM estimation algorithm. (Bayesian methods
+for estimating the variance parameters could also be
+developed.) Nevertheless, despite these many issues,
+we feel that the present framework provides a sound
+foundation in which these and other matters can be
+be addressed and incorporated into Maies.
+
+0.00
+
+Acknowledgements
+0.50
+
+0.55
+
+0.60
+
+0.65
+
+0.70
+
+0.75
+
+0.80
+
+Proportion of DNA from the major contributor.
+
+Figure 3: Posterior distribution of mixture proportion
+from Clayton data using no genotypic information.
+of genotypes, these have probabilities of 0.120049,
+0.0583912 and 0.0227133 respectively. (The network
+has 183 discrete nodes and 54 continuous nodes. The
+total state space of the 7 joint genotype nodes is approximately 5.9 × 1012 . Identifying the 15 most likely
+combinations of these nodes took approximately 38
+seconds on a 1.6GHz laptop with 256Kb memory.)
+Finally for this example, Figure 3 shows the posterior
+distribution of the mixture proportion; the peak at
+around 0.65 corresponds to a mixture ratio of 1.86:1,
+in line with the approximate 2:1 estimated in [9].
+
+6
+
+Discussion
+
+We have described a software system, Maies, for
+analysing DNA mixtures using peak area information,
+yielding a coherent way of predicting genotypes of unknown contributors and assessing evidence for particular individuals having contributed to the mixture, and
+applied it to a real life example. A simple MAP search
+algorithm allows a set of most plausible genotypes
+to be generated, perhaps for use in a DNA database
+search for a suspect.
+There are a number of issues that would need addressing before the system could be used in routine analysis
+of casework, for example, complications such as more
+than two potential contributors, multiple traces, indirect genotypic evidence, stutter, etc. In addition,
+preliminary investigations seem to indicate that the
+variance factor depends critically on the total amount
+of DNA available for analysis. As this necessarily is
+varying from case to case, a calibration study should
+be performed to take this properly into account. Methods for diagnostic checking and validation of the model
+should be developed based upon comparing observed
+weights to those predicted when genotypes are as-
+
+This research was supported by a Research Interchange Grant from the Leverhulme Trust. We are indebted to participants in the above grant and to Sue
+Pope and Niels Morling for constructive discussions.
+We thank Caryn Saunders for supplying the EPG image used in Figure 1.
+
+
+
+
+OHB, UK.
+While on the face of it these two approaches appear
+quite different, I will argue that model search meth­
+ods based upon maximizing a local log-score can be
+
+It is often stated in papers tackling the task
+
+expressed
+
+of selecting a Bayesian network structure
+from data that there are these two distinct
+approaches:
+
+(i)
+
+as
+
+equivalent search methods employing lo­
+
+cal conditional independence tests.
+The plan of the paper is as follows. The next section
+
+Apply conditional indepen­
+
+dence tests . when testing for the presence
+
+introduces notation together with some theoretical re­
+
+or otherwise of
+
+sults. Section
+
+edges; (ii) Search the
+
+model
+
+3
+
+states the assumptions made in later
+
+Section 4 considers learning structure from
+
+sections.
+
+space using a scoring metric.
+
+a known distribution, which is equivalent to learning
+
+Here I argue that for complete data and a
+
+from an infinite data set. Section 5 considers the more
+
+given node ordering this division is largely a
+
+realistic case of inferring model structure from finite
+
+myth, by showing that cross entropy methods
+
+data, from both a classical and a Bayesian perspec­
+
+for checking conditional independence are
+
+tive.
+
+mathematically identical to methods based
+upon discriminating between models by their
+overall goodness-of-fit logarithmic scores.
+
+2
+Keywords Bayesian networks;
+
+structural learning;
+
+conditional independence test; scoring metric; cross
+entropy.
+
+1
+
+tion of a Bayesian network; for a recent monograph
+
+{X 1,
+
+In this paper I consider learning Bayesian network
+structures on a finite set of discrete variables, under
+the restrictions of complete data and a given node­
+ordering. The following quote (Cheng et al.
+
+1997)
+
+is
+
+typical of statements made in articles either introduc­
+ing a novel algorithm or reviewing current algorithms
+for learning Bayesian networks.
+Generally, these algorithms can be grouped
+one category of algo­
+
+rithms uses heuristic searching methods to
+construct a model and then evaluates it using
+a scoring method. . .. The other category of
+algorithms constructs Bayesian networks by
+analyzing dependency relationships between
+nodes.
+
+I will assume that readers are familiar with the no­
+see Cowell et al.
+
+Introduction.
+
+into two categories:
+
+Notation and background results.
+
+.
+
+.
+
+.
+
+, Xn}
+
+of
+
+(1999).
+n
+
+X
+
+I consider a finite set
+
+=
+
+(finite) discrete random variables
+
+X= {X1, ... , Xn} =
+:= {1, .. . , n} denotes some in­
+
+taking values in the state space
+
+xj=1Xi.
+
+If A � V
+
+dex set, then XA will denote the subset of variables
+
+{X a
+
+:
+
+a E
+
+A}
+
+and will take values in
+
+Where convenient a variable
+its index
+
+v.
+
+X11
+
+XA
+
+:=
+
+XaEAXa.
+
+may be referred to by
+
+Particular configurations will be denoted
+
+using lower case letters, for example,
+or XA E XA.
+
+x = (x1, .
+
+.
+
+.
+
+, Xn),
+
+In this paper I consider search algorithms constrained
+by a given node ordering; without loss of generality I
+will take the node ordering to be
+
+(X1, ... , X,).
+
+Let
+
+9n denote the set of directed acyclic graphs (dags) on
+
+X,
+
+such that
+
+Xi
+
+For g E 9n let
+
+can be a parent of
+
+P9
+
+Xj
+
+only if i < j.
+
+denote the set of distributions di­
+
+rected Markov with respect to g. This means that for
+
+any
+
+P9
+
+E
+
+P9,
+
+the probability mass function factorizes
+
+92
+
+COWELL
+
+as
+
+3
+
+Pg(x)=
+where
+v in g.
+
+Xpa(v:g)
+
+IT Pg(Xv I Xpa(v:g)),
+
+Assumptions made in learning a
+network.
+
+(1)
+
+vEV
+
+I shall make the following assumptions for the remain­
+
+denotes the set of parents of the vertex
+
+ing sections.
+
+1. I will be looking for good predictive models, se­
+
+P(X) and Q(X) be two probability distributions
+X. The Kullback-Leibler divergence between P
+and Q is defined to be
+
+Let
+
+lected according to a log-scoring rule, and choos­
+
+over
+
+K(P, Q)
+It takes
+
+a
+
+=
+
+p(X)
+log
+)
+q(X
+
+[
+Ep
+
+]
+
+ing the simplest model among equally good pre­
+dictive models.
+
+"
+p(x)
+L-xp(x) log q(x).
+
+=
+
+2. The dataset is complete, and there are no latent
+
+xE
+
+variables.
+
+non-negative value measuring the similarity
+
+or closeness of the distribution Q to that of
+
+P,
+
+vanish­
+3. The node ordering is given, and without loss of
+
+ing if and only if the distributions are identical.
+
+generality is
+
+It was shown by Cowell (1996) (see also Cowell et al.
+
+(1999)) that for a given graph g E Yn the distribu­
+
+tion P9 E P9 which minimizes
+
+distribution
+
+P(X)
+
+K(P, P9)
+
+UAI2001
+
+4.
+
+for some fixed
+
+assigns to every vertex v E V,
+
+(XI,
+
+.
+
+.
+
+.
+
+, Xn)·
+
+There are no logical constraints between the vari­
+ous conditional probability tables to be estimated.
+
+Assumption 1 emphasizes that I am not looking to
+Let A, Band C be disjoint index subsets of V, and let
+
+P( X)
+
+be some distribution over
+
+entropy
+
+X.
+
+Then the cross­
+
+of X A and XB is defined to be
+
+construct causal models from data, but simply seeking
+good predictive models. The log scoring rule is unique
+
+in that it is (for multi-attribute variables) the only
+proper scoring rule whose value is determined solely by
+the probability attached to the outcome that actually
+
+occurs (Bernardo 1979). The final part of Assumption
+whilst the cross-entropy of
+
+Xc,
+
+XA
+
+and
+
+XB
+
+conditional on
+
+1
+
+is Occam's razor: without it I could choose the satu­
+
+rated model, that is, the complete graph, which would
+fit the data perfectly.
+
+or conditional cross entropy, is defined as
+
+Scoring based search methods
+
+usually try and balance these two aspects - by penal­
+izing a model's predictive score with some measure of
+the model's complexity - as a way of reducing over­
+fitting.
+Assumption 2 is made for simplicity, to avoid approxi­
+
+XA is conditionally independent of Xa
+given Xc under the distribution P, written as
+XAlLPXB I Xc, if and only if p(XA, XB I Xc)
+p(XA I Xc )p(Xa I Xc) (Dawid 1979). The notation
+
+to account for the pattern of missing data. It also im­
+
+llp will be abbreviated to lL when the distribution
+
+depending upon the node and its parents in the dag),
+
+We say
+
+=
+
+P under consideration is clear from the context. Note
+that if XAllPXB I Xc, then Hp (XA, XB I Xc) = 0,
+and vice versa.
+
+For g E
+
+9n
+
+any distribution
+
+P9
+
+E P9 has the directed
+
+Markov property, that is, any node is conditionally in­
+
+dependent of its non-descendants given its parents in
+
+g:
+
+plies that the logarithmic score of a dag decomposes
+additively into functions (one function for each node,
+thus making local search possible by enabling indepen­
+dent optimizations of each node's parent set.
+Assumption 3 implies that the dag I obtain might not
+exhibit all of the conditional independence properties
+of the data, but only those consistent with the order­
+ing.
+Assumption
+
+XvllX nd(v:g) I X pa(v:g)
+Note
+
+mations being made to handle missing data, or having
+
+in
+
+particular
+
+that
+
+Hpg (Xu, X nd(v:g) I X pa(v:g)) = 0.
+
+4
+
+states that I am assuming local meta­
+
+independence of the conditional probabilities associ­
+
+·
+
+ated with the families of any given graph considered
+this
+
+implies
+
+(Dawid and Lauritzen 1993). These conditional prob­
+abilities will be taken as parameters to be estimated.
+
+UAI2001
+
+4
+
+Learning networks from a known
+distribution.
+
+In this section, I assume that the joint distribution
+P(X) is known; this is equivalent to recovering P(X)
+from its maximum likelihood estimate (MLE) for the
+saturated model in the limit of an infinite amount of
+data drawn from P(X). The task is to find the sim­
+plest model g E 9n such that P9(X) P(X).
+=
+
+4.1
+
+93
+
+COWELL
+
+sets R; to find the largest such set for which the cross
+entropy vanishes. In practice, this is not usually possi­
+ble because the search space is too large. Thus heuris­
+tic searches are normally applied, usually based upon
+evaluating (5) with S; singleton sets. An example of
+such a search is:
+1. Set Xpa(i)
+
+•
+
+independence tests.
+•
+
+=
+
+Hp(X;, R; I X pa(i))
+XJ
+
+=
+
+"" (
+
+L..t P x;,r;,Xpa.(i)
+XJ
+
+[ p(x;,( I Xpa; (i)) ]
+p( I Xpa i)) (r I Xpa(i) )
+) log [p(x; I r;,Xpa(i))) ]
+,
+r;
+
+p
+
+p (X ·I Xpa(>)
+.
+
+=
+
+"" (X;,s;,Xpa(i) ) log [p(x; I s;,Xpa(i)) ]
+(X,·I Xpa.(t). )
+p
+
+Xpa(i) \ {Y }.
+
+Model selection via Kullback-Leibler
+
+Given a graph g E Yn, the distribution directed
+Markov with respect to g (that is, factorizes as (1))
+which has minimum Kullback-Leibler divergence from
+P(X) obeys (2) for each node in the graph. In prin­
+ciple, one could perform an exhaustive search over all
+possible graphs g E Yn, finding their closest matching
+distributions P9(X) in terms of Kullback-Leibler di­
+vergence from P(X), selecting those graphs for which
+the Kullback-Leibler divergence vanishes, and select­
+ing among these graphs the one having the fewest num­
+ber of edges.
+Consider a graph g E 9n, and it associated distribu­
+tion P9(X) which satisfies (2). The Kullback-Leibler
+divergence is given by
+
+(4)
+
+vanishes, and conversely. Hence (4) forms the ba­
+sis of a conditional independence test. Note that if
+X;ll.R; I Xpa(i), then for any subset S; C R; it is also
+true that X;ll.S; I Xpa(i), and
+
+L..t P
+
+-+
+
+.
+
+When (3) hold s the conditional cross entropy ( 4)
+
+Hp(X;, S; I Xpa(i))
+
+Xpa(il
+
+divergence.
+
+=
+
+X;
+
+Select S; E R; such that Hp(X;,S; I Xpa(i))
+is maximized.
+RemoveS; from R; and add it to Xpa(i)·
+
+This is similar to the 'thickening and thinning' algo­
+rithm of Cheng et al. (1997). More generally, S; could
+represent a restricted set of subsets of R;, not just sin­
+gleton sets.
+4.2
+
+The minimal set Xpa(i) may then be taken as the set
+of parents of node xi in the sought for graph. If
+found for each X;, the joint distribution will factorize
+as (1). Let us write R; : = {X1, ... , X;_t} \ Xpa(i)•
+and Xr
+{X1, ... , Xi}. Then using the identity
+P(X; I R;, Xpa(i))P(R; I Xpa(i)),
+P(X;, R; I Xpa(i))
+we have
+
+L..t P ( X;, r;, Xpa(i)) log
+_ ""
+
+{Xt, ... ,X;-t}.
+
+Xpa(i) such that X;ll.Y I Xpa(i) \
+{Y} is TRUE do
+•
+
+which is equivalent to the independence statement
+
+=
+
+3. WHILE :3 Y E
+
+n
+P(X) =II P(X; I Xt, ... 'X;- 1)·
+i=l
+The goal of the model search using conditional inde­
+pendence tests is to find for each node X; a minimal
+set Xpa(i) � {X1, ... , Xi-t}, such that
+
+0 and R;
+
+2. WHILE X;ll.R; I Xpa(i) is FALSE do
+
+Model selection via conditional
+
+Given the ordering (X11 ... ,Xn), the joint distribu­
+tion P(X) may be factorized as
+
+:=
+
+(5)
+
+will vanish also (and conversely). In principle, one
+could perform an exhaustive search over all possible
+
+(6)
+
+Note that (6) decomposes into a sum of terms, one
+for each node, where the g-dependence of the term
+on each node depends upon the family in g of that
+node. In fact for the same graph g, the ith term in
+the summation (6) is identical to the cross entropy
+expression (4). Thus, an exhaustive search based upon
+conditional independence is equivalent to an exhaustive
+
+search which minimizes Kullback-Leibler divergence.
+
+94
+
+UAI2001
+
+COWELL
+
+Suppose in a stepwise search algorithm that g is our
+
+current model and a candidate model g1 differs from
+
+F(X;, Xpa(i:g), S;)
+
+X; for which Xpa(i:g'} :::> Xpa(i:g}· Then
+the difference in Kullback-Leibler divergence of the
+
+L
+
+gin one node
+
+two models is found f rom
+
+(6)
+
+to be
+
+Hp(X;, X pa(i:g') \ Xp a(i:g) I Xpa(i:g)),
+
+(5)
+
+with
+
+S;
+
+:=
+
+fi(x;,Xpa(i:g)• s; )
+l
+
+l::.(g,i)=
+which is
+
+Xi,Xpa.(i;g) ,Si
+
+and the conditional cross entropy
+
+Xpa(i:g') \Xpa(i:g)·
+
+(7)
+
+Thus choos­
+
+P(x; I Xpa(i:g))
+
+where
+
+og
+
+=
+
+X
+
+[p (
+
+x ; IXpa(i:g }, s;)
+
+p' (X; I Xpa(i:g)
+
+]'
+
+p(x; , Xpa(i:g))/fi(xpa(i:g))
+
+(8)
+etc.
+
+Then a search heuristic would employ a decision rule
+
+which on the basis of the value of
+
+would either
+
+(8)
+
+accept or reject the hypothesis that
+
+X;JlS; IXpa(i)•
+
+ing the g' differing from g by one or more edges which
+
+and if the latter, decide which among the candidate
+
+minimizes
+
+algorithm.
+
+maximizes
+
+(7) is equivalent to choosing g' :::> g which
+K(P, P9,). After adding parents to X; until
+
+no further decrease in Kullback-Leibler divergence is
+
+possible (on adding yet further nodes as parents), one
+could thin the parents of node
+
+for which
+
+l::.(g, g')
+
+X;,
+
+remains zero.
+
+by removing nodes
+
+More generally, a decision criterion in the search al­
+'
+
+gorithm which moves to a model g from a submodel g
+
+based upon the consideration of a set of pos sible sets
+
+S,
+
+and their associated conditional independence tests
+
+could be used to give the same result (or move) based
+
+S;
+
+to add to Xpa(i) for the next iteration of the search
+Two common decision heuristics are: (i)
+
+if the value of
+
+(8)
+
+is below a fixed threshold value
+
+E
+
+then accept the conditional independence; (ii) perform
+
+a classical significance test, using the null hypothesis
+of conditional independence, under which a suitable
+multiple
+
+(8)
+
+(the multiplier being twice the number
+
+X�
+
+of observations) will have a
+
+distri b u tion for some
+
+suitable k. Each of these has a counterpart in search
+heuristics based upon a log-score.
+
+upon the consideration of the same S; and the changes
+
+5.2
+
+in Kullback-Leibler divergence, because the numeri­
+
+Let us write n(xA) for the marginal count of the num­
+ber of cases in the dataset for which
+XA. For
+
+cal quantities entering into the decision process upon
+which the decision is based are identical in the two
+search frameworks.
+Put another way, for every search heuristic based upon
+using conditional independence tests, there is an equiv­
+
+alent search heuristic based upon using changes in
+Kullback-Leibler divergence, and vice versa.
+
+Model selection via maximum likelihood.
+
+XA
+
+g E
+
+=
+
+Q,.. the log-likelihood of the data decomposes as
+
+logL(p9)
+
+=
+
+L IT
+i
+
+There
+
+Xi,Xpa(i:;9)
+
+n(x;, Xpa(i:g) )log(p9 (x ;IXpa(i:g) )),
+
+is no fundamental difference between the two ap­
+
+proaches, only a difference in interpretation.
+
+5
+
+which yields the MLE
+
+,
+Pg(X; I Xpa(i:g))
+
+Learning networks from finite data
+
+5.1
+
+Suppose, as in Section
+
+Xpa(i:g')
+
+independence tests.
+The directed Markov property, and the completeness
+
+of the data, allows conditional independence tests to
+be performed locally on each node. The conditional in­
+
+dependence tests employ MLEs. However due to sam­
+
+pling variability the tests are not sharp, so typically
+the requirement of the exact vanishing of (conditional)
+
+cross entropy expressions is relaxed.
+model, with node
+
+suppose that g is
+
+X;
+
+from the data one obtains the ML Es
+
+our current
+
+Xpa(i:g), and
+F(X;, Xpa(i:g))·
+
+having parents
+
+Furthermore, suppose that for some node or set of
+nodes
+
+S;
+
+E
+
+X/-l \ Xpa(i:g}
+
+n(x;,Xpa.(i:g))
+n (Xpa(i:g) ) ·
+
+4.2,
+
+one evaluates _the MLEs
+
+:::>
+
+Xpa(i:g}·
+
+(9)
+
+that ·g is our current
+
+model and g' differs from g in one node
+
+Model selection via conditional
+
+Thus for example,
+
+=
+
+X;
+
+for which
+
+Then the difference in the log­
+
+likelihoods of the two models evaluated at their MLEs
+
+is given by
+log
+
+L(pg')
+L(pg)
+
+"
+L..,;
+
+=
+
+Xi,Xpa.(i:gl)
+
+log
+
+n(x;, Xpa(i:g'})
+
+X
+
+n(x;, Xpa(i:g'))/n(xpa(i:g'))
+
+n(x;, Xpa(i:g) ) /n(Xpa(i:g) )
+
+(10)
+.
+
+Thus one could decide to move from g to g' in the
+model search if this quantity is positive. However, this
+
+will generally be the case with finite data, because the
+
+larger model will fit the data better by virtue of having
+
+extra parameters, hence the significance of the better
+
+COWELL
+
+UAI2001
+
+fit needs assessing. One simple heuristic is to set a
+threshold e such that if the change is greater than e
+the difference is taken to be significant - to do this
+we must first normalize (10) by the total number of
+cases N = .L:x n(x) in the dataset. Doing this yields
+1
+N
+
+log
+
+L(fv)
+L(pg)
+
+"""
+L
+
+Xi,XpA-(i:,g')
+
+=
+
+p(x; I Xpa(i:g'))
+
+,
+p(x;,
+Xpa(i:g')) log (
+A
+
+p
+
+X; IXpa(i:g) )
+
+,
+
+where p represents the (marginal of the) MLE of the
+saturated model. This is identical to (8), with Si =
+
+Xpa(i:g') \ Xpa(i:g)·
+
+A more formal approach would be based on hypoth­
+esis testing. Note that twice the value of (10) is the
+difference in the deviances of the two models, which
+under the assumption that the larger model is true,
+and that the smaller model is also true, will have a
+X� distribution with k equal to the difference in the
+degrees of freedom of the two nested models. Thus we
+perform the same test, and obtain the same result, as
+the formal conditional independence test described at
+the end of Section 5.1. Alternatively, one could penal­
+ize the deviance by some function of the number of
+parameters, for example by using the Akaike Informa­
+tion Criterion (Akaike 1973) which penalizes the more
+complex model by twice the number of extra parame­
+ters.
+
+More generally, because of the equality of (8) and (9)
+it follows as in the last paragraph of Section 4.2, that
+for every search heuristic based upon testing for con­
+ditional independence, there is an equivalent search
+heuristic based upon using changes in log-maximum­
+likelihood, and vice versa. There is no fundamental
+difference between the two approaches, only a differ­
+ence in interpretation.
+5.3
+
+The Bayesian approach.
+
+Many belief network search algorithms using a scor­
+ing metric tend to employ the Bayesian formalism,
+with the score being the log-marginal likelihood. The
+advantages are that for smaller data sets, where the
+asymptotic distribution results required for the tests in
+Section 5.1 and Section 5.2 may not apply (although
+exact classical tests are available, see Chapter 4 of Lau­
+ritzen (1996)), the results tend to be more robust and,
+furthermore, generally less sensitive to the presence of
+zeroes in marginal counts.
+The Bayesian approach requires a prior on the space
+of graphical structures - usually this is taken to be
+uniform, but there are other alternatives (Beckerman
+1998). For each graphical structure a prior on the
+
+95
+
+probability parameters is also required - usually these
+are taken to be locally independent Dirichlet priors.
+Under these assumptions and complete data the mar­
+ginal likelihood may be evaluated explicitly and de­
+composes into a product of terms, one for each node.
+An early and important paper is Cooper and Ber­
+skovits (1992), who gave an explicit formula for the
+marginal likelihood under these conditions.
+A common feature of the analyses given in Section 5.1
+and Section 5.2 is that the global scores factorize into
+local contributions from each node, and, moreover,
+that in comparing two similar graphs their score dif­
+ference is identical to quantities which arise when test­
+ing conditional independence using cross entropy mea­
+sures. I shall now show that a similar circumstance
+arises in a Bayesian approach when globally indepen­
+dent priors are employed. The key feature is that
+global independence is preserved under updating with
+complete data (Cowell et al. 1999).
+Thus suppose each node v of a graph g E 9n has an
+associated (vector) parameterization 8� of the condi­
+tional probability table of v, and a globally indepen­
+dent prior distribution over the parameters 89 := {8� :
+v E V}. Global independence means that the prior
+measure factorizes as d7r9(89) = flv d1r9(8�). Under
+these conditions the marginal likelihood of the graph
+g in the light of complete data D is
+
+L(g) :=p(Dig) = J Pg(Dig,89)d7rg(B9)
+
+=II 1
+V
+
+II Pg(Xv IXpa(v)' e�r(xv,Xp�(v))d1l'g(8�).
+
+Bv Xu ,Xpa(v)
+
+(11)
+
+From (11) we see that the marginal likelihood factor­
+izes into terms, one for each node and it parents. As
+before, let g' be a graph identical to graph g except
+for a difference in the parent set of the Xi. Then g'
+will require a different parameterization and associated
+prior, (see Cowell (1996), Beckerman et al. (1995) for
+alternative strategies for doing this for Dirichlet pri­
+ors), but we may take for every node other than Xi
+the same local parameterization and contribution to
+the prior as for the graph g (that is, for Xv =1- Xi,
+
+e�' = e�, Pg'(Xv IXpa(v:g'),e�') = Pg(Xv IX pa(v:g)•e�)
+andd7r9(8Z) = d1!' ,(8z')). If, furthermore, we take uni­
+9
+form priors over the alternative graphical structures
+(ie, P(g) = P(g')), then after suitable cancellations
+we obtain the ratio of posterior probabilities given in
+(12) .
+
+96
+
+COWELL
+
+p(g1 I D) - p(D I g1)
+p(g I D) - p(D I g)
+
+UA12001
+
+- fe( fL xpa(i'g') Pg' (xi I Xpa(i:g')' e( t(x;,Xpa(;,g'))d1rg• (B( )
+- for flx,,xpa(''Dl Pg(Xi IXpa(i:g)' Bf)n(x;,x.,a(;,gJ)d7r9(8f)
+•.
+
+The decision of a local score driven search to stay with
+
+6
+
+(12)
+
+Conclusions
+
+graph g or move to graph g' would depend upon the
+
+(1994) use
+(12) in a Markov chain Monte Carlo
+
+value of this ratio. Madigan and Raftery
+
+Under the conditions of complete data and given node
+
+(the logarithm of )
+
+ordering I have shown that conditional independence
+
+based graphical model search procedure, which they
+
+tests for searching for Bayesian networks are equiva­
+
+apply to model selection and model averaging; see also
+
+lent to local log-scoring metrics - they are two ways
+
+Madigan and York
+
+(1994).
+
+of interpreting the same numerical quantities.
+
+I am not aware of papers applying Bayesian tests of
+
+conditional independence to Bayesian network model
+
+selection, hence there is not a direct comparison I can
+make of
+
+(12)
+
+to results extant in the current literature.
+
+(This is not to say there are none; however Bayesian
+methods - based on comparison of posterior proba­
+bilities - for testing for independence in contingency
+
+It is
+
+possible to relax the node-ordering constraint by con­
+sidering arc reversals in addition to arc removals and
+additions; then the change in score (which will be local
+to a pair of nodes) will be a combination of the terms
+which would be considered using conditional indepen­
+dence tests.
+
+However, in the latter case, one would
+
+have the extra option of deciding if the conditional in­
+
+tables do exist, see for example Jeffreys ( 1961 ) , Good
+
+dependence properties associated with each of the two
+
+(1994).)
+
+conditional independence searching can be more re­
+
+(1 96 5) . See also the discussion in Madigan and Raftery
+
+However, a formal Bayesian approach would
+
+consider the following two hypotheses:
+
+pendence tests were combined into a single test, then
+
+p(Xi I Xpa(i:g')' e( )p(Xpa(i:g') I ¢>��(i:g'))
+d1r(ef' )d1r( ¢>��(i=g'});
+
+p(Xi, Xpa(i:g') IBH1 )d1r(BH1)
+p(Xi IXpa(i:g)> Bf)p(Xpa(i:g') I ¢��(i:g'))
+
+H1
+
+d1r(Bf)d1r( ¢>��(i:g')).
+
+model exhibiting conditional independence, and ¢
+is a parameterization common to the two hypothe­
+Then, from the (possibly equal) priors
+
+P(Ho)
+
+P(H1) and the data D, posterior probabilities
+P (Ho I D) and P(H1 ID) are evaluated and compared.
+It is left to the reader to verify that this leads to (12).
+and
+
+Thus if one were to do model search based upon lo­
+
+cal conditional independence tests, then one should
+use
+
+(12)
+
+the two procedures would again be equivalent under
+the same decision rules.
+
+
+Propagation using Chain Event Graphs
+Peter A. Thwaites
+
+Statisti s Dept.
+University of Warwi k
+Coventry UK CV4 7AL
+
+Jim Q. Smith
+
+Statisti s Dept
+University of Warwi k
+Coventry UK CV4 7AL
+
+Abstra t
+
+A Chain Event Graph (CEG) is a graphi al
+model whi h is designed to embody onditional
+independen ies in problems whose state spa es
+are highly asymmetri and do not admit a
+natural produ t stru ture. In this paper we
+present a probability propagation algorithm
+whi h uses the topology of the CEG to build a
+transporter CEG. Intriguingly, the transporter
+CEG is dire tly analogous to the triangulated
+Bayesian Network (BN) in the more onventional jun tion tree propagation algorithms
+used with BNs. The propagation method uses
+fa torization formulae also analogous to (but
+di erent from) the ones using potentials on
+liques and separators of the BN. It appears
+that the methods will be typi ally more eÆient than the BN algorithms when applied to
+ontexts where there is signi ant asymmetry
+present.
+1 INTRODUCTION
+Based on an event tree, a Chain Event Graph (CEG)
+is a more expressive alternative to a dis rete Bayesian
+Network (BN), embodying olle tions of onditional
+independen e statements in its topology. In Anderson
+and Smith (2008) it is shown not only how asymmetries in a problem's sample spa e an be represented
+expli itly through the topology of its CEG, but also
+how it an express a mu h wider range of types of onditional independen e statement not simultaneously
+expressible through a single BN. As with the BN, the
+CEG of an hypothesised model an be interrogated using natural language before the graph is embellished
+with probabilities. In Thwaites and Smith (2006) and
+Ri omagno and Smith (2005) we demonstrate how
+the CEG an also be used to represent and analyse
+various ausal hypotheses. In this paper we ontinue
+the development of CEGs by demonstrating how the
+
+Robert G. Cowell
+
+Cass Business S hool
+City University
+London EC1Y 8TZ
+
+graph provides a useful stru ture for fast probability
+propagation in asymmetri models.
+It has been noted that the CEG is an espe ially powerful framework for inferen e when a probability model
+is highly asymmetri and eli ited through a des ription of how situations unfold. Although theoreti ally
+a BN an be used in this ontext, the lique probability tables are then very sparse and ontain many zeros or repeated probabilities. This impedes fast propagation algorithms and has led to the development
+of many ontext spe i variants of BNs (Boutilier
+et al 1996, M Allester et al 2004, Poole and Zhang
+2003, Salmeron et al 2000), often based on trees within
+liques. These developments provoke the question as
+to whether a single tree might be used for propagation
+instead of the BN. Now obviously the event tree itself
+expresses no onditional independen ies in its topology and these independen ies are the building blo ks
+of urrent propagation algorithms. However, unlike
+the event tree, the CEG expresses a fairly omprehensive olle tion of onditional independen ies. In this
+paper we demonstrate the surprising fa t that there
+is a dire t analogue between a distribution on a BN
+expressed as a produ t of potentials supported by a
+graph of liques and separators, and propagation algorithms on CEGs using the distributions on the hildren of the CEG's non-leaf nodes and marginal likelihoods on the verti es themselves. This enables us to
+develop fast propagation algorithms that use a single
+graph, the transporter CEG { analogous to a triangulated BN { as its framework. This framework is highly
+eÆ ient for asymmetri /non-produ t-spa e ontexts,
+and in parti ular does not involve propagating zeros
+in sparse but large probability tables, nor ontinually
+repeating the same al ulations, whi h would be the
+ase if we were to use the BN as a framework in this
+sort of environment with a naive BN propagation algorithm.
+In the next se tion we formally de ne the transporter
+CEG C (T ) of a hypothesised probability tree T . In
+
+se tion 3 we present an algorithm analogous to that
+of Cowell and Dawid (1992) for a BN where onditional probability tables asso iated with the hildren
+of a given vertex of the CEG take the role of liques,
+and vertex probabilies take the role of separators. In
+se tion 4 we demonstrate the eÆ ien y of this algorithm with a simple example.
+2
+
+PROBABILITY TREES AND
+CHAIN EVENT GRAPHS
+Probability trees (Shafer 1996), and their ontrol analogues de ision trees, have been found to be a very natural and expressive framework for probability and deision problems, and they provide an ex ellent framework for des ribing sample spa e asymmetry and inhomogeneity in a given ontext (see for example Fren h
+and Insua (2000)). We start with an event tree T with
+vertex set V (T ) and (dire ted) edge set E (T ). Hen eforth all the tree's non-leaf verti es fvg situations,
+and denote this set of verti es S (T )  V (T ). We an
+onvert an event tree into a probability tree by spe ifying a transition matrix from its verti es V (T ), where
+the absorbing states orrespond to the leaf verti es.
+Transition probabilities from a situation are zero exept for transitions to one of that situation's hildren.
+This makes the transition matrix upper triangular.
+Su h a matrix would look like the one in Table 1 whi h
+shows part of the matrix for the problem des ribed in
+Example 1. Note that ea h transition probability an
+be identi ed by an edge on the tree.
+
+Table 1: Part of the transition matrix for Example 1
+v0
+v1
+v2
+v3
+
+..
+.
+
+v0 v1 v2 v3 v41 v42 v43 v51 v52
+0 1  2  3 0 0 0 0 0
+0 0 0 0 5 0 0 0 0
+0 0 0 0 0 6 0 7 0
+0 0 0 0 0 0 8 0 9
+
+..
+.
+
+
+
+
+
+
+
+1
+v1
+
+
+
+4
+
+
+
+0 
+0 
+0 
+..
+.
+
+One way of seeing onditional independen e
+statements on a BN is as identities in ertain ve tors of
+onditional probabilties { expli itly those probability
+ve tors asso iated with di erent an estor on gurations but the same parent on guration of a variable
+in the BN (Ri omagno and Smith 2007). There is a
+large lass of models where the probabilities in some
+of the rows of the transition matrix an be identitifed
+with ea h other. The CEG is a topologi al representation of this lass of models, and the transporter CEG
+de ned below is a subgraph of the CEG.
+Let T (vi ), i = 1; 2 be the unique subtrees whose roots
+are the situations vi , and whi h ontain all verti es
+after vi in T . Say v1 and v2 are in the same position
+w if:
+
+1. the trees T (v1 ) and T (v2 ) are topologi ally identi al.
+2. there is a map between T (v1 ) and T (v2 ) su h that
+the edges in T (v2 ) are annotated, under that map,
+by the same (possibly unknown) probabilities as
+the orresponding edges in T (v1 ).
+It is easily he ked that the set W (T ) of positions w
+partitions S (T ). Furthermore, somewhat more subtlely, if v1 ; v2 2 w and vij 2 V (T (vi )), then the vertex
+sets of T (vi ) i = 1; 2 are mapped on to ea h other by
+this map, and vij 2 wj i = 1; 2 for some position wj
+(providing vij is not a leaf-vertex in either subtree).
+For details of this property see Anderson and Smith
+(2008).
+We now draw a new graph to depi t both the sample
+spa e of T and ertain onditional independen e statements. The transporter CEG C (T ) is a dire ted graph
+whose verti es W (C (T )) are W (T ) [ fw1 g. There is
+an edge (e 2 E (C (T ))) from w1 to w2 6= w1 for ea h
+situation v2 2 w2 whi h is a hild of a xed representative v1 2 w1 for some v1 2 S (T ), and an edge
+from w1 to w1 for ea h leaf node v 2 V (T ) whi h is
+a hild of some xed representative v1 2 w1 for some
+v1 2 S (T ). The transporter CEG (hen eforth labelled
+simply as C ) is the subgraph of a CEG (de ned in Anderson and Smith (2008)) where all undire ted edges
+in the CEG are omitted. The relationship between the
+transporter CEG and the CEG is dire tly analogous
+to the relationship between a triangulated BN and the
+original BN. Certain onditional independen e statements that an be lost through onditioning are simply
+forgotten so that an homogeneous propagation algorithm an be onstru ted on the basis of the enduring
+onditional independen ies. Unlike the BN, this CEG
+an have many edges between two verti es and always
+has a single sink vertex w1 . Although typi ally having many fewer verti es than T , it retains a depi tion
+of the sample spa e stru ture of T . Thus it is easy
+to he k that the set of root to leaf paths of the tree
+(representing the set of all possible unfoldings of the
+history of a unit) are in one to one orresponden e
+with the set of root to sink paths on the transporter
+CEG. The CEG- onstru tion pro ess is illustrated in
+Example 1.
+Example 1
+
+Consider the tree in Figure 1, whi h has 16 atoms
+(root-to-leaf paths). Note that as the subtrees rooted
+in the verti es fv4i g are the same, and those rooted in
+fv5i g are the same, the distribution on the tree an be
+stored using 7 onditional tables whi h ontain 16 (9
+free) probabilities.
+Our transporter CEG (Figure 2) is produ ed by ombining the verti es fv4i g into one position w4 , the ver-
+
+ti es fv5i g into one position w5 , the verti es fv6i g into
+one position w6 , and all leaf-verti es into a single sinknode w1 . The full CEG for our example is simple { it
+has no undire ted edges, and is identi al to the transporter CEG C . For a simple CEG, all the onditional
+independen ies inherent in the problem are onveyed
+by the transporter CEG.
+vinf1
+
+θ 4= 0.65
+
+5
+= 0.6
+
+θ 10
+
+v1
+
+0.6
+
+θ12= 0.1
+
+θ10
+
+θ
+
+1=
+
+v42
+
+θ2= 0.25
+
+v2
+
+θ
+
+.7
+θ 6= 0
+
+θ
+
+14 =
+
+θ
+
+=
+θ3
+
+= 0.35
+
+15
+0.
+
+θ11
+
+θ12
+
+θ13
+
+v52
+
+θ9 = 0.6
+
+16
+
+θ 10
+
+v43
+
+θ 8= 0.4
+
+12
+
+θ15 = 0.65
+
+0.7
+
+v61
+
+v3
+
+3.1
+
+θ11
+
+θ 13= 0.3
+
+v51
+
+θ7= 0.3
+
+v0
+
+θ14
+
+θ15
+θ16
+
+v62
+
+Figure 1: Tree for Example 1
+θ4= 0.65
+
+w1
+θ5 =
+
+1=
+
+0.
+6
+
+(θ1)
+
+0.3
+5
+
+(θ1θ5 + θ2θ6 + θ3θ8)
+
+θ10 = 0
+
+w4
+
+θ
+
+θ12= 0.1
+
+winf
+
+θ
+
+(θ2)
+
+.65
+
+θ1 =
+1 0
+.25
+
+w2
+0.
+4
+
+θ2= 0.25
+
+0.7
+θ 6=
+
+8=
+
+w0
+
+.35
+16
+
+θ
+
+θ14= 0.7
+
+=0
+
+=0
+15
+
+3
+0.
+
+w5 (θ2θ7 + θ3θ9)
+
+θ
+
+=
+θ7
+
+.1 5
+
+.3
+=0
+
+13
+
+θ9= 0.6
+w3 (θ3)
+
+.6 5
+
+=0
+θ3
+
+θ
+
+3
+
+θ11= 0.25
+
+v41
+
+θ 5 = 0.3
+5
+
+vinf2
+
+su h a way, the onditional independen ies embodied
+in the problem (and in our transporter CEG) annot
+be eÆ iently oded in a BN without introdu ing tables with many zeros. Consequently, even in this very
+simple example we have eÆ ien y gains in storing this
+distribution over using a saturated model, a BN, or a
+tree.
+
+w6 (θ2θ7θ14 + θ3θ9θ14)
+
+Figure 2: Transporter CEG for Example 1
+Figure 2 shows the probabilities of rea hing ea h position w (the event rea hing w, denoted (w), is the
+union of all root-to-sink paths passing through w). It
+also shows ea h edge-probability e (w0 j w)
+( = ((e(w; w0 )) j (w)), where (e(w; w0 )) is the
+union of all root-to-sink paths utilising the edge
+e(w; w0 ) ).
+The problem represented by the tree in Figure 1 is
+asymmetri in that not all the root-to-leaf paths are
+of the same length, and also in the lo al stru ture asso iated with its verti es. We do not know whether
+the verti es fv4i g are related in any ontextual way to
+the verti es fv5i g or fv6i g, and hen e we annot obviously de ne variables on the sigma-algebra of the tree
+to allow us to represent the problem as a BN. Even
+supposing we were able to represent the problem in
+
+A SIMPLE PROPAGATION
+ALGORITHM
+THE FRAMEWORK
+
+To spe ify the joint distribution of all random variables measurable with respe t to a CEG we simply
+need to spe ify the ve tor of onditional probability
+mass fun tions asso iated with ea h of its positions.
+The rst step of our propagation algorithm is analogous to the triangulation step for a BN, whi h allows
+us to retain all onditional independen e properties at
+the ost of a possible loss of eÆ ien y. To do this we
+ignore onditional independen e statements oded by
+the undire ted edges of the CEG and work only with
+the subgraph onsisting of its positions, together with
+its dire ted edges, but not its undire ted edges { our
+transporter CEG C .
+For ea h position w 2 W = W (C )nfw1 g we store a
+ve tor of probabilites (w) = fe (w0 j w) j e(w; w0 ) 2
+E (w)g where E (w)  E (C ) is the set of all edges
+emanating from w. (w) is of ourse a onditional
+probability distribution. We let X (w) be the random
+variable taking values on f1; 2; : : : ; n(E (w))g (where
+n(E (w)) is the number of edges emanating from w)
+whose probability mass fun tion is given by the omponents of (w) taken in order. The positions w 2 W
+take the role of the liques in a triangulated BN, whilst
+the ve tors f(w) j w 2 W g are analogous to the lique
+probability tables.
+We an now spe ify the probability  of every atom 
+(a root to sink path of C , of length n() ) as a fun tion
+of f(w) j w 2 W g and C . If:
+ = (w0 = w [0℄; e [1℄; w [1℄; : : : ; e [n()℄; w1 )
+then
+nY
+()
+ =
+ (e [i℄)
+i=1
+
+where (e [i℄) is a omponent of the probability ve tor (w [i 1℄), 1  i  n(). It follows that the
+distribution of any random variable measurable with
+respe t to C an be al ulated from f(w) j w 2 W g.
+3.2
+
+COMPATIBLE OBSERVATIONS
+
+Re all that propagation algorithms for BNs based on
+triangulation are only designed to propagate information that an be expressed in the form
+
+= fXj 2 Aj g for some subsets fAj g of the
+sample spa es of fXj g the vertex-variables of the BN.
+Propagating information about the value of some general fun tion of the vertex variables using lo al message passing is not generally possible, be ause onditioning on the values of su h a fun tion an destroy the
+onditional independen ies on whi h the lo al steps of
+the propagation algorithm depend for their validity.
+In the same way the types of observation we an efiently propagate using C and f(w) j w 2 W g
+needs to be onstrained. In general an observation
+an be identi ed with a subset  of the set of all
+root to sink paths fg. The most obvious onstraining assumption on  (and the one we will hen eforth
+make in this paper) about what we might learn is
+that our observation  an be identi ed with having
+learned that fX (w) 2 A(w)g for some subsets fA(w)g
+of the sample spa es of the position random variables
+fX (w)g. Call su h a set C ompatible. Note that 
+is C ompatible if and only if there exists possibly
+empty subsets fE (w) j w 2 W g su h that
+O(A)
+
+ = f j e 2 E (w) for some w 2 W; for ea h edge
+e on the path  in C g
+So we an identify aS ompatible observation with the
+set of edges E = w2W E (w)  E (C ). We note
+that the set of ompatible observations is large and
+in parti ular when the CEG is expressible as a BN
+ontains all sets of the form O(A) de ned above.
+Example 2
+
+3.3
+
+MESSAGE PASSING FROM
+COMPATIBLE OBSERVATIONS ON
+A CEG
+
+The message passing algorithm is a fun tion from the
+original probabilities f(w) j w 2 W g to revised probabilities on the same graph f^ (w) j w 2 W g onditional on the observation . Note that on e edgeprobabilities have been revised, the resulting graph
+may not be a minimal CEG (in that we may have
+verti es within the graph whi h are the roots of identi al sub-graphs). It is possible (although unne essary
+for information-propagating purposes) to add a further algorithm step to produ e a minimal CEG if this
+is required. This step ensures that any verti es that
+are equivalent are ombined into a single position.
+Messages are passed from the terminal edges ba kwards through the transporter CEG along neighbouring edges until rea hing the root in a olle t step giving
+a new pair f (w); (w) j w 2 W g. We then move forward from the root produ ing revised f^ (w) j w 2 W g.
+Let W ( 1) denote the set of positions all of whose
+outgoing edges terminate in w1 in C .
+1. For any edge e(w; w1 ) su h that w 2 W ( 1), set
+the potential e (w1 j w) = 0 if e(w; w1 ) 2= E ,
+and e (w1 j w) = e (w1 j w) if e(w; w1 ) 2 E .
+Let the emphasis:
+(w) =
+
+X
+
+e2E (w)
+
+e (w1
+
+j w)
+
+Say that w1 and ea h of these positions is a ommodated.
+
+Consider:
+ = f j e 2 fe1(w0 ; w1 ); e2 (w0 ; w2 ); e4 (w1 ; w1 );
+e5 (w1 ; w4 ); e6 (w2 ; w4 ); e7 (w2 ; w5 ); e10 (w4 ; w1 );
+e11 (w4 ; w1 ); e14 (w5 ; w6 ); e15 (w6 ; w1 )gg
+This orresponds to all the root-to-sink paths in the
+subgraph of C given in Figure 3.
+w1
+
+w4
+
+2. For any position w all of whose hildren are a ommodated, and edge e(w; w0 ), set the potential
+e (w0 j w) = 0 if e(w; w0 ) 2
+= E , and e (w0 j w) =
+0
+0
+e (w j w) (w ) if e(w; w0 ) 2 E . Let the emphasis:
+X
+(w) =
+e (w0 j w)
+e2E (w)
+
+Say that w is a ommodated.
+3. Repeat step 2 until all w 2 W are a ommodated.
+This ompletes the olle t steps.
+4. For all w 2 W , set:
+^ (w) = 0 if  (w) = 0
+^ (w) =  (w) if  (w) 6= 0
+(w)
+
+w2
+w0
+
+winf
+
+where  (w) = fe (w0 j w) j e(w; w0 ) 2 E (w)g.
+Clearly we have that:
+w5
+
+w6
+
+Figure 3: Subgraph for event  in Example 2
+
+
+^e (w0
+
+j w) = 0 if e(w; w0 ) 2= E
+0
+
+^ (w0 j w) = e (w j w) if e(w; w0 ) 2 E
+e
+
+(w)
+
+
+
+A proof of these results is given in the appendix.
+Note that as we move forward through the graph the
+updated probabilities of (w0 ; w) subpaths will be of
+the form:
+
+^ (w
+
+j w0 ) =
+
+and we get:
+
+^((w)) =
+
+Y
+
+i=0
+
+
+^e (wi+1
+
+X
+
+2f(w0 ;w)g
+
+
+^ (w
+
+j w0 )
+
+Steps 1, 2 and 3 give us the graph in Figure 4. Step 4
+gives us the CEG in Figure 5 (note that our CEG is
+again simple, and also minimal without the need for
+the additional step previously mentioned).
+0.65
+
+w1
+
+0.
+96
+5
+
+x0
+
+.9
+
+0.65 + 0.25
+0.65
+
+0.
+6
+
+x
+
+w4
+0.7 x
+
+w0
+
+0.9
+
+0.25
+
+0.25 x 0.7665
+w2 0.63 + 0.1365
+
+0.579 + 0.1916
+
+winf
+
+x
+
+0.6
+
+3
+
+5
+
+0.
+0.
+5
+45
+
+0.7 x 0.65
+w6 0.65
+
+w5 0.455
+
+Figure 4: Potentials and emphases added
+0.65 / 0.965 = 0.674
+w1
+0.579 / 0.771 = 0.751
+
+0.315 / 0.965 = 0.326
+w4
+
+0.65 / 0.9 = 0.722
+
+0.63 / 0.767 = 0.822
+w0
+
+w2
+0.25 / 0.9 = 0.278
+winf
+
+0.192 / 0.771 = 0.249
+0.137 / 0.767 = 0.178
+
+1
+
+
+
+Also note that at the ost of some omputation, we
+an perform inferen e on the redu ed graph C whose
+edges E (C ) are just the edges e in E (C ) with nonzero probabilities ^ (e), and whose verti es W (C ) are
+the w 2 W (C ) for whi h (w) 6= 0. The non-zero
+edge and vertex probabilities of C then simply map
+on to their orresponding edge and vertex probabilities
+in C . Note that, unlike for the BN, any non trivial
+C ompatible observation stri tly redu es the number
+of edges in the edge set after this operation.
+A pseudo- ode version of our algorithm is provided
+below:
+Let C (W (C ); E (C )) be a transporter CEG with edges
+in E (C ) having labels ei ; i = 1; 2; : : : ne , su h that
+i < j ) ei  ej (ei does not lie downstream of ej on
+any w0 ! w1 path); and positions in W (C )nfw1 g
+having labels wi ; i = 0; 1; 2; : : : mw , su h that i < j )
+wi  wj . To update the edge-probabilities on C following observation of an event , do:
+(1) Set A = 
+(2) Set B = 
+(3) Set i = 1
+(4) Repeat
+(a) Sele t ei
+(b) If ei 2 E , add ei to A
+otherwise, set 
+^ei = 0
+( ) Set i = i + 1
+Until i = ne + 1
+(5) Set (w1 ) = 1
+(6) Set j = mw
+(7) Repeat
+(a) Sele t wj
+(b) Repeat
+(i) Sele t e(wj ; wj0 ) 2 E (wj ) \ A
+(ii) Set e (wj0 j wj ) = e (wj0 j wj ) (wj0 )
+(iii) Add e(wj ; wj0 ) to B
+Until E (wj ) \ A  B
+P
+( ) Set (wj ) = e2E(wj ) e (wj0 j wj )
+(d) Set j = j 1
+Until j =
+1
+w j w)
+(8) For ea h e(w; w0 ) 2 E , set ^e (w0 j w) = e ((
+w)
+(9) Return f^e g
+0
+
+1
+w5
+
+n()
+
+i=0
+
+Example 3
+
+0.3
+5
+
+Q  (e [i℄)
+
+ ( j ) = 
+^ () = ^ (e [i℄) = n(i=1
+Q) 1 (w [i℄)
+i=1
+Y
+
+n()
+
+j wi )
+
+From the de nition of a ommodation, the order of
+these operations (like the perfe t order used to update
+a triangulated BN) depends only on the toplogy of C ,
+so it an be set up beforehand.
+
+0.65 + 0.315
+
+ = (w0 = w [0℄; e [1℄; w [1℄; : : : ; e [n()℄; w1 ) is
+given by the invarian e formula:
+
+w6
+
+Figure 5: Updated CEG C
+Note that, in analogy with equation (6) of Cowell and
+Dawid (1992), the onditional probability of any atom
+
+4
+
+A CLOSER LOOK AT OUR
+EXAMPLE
+Consider the CEG in Figure 2 and let the 16 edges be
+labelled ei in the same order as the fi g thereon. In
+
+Examples 1 to 3 we showed how to reate and use a
+Transporter CEG without on erning ourselves with a
+ontext. We now add that ontext and suppose that
+this CEG represents a Treatment regime for a serious
+medi al ondition, and the edges arry the meanings
+given in Table 2:
+Table 2: Edge des riptors
+Edge
+e1
+e2
+e3
+e4
+e5
+e6 ; e8
+e7 ; e9
+e10
+e11
+e12 ; e13
+e14
+e15
+e16
+
+Des ription
+Not riti al { Treatment pres ribed I
+Liver failure { Treatment : : : II
+Liver & Kidney failure { Treatment : : : II
+Responds to I { Full re overy
+No response to I { Surgery pres ribed III
+Responds to II { Surgery : : : III
+No response to II { Surgery : : : IV
+Re overy { Lifetime monitoring
+Re overy { Lifetime medi ation
+Death in surgery
+Survives surgery IV { Treatment : : : V
+Re overy { Lifetime on treatment V
+No response to V { Dies
+
+As alluded to in se tion 2, it is not possible to represent
+this regime eÆ iently as a BN, nor yet as a ontextspe i BN, given that the asymmetry of the problem does not just lie in it having asymmetri sample
+spa e stru tures. By equating the des riptions of edges
+e4 and e10 ; edges e11 and e15 ; and edges e12 ; e13 and
+e16 , we an however approximate the problem with
+a 4-variable BN; where X1 Diagnosis and initial treatment an take values orresponding to the out omes
+fNot riti al, Liver failure, Liver & Kidney failureg;
+X2 2nd treatment to fNone, III, IVg; X3 3rd treatment
+to fNone, Vg; and X4 Response to fDeath, Partial reovery, Full re overyg. The BN for this approximation
+to the model is given in Figure 6.
+X1
+
+X2
+
+X3
+
+X4
+
+Figure 6: BN for our example
+To store the model using a CEG requires 16 ells ( orresponding to the 16 edges), but in this BN 27 ells (9
+for the lique fX1 ; X2 g and 18 for fX2; X3 ; X4 g), 14
+of whi h are storing the value zero.
+The event  in our example orresponds to the observation that a patient was not diagnosed with Liver
+and Kidney failure, and is still alive. Propagation
+of this event enables a pra titioner to establish prob-
+
+ability distributions for the possible histories of our
+patient. Note that it is only the fa t that we an des ribe  in su h a simple manner that has allowed us
+to approximate the problem with the BN in Figure 6.
+Propagating of the event  using a simple Jun tion
+Tree algorithm on the liques of the BN takes a minimum of 43 operations. Propagation on the CEG using
+our algorithm requires 32 operations ( orresponding
+to 16 ba kward edges, 6 ba kward verti es and 10 forward edges). So even in this simple example, using
+the CEG is more eÆ ient than the BN. The eÆ ien y
+here is due mainly to the fa t that the lique probability tables ontain many zeros. This is re e ted in the
+CEG by the w0 ! w1 paths not all having the same
+length. It is this form of asymmetry in a model that
+ontext-spe i BNs do not ope with adequately, and
+why CEGs are a better stru ture for use with this type
+of problem.
+The problems in whi h the algorithm des ribed above
+are most eÆ ient are when the CEG stru ture is known
+to be simple. To store the probability tables for the
+CEG requires only N = #(W (C )) + #(E (C ))
+< 2#(E (C )) ells. In this ase the olle t step involves
+only N al ulations and the topology of the CEG is
+valid so that in parti ular the original probability table stru ture an be preserved. The potential produ t
+ne essitates only a single distribute step whi h again
+only involves at most N al ulations. For large trees
+with mu h of the type of subtree symmetry dis ussed
+above the propagation is extremely fast.
+It is worth qui kly looking at a very simple example arising from model sele tion in graphi al or partition model problems, an area urrently attra ting
+some interest: Consider a model with random variables X1 ; : : : Xn, where X1 with M = 1 =2(n 1)
+(n 2) possible states, determines whi h pair of binary variables from fX2; : : : Xn g are dependent, all
+other variables from fX2 ; : : : Xn g being independent
+of ea h other and of the pair determined. The CEG of
+this model has at most M (1 + 2n) edges and 2 + M n
+positions, whereas the BN is a single lique requiring
+M  2n 1 ells for storage. As the number of operations required for propagation on both the BN and the
+CEG is of the same order of magnitude as the number
+of ells required for storage, it is lear that the CEG
+is far more eÆ ient in this example.
+5 DISCUSSION
+There are several advantages of this method over the
+oding of this type of problem through a BN. Firstly,
+the al ulated probabilities an be proje ted ba k on
+to the edges of the eli ited tree, so that the onsequen es of inferen es given di erent types of information an be immediately appre iated by the pra ti-
+
+tioner. Se ondly, the a ommmodation of data in the
+form of a ompatible observation is mu h more general
+than the a ommodation of subsets of observations
+from a predetermined set of random variables, so the
+CEG provides a more exible framework for propagation, parti ularly when data is ontingently ensored.
+Thirdly, there are eÆ ien y gains as outlined above.
+We intend to show how great these gains an be for
+very large problems in a later paper.
+Note also that, as is the ase with the triangulation
+step in BN-based algorithms, there are faster algorithms (Thwaites 2008) than the one des ribed above,
+although they lose some of this algorithm's generality.
+Our algorithms are urrently being oded by Cowell
+within freely available software, and will be available
+shortly.
+Of ourse BNs provide a simpler representation of
+more symmetri problems and should always be preferred when the three ontingen ies are not satisi ed.
+The CEG does not provide a universal improvement
+over the BN for propagation. In parti ular in problems when the underlying BN is de omposable but the
+CEG is not simple the BN propagation an be mu h
+more eÆ ient. But in highly asymmetri problems,
+the CEG should de nitely be a rst hoi e.
+It should be noted that it is also possible to de ne a
+dynami analogue of the CEG, and our investigation
+of these suggests that a time-sli ed CEG (analogous
+to a time-sli ed BN) will be an ideal vehi le for a dynami updating algorithm. We hope to report on these
+developments in the near-future.
+APPENDIX
+We laim that:
+
+^e (w0
+
+j w) , (((e(w; w0 )) j ; (w))
+e (w j w )
+if e(w; w0 ) 2 E
+(w)
+=
+0
+if e(w; w0 ) 62 E
+0
+
+Proof:
+
+For a CEG C , and C ompatible event , let T be
+the tree asso iated with C , T the tree asso iated with
+C , and T() the subtree of T ontaining only those
+root-to-leaf paths in . T() di ers from T in that
+the former retains the edge-probabilities from T .
+Consider a position w 2 C (w 2 C ) orresponding to
+a set of verti es fvi g 2 T . Then the subtrees rooted
+in ea h vi are identi al both in topology and in their
+edge-probabilities.
+If there is a subpath (w0 ; w) whi h is not part of a
+w0 ! w1 path in  (ie. (w0 ; w) exists in C , but not
+in C ) then there will exist a subset of fvi g whi h does
+not exist in T (or T() ). We split the set fvi g into:
+
+fvi gi2I
+fvi gi2J
+
+verti es existing in T
+verti es not existing in T
+Be ause  is C ompatible, the subtrees in T()
+rooted in ea h vi 2 fvi gi2I are also identi al both
+in topology and in their edge-probabilities that they
+retain from T .
+Suppose there exists an edge e(w; w0 ) in C , then for
+ea h vi 2 fvi g, there exists an edge e(vi ; vi0 ) in T orresponding to this edge. Note that:
+[
+(w) =
+(vi )
+(e(w; w0 )) =
+e (v 0
+
+i
+
+j
+
+i2I [J
+
+[
+
+(e(vi ; vi0 ))
+
+i2I [J
+vi ) = e (w0 w)
+
+j
+
+8i 2 I [ J
+
+and sin e the subtrees in T() rooted in ea h
+vi 2 fvi gi2I are identi al, we also have:
+ ( j (vi )) =  ( j (vj ))
+ (; (e(vi ; vi0 )) j (vi )) =  (; (e(vj ; vj0 )) j (vj ))
+for i; j 2 I
+[( j (vi )) is the sum of the probabilities of all the
+(vi ; vleaf )
+subpaths
+in
+T() ,
+and
+ (; (e(vi ; vi0 )) j (vi )) is the sum of the probabilities of all the (vi ; e(vi ; vi0 ); vi0 ; vleaf ) subpaths in T() ℄
+So:
+
+^e (w0 j w) = ((e(w; w0 )) j ; (w))
+e(w; w0 )))
+= (; (w();; (
+(w))
+=
+
+ (;
+
+S
+
+0
+
+i2I [J [(vi ); (e(vi ; vi ))℄)
+ (; i2I [J (vi ))
+
+S
+
+(an expression evaluated on T )
+sin e (vi ) \ (e(vj ; vj0 )) =  for i 6= j
+P
+0
+J  (; (vi ); (e(vi ; vi )))
+= i2I [P
+i2I [J  (; (vi ))
+But  \ (vi )P=  for vi 2 fvi gi2J , so this equals:
+(; (vi ); (e(vi ; vi0 )))
+i2I P
+; (vi ))
+P (i2;I((
+e(v ; v 0 )) j (vi ))  ((vi ))
+= i2I P ( ij (i v )) ((
+vi ))
+i
+i2I
+P
+0
+ (; (e(vj ; vj )) j (vj ))
+i2I  ((vi ))
+P
+=
+ ( j (vj ))
+i2I  ((vi ))
+for any vj 2 fvi gi2I
+ (; (e(vj ; vj0 )) j (vj ))
+=
+ ( j (vj ))
+for any vj 2 fvi gi2I
+Turning our attention to the terms in the algorithm,
+we laim that (w) = ( j (vi )) and e (w0 j w) =
+ (; (e(vi ; vi0 )) j (vi )) (vi 2 fvi gi2I ) for all w;
+e(w; w0 ) 2 C , where fvi gi2I is the set of verti es in
+T() orresponding to w. We prove this by indu tion:
+
+part of the proje t Chain Event Graphs: Semanti s
+
+Step 1.
+
+and Inferen e.
+
+Consider positions w 2 W ( 1). Then:
+(w) =
+=
+
+X
+e
+X
+e
+
+e (w1
+
+j w) =
+
+e (vleaf
+
+j vi )
+
+X
+e
+
+e (w1
+
+j w)
+
+Referen es
+
+[1℄ P. E. Anderson and J. Q. Smith. Conditional independen e and Chain Event Graphs. Arti ial
+Intelligen e, 172:42{68, 2008.
+[2℄ C. Boutilier, N. Friedman, M. Goldszmidt, and
+D. Koller. Context-spe i independen e in
+Bayesian Networks. In Pro eedings of the 12th
+
+in T()
+
+for any vi 2 fvi gi2I
+= ( j (vi ))
+Step 2.
+
+Suppose w is su h that all of its outgoing edges terminate
+in
+positions
+fw0 g for whi h
+0
+0
+(w ) = ( j (vi )). Then:
+(w) =
+=
+
+X
+
+e
+X
+e
+
+X
+
+e (w0
+
+j w) =
+
+e (v 0
+
+j vi ) ( j (vi0 ))
+
+i
+
+e
+
+e (w0
+
+j w) (w0 )
+
+for any vi 2 fvi gi2I
+X
+= ((e(vi ; vi0 )) j (vi )) ( j (vi0 ))
+e
+
+But (vi0 ) = (e(vi ; vi0 ))  (vi ) in a tree, so this
+equals: X
+ ((e(vi ; vi0 )); (vi0 ) j (vi ))
+e
+
+0
+0
+X  ( j (0vi ); (e0(vi ; vi)); (vi ))
+= (; (e(vi ; vi )); (vi ) j (vi ))
+e
+X
+= (; (e(vi ; vi0 )) j (vi ))
+e
+= (; (vi ) j (vi )) = ( j (vi ))
+
+Hen e:
+e (w0 j w) = e (w0 j w) (w0 )
+= e (vi0 j vi ) ( j (vi0 ))
+for any vi 2 fvi gi2I
+= ((e(vi ; vi0 )) j (vi )) ( j (vi0 ))
+= : : : = (; (e(vi ; vi0 )) j (vi ))
+We now ombine our two results to give:
+ (; (e(vj ; vj0 )) j (vj ))
+
+^e (w0 j w) =
+ ( j (vj ))
+0
+w j w)
+= e ((
+w)
+
+
+
+A knowledgements
+
+This work has been partly funded by the EPSRC as
+
+Conferen e on Un ertainty in Arti ial Intelligen e, pages 115{123, Portland, Oregon, 1996.
+
+[3℄ R. G. Cowell and A. P. Dawid. Fast retra tion of
+eviden e in a probabilisti expert system. Statisti s and Computing, 2:37{40, 1992.
+[4℄ S. Fren h and D. R. Insua. Statisti al De ision
+Theory. Arnold, 2000.
+[5℄ D. M Allester, M. Collins, and F. Periera. Case
+fa tor diagrams for stru tured probabilisti modeling. In Pro eedings of the 20th Conferen e on
+Un ertainty in Arti ial Intelligen e, pages 382{
+391, 2004.
+[6℄ D. Poole and N. L. Zhang. Exploiting ontextual
+independen e in probabilisti inferen e. Journal of Arti ial Intelligen e Resear h, 18:263{313,
+2003.
+[7℄ E. M. Ri omagno and J. Q. Smith. The ausal
+manipulation and Bayesian estimation of Chain
+Event Graphs. Resear h Report 05-16, CRiSM,
+2005.
+[8℄ E. M. Ri omagno and J. Q. Smith. The geometry
+of ausal probability trees that are algebrai ally
+onstrained. In L. Pronzato and A. Zhigljavsky,
+editors, Optimal Design and Related Areas in Optimization and Statisti s, hapter 6, pages 131{
+151. Springer-Verlag, 2007.
+[9℄ A. Salmeron, A. Cano, and S. Moral. Importan e
+sampling in Bayesian Networks using probability
+trees. Computational Statisti s and Data Analysis, 34:387{413, 2000.
+[10℄ G. Shafer. The Art of Causal Conje ture. MIT
+Press, 1996.
+[11℄ P. A. Thwaites. Chain Event Graphs: Theory and
+appli ation. PhD thesis, University of Warwi k,
+2008.
+[12℄ P. A. Thwaites and J. Q. Smith. Evaluating ausal
+e e ts using Chain Event Graphs. In Pro eedings
+of the 3rd European Workshop on Probabilisti
+Graphi al Models, pages 291{300, Prague, 2006.
+
+
+

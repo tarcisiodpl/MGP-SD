@@ -1,0 +1,3346 @@
+
+Model-based diagnosis reasons backwards
+from a functional schematic of a system to
+isolate faults given observations of anoma­
+lous b ehavior. We develop a fully proba­
+bilistic approach to model based diagno­
+sis and extend it to support hierarchical
+models. Our scheme translates the func­
+tional schematic into a Bayesian network
+and diagnostic inference takes place in the
+Bayesian network.
+A Bayesian network
+diagnostic inference algorithm is modified
+to take advantage of the hierarchy to give
+computational gains.
+
+1
+
+INTRODUCTION
+
+Fault diagnosis in engineering systems is a very im­
+portant problem. The problem is as follows: From
+observations of anomalous behavior of a system one
+has to infer what components might be at fault.
+Diagnosis fundamentally involves uncertainty.
+For any reasonable sized system, there is a very
+large number of possible explanations for anoma­
+lous behavior. Instead of reasoning with all of them
+we want to concentrate on the most likely explana­
+tions. In this paper we describe a method for doing
+model-based diagnosis with a fully coherent proba­
+bilistic approach. To do so, we translate the system
+model into a Bayesian network and perform diag­
+nostic computations within the Bayesian network.
+We then extend the notion of system models to
+include hierarchical models. Hierarchical composi­
+tional modeling is an all pervasive technique in en­
+gineering practice. It allows modularization of the
+modeling problem, thus aiding the modeling process.
+In addition, the hierarchy allows gains in computa-
+
+* Also with Rockwell International Science Center,
+Palo Alto Laboratory, Palo Alto, CA 94301.
+
+tional tractability. We show how this improvement
+in tractability extends to diagnosis by describing a
+hierarchical version of a Bayesian network inference
+algorithm which takes advantage of the hierarchy in
+the model to give computational gains.
+
+2
+
+THE TRANSLATION SCHEME
+
+In this section we describe how the Bayesian network
+is created from the system functional schematic.
+The system functional schematic consists of a set
+of components. Each component has a set of dis­
+crete valued inputs I1, !2, . . . , In and a discrete val­
+ued output 0. The component also has a discrete
+valued mode variable M. Each state of M is asso­
+ciated with an operating region of the device. Each
+state of M is associated with a specific input-output
+behavior of the component.
+The component specification requires two pieces
+of information- a function F : /1 X h . . . In X M -+ 0
+and a prior distribution over M. The prior distri­
+bution quantifies the a priori probability that the
+device functions normally. As an example, a com­
+ponent might have only two possible mode states
+broken and ok. If it is very reliable we might have
+a very high probability assigned to P(M = ok), say
+0.995. The components are connected according to
+the signal flow paths in the device to form the system
+model ( we do not allow feedback paths) .
+A Bayesian network fragment is created for a
+component as follows. A node is created for each
+of the input variables, the mode variable and the
+output variable. Arcs are added from each of the
+input variables and the mode to the output variable.
+The distribution P(OI/t, h . . . , In, M) is specified
+1
+by the component function F. That is , P( 0 =
+ol/1 = i1,/2 = i2, ... ,/n = in,M = m) = 1 iff
+F(it, i2, . . . , in, m) = o. Otherwise the probability is
+0. The variable M is assigned the prior distribution
+1
+
+We use
+
+x
+
+to denote a state of a discrete variable X.
+
+A Probabilistic Approach to Hierarchical Model-based Diagnosis
+
+given as part of the component specification.
+The network fragments are now interconnected
+
+as follows: W henever the output variable 0 1 of a
+component C1 is connected to the input !2 of a
+
+C2 ,
+01 of C1
+
+component
+
+1
+
+an arc is added from the output
+
+node
+to the input node
+of C2. This
+arc needs to enforce an equality constraint and so
+we enter the following distribution into node !2·.
+
+P{Ij
+
+IJ
+
+= pl01 = q) =
+
+)
+
+1 iff p = q, otherwise the
+probability is 0. After interconnecting the Bayesian
+network fragments created for each component we
+have a nearly complete Bayesian network. We now
+make some observations. The network created is in­
+deed a DAG (and hence fulfills one of the necessary
+conditions for us to claim it is a Bayesian network).
+This is so because we did not allow any feedback in
+the original functional schematic.
+The probability distribution for every non-root
+node in the Bayesian network has been specified.
+This is because every non-root node is either (a)
+an output node or (b) an input node which is con­
+nected to a preceding output node. The probability
+distribution for every output node has been specified
+when creating the Bayesian network fragments. The
+probability distribution for every input node which
+�as an output node as a predecessor has been spec­
+tfied when the fragments were interconnected.
+The root nodes in the network fall into two
+classes. The first class consists of nodes correspond­
+ing to mode variables and the second class consists of
+nodes corresponding to some of the input variables.
+We note that the marginal probability distributions
+of all nodes in the first class (i.e, mode variables)
+have been specified.
+The set of variables associated with this second
+class of nodes are those variables which are inputs
+to the entire system - that is, these variables are
+inputs of components which are not downstream of
+other components. We will call this set of variables
+system input variables. Let us assume that the in­
+puts coming from the environment to the system are
+all independently distributed. Further let us assume
+for now that we have access to a marginal distribu­
+tion for each system input variable2. We enter the
+marginal distribution for each system input variable
+into its corresponding node. We now have a fully
+specified Bayesian network.
+Consider the original functional schematic. We
+can interpret every component function and inter­
+connection in the original functional schematic as
+a constraint on the values that variables in the
+schematic can take (in the constraint satisfaction
+2
+
+If every observation of the system is guaranteed to
+
+contain a full specification of the state of the input, then
+the actual choice of priors is irrelevant [Srinivas94].
+
+539
+
+sense). We note that the Bayesian network that we
+have constructed enforces exactly those constraints
+that are present in the original schematic and no
+others. Further, it explicitly includes all the infor­
+mation we have about marginal distributions over
+the mode variables and the system input variables.
+The Bayesian network is therefore a representation
+of the joint distribution of the variables in the func­
+tional schematic and the mode variables.
+We proceed now to use the Bayesian network
+for diagnosis in the standard manner. Say we make
+an observation. An observation consists of observing
+the states of some of the observable variables in the
+system. As an example, we might have a observa­
+tion which consists of the values (i.e., states) of all
+the system input variables and the output values of
+some of the components. We declare the observa­
+tion in the Bayesian network. That is, we enter the
+states of every observed variable into the Bayesian
+network and then do a belief update with any stan­
+dard Bayesian network inference algorithm (for ex­
+ample, (Lauritzen88],(Jensen90]).
+Say an observation 0
+
+Y2, ... , Yk
+
+=
+
+=< Yt = Y1, Y2 =
+Yk > has been made. After a Bayesian
+
+network algorithm performs a belief update we have
+the posterior distribution
+
+P(XIO)
+
+available at ev­
+
+ery node X in the Bayesian network. The posterior
+distribution on each of the mode variables gives the
+updated probability of the corresponding component
+b eing in each of its modes. This constitutes diagno­
+_
+
+SIS.
+
+We illustrate our scheme with a simple exam­
+ple from the domain of Boolean circuits. The circuit
+is shown in Fig 1(a). We treat this circuit as our
+
+input functional schematic. A particular observa­
+tion (i.e., input and output values) is marked on the
+figure. We note that if the circuit was functioning
+correctly the output for the marked inputs should
+
+be 0. Instead the output is a 1. We assume, for this
+example, that each gate has two possible states for
+the mode variable, ok and broken. The modeler
+provides a prior on the mode of each gate - for each
+�ate the prior probability of it being in the ok state
+IS shown next to it in Fig l(a). We also require a
+full fault model- i.e., for each gate we should have a
+fully �pecified function relating inputs to the output
+even 1f the mode of the gate is broken. We assume
+
+a "stuck-at-0" fault model - i.e., if the gate is in
+state broken the output is 0 irrespective of what
+the input is. W hen the gate is in state ok the func­
+tion relating the inputs to the output is the usual
+Boolean function for the gate.
+The Bayesian network corresponding to this
+schematic is shown in Fig 1{b). We assume that
+the inputs are independently distributed. We also
+
+540
+
+Srinivas
+
+11
+
+mation to complete the hierarchy - she has to relate
+the modes of the subcomponents to the modes of the
+component. To make this more concrete, consider a
+component which has two states for its mode vari­
+able
+ok and broken. Say that it is modeled at
+a lower level of detail with 4 subcomponents, each
+of which has two possible states. If we consider the
+possible combinations of mode states at the lower
+level of abstraction there are 24 = 16 possibilities.
+However at the higher level of abstraction there are
+only two possibilities, i.e., the granularity is not fine
+enough to distinguish individually between the 16
+different possibilities at the lower level.
+To relate the lower level to the higher level the
+modeler has to provide a function describing how
+the lower level combinations of mode states relate
+to the higher level mode state. In other words, the
+modeler has to provide a categorization which sep­
+arates the lower level state combinations into a set
+of bins. Each bin corresponds to one of the states of
+the mode variable at the higher level of abstraction.
+This function could be a simple rule. One possibil­
+ity, for example, is the rule "If anything is broken at
+the lower level then consider the component broken
+at the higher level". This means, in our example,
+that 15 possibilities at the lower level fall into the
+broken bin at the higher level while only 1 possi­
+bility (i.e., no subcomponents broken) falls into the
+the ok bin at the higher level.
+Once this function is specified the hierarchical
+model is complete. We will call this function the
+abstraction function. Note that we can have mul­
+tiple levels of hierarchy. We also note two salient
+points - the modeler does not need to provide a
+component function at higher levels of the hierar­
+chy. In addition the modeler does not need to pro­
+vide a prior on the mode variable at higher levels of
+hierarchy. In other words, if a component is mod­
+eled at a lower level of detail then only the low level
+functional schematic and the abstraction function
+are required. The component function and prior are
+required only for a component which is being mod­
+eled "atomically", i.e., it is not being modeled at any
+finer level of detail.
+As an example of hierarchical modeling, con­
+sider an exclusive-OR (XOR) gate. We might rep­
+resent the XOR gate at a lower level of detail and
+show that it is synthesized using AND gates, OR
+gates and inverters (Fig 2). We use the following
+rule as the abstraction function: "If anything is bro­
+ken at the lower level then the X 0 R gate is broken".
+-
+
+Key:
+
+�
+
+�
+
+Prior
+
+(a)
+
+Posterior
+
+P(M=Ok}
+
+Figure 1: An example: (a) functional schematic (b)
+corresponding Bayesian network.
+
+assume a uniform distribution as the prior for each
+of the inputs h, h and 13. Note that in this exam­
+ple, any (strictly positive) prior could be assumed
+without affecting the results of the diagnosis. This
+is because the state of the input is fully known when
+the diagnosis is performed. The observation is en­
+tered into the network and inference is performed.
+The posterior probability of being in the ok state
+for each gate is as shown in Fig 1(a).
+
+3
+
+HIERARCHICAL MODELS
+
+Consider a situation where the modeler has con­
+ceptually broken up an engineering artifact into a
+set of component subsystems. She would probably
+not have a complete functional description (i.e., the
+function relating inputs to outputs) at this level of
+abstraction Each of the component systems has to
+be modeled at a lower level of detail. We extend our
+scheme to support such a feature. The modeler first
+fully specifies the inputs, output and the mode vari­
+able of the component. By full specification we mean
+that the modeler specifies the number of inputs, the
+possible states of each input variable, the possible
+states of the output variable and the possible states
+of the mode variable.
+If the modeler would now like to model the com­
+ponent at a lower level of abstraction she can specify
+a new functional schematic as a detailed description
+of the component. This new functional schematic
+would have new components (we will call them sub­
+components) which are interconnected to form a
+functional schematic. This lower level schematic is
+constrained in the following way: The system input
+variables of this functional schematic should be the
+same as the input variables to the component speci­
+fied at the higher level. Similarly the system output
+variable of the schematic should be the same as the
+component output variable at the higher level.
+The modeler has to provide a final piece of infor.
+
+A Probabilistic Approach to Hierarchical Model-based Diagnosis
+
+.... ....
+
+\
+\
+\
+
+.... ....
+
+... ....
+
+541
+
+....
+
+Xl
+
+n.,.._-e--t----1
+
+112
+
+\
+
+........
+. �
+.. ---1
+X2
+
+0
+
+Inv2 X4 r:::
+. ... ::�
+
+�
+
+Figure 2: An XOR gate: An example of a hierarchi­
+cal schematic.
+
+3.1
+
+INCORPORATING HIERARCHY IN
+THE TRANSLATION
+
+When a component is modeled at a lower level,
+
+the translation proceeds as follows: Assume that
+the higher level abstraction does not exist and just
+plug in the lower level functional schematic be­
+tween the system inputs and outputs and do the
+translation. In the resulting Bayesian network in­
+troduce a new variable for the higher level mode.
+Call this Mh. Add an arc from the mode vari­
+able of each of the subcomponents to the higher
+level mode variable. Call the lower level mode vari­
+ables M11, M12, ... , M1n. Fill out the conditional
+probability distribution of the higher level mode
+variable as follows: P(mhlm11,m12, ... m1.-.) = 1 iff
+m" = Ab(m11, m12,
+, m1n ) , 0 otherwise. Here Ab
+is the abstraction function relating combinations of
+mode states of the subcomponents to the mode of
+the higher level component. Fig 3(a) shows the
+Bayesian network for the XOR gate example.
+Hierarchical models usually have two major and
+related advantages. The first advantage is that mod­
+eling becomes easier. This is because the system is
+decomposed in a compositional fashion into compo­
+nents with well defined boundaries and interactions.
+The second advantage is that computation with the
+model becomes easier. As a first cut, diagnosis with
+a hierarchical functional model can proceed exactly
+as described with non-hierarchical models. If we
+want a fine grain diagnosis we look at the updated
+posterior probabilities of the subcomponent modes.
+If we want a coarse grained diagnosis we look at the
+updated posterior of the mode variable of the com­
+ponent at the higher level of abstraction. However,
+this simplistic solution does not get any computa­
+tional gains from the hierarchy.
+To get computational gains we need to be able
+to reason with the higher level model in a way such
+•
+
+.
+
+•
+
+Figure 3: (a) Bayesian network fragment for XOR
+schematic (b) The fragment after "compilation".
+that the detail of the lower level model has been
+"compiled away" into a more succinct higher level
+model. We now describe a scheme for doing so.
+Consider a component C" which is modeled at a
+lower level of abstraction with a functional schematic
+consisting of subcomponents C11, C12, ... , C1n. The
+mode variable of C" is Mh and the mode variable of
+subcomponent cu is M1;. Let the inputs of C" be
+If, I�, ... , I�. Let the output of Ch be Qh. Let all
+the internal variables of the lower level functional
+schematic (i.e., the input and output variables of
+the subcomponents excluding the system inputs and
+outputs) be X1, X2, ... , XkFor simplicity, let us assume that all the inputs
+of ch are system inputs- i.e., there are no compo­
+nents upstream of C". We also assume, as described
+before, that we have a prior on each system input.
+Now consider the Bayesian network fragment cre­
+ated by the translation scheme for Ch. We note
+that this fragment happens to be a fully specified
+Bayesian network.
+A Bayesian network is a structured representa­
+tion of the joint distribution of all the variables in
+the network. In this case the network is a represen­
+tation following distribution P( If, Ig, ..., It:,, O",
+, M1n, X1, X2, .. ., Xk ) . Call
+Mh , M11, l>.lf12,
+this the lower level distribution.
+If now, we wanted to have a Bayesian network
+representation at the higher level of abstraction we
+would not want to explicitly represent the detail
+about internal variables of the lower level functional
+schematic or the mode variables of the subcompo­
+nents. In other words we would like to have a
+Bayesian network which represents the joint distri­
+bution only the input, mode and output variables of
+C", i.e., the distribution P(If, Ig, ...,I�, O", Mh) .
+Call this the higher level distribution.
+We can generate the higher level distribution
+from the lower level distribution by simply marginal­
+izing out all the irrelevant variables, vi z , M 11,
+.
+
+.
+
+•
+
+542
+
+Srinivas
+
+Figure 4: A hierarchical schematic.
+
+M12,... , M1n, X1, X2, . . . , X�:. Ideally, we should
+do this marginalization in some efficient way. Such
+efficient marginalization is possible using topological
+transformations of Bayesian networks [Shachter86].
+Specifically, we can use the arc reversal and node
+absorption operations as follows:
+1. Successively reverse the arcs
+
+M12 ...... Mh, ... , M1"
+this step M h is a root
+
+.......
+
+M11 ...... Mh,
+
+Mh. At the end of
+
+node.
+
+2. Let X be the set of internal variables of the
+lower level functional schematic, i.e., X
+{ M11, M12, .. . , M1", X 1, X2, . .. , X k}. Sort X
+into a sequence X, eg in inverse topological or­
+=
+
+der (descendants first). Successively absorb the
+nodes in Xuq (in order) into Oh.
+This completes the process and leaves us with
+the topology shown in Fig 3(b) . The successive ab­
+sorption in the last step is always possible since there
+is no node N in the Bayesian network such that (a)
+N is not in X, eq and (b) the position of N has to nec­
+essarily be between two nodes contained in X5eq in a
+global topological order [Shachter86]. Note that the
+topology which results from the marginalization pro­
+cess described above is the same as the one we would
+get if we had directly modeled ch as an atomic com­
+ponent.
+For simplicity of exposition, the description
+above assumes that Ch's inputs are system inputs.
+However, this assumption is unnecessary. The iden­
+tical marginalization process is possible for any hi­
+erarchically modeled component. We can consider
+the marginalization process that gives us the higher
+level distribution as a "compilation process" which
+is carried out after the model is created.
+3.2
+
+INTEGRATING HIERARCHY AND
+DIAGNOSTIC INFERENCE
+
+The hierarchy in the functional schematic can
+be exploited to improve diagnostic performance. We
+
+Figure 5:
+Bayesian
+schematic of Fig 4.
+
+network
+
+Be
+
+created
+
+from
+
+now describe a method of tailoring the cluster­
+ing algorithm [Lauritzen88, Jensen90, Pearl88] for
+Bayesian network inference to take advantage of the
+hierarchy. This is the most widely used algorithm
+in practice. The clustering algorithm operates by
+constructing an tree of cliques from the Bayesian
+network as a pre-processing step. This construction
+is by a process called triangulation [Tarjan84]. The
+resulting tree is called the join tree. Each clique has
+some of the Bayesian network nodes as its members.
+As evidence arrives, a distributed update algorithm
+is applied to the join tree and the results of the up­
+date are translated back into updated probabilities
+for the Bayesian network nodes. The update process
+mentioned above can be carried out on any join tree
+that is legal for the Bayesian network.
+We will now describe a method of constructing
+a legal join tree that is tailored to exploit the hierar­
+chy. We explain by means of an example. Consider
+the hierarchical functional schematic shown in Fig 4.
+This results in the hierarchical Bayesian network Be
+shown in Fig 5.
+After the lower level detail is compiled out we
+get the network Bh in Fig 6(a). We add a dummy
+node D h to this Bayesian network such that Ms, Is
+and 03 are parents of Dh. If we run a triangula­
+tion algorithm on this network we get a join tree
+JTh (Fig 7(a)). We note there exists a clique 8h in
+JTh such that I3, Ms and 03 belong to 8h. This is
+because I3, Ms and Os are parents of Dh. Triangu­
+lation guarantees that a Bayesian network node and
+its parents will occur together in at least one clique
+in the join tree.
+Now consider the lower level network fragment
+by itself (Fig 6(b)). Call this B 1• Say we create a
+dummy node D1 and add arcs into it from Is, Ms
+and 03 as shown in the figure. If we triangulate the
+graph we get a join tree JT1 (Fig 7(b)). Once again,
+
+543
+
+A Probabilistic Approach to Hierarchical Model-based Diagnosis
+
+1_3, 1_4-1. M_3, 0-3, IY'h
+_r---""""'�-)----<.o•h ---
+
+M_4, 1_4-1, 1_4·2. 0_4
+
+0_3, 1_4·1, 1_4-2
+
+M..1.U,0-1
+
+0.1.
+
+C4-1, U
+
+U.L4-1,U
+
+o_z, L2, 1_4-1
+(a)
+
+, ..;��11
+
+.1- -�'
+1
+.:- ...
+
+,..."'
+
+0_3, 1_3, M_3, D•t
+
+0_3I.-2, 1_3, M_3, M_3I.-2, L3L-2
+,_
+
+0-__
+
+...::�--------------......
+-- -
+
+__
+
+l_3L-2, M_3, 1_3, M_3L-2, 0_3L-1
+
+0
+
+�----·�-
+
+--0
+
+M_3L-2. 0_3L-l, 1_3, M_3I.-1, M_3
+
+3 I 3 M 3 0 3L-2
+
+(')_____
+- ---o
+
+--·
+
+M_3 L- 1 , 1_3, 1_3I.-1, 0-3L-1
+
+(b)
+
+(b)
+
+Figure 6: (a) Compiled network Bh. (b) Lower level
+Bayesian network fragment B 1 •
+
+we
+
+are
+
+guaranteed that there is
+
+a
+
+clique 61 in JT1
+
+such that !3, M3 and 03 belong to 81.
+Now we construct a composite join tree JTc
+from JTh and JT1• This is done by adding an link
+from bh to 61 (shown as a dotted line in Fig 7). This
+composite join tree is a valid join tree for the network
+Be shown in Fig 5 (see next section for proof).
+The composite join tree JTc has the following
+interesting property. If the user is not interested in
+details about the lower level nodes, then the update
+operation can be confined purely to the JTh segment
+of the join tree since only JTh has any variables
+of interest. More precisely, if there is no evidence
+available regarding the states of the lower level nodes
+and in addition, the user is not interested in details
+of the lower level nodes posterior distributions, then
+the update can be confined to JTh.
+Now suppose the user has finished an update in
+JTh. She then decides that she does want to view
+more detail. In that case, the update process can be
+restarted and continued locally in JT1• That is, the
+update process through the whole of JTh need not
+be repeated - the information coming from the rest
+of JTh is summarized in the message that 8h sends 81
+when the update process is restarted. The restarted
+update process, in fact, is an incremental update
+which occurs only within JT1• This incremental up­
+date can be performed at the user's demand- for ex­
+ample, in a graphical interface, the user may "open
+the window" corresponding to a "iconified" compo­
+nent. This can be interpreted as a request for more
+
+JT•l
+
+Figure 7: (a) JTh (b) JT1• Adding the link shown
+as a dotted line creates the composite tree JTc.
+
+detailed information.
+Along similar lines, if the user discovers evi­
+dence pertaining to a subcomponent, then she can
+"de-iconify" the containing component and assert
+the evidence. In this case, the update process be­
+gins in JT1 and proceeds through JTh to make a
+global update. If one has multiple levels of hierar­
+chy, the composite join tree has multiple levels of
+hierarchy too. At any time, the update process only
+affects that segment of the join tree that the user
+is interested in. This gives substantial savings in
+computation.
+The dummy nodes D11 and D1 have been used
+only for ease of presentation. In practice, one only
+has to ensure that the join tree algorithm forces the
+nodes of interest to occur together in at least one
+clique.
+3.3
+
+JTc IS A VALID JOIN
+
+TREE
+
+A valid join tree is constructed for a Bayesian net­
+work B as follows [Pearl88):
+( 1) The Bayesian network B is converted into a
+Markov network G by connecting the parents of each
+node in the network and dropping the directions of
+the arrows in the DAG. G is an undirected graph.
+
+(2) A chordal supergraph d is created from G by
+a process called triangulation. A chordal graph is
+one where any loop of length 4 or more has a chord
+(an arc connecting two non-consecutive edges in the
+loop). Basically, the triangulation process adds arcs
+to the G until it becomes chordal. (3) The maximal
+
+544
+
+Srinivas
+
+cliques of the chordal graph d are assembled into
+a tree JT. Each maximal clique is a vertex in the
+tree. The tree has the join tree property. The join
+tree property is the following: For every node n of
+B, the sub-tree of JT consisting purely of vertices
+which contain node n is a connected tree.
+It can be proved that JTc is a valid join tree
+for the Bayesian network Be. We do so by first
+describing the construction of a particular chordal
+
+(similarly, JT1). The only nodes which appear in
+both Bh and B1 are M3, l3 and 03. Since these
+nodes appear both in oh and 81 we see that the run­
+ning intersection property holds for them too. O
+Theorem: JT0 is a valid join tree for the Bayesian
+network Be.
+Proof: This follows directly from Lemmas 1 and 2.
+
+supergraph cc of the Markov network of Be. JTC
+
+The dummy nodes Dh and D1 are present solely to
+force a particular topology on the join t rees JTh
+and JT1• After the triangulation process they can
+be dropped from the cliques which contain them.
+This might sometime result in a simplification of the
+composite join tree. Consider the case where 61 is
+reduced to {Ma, h Oa} after D1 is dropped In this
+situation, 81 can be merged with oh since it is a sub­
+set of 8h. Similarly oh can be merged with 61 if 81
+reduces to {M3,/3, 03} after oh is dropped. JTc
+
+'
+
+'
+is a valid join tree constructed from ac . We have
+included proof sketches below, the full proof is in
+[TechReport94].
+Consider a graph ac' constructed as follows: Bh
+is converted into a Markov network Gh. Similarly,
+B1 is converted into a Markov network G1. Each of
+these networks are triangulated giving the chordal
+graphs ah' and G1'. ah' and G1' are merged to form
+
+'
+
+a graph ac . This "merging" of the graphs is don e as
+follows: The nodes
+
+M3,
+
+13 and 03 in Gh' are merged
+
+0
+
+.
+
+continues to be a valid join tree after such mer gers.
+
+with with the corresponding nodes in G1'. That is,
+ac' has only one copy of each of these nodes. Any
+link between any of these nodes and
+
+a
+
+node in ah' is
+
+also present in ac'. Similarly any link between any
+of these nodes and a node in 01' is also present in
+ac'.
+Lemma 1: ac' is a chordal supergraph of a Markov
+
+network ac of Be.
+
+Proof sketch: We note that the nodes in the set S
+= {M3, 13, 03} are the only nodes common to the
+'
+
+subgraphs Gh' and G1 . Any loop L that lies partly
+in 01' and cc' has to necessarily pass through S
+twice. We see that in the M3, Is and 03 are nec­
+essarily connected to each other in both Gh' and
+
+G1'. Hence the loop L has a chord that breaks it
+into two subloops Lh and L1 which lie purely in the
+
+chordal graphs Gh' and G1' respectively. Hence cc
+
+'
+
+is chordal. It is easily proved that ac' is a super­
+graph of a Markov netw ork ac of B". o
+Lemma 2: JTC
+
+'
+is a valid join tree created from cc .
+
+Proof sketch: We note that any maximal clique in
+
+G1' which contains at least one node n which does
+'
+not occur in Gh' is also a maximal clique in ac .
+
+We now observe that e1;ery maximal clique in G1'
+contai ns at least one node which does not occur in
+Gh'. We make a similar argument for the maximal
+
+cliques of ah'. This implies that vertices of
+
+JTC are
+
+the maximal cliques of cc'. We note that the run­
+ning intersection property (r.i.p) holds for any node
+n of Be which appears ::;olely in Bh (similarly, B1
+since n appears purely in the vertices of true in JT
+
+�
+
+4
+
+RELATED WORK
+
+Geffner and Pearl [Geffner87] describe a scheme for
+doing distributed diagnosis of systems with multiple
+faults. They devise a message passing scheme by
+which, given an observation, a most likely explana­
+tion is devised. An explanation is an assignment of
+a mode state to every component in the schematic.
+The translation scheme described in this paper can
+be used to achieve an isomorphic result. That is,
+instead of using a Bayesian network update algo­
+rithm to compute updated probabilities of individ­
+ual faults we could use a dual algorithm for comput­
+ing composite belief [Pearl87] and compute exactly
+the same result. From the perspective of this pa
+per, [Geffner87] have integrated the inference in the
+Bayesian network into the schematic as a message
+passing scheme. Separating out the network trans­
+lation explicitly allows features such as hierarchical
+diagnosis, computation of updated probabilities in
+individual components as against component beliefs
+and many others (see below).
+Mozetic [Mozetic92] lays out a formal basis for
+diagnostic hierarchies and demonstrates a diagnos­
+tic algorithm which takes advantage of the hierar chy.
+The approach is not probabilistic. However, he in­
+cludes a notion of non-determinism in the following
+sense: Given the mode of a component he allows the
+input-output mapping of a component to be relation
+instead of a function - there can be multiple possible
+outputs for a given input. The notion of hierarchy
+we have described here co r responds to one of three
+possible schemes of hierarchical modeling that he de­
+scribes. Our scheme can be expanded to support a
+­
+
+A Probabilistic Approach to Hierarchical Model-based Diagnosis
+
+probabilistic generalization of the other two schemes
+of modeling and his notion of non-determinism.
+Genesereth [Genesereth84] describes a general
+approach to diagnosis including hierarchies. He dis­
+tinguishes between structural abstraction and be­
+In structural abstraction a
+havioral abstraction.
+component's function is modeled as the composi­
+tion of the functions of subcomponents whose de­
+tail is suppressed at the higher level. This is similar
+to what we have described. Behavioral abstraction
+corresponds to a difference in how the function of
+a device is viewed - for example, in a low level de­
+scription of a logic gate one might model input and
+output voltages while a high level description might
+model them as "high" and "low'. Behavioral ab­
+straction often corresponds to bunching sets of in­
+put values at the low level into single values at the
+higher level. Our method extends to support such
+abstractions in a straightforward manner.
+Yuan [Yuan93] describes a framework for con­
+structing decision models for hierarchical diagnosis.
+The decision model is comprised of the current state
+of knowledge, decisions to test or replace devices
+and a utility function that is constructed on the fly.
+A two step cycle comprising model evaluation and
+progressive refinement is proposed. The cycle ends
+when the fault is located (a single fault assumption is
+made). Model refinement is in accordance with the
+structural hierarchy of the device. The goal is to pro­
+vide decision theoretic control of search in the space
+of candidate diagnoses. Such a framework needs a
+scheme for computing the relative plausibility of can­
+didate diagnoses. Our work provides such a scheme
+in a general multiple fault setting.
+
+5
+
+CONCLUSION
+
+The translation scheme described in this paper is
+a first step in an integrated approach to diagno­
+sis, reliability engineering, test generation and op­
+timal repair in hierarchically modeled dynamic dis­
+crete systems. The approach is probabilistic/utility­
+theoretic. We have made variety of assumptions
+in this paper for simplicity of exposition. The as­
+sumptions are: (a) non-correlated faults (b) full
+fault models (c) fully specified input distributions
+(d) components with single outputs (e) restricted
+form of hierarchy and (f) systems without dynam­
+ics or feedback. Each of these are relaxed in the
+general approach [Srinivas94]. We also discuss the
+temporal aspect of the "prior probability of failure"
+notion and relate it to standard quantities found in
+the reliability literature.
+
+545
+
+
+
+
+Structure
+
+2
+
+IDEAL (Influence Diagram Evaluation and Analysis
+in Lisp) is a software environment for creation and
+evaluation of belief networks and influence diagrams.
+IDEAL is primarily a research tool and provides an
+implementation of many of the latest developments
+in belief network and influence diagram evaluation in
+a unified framework.
+
+This paper describes IDEAL
+
+and some lessons learned during its development.
+
+IDEAL is written in Common Lisp. Lisp was chosen
+as the implementation language since it is most suited
+to exploratory programming and quick development.
+In addition, the software is portable across a wide
+variety of platforms.
+IDEAL is a library of Lisp functions that pro­
+vides the following features:
+•
+
+Data structures for representing influence dia­
+grams and belief networks.
+
+•
+
+1
+
+grams and belief networks.
+
+Introduction
+
+Over the last few years influence diagrams
+lief networks
+
+[5] and be­
+
+•
+
+tation schema for domains where uncertainty plays
+
+•
+
+process them
+
+as
+
+well
+
+[10,8,14].
+
+as
+
+as
+
+the semantics of these
+
+on efficient algorithms to
+
+•
+
+lief networks.
+•
+
+systems. IDEAL is a software package that was de­
+veloped
+
+as
+
+a platform for research in belief networks
+
+and influence diagrams. IDEAL also can be used to
+
+•
+
+Algorithms for p erforming inference in influence
+diagrams and inference and belief propagation in
+belief networks.
+
+library of functions that provides the belief network
+and influence diagram methodology for embedded use
+
+Routines that perform some basic transforma­
+tions of influence diagrams.
+
+create intermediate sized run-time systems and as a
+
+by other applications.
+
+Utilities that provide many useful services like
+consistency checking and creation of random be­
+
+This work has now matured to the point where
+these techniques are finding their way into production
+
+Utilities that are of use in coding influence dia­
+gram manipulation algorithms etc.
+
+an important role. There has been a wealth of work
+representations
+
+Facilities for copying, saving (to file) and loading
+influence diagrams and belief networks.
+
+[10] have emerged as attractive represen­
+
+on both basic issues such
+
+Facilities for creating and editing influence dia­
+
+•
+
+Influence diagram evaluation algorithms.
+
+IDEAL incorporates, in a unified framework,
+
+These functions can be used interactively by a
+
+many of the latest developments in algorithms for
+
+user typing to a Lisp interpreter or embedded in
+
+evaluation of belief networks and influence diagrams.
+
+code by other applications. To preserve portability,
+
+In addition , it provides a complete environment for
+
+IDEAL has only a simple character terminal based
+
+creating, editing and saving belief networks and influ­
+
+user interface. However, it provides hooks (or easy
+
+ence diagrams. In the rest of the paper any reference
+
+development of a graphic interface layered over it on
+
+to 'diagrams' can be taken to refer to influence dia­
+
+any specific platform. A graphic interface has been
+
+grams and belief networks unless stated otherwise.
+
+developed for the Symbolics environment.
+
+213
+
+I
+I
+
+3
+3.1
+
+Facilities in I DEAL
+Data structures
+
+IDEAL provides abstract data structures for rep­
+resenting influence diagrams and belief networks.
+These data structures and a tool kit of associated
+functions provide all the basic low level functionali­
+ties required for the creation of belief networks and
+influence diagrams. This includes creation of directed
+acyclic graph topologies, creation of probability ma­
+trices and other matrices and vectors that are indexed
+and sized by the states of the nodes in the graph, ac­
+cessing these matrices and vectors, manipulation of
+the graph topology, control constructs that allow easy
+traversal of these node matrices, etc. These are low
+level features that can be used by programmers to
+develop functionalities that are not available directly
+in IDEAL. A user who does not need any additional
+functionalities can interact with IDEAL with higher
+level functions described below.
+3.2
+
+Creating and Editing diagrams
+
+The functions used to create and edit diagrams are
+at a higher level than the functions that manipulate
+the low level data structures. These functions expect
+fully specified diagrams as input and return consis­
+tent diagrams after they are done. Some of these
+functions require interactive input from the user.
+Functions to do the following are available: Cre­
+ation of complete diagrams, adding arcs, deleting
+arcs, adding nodes, deleting nodes, adding states to
+a node, deleting states from a node and editing node
+distributions. These functions make suitable assump­
+tions that guarantee consistency of the diagram after
+they are done. For example, adding an arc between
+two nodes extends the distribution of the child node.
+This extension of the distribution is done such that
+the child node is independent of the new parent, i.e,
+the child node has the same distribution given its
+predecessors regardless of the state of the new node.
+Most of these functions can be used embedded in
+code to create diagrams on the fly. These functions
+provide the right hooks into IDEAL for a user who is
+interested primarily in the existing functionality and
+does not need to go into the low level implementation
+details.
+3.3
+
+Copying and Saving Diagrams
+
+The copy function in IDEAL makes a complete copy
+of a fully specified diagram. This is frequently useful
+when one wants to make some transformation that
+might destructively modify the diagram. The copy-
+
+ing mechanism provides a means of keeping an un­
+modified original in the Lisp environment.
+IDEAL also has functions that allow the user to
+save a diagram to file and to reload diagrams from
+these saved files. IDEAL saves the diagram in text
+files and so they can easily be exchanged between
+users at remote sites or on different platforms by elec­
+tronic mail or other means. The saving function can
+be made to recognize any extensions that the user
+may make to the abstract diagram data structures.
+Thus, any custom information that a user may want
+to associate with the diagram can also be saved and
+retrieved.
+3.4
+
+Utility functions
+
+IDEAL provides a wide variety of utility functions
+that are of use in conjunction with belief networks
+and influence diagrams. Consistency checking func­
+tions for the following are available: To check whether
+a diagram is consistent (i.e., it is acyclic, the proba­
+bility distributions sum to 1, etc), to check whether
+a diagram is acyclic (a lower level function), to check
+whether a diagram has a strictly positive distribution
+and to check whether a diagram is a belief network.
+User interface utilities are available for display­
+ing a description of the diagram in text format, for
+easily accessing nodes in the diagram and for describ­
+ing the contents of particular nodes of a diagram.
+A set of utility functions is available for creat­
+ing 'random' belief networks. This set of functions is
+useful for creating examples for testing of belief net­
+work algorithms and for quickly creating test belief
+networks that satisfy certain user defined criteria (for
+example, see [1]).
+In addition to these there are miscellaneous util­
+ity functions. Some examples: a function for sort­
+ing the nodes in the diagram by graph order and
+a function that modifies the distributions of a non­
+strictly positive diagram slightly (as specified by an
+argument) to make the distribution strictly positive.
+3.5
+
+Diagram transformations
+
+This is a set of functions, each of which take a con­
+sistent diagram as input and return a consistent di­
+agram. These transformations are used in reduction
+style algorithms [14,13]. They can also be used to
+make changes in diagrams or to preprocess them be­
+fore passing them to an inference scheme.
+Some of the transformation functions are: Re­
+moval of a particular barren node from a diagram,
+Removal of all barren nodes from a diagram, absorb­
+ing a chance node in a diagram, reversing an arc,
+
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+
+214
+
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+
+reducing a deterministic node etc. The transforma­
+tion functions (as implemented) change the input di­
+agram destructively to yield the result. Details of
+these transformations can be found in [9,14].
+3.6
+
+Graphic Interface and documen­
+tation
+
+As mentioned before, IDEAL is designed to be a
+portable tool and so it does not include any imple­
+mentation specific graphics features. On the other
+hand, hooks are available for in IDEAL for easily lay­
+ering a graphics interface over it.
+Such an interface has been developed for IDEAL
+on Symbolics machines. In addition to standard
+graphic manipulation commands this interface pro­
+vides most of the functionalities described above ei­
+ther through mouse driven graph manipulation (for
+eg, reversing an arc) or through convenient menu
+driven commands. The interface allows convenient
+access to the Lisp environment in a separate window
+and can be a very effective programming tool when
+developing applications based on IDEAL .IDEAL and
+the Symbolics interface to IDEAL are documented in
+detail in [17].
+
+same for all algorithms of the latter three classes. So,
+if need be, the actual algorithm used can be a deci­
+
+sion that is transparent to the end user or any calling
+function which needs an inference mechanism whose
+details are irrelevant.
+4.1
+
+Reduction algorithms
+
+Influence diagram evaluation algorithms as described
+by Shachter [14] and Rege and Agogino [13] are avail­
+able. Inference algorithms applicable to both influ­
+ence diagrams and belief networks are also available
+as described in the same sources.
+These algorithms operate by making a series of
+transformations (see above) to the input diagram.
+The input diagram is destructively modified.
+4.2
+
+Message passing algorithms
+
+Message passing algorithms model each node as a pro­
+cessor that communicate by means of messages. A
+distributed algorithm from Pearl that applies to poly­
+trees [10] is implemented in IDEAL. This implemen­
+tation also utilizes work by Peat and Shachter [11). A
+conditioning algorithm that works for all belief net­
+works is also available. The conditioning algorithm
+calculates cutset weights as described by Suermondt
+and Cooper [18]. A variation of the conditioning a.l­
+Algorithms in IDEAL
+4
+gorithm from Peot and Shachter [11] is also available.
+The conditioning algorithms find cutsets as described
+IDEAL provides many different evaluation and in­ by Suermondt and Cooper [19].
+ference algorithms. The implementation emphasis is
+on clarity rather than speed. Each of the algorithms
+make extensive input checks and also explicitly de­ 4.3 Clustering algorithms
+tects error conditions such as impossible evidence (see Clustering algorithms aggregate the nodes in a belief
+Sec 5.2).
+network into a join tree of 'meta' nodes and then run
+The algorithms implemented in IDEAL fa]) into an update scheme on this tree. The updated beliefs
+four classes- reduction algorithms (14,13], message for each of the belief network nodes is then calculated
+passing algorithms (10,14), clustering algorithms [8,6) from the 'meta' nodes.
+and simulation algorithms [10]. The algorithms in
+IDEAL implements two variations of the ba­
+each class are closely related to each other but differ sic clustering algorithm described by Lauritzen and
+in complexity or are applicable to only specific kinds Spiegelhalter [8]. The first considers the join tree as a
+of belief networks. Reduction algorithms are used for 'meta' belief network and runs a variation of the poly­
+influence diagram evaluation (i.e., solving an influ­ tree algorithm [10] on it. The second variation uses
+ence diagram for the optimal decision strategy) and an update scheme that operates on clique potentials
+for inference. When used for inference they answer as described by Jensen et al [6].
+specific queries, i.e, they give the updated belief of
+Two methods are available for making the fill-in
+a specific target node given a set of evidence nodes. for use in construction of the join tree - Maximum
+The algorithms in the latter three classes ( as imple­ Cardinality Search [20] and a heuristic elimination
+mented) can be used only for inference in belief net­ ordering heuristic from Jensen et. al. [7,12].
+works. They give updated beliefs for all the nodes
+in the network given evidence. The data structures
+Simulation Algorithms
+4.4
+for declaring evidence before an algorithm is called
+and the data structures where the updated beliefs are IDEAL implements a simulation algorithm from
+found after the algorithm has finished running are the Pearl [10]. This implementation can only operate on
+
+215
+
+I
+I
+
+We have calibrated the estimates yielded by
+these functions against actual time measurements of
+how long it takes to solve the corresponding problems.
+The correlations have been strong (see Sec 5.1).
+
+belief networks with strictly positive distributions.
+4.5
+
+Estimator functions
+
+IDEAL provides run time estimator functions for
+some of the algorithms implemented in it. Given an
+algorithm and a particular belief network with a par­
+ticular state of evidence, the estimator function gives
+a quick estimate of the complexity of the update pro­
+cess.
+In general, belief net inference algorithms con­
+sist of two kinds of operations. The first kind are
+graph operations that are polynomial in the number
+of nodes in the graph (eg, triangulating a graph for
+clustering, conversion of a multiply connected net­
+work into a singly connected network by instanti.
+atmg a cutset) 1 . The other class of operations are
+the actual numerical calculations that are carried out
+over the probability and potential matrices associ­
+ated with the graphs. We will refer to this as the
+update process. The overall exponential complexity
+algorithm derives from the fact that these matrix op­
+erations carried out during the update process take
+exponential time. The estimator functions in IDEAL
+give a quick estimate of the complexity of these ma­
+trix operations.
+The complexity count that is returned is a count
+of the number of steps the algorithm will spend in
+spanning the state spaces of the nodes or cliques in­
+volved. For example, if a binary node A has a lone
+binary node B as a predecessor then the complexity
+count of setting the probability distribution of A is
+four since one has to cover a state space of 2 x 2 states.
+The complexity of normalizing the belief vector of A
+is again 4 since one has to cover the state space of
+the node A twice, once for summing the beliefs and
+once for normalizing them.
+An estimator function for a particular algorithm
+takes an inference problem as input, i.e, a belief net­
+work and associated evidence. The estimator per­
+forms the polynomial time graph manipulations that
+are necessary for initialization before the actual up­
+date process can begin. It then applies embedded
+knowledge of the update process to give an exact
+count of the number of steps that the update pro­
+cess will take. A step is defined as explained in the
+previous paragraph. This estimate is made in linear
+time. So overall, the estimator function runs in time
+polynomial in the size of the input.
+1 Here
+
+we refer to the actual graph algorithm implemented
+
+as against the algorithm which would give optimal results. For
+example, the algorithm implemented in IDEAL for finding a
+
+loop cutset for conditioning
+
+runs
+
+in polynomial time while the
+
+p roblem of finding the minimal loop cutset is NP-hard ( see
+
+for both results ) .
+
+[3]
+
+5
+
+Discussion
+
+IDEAL has been a success from the experimental
+point of view. It has been used both for in-house ap­
+plications and research both within and outside Rock­
+well. Some examples of the uses of IDEAL include a
+decision aiding model for pilots that helps to sort the
+vast flow of information that comes to the cockpit
+from the sensors on the plane, a life cycle costs anal­
+ysis system for Rocket engines, embedded use in a
+natural language system for story understanding [2]
+and an implementation of interval influence diagrams
+[4].
+One of the lessons we learned in the process of
+implementing IDEAL was that many of the algorithm
+papers do not describe the algorithms in standard al­
+gorithmic style. In addition they leave many details
+incompletely specified. From an engineering point of
+view, it would be very useful if we had both a more
+complete description of algorithms and in a more con­
+ventional style. IDEAL's emphasis on code readabil­
+ity and explicitness were of great help in detecting
+and correcting any problems that came up.
+5.1
+
+Estimator functions
+
+As explained in the previous section, the estimator
+functions carry out the polynomial time graph ma­
+nipulations that precede the update process and then
+give an estimate of the complexity of the update pro­
+cess. The results of the graph manipulation are re­
+quired to make the estimate. The actual estimate is
+the result of applying a formula to the results of the
+graph manipulation. These formulae were derived by
+analysis of the update process of each algorithm. The
+estimator functions in IDEAL apply only to exact al­
+gorithms (as opposed to approximation algorithms).
+As an example of an estimator function consider
+the estimat�r for the Jensen method [6] of clustering.
+.
+G1v�n a behef network the complexity of initializing
+.
+the JOm tree by the Jensen method if given by:
+
+L (3 + N(U))S(U)
+UEJ
+
+where U represents a Bayesian belief universe J
+is the join tree made up of Bayesian belief univers�
+N(U) is the number of neighbors of U in the joi�
+tree and S(U) is the size of the joint state space of
+the belief network nodes that are members of U.
+
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+
+216
+
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+
+Update phase of Jensen algorithm
+300 .------.--.
+
+This formula is easily derived as follows.
+
+For
+
+each belief universe the potential distribution has to
+be set up by multiplying the distributions of the com­
+ponent belief network nodes.
+
+This has complexity
+
+S(U).
+When a belief universe absorbs from its neigh­
+bors the complexity of the operation is
+
+S(U).
+
+When
+
+it updates a neighboring sepset, again the complex­
+
+ity of the operation is S(U). During the collect­
+evidence operation, each universe absorbs from its
+'child' neighbor sepsets and then updates its 'parent'
+neighbor sepsets. Thus, for each universe the com­
+plexity of the operation is
+
+Iii
+
+"C
+c
+0
+u 200
+Cll
+
+!!.
+Cll
+
+�
+c
+
+2
+iii
+::I
+
+100
+
+0
+<
+
+2S(U).
+
+During the dist.ribute-evidence operation, each
+universe first absorbs from its 'parent' sepset neigh­
+The complexity of the operation is
+
+N(U)S(U)
+
+1 &+5
+
+5e+4
+
+bor and then updates all the 'child' sepset neighbors.
+
+Complexity Estimate (steps)
+
+for
+
+each universe U. Summing the terms for initializa­
+
+Figure 1:
+
+tion of the join tree, the collect-evidence operation
+
+example
+
+Performance of estimator functions:
+
+2e+5
+
+An
+
+and the distribute-evidence operation gives the com­
+plexity formula above.
+An approximate formula that gives the complex­
+
+once. This could be the case, for example, in a sys­
+
+ity of the update process in the Jensen algorithm is:
+
+tem that constructs belief networks dynamically and
+
+L (2 + N(U))S(U) + L [S(Us) + S(i)]
+iEB
+
+UEJ
+
+where
+
+U,
+
+is the smallest universe (in terms of
+
+state space size) that contains node i of the network.
+The update process consists of one collect
+evidence-operation,
+
+one distribute-evidence opera­
+
+tion and a marginalization operation for setting the
+belief vectors of the belief network nodes. These fac­
+tors add up to the formula above. The formula does
+not take into account the fact that some optimiza­
+tion can be made based on the position of evidence in
+the join tree. It also does not include the operations
+needed to declare e vidence in the join tree. However,
+
+uses each network only once. When the same network
+is used repeatedly with different evidence pieces, the
+clustering algorithms are superior. The construction
+of the join tree can be considered as a compilation
+step of the belief network ·that needs to be carried
+·
+out only once.
+·
+
+·
+
+Though IDEAL is an experimental tool it gives
+reasonable response times for medium size problems.
+As an example, a
+
+50
+
+node network developed as part
+
+of a decision aid system for aircraft pilots takes about
+
+17 seconds to solve on a Symbolics 3645. IDEAL's
+speed is limited both by the choice of implementation
+language and its implementation style, where explicit
+code rather than speed has been the top priority.
+
+leaving out these terms does not introduce significant
+error.
+We have obtained excellent correlations between
+the complexity estimates given by the estimator func­
+
+5.2
+
+Handling determinacy and inconsistency
+
+tions for various algorithms and the actual run time.
+
+In all the algorithms, gains can be made by explicitly
+
+F ig 1 demonstrates the correlation for the update
+phase of the Jensen algorithm. The data in the graph
+
+done as a pre-processing step [15](in which case the
+
+was collected by running tests on randomly created
+
+network topology itself is modified) or, more gener­
+
+belief networks.
+
+ally, in the propagation phase of the algorithm.
+
+detecting determinacy in the network. This can be
+
+As expected, particular algorithms suit particu­
+
+When the joint probability distribution of a be­
+
+lar types of problems well. When choosing what algo­
+
+lief net (i.e, the joint distribution of all the variables
+
+rithm to use, in addition to the type or size of prob­
+
+in the belief net) is not strictly positive it means that
+
+lem, one needs to consider whether the belief network
+
+some particular configuration of the belief net is im­
+
+involved needs to be solved just once or solved mul­
+
+possible.
+
+tiple times with different evidence sets. Conditioning
+
+of nodes of the belief net have non-strictly positive
+
+algorithms are competitive (though not necessarily
+
+joint distributions, i.e., the unconditional probability
+
+faster) when the problems needs to be solved only
+
+of some joi�t state of the subset is zero. The actual
+
+This in turn implies that some subset(s)
+
+217
+
+I
+I
+
+makeup of these subsets depends on the conditional
+
+conditional distribution in which the condition­
+
+independencies in the network.
+Let the network I (or some subset of nodes of
+
+ing node set consists of some belief net nodes
+
+the network) have an impossible state I= i. Then,
+obviously, any conditional probability distribution
+
+P(X/I
+
+=
+
+i) where X
+
+is another subset of nodes of
+
+the network cannot be assigned meaningfully. If an
+implementation of any probabilistic inference algo­
+rithm does not account for such circumstances, this
+leads to a divide by zero error if the implementa­
+
+P(X/ I = i).
+P(X/I = i) as
+
+tion tries to calculate the distribution
+This occurs either when calculating
+
+P(X, I= i) / P(I= i) or when normalizing the repre­
+sentation of P(X/ I= i), say R(X/I= i) for all states
+x of X where each R(X = x/I = i) has been found
+to be zero. Note that the representation is inconsis­
+tent and cannot represent a conditional probability
+distribution that sums to
+
+1.
+
+An impossible state can occur due to two things:
+1. Inconsistent Evidence: The evidence that the
+user has declared may be inconsistent with the
+
+Reduction algorithms
+
+5.2.1
+
+In reduction algorithms a divide by zero error can
+occur when we try and find new conditional distri­
+butions. This happens only during arc reversal and
+node absorption.
+
+In inference algorithms node ab­
+
+sorption is just a special case of arc reversal and so
+we need to look only at arc reversal.
+When performing arc reversal to find a new dis­
+tribution
+and
+
+B
+
+P(A/B
+
+==
+
+b) where
+
+A
+
+is a single node
+
+is a set of nodes the basic method is to
+
+marginalize
+
+P(A, B = b)
+
+and then normalize it us­
+
+ing the marginal. We hit a divide by zero error if
+the marginal
+
+a case IDEAL
+tribution.
+
+b) happens to be zero . In such
+makes P(A/B = b) a uniform dis­
+
+P( B
+
+==
+
+This is justified because any subsequent
+
+manipulation of the distribution P(A/ B = b) by a re­
+duction algorithm always involves multiplying it into
+
+P(B =b) first. We know that P(B =b) is zero and
+P(A/B =b) can be anything. The advantage of
+
+belief net. Let us say that the probabilities en­
+coded in the belief net are such that for a subset
+
+so
+
+of nodes A of the belief net P(A = a) is zero
+where a is some joint state of the nodes A. If
+
+consistent (i.e., the numbers still constitute a valid
+
+the evidence we declare happens to be exactly
+
+probability distribution) even after the tr;insforma­
+
+a
+
+or some superset of it (i.e
+
+some nodes outside
+
+a
+
+plus evidence for
+
+A) then obviously we will hit
+
+a divide by zero error when performing inference
+to find some distribution P(B/A =a) where
+
+2.
+
+which are not evidence nodes.
+
+B is
+
+this uniform assignment is that the diagram remains
+
+tion.
+
+The disadvantage is that if the user's query
+
+to the system was
+
+P(A/ B =b)
+
+and
+
+P(B =b)
+
+hap­
+
+pens to be zero for some state of B then the user
+will not realize it and may ascribe some meaning to
+
+some other set of nodes in the belief net. This is
+
+the distribution
+
+because the distribution we are seeking is hypo­
+
+meaning. Note that this effectively amounts to out­
+
+thetical, unassignable or meaningless, depending
+
+putting garbage when the evidence is impossible (the
+
+on how we look at the problem.
+
+evidence being that particular state b of
+
+Nature of algorithm: An impossible state may
+also be caused by the nature of the inference al­
+gorithm.
+
+Consider the conditioning algorithm,
+
+for example. It performs whatever inference we
+are interested in conditioned on every possible
+
+5.2.2
+
+P(A/ B = b)
+
+even though it has no
+
+B).
+
+Message passing algoritluns
+
+The polytree algorithm,
+
+as
+
+implemented in IDEAL,
+
+cannot hit the divide by zero error during the prop­
+agation phase since it calculates only joint probabil­
+
+joint state of a set of cutset nodes which make
+
+ities. However, when normalizing the beliefs of each
+
+the belief net singly connected. The results ob­
+
+belief network node after the propagation is done, it
+
+tained from each of these conditionings are then
+'weighted' to get the results. Thus if the cutset
+
+is possible to find that the marginal is zero. This di­
+rectly implies that the evidence declared before the
+
+is
+
+propagation is impossible (i.e.,
+
+A
+
+and the evidence is
+
+node(s) is
+
+B then
+
+we find
+
+E = e and the target
+P(B/A =a,E =e) for
+
+a of A and then weight these
+If P(A =a,E =e) is zero for some state
+
+the marginal is nothing but
+
+P(E = e) = O) since
+P(E = e). IDEAL de­
+
+all possible states
+
+tects this situation explicitly and tells the user that
+
+results.
+
+the evidence is impossible.
+
+a of A it is easy to see that we have an impossible
+
+This conditioning algorithm makes the belief net
+
+state which would lead to a divide by zero error
+in general, an algorithm can hit an impossible
+
+a poly tree by clamping the states of a cycle cutset
+of nodes S. The evidence is propagated as by the
+polytree algorithm for each of the evidence pieces and
+
+situation (which cannot be attributed to incon­
+
+then the result is weighted to get the beliefs of each
+
+sistent evidence) if the algorithm calculates any
+
+node given the evidence alone.
+
+when calculating
+
+P(B/A = a,E = e).
+
+Thus,
+
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+
+218
+
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+I
+
+IDEAL supports two conditioning implementa­
+
+described in the original paper. After propagation, if
+
+The first calculates cutset weights explic­
+
+a zero marginal is encountered when normalizing the
+
+In other words, for every node A we calcu­
+P(A/S = s, E = e) and then use that to cal­
+culate P( A/E = e) as the marginal of the prod­
+uct P(A/S = s, E = e)P(S = sfE = e), where
+P(S = s/E = e) is a 'mixing' probability. We will
+hit the divide by zero error when P(S = s,E =e) is
+zero and we try and calculate P(A/S= s, E =e).
+
+beliefs this implies that the evidence was impossible.
+
+tions.
+itly.
+late
+
+In this implementation, a cutset conditioning
+case
+
+s
+
+for which
+
+P(S = s, E = e) = 0
+
+contribute to the overall belief.
+
+does not
+
+So to avoid an er­
+
+ror the cutset algorithm checks for the occurrence of
+
+P(S = s, E = e) = 0
+
+process that determines
+
+during the recursive update
+
+P(S = s/E= e).
+
+If the con­
+
+dition occurs then that cutset conditioning case
+
+s
+
+is
+
+IDEAL signals the fact explicitly in both clustering
+implementations.
+
+5.2.4
+
+Simulation Algorithms
+
+The simulation algorithm coded in IDEAL cannot
+handle non-strictly positive belief networks. If such a
+belief network is given as input the algorithm breaks
+with an appropriate warning.
+
+skipped. Other than being a graceful technique to de­
+tect an impossible situation, this step, in conjunction
+with Suermondt and Cooper's
+
+[19]
+
+technique for cal­
+
+culating cutset weights, can lead to substantial com­
+plexity gains since whole classes of impossible cutset
+cases can be detected and skipped with very little
+
+Further developments
+
+6
+
+effort. For example, if the cutset consists of three bi­
+nary nodes A, B and C (in graph order (A, B, C)),
+then knowing that P(A = t) = 0 immediately elimi­
+nates 4 cutset cases, one for each state combination
+of
+
+B
+
+and
+
+C
+
+in conjunction with
+
+A= t.
+
+In the second conditioning implementation
+
+[11]
+
+no conditional probabilities are calculated during the
+propagation phase and so no divide by zero errors are
+possible. However, it is possible that when marginal­
+izing the belief vectors of the nodes after the propa­
+gation, the marginals are zero. This implies that the
+evidence that has been propagated is impossible (see
+previous subsection).
+
+IDEAL detects this situation
+
+explicitly in both conditioning implementations.
+
+We foresee more work on developing efficient estima­
+tor functions.
+
+Each estimator function may be ex­
+
+panded into a class of functions where one may trade
+off the accuracy of the estimate with the time re­
+quired to make the estimate. It may be p ossible to
+use these estimator functions to help choose between
+competing algorithms for a given problem or to use
+them as a search function to search through a space
+of competing alternative solutions.
+IDEAL, has incorporated almost all the pub­
+lished work to date on exact belief network and influ­
+ence diagram algorithms. We will probably include
+any promising new methods that come up (for exam­
+ple, nested dissection
+
+5.2.3
+
+[3])
+
+so that we can choose the
+
+best possible method for the applications we have in
+
+Clustering Algorithms
+
+IDEAL supports two clustering algorithm implemen­
+tations. The first implementation creates a join tree
+of cliques and calculates the conditional probabili­
+Consider a clique A with a
+B. We hit the divide by zero er­
+ror when P(B = b) is 0 and we try and calculate
+P( A/ B = b). When creating the join tree we assign
+P(A = afB = b) = 0 (we could assign anything, in
+fact) for all states a of A when P(B =b)= 0. After
+
+mind.
+We will also be including some approximation
+algorithms such as Likelihood weighting
+
+[16].
+
+ties in the join tree.
+
+parent clique
+
+7
+
+Acknowledgements
+
+the join tree is created the clustering algorithm uses a
+variant of the polytree algorithm for evidence propa­
+
+We would like to thank Robert Goldman for being
+
+gation and so the divide by zero problem cannot come
+
+an invaluable source of suggestions, bug reports and
+
+up.
+The second implementation from
+
+[6]
+
+handles a
+divide by zero condition during the propagat.ion as
+
+enhancements.
+
+We would also like to thank Bruce
+
+D'ambrosio, Keiji Kanazawa, Mark Peot and other
+users of IDE�L for their suggestions and help.
+
+219
+
+I
+I
+
+
+
+The Noisy-Or model is convenient for de­
+scribing a class of uncertain relationships
+in Bayesian networks [Pearl 1988]. Pearl
+describes the Noisy-Or model for Boolean
+variables. Here we generalize the model to
+nary input and output variables and to ar­
+bitrary functions other than the Boolean
+OR function. This generalization is a
+useful modeling aid for construction of
+Bayesian networks. We illustrate with
+some examples including digital circuit di­
+agnosis and network reliability analysis.
+
+INTRODUCTION
+
+1
+
+The Boolean Noisy-Or structure serves as a use­
+ful model for capturing non-deterministic disjunc­
+tive interactions between the causes of an effect
+[Pearl 1988] .
+The Boolean Noisy-Or can be explained as fol­
+lows. Consider a Boolean OR gate with multiple
+inputs U1, U2, ..., Un and an output X. Now c�n­
+sider some non-determinism associated with each m­
+put defined as follows: On each input line U; a non­
+deterministic line failure function M is introduced
+(see Fig 1, considering F to be a Boolean ? R gate).
+The line failure function M takes U; as mput and
+has a Boolean output u;. Instead of U; being con­
+nected to the OR gate we now have u: connected to
+the OR gate instead.
+The line failure function can be conceptualized
+as a non-deterministic device - there is a probabil­
+ity q; (called the inhibitor probability) that the l�ne
+failure function causes a 'line failure'. When a lme
+failure occurs on line i, the output of the device is
+f (i.e., false) irrespective of what the input is, i.e.,
+•
+
+Also with Rockwell International Science Center,
+
+Palo Alto Laboratory, Palo Alto, CA 94301.
+
+=
+
+u; f. When a line failure does not occur on line
+i the device just transmits its input to its output,
+i.e., U;'
+U;. This non-failure event occurs with
+=
+
+probability 1 q;.
+This overall structure induces a probability
+distribution P(XIU1, U2 ..., Un) which is easily
+computable[Pearl1988] .
+When each U; is interpreted as a "cause" of the
+"effect" X, the Boolean Noisy-Or models disjunctive
+interaction of the causes. Each cause is "inhibited"
+with probability q;, i.e., there is a probability q; that
+even when the cause U; is active, it will not affect
+-
+
+X.
+
+In a Bayesian network interpretation, each of
+the variables U; can be considered as a predeces­
+sor node of the variable X. The conditional proba­
+bility distribution P(XIU1, U2 ..., Un) is computed
+from the probabilities q;. In domains where such dis­
+junctive interactions occur, instead of fully specify­
+ing opaque conditional probability distributions, the
+Noisy-Or model can be used instead. The inhibitor
+probabilities are few in number (one associat.ed with
+each predecessor U; of X) and would be intuitively
+easier to specify because of their direct relation to
+the underlying mechanism of causation.
+This paper generalizes the Noisy-Or model to
+the case where both the 'cause' variables U; and 'ef­
+fect' variable X need not be Boolean. Instead, they
+can be discrete variables with any number of states.
+Furthermore the underlying deterministic function
+is not restrict ed to be the Boolean OR function, it
+can be any discrete function. In other yvords, in Fig
+1, F can be any discrete function.
+Seen as a modeling tool, this generalization pro­
+vides a framework to move from an underlying ap­
+proximate deterministic model (the function F) to a
+more realistic probabilistic model (the distribution
+P(XIU1, U2 ..., Un)) with the specification of only a
+few probabilistic parameters (the inhibitor probabil­
+ities).
+
+A Generalization of the Noisy-Or Model
+
+u1
+
+Nt
+
+u�
+
+209
+
+similarly defined quantities u�(j), u;, I; associated
+with the variable u;
+The line failure function M associates a prob­
+ability value P/ nh(j) with every index 0 � j < m;.
+This quantity can be read as the inhibitor probabil­
+ity for the jth state of input ui
+The line failure function can be conceptualized
+as a non-deterministic device that takes the value of
+U; as the input and outputs a value for u;. This de­
+vice fails with probability prh(j) in state j. When
+a failure in state j occurs, the output of the device
+is u;(j) regardless of the input. When no failure oc­
+curs, if the input is u;(j) the output is u; (j) - this
+can be viewed as "passing the input through to the
+output" (note that the index j of the output state
+and the input state are same in this case). The probability of no failure occuring is denoted by Ptofail.
+We see that:
+0
+
+u2
+U·
+
+N2
+r- 1
+
+�M
+
+u�
+u:
+t
+
+X
+
+F
+
+0
+
+L_...J
+
+Un
+
+Nn
+
+u'n
+
+Figure 1: The generalized Noisy-Or model.
+In domains where the generalized Noisy-Or is
+applicable, it makes the modeling task much easier
+when compared to the alternative of direct specifi­
+cation of the probabilistic model P(XjU1,U2 . ..Un)·
+In such domains, the task of creating a Bayesian network would proceed as follows:
+
+Ptojail
+
+·
+
+•
+
+•
+
+•
+
+•
+
+2
+
+Variables and deterministic functions that re­
+late
+them
+approximate
+and
+the non-deterministic behaviour of the domain
+are identified.
+A network is created with this information with
+a node for each variable, and a link from each
+of U1, U2, ..., Un to X for each relation of
+form X = F(Ut,U2,...,Un)· (The network is
+assumed to be acyclic).
+Inhibitor probabilities for each link in the net­
+work are elicited.
+The generalized Noisy-Or model is used to au­
+tomatically 'lift' the network from the previ­
+ous step into a fully specified Bayesian network
+which has the same topology as the network.
+
+THE GENERALIZED MODEL
+
+The generalized Noisy-Or model is illustrated in Fig
+1.
+
+Each U; is a discrete random variable. Each u;
+is a discrete random variable with the same number
+of states as U;.
+We will refer to the number of states of U; and
+u; as m;. We will refer .to the jth state of U; as
+u;(j) where 0 � j < m;. We call j the index of state
+u;(j). We will use u; to denote "any state of U;". As
+an example of the use of u;, consider the statement,
+"Every state u; of U; has a unique index associated
+with it" .
+We define I; to be the function that returns the
+index of a state u; of U;, i.e., I;(u;) = j where j is
+the index of state u; of variable U;. We also have
+
+=
+
+1
+
+_ L P/nh(j)
+O�j<m;
+
+The output X is a discrete random variable with
+states. We will refer to the jth state of X as x(j)
+and use x to refer to "any state of X".
+F (see Fig 1) can be conceptualized as a de­
+terministic device that outputs some value x of X
+for each possible joint state u�, u�, ..., u� of the
+inputs U�,U�, ...,U�. In other words F is a dis­
+crete function that maps the space of joint states of
+U� X U� X
+X U� into the set of states of X.
+We note that the model described above induces
+an uncertain relationship between the output X and
+the variables Ui. This relationship is captured by the
+conditional distribution P(XIU1,U2,..., Un)·
+In the next section we proceed to show how
+this conditional distribution is computed from the
+function F and the inhibitor probabilities. We will
+use the notation U to denote the vector of vari­
+ables [U1, U2,...,Un]. Similarly, we will use u to
+denote any joint state [u1, U21 , Un] of U. U' and
+'
+u are defined similarly with respect to the variables
+u;. Note that P(XIUt,U2,...,Un) abbreviates to
+m.,
+
+•
+
+.
+
+•
+
+• • •
+
+P(XIU).
+
+In the special case where every inhibitor proba­
+bility is zero each variable u; always has the "same"
+value as U; (i.e., the state of u; has the same index
+as the state of U;). In this special case the variables
+I
+U; become superfluous, we could JUSt as well remove
+the line failure functions and connect the each input
+U; directly through to F.
+In this special case, the overall model degener­
+ates to a deterministic function where the value of
+output X is determined from the values of the input
+variables U; by the function F. Thus the general•
+
+210
+
+Srinivas
+
+ized Noisy-Or model can be viewed as starting with
+a deterministic model (the function F) and then in­
+troducing failures in the inputs, viz, the inhibitor
+probabilities, resulting finally in a non-deterministic
+model.
+3
+
+CHARACTERIZING P(XIU)
+
+We note that we have already defined P(u; j u; )
+in terms of the inhibitor probabilities.
+The above equation is easily converted to an al­
+gorithm (described later) to generate a conditional
+probability table given the inhibitor probabilities
+and the function F.
+
+BOOLEAN NOISY-OR AS A
+3.1
+Each line failure function M defines a probability
+SPECIAL CASE
+distribution P;(U;jU;) relating u; and U;. From the
+The generalized Noisy-Or collapses to be the
+model for .M we see that the distribution P; is calBoolean Noisy-Or [Pearl1988] when all the variables
+culated as:
+are Boolean1, the function F is the Boolean OR,
+�,
+ofail
+(O) = q; and Pjnh(1) = 0. In other words, N;
++
+i
+I;(
+)�inh
+;))
+;)
+Pt
+� nh(I;(u
+if u = I;(ui
+Pi (U; u; ) - pfnh(l(
+can
+fail
+with probability q; with the output being
+otherwise
+u1.))
+a
+a
+a
+"false"
+but
+it cannot fail with output being "true" .
+(1)
+Let
+/;
+�nd t; den�te. the "true" and "false"
+The equation above summarizes the following
+states
+f
+vanable
+U;. Simi!arly we have fx and .tx
+?
+facts: if the the output u; of .M is the "same" as
+for variable. X. The followmg can be shown easily
+·
+· d'Ices of both are the same),
+t u; ('1.e., the m
+the Inpu
+from equatiOn 2 above:
+then either the device M is working normally or it
+has failed in the state u�. If the output u; is not
+the "same" as input u;, then the device has failed in
+P(fx l u) =
+I
+IT q;
+state u;.
+{ilu;=ti}
+We now characterize the distribution P(XjU )
+1- IT
+in terms of the inhibitor probabilities for each U;
+{ilu;=t;}
+and the function F.
+We note that:
+_
+
+{
+
+1
+
+We note that once we know the state U of U 1 ,
+we know the value x of X, since x = F(u'). In other
+words, X is independent of U once U1 is known.
+The above equation therefore simplifies to:
+
+P(xju) = L P(xju')P(u1ju)
+ul
+We note that P(xju1) = 1 when x = F(u1) and
+P(xju1) = 0 when x -f:. F(u1). This simplifies the
+
+defining equation to:
+
+I
+
+P(u ju)
+
+P(xju) =
+{U1Ix=F(U1)}
+
+1
+
+Now we note that the dependence of U =
+[u1, u2, ... , un ] on u = (u1, u2, . . . , Un] can be split
+into n pairwise dependences of u; on u;. This is be­
+cause the value of a variable U/ depends solely on
+U; and not on any other variable Uj where i-f:. j.
+Thus we can simplify the equation to:
+
+P(xju) =
+
+P(ulju)
+
+L
+
+{U1Ix=F(U1)}
+
+IT P;(u;ju;)
+u'
+
+CHOICE OF A FUNCTION F
+The generalized model described above allows the
+use of any discrete function F relating U to X. We
+now suggest a particular form of F that is 'compat­
+ible' with the Boolean Noisy-Or, i.e., F degenerates
+to the Boolean OR function when the inputs and
+outputs are Boolean23:
+
+4.1
+
+In essence, this function is a weighted average
+- we are finding the fraction of each input's state's
+index over the maximum possible index of that in­
+put, averaging these fractions, scaling this quantity
+to the maximum index of the output, and mapping
+back to an actual state of the output after converting
+the scaled result to an integer.
+1 For Boolean variables we define the index of the
+"false" state to be 0 and the index of the "true" state to
+be 1.
+
+2We use the syntax rl for the Ceiling function. For a
+real number x, r X l is the smallest integer i that satisfies
+
+{U1Ix=F(U1)}
+=
+
+INTERESTING SPE CIAL
+CASES
+
+4
+
+P(xju) = L P(xju1, u)P(u1ju)
+ul
+
+(2)
+
+i >
+-
+
+x.
+
+3In the following equation, note again that
+
+notes the jth state of
+
+X.
+
+x(j)
+
+de­
+
+A Generalization of the Noisy-Or Model
+
+This additive function will have the characteris­
+tic that as any input goes 'higher' it will tend to drive
+the output 'higher'. Further, the inputs are 'equally
+weighted' regardless of their arity. So, for example,
+a change from state 0 to state 1 in a Boolean input
+will have just the same effect as a change from 0 to
+5 in an input with 6 states. Finally, the output is 0
+if and only if all the inputs are 0.
+We note that this function reduces to the
+Boolean OR function in the case where all inputs
+are Boolean and the output is Boolean.
+CASE OF BOOLEAN OUTPUT AND
+nARY INPUTS
+Consider the case where X is a Boolean variable
+and the inputs U; are nary. The function F is de­
+fined as in the previous section. Further, we define
+Pinh(O) = q; and Plnh(j) = 0 for j f. 0. We see that
+we have a restricted generalization of the Boolean
+Noisy-Or.
+This special case of nary inputs and Boolean
+output is interesting since it has better computa­
+tional properties than the general case while be­
+ing more general than the Boolean Noisy-Or (see
+Sec 5.2).
+4.2
+
+OBTAINING STRICTLY POSITIVE
+DISTRIBUTIONS
+In some situations it is desirable for the condi­
+tional distribution of a Bayesian network node X
+with predecessors U to be strictly positive, i.e.,
+VxVuP(xju) > 0.
+For the generalized Noisy-Or model, the defini­
+tion of P(xju) is in Equation 2. From this definition
+we note that the following condition is necessary to
+ensure a strictly positive distribution:
+4.3
+
+For all states x of X, the set {u'jx =
+F(u')} is not empty. In other words, F
+should be a function that maps onto X.
+This condition is a natural restriction - if F
+does not satisfy this condition, the variable X, in ef­
+fect, has superfluous states. For example, the func­
+tion defined in Section 4.1 satisfies this restriction.
+Assuming that the above condition is satisfied,
+the following condition is sufficient (though not nec­
+essary) to ensure a strictly positive distribution:
+For any u' and u, P(u'ju) > 0, i.e.,
+Tiu P;(u;ju;) > 0.
+
+'
+
+This second condition is a stronger restriction.
+From Equation 1 we note that this restriction is
+equivalent to requiring that all inhibitor probabil­
+ities be strictly positive, i.e., that prh(j) > 0 for
+allOs;j<m;.
+
+211
+
+Finally, we note that the Boolean Noisy-Or for­
+mulation of [Pearl 1988] and its generalization to
+nary inputs described in Section 4.2 always result
+in a distribution which is not strictly positive since
+P(txif ) = 0.
+5
+
+COMPUTING P(XIU)
+
+We consider the complexity of generating the prob­
+abilities in the table P(XIU).
+Let S = IJ; m; be the size of the joint state
+space of all the inputs U;. We first note that
+P;(u�lui) can be computed in e(1) time from the
+inhibitor probabilities. This leads to:
+
+P(u'ju) =
+
+II P;(u�iu;) = e(n)
+
+Therefore:
+
+P(u'ju) = e(Sn)
+
+P(xju) =
+{xlx=F(U')}
+
+This is because, for a given x and u we have to
+traverse the entire state space of u' to check which
+u' satisfy x = F(u').
+To compute the entire table we can naively
+compute each entry independently in which case we
+have:
+P(XIU) = mxSe(Sn) = e(mxnS2)
+However the following algorithm computes the
+table in e(nS2):
+Begin Algorithm
+For each state u of U:
+• For all states x of X set P(xju) to 0.
+'
+• For each state u' of u :
+- Set x = F(u').
+- Increment P(xju) by P(u'ju).
+End Algorithm
+BOOLEAN NOISY-OR
+In the case of the Boolean Noisy-Or, all U; and X
+are Boolean variables. We see from Sec 3.1 that:
+P(fxiu)
+II q; = e(n)
+5.1
+
+{ilu;=t;}
+
+For computing the table, we see that since
+P(txlu) = 1- P(fxlu), we can compute both prob­
+abilities for a particular u in e(n) time. So the
+time required to calculate the entire table P(XIU)
+is e(Sn).
+We see that in the case of the Boolean Noisy-Or
+there is a substantial saving over the general case in
+computing probabilities. This saving is achieved by
+taking into account the special characteristics of the
+Boolean OR function and the inhibitor probabilities
+when computing the distribution.
+
+212
+5.2
+
+Srinivas
+
+BOOL EAN OUTPUT AND nARY
+INPUTS
+
+A
+
+From an analysis similar to the previous section we
+note that computation of P(XIU) takes 0 ( Sn) time
+in this case too.
+5.3
+
+B
+
+STORAG E COMPLEXITY
+
+c
+
+For the general case we need to store mi inhibitor
+probabilities per predecessor. Therefore in this
+case 0(nmmax) storage is required where mmax =
+mruq (mi). This contrasts with O(mxm�ax) for stor­
+ing the whole probability table.
+For the Boolean Noisy-Or we need to store
+one inhibitor probability per predecessor and this is
+e(n). Using tables instead would cost 0(2 X 2n) =
+0(2n).
+In the case of nary inputs and Boolean output
+( as described above) one inhibitor probability per
+predecessor is stored. Thus storage requirement is
+0(n). Using a table would cost O(m�ax) ·
+5.4
+
+Each line has lhe probability of failure marked on il.
+
+Figure 2: A digital circuit
+
+For every link the failure function N hazJ the following inhibitor
+probabilities (where X is the predecessor variable of the link):
+
+REDUCING COMPUTATION
+COMPL EXITY
+
+In general, one could reduce the complexity of com­
+puting P(:z:lu) if one could take advantage of special
+propertie.s of the function F to efficiently generate
+those u' that satisfy x = F(u') for a particular x.
+Given a function F, we thus need an efficient
+algorithm Invert such that lnvert ( x) = {ul x =
+F(u)}. By choosing F carefully one can devise ef­
+ficient Invert algorithms. However, to be useful as
+a modeling device, the choice of F has also to be
+guided by the more important criterion of whether
+F does indeed model a frequently occurring class of
+phenomena.
+This Noisy-Or generalization has high complex­
+ity for computing probability tables from the in­
+hibitor probabilities4. If the generalization is seen
+mostly as a useful modeling paradigm, then this
+complexity is not a problem, since the inhibitor
+probabilities can be pre-compiled into probability
+tables before inference takes place. Inference can
+be then performed with standard Bayesian network
+propagation algorithms.
+If this generalization, however, is seen as a
+method of saving storage by restricting the models
+to a specific kind of interaction, the cost of com­
+puting the probabilities on the fly may outweigh the
+gains of saving space.
+4 However,
+
+the Boolean Noisy Or does not suffer from
+
+this p roblem since the special structure of the F function
+and the fact that the inputs and outputs are Boolean
+reduce the complexity dramatically by a factor of S.
+
+F
+
+p;rh(f)
+
+=
+
+O.Ql and
+
+p;rh(t)
+
+=
+
+0
+
+Figure 3: A generalized Noisy or model of the circuit
+
+6
+
+EXAMPLES
+
+DIGITAL CIRCUIT DIAGNOSIS
+The generalized Noisy-Or provides a straight­
+forward method for doing digital circuit diagnosis.
+Consider the circuit in Fig 2. Let us assume that
+each line ( i.e., wire) in the circuit has a probability
+of failure of 0.01 and that when a line fails, the input
+to the devices downstream of the line is false.
+Each of the inputs to the devices in the circuit
+is now modeled with a state variable in a Noisy-Or
+model ( see Fig 3). The function F for the general­
+ized Noisy-Or which is associated with each node is
+the truth table of the digital device whose output
+the node represents. We have an inhibitor probabil­
+ity of 0.01 associated with the false state along each
+link and an inhibitor probability of 0 associated with
+the true state ( since the lines cannot fail in the true
+state in our fault model) .
+A Bayesian network is now constructed from
+the Noisy-Or model ( see Fig 4) using the algorithm
+described in Section 5. Note that to complete the
+Bayesian network one needs the marginal distribu­
+tions on the inputs to the circuit. Here we have
+made a choice of uniform distributions for these
+6.1
+
+A Generalization of the Noisy-Or Model
+
+Gf
+
+"'g}
+U2--
+
+Un
+
+PF=tD,E
+D -g Prob
+I
+I
+
+f
+f
+
+I
+f
+
+I
+f
+
+0.0198
+0.9900
+0.9900
+0.0000
+
+PD tA,B
+A B
+Prob
+I
+I
+f
+f
+
+I
+f
+I
+f
+
+The node� A, B and C are as::ngned
+
+0.9801
+0.0000
+0.0000
+0.0000
+
+umform
+
+P(E- t B,C
+B c
+Prob
+I
+
+I
+
+f
+
+I
+
+I
+
+f
+
+f
+
+f
+
+ma.rg1na.l
+
+P(A"' t)"' P(B"' t)"' P(C"' t)
+
+"'0.5.
+
+G
+
+X
+
+213
+
+----a:-•
+I
+
+Ul
+U2
+
+X
+
+Un
+L -----·
+
+Figure 5: Modeling device failure with an 'extended'
+device.
+
+0.9999
+0.9900
+0.9900
+0.0000
+
+dtstnbution�.
+
+Figure 4: Bayesian network for digital circuit exam­
+ple.
+marginals.5
+As an example of the use of the resulting
+Bayesian network, consider the diagnostic question
+"What is the distribution of D given F is false and
+B is true ?". The evidence B = t and F = f
+is declared in the Bayesian network and any stan­
+dard update algorithm like the Jensen-Spiegelhalter
+[Jensen 1989, Lauritzen 1988] algorithm is used to
+yield the distribution P(D = t!F = j, B = t) =
+0.984 and P(D =!IF= j, B = t) = 0.016.
+Note that this example does not include a model
+for device failure - only line failures are considered.
+However the method can be extended easily to han­
+dle device failure by replacing every device G in the
+circuit with the 'extended' device c' as shown in
+Fig 5. In this figure, the input (variable) G1 has a
+marginal distribution which reflects the probability
+of failure of the device. All the inhibitor probabilities
+on the line G1 are set to 0. Note that the particu­
+lar fault model illustrated here is a 'failed at false'
+model, i.e., when the device is broken, its output
+is false. One nice feature of the method described
+above is that it is incremental. If a device is added
+or removed from the underlying circuit a correspond­
+ing node can be added or removed from the Bayesian
+5These marginals can be seen as the distribution over
+the inputs provided by the enVironment outside the cir­
+cuit. Such a distribution is not usually available. But
+
+when the distribution is not available, all diagnosis is
+out with the assumption that all inputs
+are known. Furthermore, when all the inputs are known,
+it is to be noted that the answer to any diagnostic ques­
+tion is not affected by the actual choice of marginal as
+long as the marginal is any strictly positive distribution.
+
+perforce carried
+
+Ea.ch link ha.s the probability
+
+of
+
+failure marked on it.
+
+Figure 6: A network with unreliable links.
+network - there is no need to construct a complete
+diagnostic model from scratch.
+This method relates very well to the model
+based reasoning approach in this particular do­
+main [deKleer 1987, deKleer 1989, Geffner 1987].
+We describe a probabilistic approach to model­
+based diagnosis using Bayesian networks in detail
+in [Srinivas 1993b, Srinivas 1993a].
+NETWORK CONNECTIVITY
+The following example uses the Boolean Noisy-Or
+and the following example generalizes it to use the
+generalized Noisy-Or.
+Consider the network shown in Fig 6. Say each
+link is unreliable- when the link is 'down' the link
+is not traversable. The reliability of each link L is
+quantified by a probability of failure I (marked on
+the link in the network). Now consider the question
+"What is the probability that a path exists from A
+toG?".
+Consider the subset of the network consisting
+of A and its descendants (in our example, for sim­
+plicity, this is the whole network). We first asso­
+ciate each node with the Boolean OR as the F func­
+tion. Each of the link failure probabilities translates
+directly into the inhibitor probability for the false
+state along each link. The inhibitor probability for
+the true state is 0.
+This network is now used to create a Bayesian
+network using the algorithm of Sec 5. The Bayesian
+6.2
+
+214
+
+Srinivas
+
+network has the same topology as the network
+in Fig 6. To complete the distribution of the
+Bayesian network the root node A has to be as­
+signed a marginal distribution. We assign an arbi­
+trary strictly positive distribution to the root node
+A (since evidence is going to be declared for the root
+node, the actual distribution is irrelevant).
+The answer to the question asked originally is
+now obtained as follows: Declare the evidence A = t
+(and no other evidence), do evidence propagation
+and look at the updated belief of G. In this example,
+we get Bel(G = t) = 0.7874 and Bel(G = /) =
+0.2126.6 These beliefs are precisely the probabilities
+that a path exists or does not exist respectively from
+A to G.
+To see why, consider the case where link failures
+cannot happen (i.e., link failure probability is zero) .
+Then if any variable in the network is declared to
+be true then every downstream variable to which it
+has some path will also be true due to the nature of
+the Boolean OR function. Once the failure proba­
+bilities are introduced, belief propagation gives us,
+in essence, the probability that a connected set of
+links existed between A and G forcing the OR gate
+at G to have the output true.
+Furthermore, it is to be noted that because be­
+lief propagation updates beliefs at every node, the
+probability of a path existing from A to any node X
+downstream of it is available as Bel(X = t).
+This method can be extended with some minor
+variations to answer more general questions of the
+form "What is the probability that there exists a
+path from any node in a set of nodes Sto a target
+node T ?".
+NETWORK CONNECTIVITY
+EXTENDED
+Consider the exact same network as in the previ­
+ous example. The question now asked is "What is
+the probability distribution over the number of paths
+existing from A to G ?".
+Consider the subset of the network consisting of
+A and its descendants. For every node U we make
+the number of states be nu + 1 where nu is the
+number of paths from root node A to the node U.
+The states of U are numbered from 0 through nu.
+We will refer to the ith state of node U as u(i) .
+The number nu can be obtained for each node
+in the network through the following simple graph
+traversal algorithm:
+6.3
+
+Begin Algorithm
+6The updated belief Bel(X = x) of a variable X is
+the conditional probability P(X = xiE) where E is all
+the available evidence.
+
+For root node A, set nA = 1.7
+For every non root node U in the graph
+considered in graph order ( with ances­
+tors before descendants):
+nu = LpeParents(U) np
+End Algorithm
+•
+
+•
+
+To build the Noisy-Or model, we now associate
+integer addition as the function F associated with
+each node. For example, if R and S are parents of
+T and the state of R is known to be r2 and the state
+of Sis known to be s3, then the function maps this
+state of the parents to state t(2+3) = t5 of the child
+T.
+
+We now set the inhibitor probabilities as fol­
+lows: Say the predecessor node of some link L in the
+graph is a node U. We set the inhibitor probabil­
+ity for state u(O) to be the link failure probability l
+and all other inhibitor probabilities to be 0. That is
+P{ph(O) = l, where l is the link failure probability
+and P{ph(i) = 0 for i = 1, 2 ... , nu.
+We now construct the Bayesian network from
+the network described above. The marginal proba­
+bility for the root node is again set arbitrarily to any
+strictly positive distribution since it has no effect on
+the
+. result.
+The answer to the question posed above is ob­
+tained by declaring the evidence A = 1 and then
+doing belief propagation to get the updated beliefs
+for G. The updated belief distribution obtained for
+G is precisely the distribution over the number of
+paths from A to G.
+To see why, consider the case where there are no
+link failures. Then when A is declared to have the
+value 1, the addition function at each downstream
+nodes counts exactly the number of paths from A
+to itself. Once the failures are introduced the ex­
+act count becomes a distribution over the number of
+active paths.
+In this example, we get the distribution:
+Bel(G = 0) = 0.2126, Bel(G == 1) = 0.3466,
+Bel(G = 2) = 0.2576, Bel(G = 3) = 0.1326 and
+Bel(G = 4) = 0.0506. We see that Bel(G = 0) is
+the same probability as Bel(G = f) in the previ­
+ous example, viz, the probability that no path exists
+from A to G.
+Note that after belief updating, the distribution
+of number of paths from A to any node X down­
+stream of it is available as the distribution Bel(X)
+after belief propagation.
+This method can be extended with to answer
+more general questions of the form "What is the
+distribution over the number of paths that originate
+7We define the root node to have
+itself.
+
+a
+
+single path to
+
+A Generalization of the Noisy-Or Model
+
+in any node in a set of nodes S and terminate in a
+target node T ?".
+Another interesting example which can be
+solved using the generalized Noisy-Or is the prob­
+abilistic minimum cost path problem: Given a set
+of possible (positive) costs on each link of the net­
+work and a probability distribution over the costs,
+the problem is to determine the probability distri­
+bution over minimum cost paths between a specified
+pair of nodes.
+The generalized Noisy-Or, in fact, can be
+used to solve an entire class of network problems
+[Srinivas 1993c]. The general approach is as in the
+examples above - the problem is modeled using the
+generalized Noisy-Or and then Bayesian propagation
+is used in the resulting Bayesian network to find the
+answer.
+All the examples described above use the Noisy­
+Or model at every node in the network. However,
+this is not necessary. Some sections of a Bayesian
+network can be constructed 'conventionally', i.e., by
+direct elicitation of topology and input of probabil­
+ity tables while other sections where the Noisy-Or
+model is applicable, can use the Noisy-Or formal­
+Ism.
+7
+
+IMPLEMENTATION
+
+This generalized Noisy-Or model has been imple­
+mented in the IDEAL [Srinivas 1990] system. When
+creating a Noisy-Or node, the user provides the in­
+hibitor probabilities and the deterministic function
+F.
+
+IDEAL ensures that all implemented inference
+algorithms work with Bayesian networks that con­
+tain Noisy-Or nodes. This is achieved by 'compiling'
+the Noisy-Or information of each node into a con­
+ditional probability distribution for the node. The
+distribution is available for all inference algorithms
+to use.
+Acknowledgements
+I thank Richard Fikes, Eric Horvitz, Jack Breese
+and Ken Fertig for invaluable discussions and sug­
+gestions.
+
+

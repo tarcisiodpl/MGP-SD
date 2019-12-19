@@ -1,0 +1,4131 @@
+
+A Bayesian belief network models a joint
+distribution with an directed acyclic graph
+representing dependencies among variables
+and network parameters characterizing conditional distributions. The parameters are
+viewed as random variables to quantify uncertainty about their values. Belief nets are
+used to compute responses to queries; i.e.,
+conditional probabilities of interest. A query
+is a function of the parameters, hence a random variable. Van Allen et al. (2001, 2008)
+showed how to quantify uncertainty about a
+query via a delta method approximation of
+its variance. We develop more accurate approximations for both query mean and variance. The key idea is to extend the query
+mean approximation to a “doubled network”
+involving two independent replicates. Our
+method assumes complete data and can be
+applied to discrete, continuous, and hybrid
+networks (provided discrete variables have
+only discrete parents). We analyze several
+improvements, and provide empirical studies
+to demonstrate their effectiveness.
+
+1
+
+INTRODUCTION
+
+Consider a simple example. Suppose A represents
+presence/absence of a medical condition while B and
+Y are test results. Variables B and Y are conditionally independent given A, with A and B binary
+and Y continuous. The conditional independence assumption is represented by the directed acyclic graph
+structure in Figure 1(a). Let θa = P (A = a),
+θb|a = P (B = b | A = a), and let p(y | βa , σa ) be the
+conditional density of Y given A = a, assumed normal with mean βa and variance σa2 . We want to estimate the probability that condition A is present given
+
+specified results from the two tests B and Y . Let Θ
+represent all of the parameters. If Θ were known, we
+would use the formula:
+θa θb|a p(y | βa , σa )
+.
+a1 θa1 θb|a1 p(y | βa1 , σa1 )
+
+q(Θ) = qa|b,y (Θ) = P
+
+(1)
+
+In the Bayesian paradigm, uncertainty about Θ is
+quantified by modeling parameters as random variables. It follows that query probabilities such as (1)
+are also random. A query response is usually estimated
+by approximating its posterior mean. This approximation is similar to expression (1), but with θa and θb|a
+replaced by their posterior means and with the normal
+densities replaced by Student’s t densities.
+One may want more than just a point estimate. Van
+Allen et al. (2001, 2008) showed (for discrete networks)
+how one can approximate the variance and posterior
+distribution of a query. Their variance derivation employs the delta method; i.e., a first-order Taylor series
+expansion of the function q(Θ) about the posterior
+mean of Θ. They provide asymptotic theory and empirical experiments supporting this approach. They
+also showed how these approximations can be used
+to construct a Bayesian credible interval (error bars)
+for q(Θ). Guo and Greiner (2005) applied this delta
+method approximation as part of a mean squared error (i.e., squared bias + variance) measure designed
+to estimate the quality of different belief net structures when seeking a best classifier. Lee et al. (2006)
+provide a technique for combining independent belief
+net classifiers that involves weighting their respective
+mean probability values by their inverse variances, and
+they show that this works well in practice.
+We propose new approximations for the mean and
+variance based on a simple trick. Suppose (A1 , B1 , Y1 )
+and (A2 , B2 , Y2 ) are replicates of the network variables,
+conditionally independent given Θ. We represent the
+paired replicates as nodes in a “doubled network” with
+the same structure; see Figure 1. The squared query
+q(Θ)2 can be expressed as a query in this doubled net-
+
+UAI 2009
+
+θb1 |a1
+θb1 |a2
+
+θb2 |a1
+θb2 |a2
+
+HOOPER ET AL.
+#$
+θa1 θa2
+A
+!"
+! #
+!
+#
+!
+#
+!
+#
+!
+#
+θ 1 1θ 1 1
+"
+!
+$
+#
+#$ b |a b |a
+#$
+θb1 |a1 θb1 |a2
+(βa1 , σa21 )
+Y
+B
+2
+!" (βa2 , σa2 ) !" θb1 |a2 θb1 |a1
+θb1 |a2 θb1 |a2
+
+233
+
+θa1 θa1
+
+θb1 |a1 θb2 |a1
+θb1 |a1 θb2 |a2
+θb1 |a2 θb2 |a1
+θb1 |a2 θb2 |a2
+
+θb2 |a1 θb1 |a1
+θb2 |a1 θb1 |a2
+θb2 |a2 θb1 |a1
+θb2 |a2 θb1 |a2
+
+θa1 θa2
+
+θb2 |a1 θb2 |a1
+θb2 |a1 θb2 |a2
+θb2 |a2 θb2 |a1
+θb2 |a2 θb2 |a2
+
+θa2 θa1
+
+θa2 θa2
+
+'(
+
+A1 , A2
+%%&
+'
+%
+'
+%
+'
+%
+'
+%
+'(
+'(
+(βa1 , σa21 )(βa1 , σa21 ) '
+&
+%
+(
+'
+(βa1 , σa21 )(βa2 , σa22 )
+Y1 , Y2
+B1 , B2
+(βa2 , σ 22 )(βa1 , σ 21 )
+%& (β 2 , σa2 )(β 2 , σa2 ) %&
+2
+2
+a
+a
+a
+a
+
+Figure 1: (a) A simple Bayesian network. (b) The corresponding doubled network.
+Figure 1: A simple Bayesian net.
+
+work:
+P (A1 = A2 = a | B1 = B2 = b, Y1 = Y2 = y, Θ) .
+The method used to approximate the mean of q(Θ)
+can be extended to the doubled network to approximate the mean of q(Θ)2 and hence to approximate
+the variance. Unlike the delta method, our approach
+does not rely on approximate local linearity of q(Θ).
+It does involve the addition of two incomplete observations to the data set when calculating the posterior
+mean of q(Θ)2 . In some situations, this addition results in under-estimation of the desired variance. This
+deficiency is largely eliminated by a simple adjustment.
+A similar adjustment substantially improves the usual
+query mean approximation.
+Section 2 reviews pertinent models and methods for
+belief networks. The network doubling technique is
+described in Section 3 for discrete, continuous, and hybrid networks. Proposed adjustments and numerical
+results are presented in Sections 4 and 5 for discrete
+networks. Corresponding work for continuous and hybrid networks is ongoing. Computational issues are
+discussed in Section 6. Contributions and plans for
+further work are summarized in Section 7.
+
+2
+2.1
+
+BACKGROUND
+NETWORK VARIABLES
+
+We assume network structure is known. Let B denote
+a discrete network variable taking values b ∈ DomB .
+Let Y denote a continuous network variable taking values y on the real line. Vectors of variables are denoted
+by boldface: A for discrete and X for continuous. Let
+Θ be a random vector comprising all unknown network
+parameters; i.e., Θ determines all conditional distributions of variables given their parents.
+We assume that discrete variables have only discrete
+parents. Suppose pa(B) = A; i.e., the parents of B are
+the variables comprising the vector A. The conditional
+probability that B = b given A = a is denoted
+θb|a = θB=b|A=a = P {B = b | A = a, Θ}.
+
+1
+
+Variables associated with values will be clear from context. We employ similar abbreviations for other parameters and hyperparameters. The θb|a parameters
+are often presented in conditional probability tables
+(CPtables) with rows indexed by a and columns by
+b; e.g., see Figure 1. Note that we use superscripts
+b1 , b2 to list the distinct values in DomB . We use subscripts b1 , b2 to denote arbitrary values in DomB , often
+related to replicated variables B1 , B2 .
+Continuous variables can have both discrete and continuous parents. Suppose pa(Y ) = hA, Xi with X =
+hX1 , . . . , Xd i. The conditional distribution of Y is
+
+(Y | A = a, X = x, Θ) ∼ N (1, xT )β a , σa2 ; (2)
+i.e., normally distributed, conditional mean related to
+x by a linear regression model with coefficients depending on a. Here xT is the transpose of the ddimensional column vector x while β a is an (d + 1)dimensional column vector of regression coefficients
+(the first entry is the constant term).
+2.2
+
+PRIOR AND POSTERIOR
+
+The network parameters represented by Θ consist of
+CPtable parameters θb|a , regression coefficient vectors
+β a , and variances σa2 . We assume the prior distribution for Θ has the following form; e.g., see Gelman et
+al. (2003).
+• CPtable rows follow Dirichlet distributions:
+θB|a := hθb|a , b ∈ DomB i ∼ Dir(αB|a ),
+where αB|a := hαb|a , b ∈ DomB i .
+• The regression coefficients and variance together
+have a normal-(inverse chi-square) distribution:
+
+(β a | σa2 ) ∼ Nd+1 µa , σa2 (νa Ψa )−1 ,
+σa−2
+
+∼ (τa2 νa )−1 χ2νa .
+
+I.e., dropping subscripts for a moment, β conditioned on σ 2 is multivariate normal with mean
+
+234
+
+HOOPER ET AL.
+vector µ and covariance matrix σ 2 (νΨ)−1 ; and
+ντ 2 /σ 2 has a χ2ν distribution with ν > 0 (not necessarily an integer). Note that τ 2 /σ 2 has mean 1
+and variance 2/ν.
+
+• Parameters are assumed to be statistically independent except where joint distributions are specified above. In particular, we assume global independence: the parameters determining the conditional distribution of one variable given its parents
+are independent of all other parameters.
+The prior is conjugate: given a data set D consisting
+of n independent replicates of complete tuples of network variables, the prior hyperparameter values are
+updated as follows. Let nab and na be the number of
+tuples in D with (A, B) = (a, b) and A = a, respectively. Let (xi , yi ) be the observations of (X, Y ) for
+the na tuples with A = a. Let X a be the na × (d + 1)
+matrix with rows (1, xTi ). Let y a be the column vector
+with entries yi . In the five equations below, the prior
+hyperparameter values appear on the right-hand side
+and are identified with tildes (e.g., α̃).
+αb|a = α̃b|a + nab
+νa = ν̃a + na
+νa Ψa = ν̃a Ψ̃a + X Ta X a
+νa Ψa µa = ν̃a Ψ̃a µ̃a + X Ta y a
+i
+h
+ 2
+
+νa τa + µTa Ψa µa = ν̃a τ̃a2 + µ̃Ta Ψ̃a µ̃a + y Ta y a
+P
+P
+The values
+a,b αb|a and
+a νa are called the effective sample sizes for variables B and Y , respectively.
+Our adjustments developed in Section 4 are motivated
+by large m asymptotics, where m is proportional to
+the effective sample size for each of the variables; i.e.,
+0
+αb|a = mαb|a
+and νa = mνa0
+0
+with (αb|a
+, νa0 , Ψa , µa , τa2 ) fixed.
+
+(3)
+
+Large m asymptotics are similar to but not the same
+as large n asymptotics. As the sample size n increases,
+the posterior mean E{θb|a | D} = αb|a /α·|a varies and
+converges to some value. (Here and elsewhere,
+the dot
+P
+subscript indicates summation: α·|a = b αb|a .) Under assumption (3), the posterior mean remains fixed
+as m varies.
+2.3
+
+APPROXIMATING A QUERY MEAN
+
+Consider a query involving outcomes of hypothesis
+variables H given values for evidence variables E.
+It is convenient to represent the query in terms of a
+function w(H). E.g., suppose H = A, E = (B, Y ),
+e = (b, y), and
+q(Θ)
+
+= P (A = a | B = b, Y = y, Θ)
+= E{w(A) | B = b, Y = y, Θ} ,
+
+UAI 2009
+
+where w(A) = 1 for A = a and w(A) = 0 otherwise.
+For discrete networks, query responses q(Θ) are usually estimated by q(Θ̂), where Θ̂ := E{Θ | D} is the
+posterior mean of the parameter vector. This plugin estimate usually differs slightly from the posterior query mean E{q(Θ) | D}. Cooper and Herskovits
+(1992, expression 19) showed that the plug-in estimate
+equals E{q(Θ) | D, e}; i.e., the posterior query mean
+given an augmented data set consisting of D and an
+additional partial observation of the evidence variables
+E = e. Cooper and Herskovits (1991) derived a formula for E{q(Θ) | D, e} that is valid for discrete, continuous, and hybrid networks. This formula provides a
+useful approximation of the less tractable E{q(Θ | D}.
+The plug-in estimate is a special case of this formula
+for discrete networks. The formula is important for
+our network doubling technique, so is reviewed here.
+In the integral expression below, Z represents all variables not included in (H, E); dh and dz refer to product measures allowing both integration for continuous
+variables (Lebesgue measure) and summation for discrete variables (counting measure). Some manipulation yields
+E{q(Θ) | D, e} = E{w(H) | E = e, D}
+= E [ E{w(H) | E = e, Θ} | D ]
+(4)
+RR
+R
+w(h) p(h, e, z | θ)p(θ | D)dθdhdz
+RRR
+.
+=
+p(h, e, z | θ)p(θ | D)dθdhdz
+Now p(h, e, z | θ) factors as a product of conditional
+probabilities and densities, one for each variable in
+the network.
+Due to global independence, the inteR
+gral p(h, e, z | θ)p(θ | D)dθ factors into a product of
+integrals, one for each variable. The result is a product
+of probabilities and densities described in Section 2.4
+below. It follows that E{q(Θ | D, e} can be calculated
+in essentially the same manner as the function q(Θ),
+but with two modifications.
+• For discrete variables, parameters θb|a are replaced by their posterior means. If all network
+variables are discrete, then we have the plug-in
+estimate:
+E{q(Θ) | D, e} = q(E{Θ | D}).
+
+(5)
+
+• For continuous variables, the normal densities are
+replaced by the St1 (η, ω 2 , ν) densities described
+below. Note that this is not the same as replacing
+β and σ 2 parameters with their posterior means.
+2.4
+
+PREDICTIVE DISTRIBUTIONS
+
+The predictive distribution of the network variables is
+obtained by integrating out their joint conditional dis-
+
+UAI 2009
+
+HOOPER ET AL.
+
+tribution given Θ with respect to the posterior distribution of Θ. Global independence allows this integration to be carried out separately for each conditional
+distribution of a variable given its parents.
+The predictive distribution for a discrete variable B is
+πb|a := P (B = b | A = a, D) = E{θb|a | D} =
+
+αb|a
+.
+α·|a
+
+The predictive distribution for a continuous variable is
+a location-scale version of the Student’s t distribution
+with ν degrees of freedom. We need the multivariate
+form of this distribution in Section 3, so we define it
+here. Suppose
+T = η + U −1/2 (Z − η),
+where Z and U are independent, Z ∼ Np (η, Ω), U ∼
+(1/ν)χ2ν , and Ω is a nonsingular covariance matrix.
+It follows that T has the following density function
+(Johnson and Kotz, 1972, page 134):
+
+(νπ)p/2 |Ω|1/2
+
+Γ[(ν + p)/2] / Γ(ν/2)
+
+(ν+p)/2 .
+1 + ν1 (t − η)T Ω−1 (t − η)
+
+We refer to this as the Stp (η, Ω, ν) distribution. For
+p = 1, we write St1 (η, ω 2 , ν). Note that St1 (0, 1, ν) is
+Student’s t distribution.
+We claim that (Y | A = a, X = x, D) ∼ St1 (η, ω 2 , ν)
+with ν = νa , η = (1, xT )µa , and
+
+ω 2 = τa2 (1, xT )(νa Ψa )−1 (1, xT )T + 1 . (6)
+To see this, let us suppress subscripts for a moment.
+Let Z1 ∼ N (0, 1) be independent of (β, σ). Put Z 2 :=
+σ −1 (β − µ) ∼ Nm+1 0, (νΨ)−1 . We then have
+(Y | a, x, D) ∼ (1, xT )β + σZ1
+
+∼ η + (σ/τ )τ (1, xT )Z 2 + Z1 .
+
+3
+
+NETWORK DOUBLING
+
+In Section 2.3 we noted that E{q(Θ) | D} is usually
+approximated by the more tractable E{q(Θ) | D, e}.
+Here we propose approximating Var{q(Θ) | D} by
+Var{q(Θ) | D, e, e}; i.e., the posterior variance given
+D and additional replicates E 1 and E 2 of the vector
+of evidence variables, both having the same value e.
+We develop a formula for this latter variance by imagining a doubled network; see Figure 1(b). These mean
+and variance approximations can be improved by adjustments described in Section 4.
+Consider two replicated tuples of network variables,
+conditionally independent and identically distributed
+given Θ. Use these to replace each variable in the
+
+235
+
+original network by a pair of variables; e.g., B is replaced by B ∗ := (B1 , B2 ) with possible values b∗ =
+(b1 , b2 ) ∈ DomB ∗ = DomB × DomB . If pa(B) = A,
+then pa(B ∗ ) = A∗ := (A1 , A2 ). Conditional distributions of doubled variables given parents are obtained
+by multiplying probabilities or densities for single variables.
+For discrete variables, we have
+P (B ∗ = b∗ | A∗ = a∗ , Θ) = θb1 |a1 θb2 |a2 .
+E.g., if A = A, DomA = {a1 , a2 }, and DomB =
+{b1 , b2 }, then the CPtable for B ∗ is the 4 × 4 array
+shown in Figure 1(b). More generally, if a CPtable
+in the original network involves dr × dc parameters,
+then corresponding table in the doubled network has
+d2r × d2c entries. Note that CPtable rows in the doubled network are not independent (local independence
+does not hold) and do not have Dirichlet distributions.
+Fortunately, these properties are not needed for the
+factorization described following (4).
+For continuous variables, the conditional density of
+Y ∗ = (Y1 , Y2 ) given (A∗ = a∗ , X ∗ = x∗ , Θ) is the
+product of the densities for two normal distributions
+of the form (2) with subscript i = 1, 2 on a and x.
+Put H ∗ = (H 1 , H 2 ), w∗ (H ∗ ) = w(H 1 )w(H 2 ), E ∗ =
+(E 1 , E 2 ), and e∗ = (e, e). Some manipulation using
+conditional independence yields
+q(Θ)2 = E{w∗ (H ∗ ) | E ∗ = e∗ , Θ} ,
+q(Θ) = E{w(H1 ) | E ∗ = e∗ , Θ} .
+We thus have
+Var{q(Θ) | D, e, e}
+(7)
+2
+2
+= E{q(Θ) | D, e, e} − [E{q(Θ) | D, e, e}]
+= E{w∗ (H ∗ ) | e∗ , D} − [E{w(H1 ) | e∗ , D}]2 .
+The doubled network satisfies global independence assumptions, so we can follow the approach of Section
+2.3 to evaluate the two expected values in (7). To
+accomplish this task, we need bivariate predictive distributions for the doubled network.
+For discrete variables, the calculation follows from the
+means and covariances of a Dirichlet distribution. Let
+δb1 b2 be the Kronecker delta function. We have
+πb∗∗ |a∗
+
+:= P {B ∗ = b∗ | A∗ = a∗ , D}
+= E{θb1 |a1 θb2 |a2 | D}
+=
+
+πb1 |a1 πb2 |a2 + δa1 a2
+
+πb1 |a1 (δb1 b2 − πb2 |a1 )
+.
+α·|a1 + 1
+
+If all network variables are discrete, then we have an
+identity corresponding to (5). Let Θ∗ be the vector
+
+236
+
+HOOPER ET AL.
+
+of all CPtable entries in the doubled network; e.g.,
+θb1 |a1 θb2 |a2 appears in row a∗ and column b∗ for the
+CPtable of B ∗ . We then have
+E{q ∗ (Θ∗ ) | D, e, e} = q ∗ (E{Θ∗ | D})
+
+(8)
+
+with the entries in E{Θ∗ | D} given by the πb∗∗ |a∗ values above. The two expected values in the variance approximation (7) are calculated by applying (8) twice:
+with q ∗ (Θ∗ ) = q(Θ)2 and with q ∗ (Θ∗ ) = q(Θ).
+For continuous variables, we need the density for
+{(Y1 , Y2 ) | a1 , a2 , x1 , x2 , D}. There are two cases to
+consider.
+• If a1 6= a2 , then the parameters (β a1 , σa2 1 ) and
+(β a2 , σa2 2 ) are mutually independent. Consequently, the joint distribution factors as a product
+of two St1 (η, ω 2 , ν) densities; see expression (6).
+• If a1 = a2 ( = a, say), then the joint distribution
+is St2 (η, Ω, ν) with ν = νa , η = X 2 µa , and
+o
+n
+Ω = τa2 X 2 (νa Ψa )−1 X T2 + I 2 ,
+where X 2 is the 2 × (1 + d) matrix whose rows
+are each (1, xTi ) and I 2 is the 2 × 2 identity matrix. The derivation is similar to that following
+(6). Note that (β a , σa2 ) is the same for both Y1
+and Y2 in this case.
+
+4
+
+UAI 2009
+
+Table 1: Summary of approximations for µq and σqq .
+Means
+q̂1 = E{q(Θ) | D, e}
+q̂2 = E{q(Θ) | D, e, e}
+q̂3 = q̂1 − (q̂2 − q̂1 )
+q̂4 = q̂1 − σ̂qr /µr
+
+√
+verify that the distribution of m(Q − µq , R − µr )
+converges to bivariate normal by modifying the proof
+of Theorem 2 in Van Allen et al. (2008). Asymptotic
+normality implies that
+2
+σqqrr − 2σqr
+− σqq σrr → 0 at rate m−5/2
+
+T
+
+v̂1 = g Cg ,
+
+E{R − µr | Q} ≈ (Q − µq )
+
+We use approximations for higher moments motivated
+by large m asymptotics; i.e., a sequence of posterior
+distributions of the form (3) with m → ∞. One may
+
+2σqr σqq (1 − 2µq )
+.
+µq (1 − µq ) + σqq
+
+(11)
+
+Switching the roles of Q and R gives
+σqrr ≈
+
+(9)
+
+For conciseness we suppress D in our expressions; i.e.,
+we implicitly assume that expectations are conditioned
+on D. Put Q = q(Θ) = P (H = h | E = e, Θ) and R =
+P (E = e | Θ). Note that R is an unconditional query,
+with hypothesis E = e and no evidence variables. Let
+µq , µr , σqq , σrr , and σqr denote the means, variances,
+and covariance for (Q, R). We extend this notation to
+higher moments; e.g., σqqr = E{(Q − µq )2 (R − µr )}.
+
+σqr
+σqq
+
+and hence σqqr ≈ σqqq σqr /σqq . Now σqqq = 0 for normal distributions; however, Van Allen et al. (2008) argue that query distributions are usually better approximated by beta distributions. Substituting the third
+moment of a beta distribution for σqqq , we obtain
+σqqr ≈
+
+where g is the gradient vector of q(Θ) and C is the
+covariance matrix of Θ, both evaluated at E{Θ | D}.
+The second variance approximation v̂2 is the doubling
+method introduced in Section 3. The simple adjustments (q̂3 , v̂3 ) and more complex adjustments (q̂4 , v̂4 )
+are developed in this section.
+
+(10)
+
+while σqrr and σqqr converge to zero at rate m−2 . We
+considered approximating σqqr and σqrr by zero but
+found that more accurate approximations give better
+results. Asymptotic bivariate normality suggests
+
+ADJUSTMENTS
+
+We now narrow our focus to discrete networks and
+consider the four mean and variance approximations
+in Table 1. The delta method approximation is
+
+Variances
+v̂1 = delta method (9)
+v̂2 = Var{q(Θ) | D, e, e}
+v̂3 = expression (18)
+v̂4 = expression (17)
+
+2σqr σrr (1 − 2µr )
+.
+µr (1 − µr ) + σrr
+
+(12)
+
+Before proceeding, we observe that µr and σrr can
+be calculated exactly because R can be expressed as
+a sum of products of independent terms. For queries
+with this property, all approximations (except v̂1 ) are
+exact; i.e., additional observations of evidence variables have no effect on the posterior mean or variance. E.g., given a discrete network
+with structure
+P
+E → B → H, we have q(Θ) = b θh|b θb|e . Since parameters in each product are independent, it follows
+that q̂2 = q̂1 = µq and v̂2 = σqq .
+We begin with adjustments to improve q̂1 . Bayes rule
+and some manipulation yields
+q̂1
+
+=
+
+q̂2
+
+=
+
+E(QR)
+σqr
+= µq +
+(13)
+E(R)
+µr
+E(QR2 )
+2µr σqr + σqrr
+= µq +
+.
+2
+E(R )
+µ2r + σrr
+
+We approximate σqqrr using (10), σqqr by (11), σqr by
+(14), µq by q̂4 , and replace σqq by v̂4 . Rearranging
+terms yields the identity: v̂4 =
+2
+(µ2r + σrr ){v̂2 + (q̂2 − q̂4 )2 } − 2σ̂qr
+. (17)
+µ2r + σrr + 4µr σ̂qr (1 − 2q̂4 )/{q̂4 (1 − q̂4 ) + v̂4 }
+
+Notice that v̂4 appears in the denominator of (17). We
+initially set this value to v̂2 , then iteratively solve for
+v̂4 . The values converge in a few iterations.
+We observe that replacing σrr by zero has negligible
+effect on (17) as m → ∞. By also replacing q̂4 by q̂3
+and σ̂qr /µr by q̂2 − q̂1 , we obtain a simpler identity:
+v̂3 =
+
+v̂2 + 2(q̂2 − q̂1 )2
+. (18)
+1 + 4(q̂2 − q̂1 )(1 − 2q̂3 )/{q̂3 (1 − q̂3 ) + v̂3 }
+
+We again initialize by v̂2 , then iteratively solve for v̂3 .
+The approximations q̂3 and v̂3 may be preferred to q̂4
+and v̂4 since µr and σrr are not required.
+Rates of convergence are summarized in Proposition 1
+below. The proof of this result follows easily from Van
+Allen et al. (2008) and the development above.
+Proposition 1. Assume a discrete network satisfying
+(3) and let m → ∞. The query mean µq remains constant while the variance σqq approaches zero at rate
+m−1 . The mean approximations have errors q̂j − µq
+approaching zero at rate m−1 for j = 1 and 2, and at
+the faster rate m−3/2 for j = 3 and 4. All four variance approximations have relative errors (v̂j −σqq )/σqq
+approaching zero at rate m−1 .
+
+-0.1
+-0.3
+
+Scaled Error
+q3
+
+q4
+
+q1
+
+q4
+
+0.2
+-0.6
+
+-0.2
+
+Scaled Error
+
+0.0
+
+Scaled Error
+
+q3
+
+(b) Diamond & m = 20
+
+0.5
+
+(a) NB & m = 20
+
+(15)
+
+µ2r σqq + 2µr σqqr + σqqrr
+E{(Q − µq )2 R2 }
+=
+. (16)
+E(R2 )
+µ2r + σrr
+
+0.0
+
+q1
+
+In trying to improve v̂2 , we began with the idea of
+replacing q̂2 with µq :
+
+This suggests an approximation v̂2 +4(q̂2 − q̂1 )2 , which
+does help to reduce the under-estimation problem;
+however, a greater improvement is obtained by further
+analysis of (15):
+
+-0.5
+
+The formula for q̂4 in Table 1 follows from (13). Now
+recall that, under condition (3), µr remains fixed while
+σrr → 0 as m → ∞. It follows that setting σrr = 0
+in (14) will have negligible effect for large m. We thus
+obtain σ̂qr ≈ (q̂2 − q̂1 )µr , leading to the simpler q̂3
+approximation.
+
+E{(Q − µq )2 | e, e} = v̂2 + (q̂2 − µq )2 .
+
+-0.4
+-0.8
+
+(14)
+
+-0.5
+
+(q̂2 − q̂1 )µr (µ2r + σrr ){µr (1 − µr ) + σrr }
+.
+2
+µ3r (1 − µr ) + µr (1 − 2µr )σrr − σrr
+
+Scaled Error
+
+If µr = 1, then set σ̂qr = 0. Otherwise, substituting
+(12) for σqrr and solving yields σ̂qr =
+
+237
+
+0.1
+
+HOOPER ET AL.
+
+-1.0
+
+UAI 2009
+
+q1
+
+q3
+
+q4
+
+(c) NB & m = 500
+
+q1
+
+q3
+
+q4
+
+(d) Diamond & m = 500
+
+Figure 2: Boxplots of scaled errors m(q̂j − q̂0 ) for j ∈
+{1, 3, 4}, m ∈ {20, 500}, and network structures NB
+and Diamond. Each boxplot shows variation in errors
+for a set of distinct queries, 22 +24 = 20 for NB and 108
+for Diamond. Errors for q̂3 and q̂4 are nearly identical.
+Errors for q̂1 are often much larger. Results for q̂2 are
+not plotted since q̂2 − q̂0 ≈ 2(q̂1 − q̂0 ).
+
+5
+
+NUMERICAL RESULTS
+
+We evaluated accuracy of approximations q̂j and v̂j using highly accurate empirical estimates of µq and σqq .
+These estimates q̂0 and v̂0 were obtained by simulating k = 106 replicates of Θ from the posterior distribution, evaluating q(Θ) for each replicate, then calculating the sample mean and sample variance. Computational
+costs
+preclude using empirical variance estipaper/R
+figures
+mates/Users/peterhooper/Documents/Research/Doubling
+in practice. When m is large, asymptotic normality of q(Θ) implies that the distribution of v̂0 /σqq
+is approximately (1/k)χ2k with variance 2/k.p Consequently v̂0 /σqq varies over the interval 1 ± 2 2/k for
+roughly 95% of samples. Since our variance approximations have relative errors of order m−1 , it follows
+that k should be of order at least m2 for v̂0 to have
+substantially smaller relative error. When comparing
+approximate relative errors (v̂j − v̂0 )/v̂0 with k = 106 ,
+variation in v̂0 has a noticeable effect for m = 500; see
+Figure 3(f).
+Our examples differ with respect to network structure, posterior distribution, and query. All variables
+are binary. All posterior distributions satisfy BDe
+constraints (e.g., see Hooper 2008), so all variables
+have the same effective sample size m. Hyperparameters are thus determined by m and the poste-
+
+238
+
+HOOPER ET AL.
+3
+
+E = all children of H, e varies over all combinations (22 for NB-2, 24 for NB-4).
+
+0
+
+1
+
+&
+• Diamond network with 4 variables .
+& . , all 108
+distinct queries with one hypothesis variable.
+
+-2
+
+-1
+
+Scaled Relative Error
+
+2
+
+10
+5
+0
+-5
+
+Scaled Relative Error
+
+-3
+
+-10
+
+v1
+
+v2
+
+v3
+
+v4
+
+v1
+
+v3
+
+v4
+
+0
+-2
+-6
+
+-4
+
+Scaled Relative Error
+
+10
+0
+-10
+-20
+-30
+
+Scaled Relative Error
+
+v2
+
+(b) Diamond & m = 20
+
+2
+
+(a) NB & m = 20
+
+v1
+
+v2
+
+v3
+
+v4
+
+v1
+
+v2
+
+v3
+
+v4
+
+(d) Diamond & m = 100
+
+COMPUTATIONAL ISSUES
+
+2
+0
+-2
+-6
+
+-4
+
+Scaled Relative Error
+
+0
+-10
+-20
+
+Approximations for means are compared in Figure 2
+and for variances in Figure 3. The errors and relative errors are multiplied by m in these figures to facilitate comparisons across a range of effective sample sizes. Boxplots for m = 20, 100, and 500 are
+shown. Plots for other values of m are similar. By
+Proposition 1, relative errors (v̂j − σqq )/σqq should approach zero at rates cj /m, where cj depends implicitly on the network, E(Θ | D), and the query. This
+theory is supported by Figure 3 and additional plots
+(not shown) comparing the four methods for individual queries. Our results suggest that c3 ≈ c4 while c1
+and c2 tend to be further from zero. Relative errors
+can be interpreted in terms of variances or standard
+deviations. If (v̂j − σqq )/σqq = cj /m, then we have
+p
+r
+v̂j
+cj
+cj
+cj
+v̂j
+=1+
+and √
+= 1+
+≈1+
+.
+σqq
+m
+σqq
+m
+2m
+
+6
+
+-40
+
+Scaled Relative Error
+
+10
+
+20
+
+(c) NB & m = 100
+
+-30
+
+UAI 2009
+
+v1
+
+v2
+
+v3
+
+(e) NB & m = 500
+
+v4
+
+v1
+
+v2
+
+v3
+
+v4
+
+(f) Diamond & m = 500
+
+Figure 3: Boxplots of relative errors m(v̂j − v̂0 )/v̂0 for
+j ∈ {1, 2, 3, 4}, m ∈ {20, 100, 500}, and network structures NB and Diamond. Each boxplot shows variation
+among values for a set of distinct queries, 20 for NB
+and 108 for Diamond. We observe that: relative errors
+tend to be larger for NB compared with Diamond; v̂3
+and v̂4 tend to over-estimate σqq for NB and are more
+accurate than v̂2 ; the three methods v̂2 , v̂3 ,and v̂4 have
+similar accuracy for Diamond; v̂1 is less accurate than
+the other methods. The four methods appear to have
+paper/R figures
+similar
+accuracy in (f), but these plots are mislead/Users/peterhooper/Documents/Research/Doubling
+ing. Many of the Diamond queries have the property
+described following (12), where v̂2 = v̂3 = v̂4 = σqq .
+We would therefore expect the Diamond results for
+m = 500 to be similar to those for m = 100. It appears
+that the variation among relative errors for m = 500
+is due in large part to variation in v̂0 .
+rior means E{Θ | D}. Our examples are from three
+small networks, each with one vector E{Θ | D} and
+m ∈ {20, 50, 100, 200, 500}:
+• Two naı̈ve Bayes networks (NB-2 and NB-4 with
+2 and 4 features plus the root variable); H = root,
+
+Inference in Bayesian networks is in general an NPcomplete problem (Cooper, 1990). For instance, the
+complexity of the Variable Elimination (VE) Algorithm is O(dr ), where d is an upper bound on the
+number of values that a variable can take and r is
+an upper bound on the size of a factor generated by
+the VE Algorithm (Koller and Friedman, 2008). Network doubling uses essentially the same technique to
+calculate a variance as that used to evaluate a query,
+resulting in corresponding computational complexity.
+The doubled CPtables are larger (squared number of
+rows and columns), so the computational complexity
+of VE is increased to O(d2r ). The delta method retains O(dr ) complexity (Van Allen et al., 2008), so is
+typically faster in large networks; see Table 2 below.
+In some cases, we can exploit the structure of the network or query to achieve a polynomial time inference
+algorithm. For poly-tree Bayesian networks (i.e. networks with at most one undirected path between any
+pair of nodes), there exist inference algorithms with
+linear time complexity. Reduced complexity is also
+available when the query can be expressed in terms of
+probabilities of hypothesis and evidence nodes conditioned on their Markov blanket; i.e., the parents, the
+children and the parents of the children. Once again,
+we have a polynomial time inference algorithm. These
+techniques translate directly to efficient algorithms for
+computing all of the variance approximations in Table 1.
+
+UAI 2009
+
+HOOPER ET AL.
+
+Table 2: Timing results in seconds.
+Network
+NB-4
+Diamond
+Alarm
+
+# Queries
+100,000
+108,000
+100
+
+Delta
+37.837
+50.052
+11.390
+
+Doubling
+3.969
+12.660
+282.342
+
+239
+
+Acknowledgements
+We are grateful for helpful comments from the anonymous reviewers. We acknowledge support provided by
+NSERC, iCORE, and the Alberta Ingenuity Centre for
+Machine Learning.
+
+
+We study the problem of learning Markov decision processes with finite state and action
+spaces when the transition probability distributions and loss functions are chosen adversarially and are allowed to change with time. We introduce an algorithm whose regret with
+respect to any policy in a comparison class grows as the square root of the number of rounds
+of the game, provided the transition probabilities satisfy a uniform mixing condition. Our
+approach is efficient as long as the comparison class is polynomial and we can compute
+expectations over sample paths for each policy. Designing an efficient algorithm with small
+regret for the general case remains an open problem.
+
+1
+
+Notation
+
+Let X be a finite state space and A be a finite action space. Let ∆S be the space of probability
+distributions over set S. Define a policy π as a mapping from the state space to ∆A , π : X → ∆A .
+We use π(a|x) to denote the probability of choosing action a in state x under policy π. A random
+action under policy π is denoted by π(x). A transition probability kernel (or transition model) m
+is a mapping from the direct product of the state and action spaces to ∆X : m : X × A → ∆X .
+Let P (π, m) be the transition probability matrix of policy π under transition model m. A loss
+function is a bounded real-valued
+function over state and action spaces, ℓ : X × A → R. For a
+P
+vector v, define kvk1 = i |vi |. For a real-valued function f defined over X × A, define kf k∞,1 =
+P
+maxx∈X a∈A |f (x, a)|. The inner product between two vectors v and w is denoted by hv, wi.
+
+2
+
+Introduction
+
+Consider the following game between a learner and an adversary: at round t, the learner chooses a
+policy πt from a policy class Π. In response, the adversary chooses a transition model mt from a set
+of models M and a loss function ℓt . The learner takes action at ∼ πt (.|xt ), moves to state xt+1 ∼
+mt (.|xt , at ) and suffers loss ℓt (xt , at ). To simplify the discussion, we assume that the adversary is
+oblivious, i.e. its choices do not depend on the previous choices of the learner. We assume that
+ℓt ∈ [0, 1]. In this paper, we study the full-information version of the game, where the learner
+observes the transition model mt and the loss function ℓt at the end of round t. The game is shown
+in Figure 1. The objective of the learner is to suffer low loss over a period of T rounds, while the
+performance of the learner is measured using its regret with respect to the total loss he would have
+achieved had he followed the stationary policy in the comparison class Π minimizing the total loss.
+Even-Dar et al. (2004) prove a hardness result for MDP problems with adversarially chosen
+transition models. Their proof, however, seems to have gaps as it assumes that the learner chooses a
+deterministic policy before observing the state at each round. Note that an online learning algorithm
+only needs to choose an action at the current state and does not need to construct a complete
+deterministic policy at each round. Their hardness result applies to deterministic transition models,
+while we make a mixing assumption in our analysis. Thus, it is still an open problem whether it is
+possible to obtain a computationally efficient algorithm with a sublinear regret.
+Yu and Mannor (2009a,b) study the same setting, but obtain only a regret bound that scales
+with the amount of variation in the transition models. This regret bound can grow linearly with
+time.
+
+Initial state: x0
+for t := 1, 2, . . . do
+Learner chooses policy πt
+Adversary chooses model mt and loss function ℓt
+Learner takes action at ∼ πt (.|xt )
+Learner suffers loss ℓt (xt , at )
+Update state xt+1 ∼ mt (.|xt , at )
+Learner observes mt and ℓt
+end for
+Figure 1: Online Markov Decision Processes
+
+Even-Dar et al. (2009) prove regret bounds for MDP problems with a fixed and known transition
+model and adversarially chosen loss functions. In this paper, we prove regret bounds for MDP
+problems with adversarially chosen transition models and loss functions. We are not aware of any
+earlier regret bound for this setting. Our approach is efficient as long as the comparison class is
+polynomial and we can compute expectations over sample paths for each policy.
+MDPs with changing transition kernels are good models for a wide range of problems, including
+dialogue systems, clinical trials, portfolio optimization, two player games such as poker, etc.
+
+3
+
+Online MDP Problems
+
+Let A be an online learning algorithm that generates a policy πt at round t. Let xA
+t be the state
+at round t if we have followed the policies generated by algorithm A. Similarly, xπt denotes the state
+if we have chosen the same policy π up to time t. Let ℓ(x, π) = ℓ(x, π(x)). The regret of algorithm
+A up to round T with respect to any policy π ∈ Π is defined by
+RT (A, π) =
+
+T
+X
+t=1
+
+πt (xA
+t ).
+
+ℓt (xA
+t , at ) −
+
+T
+X
+
+ℓt (xπt , π) ,
+
+t=1
+
+where at =
+Note that the regret with respect to π is defined in terms of the sequence of
+states xπt that would have been visited under policy π. Our objective is to design an algorithm that
+achieves low regret with respect to any policy π.
+In the absence of state variables, the problem reduces to a full information online learning
+problem (Cesa-Bianchi and Lugosi, 2006). The difficulty with MDP problems is that, unlike the full
+information online learning problems, the choice of policy at each round changes the future states
+and losses. The main idea behind the design and the analysis of our algorithm is the following regret
+decomposition:
+RT (A, π) =
+
+T
+X
+t=1
+
+Let
+
+ℓt (xA
+t , at ) −
+
+T
+X
+
+BT (A) =
+
+T
+X
+
+t=1
+
+t=1
+
+CT (A, π) =
+
+ℓt (xπt t , πt ) +
+
+T
+X
+t=1
+
+T
+X
+t=1
+
+ℓt (xA
+t , at ) −
+
+T
+X
+
+ℓt (xπt t , πt ) −
+
+ℓt (xπt t , πt ) −
+
+T
+X
+
+ℓt (xπt , π) .
+
+(1)
+
+t=1
+
+ℓt (xπt t , πt ) ,
+
+t=1
+
+T
+X
+
+ℓt (xπt , π) .
+
+t=1
+
+Notice that the choice of policies has no influence over future losses in CT (A, π). Thus, CT (A, π)
+can be bounded by a specific reduction to full information online learning algorithms (to be specified
+later). Also, notice that the competitor policy π does not appear in BT (A). In fact, BT (A) depends
+only on the algorithm A. We will show that if algorithm A and the class of models satisfy the
+following two “smoothness” assumptions, then BT (A) can be bounded by a sublinear term.
+Assumption A1 Rarely Changing Policies Let αt be the probability that algorithm A changes
+its policy at round t. There exists a constant D such
+√ that for any 1 ≤ t ≤ T , any sequence of models
+m1 , . . . , mt and loss functions ℓ1 , . . . , ℓt , αt ≤ D/ t.
+2
+
+N : number of experts, T : number of rounds.
+Initialize wi,0 = 1 for each expert i.
+W0 = N .
+for t := 1, 2, . . . do
+For any i, pi,t = wi,t−1 /Wt−1 .
+Draw It such that for any i, P (It = i) = pi,t .
+Choose the action suggested by expert It .
+The adversary chooses loss function ct .
+The learner suffers loss ct (It ).
+For expert i, wi,t = wi,t−1 e−ηct (i) .
+P
+Wt = N
+i=1 wi,t .
+end for
+Figure 2: The EWA Algorithm
+N : number
+p of experts, T : number of rounds.
+η = min{ log N/T , 1/2}.
+Initialize wi,0 = 1 for each expert i.
+W0 = N .
+for t := 1, 2, . . . do
+For any i, pi,t = wi,t−1 /Wt−1 .
+With probability βt = wIt−1 ,t−1 /wIt−1 ,t−2 choose the previously selected
+expert, It = It−1 and with probability 1 − βt , choose It based on the
+distribution qt = (p1,t , . . . , pN,t ).
+Learner takes the action suggested by expert It .
+The adversary chooses loss function ct .
+The learner suffers loss ct (It ).
+For all experts i, wi,t = wi,t−1 (1 − η)ct (i) .
+PN
+Wt = i=1 wi,t .
+end for
+Figure 3: The Shrinking Dartboard Algorithm
+
+Assumption A2 Uniform Mixing There exists a constant τ > 0 such that for all distributions
+d and d′ over the state space, any deterministic policy π, and any model m ∈ M ,
+kdP (π, m) − d′ P (π, m)k1 ≤ e−1/τ kd − d′ k1 .
+As discussed by Neu et al. (2010), if Assumption A2 holds for deterministic policies, then it holds
+for all policies.
+3.1
+
+Full Information Algorithms
+We would like to have a full information online learning algorithm that rarely changes its policy.
+The first candidate that we consider is the well-known Exponentially Weighted Average (EWA)
+algorithm (Vovk, 1990, Littlestone and Warmuth, 1994) shown in Figure 2. In our MDP problem,
+the EWA algorithm chooses a policy π ∈ Π according to distribution
+!
+t−1
+X
+E [ℓs (xπs , π)] , λ > 0 ,
+(2)
+qt (π) ∝ exp −λ
+s=1
+
+The policies that this EWA algorithm generates most likely are different in consecutive rounds and
+thus, the EWA algorithm might change its policy frequently. However, a variant of EWA, called
+Shrinking Dartboard (SD) (Geulen et al., 2010) and shown in Figure 3, satisfies Assumption A1.
+Our algorithm, called SD-MDP, is based on the SD algorithm and is shown in Figure 4. Notice
+that the algorithm needs to know the number of rounds, T , in advance.
+3
+
+T : number
+p of rounds.
+η = min{ log |Π| /T , 1/2}.
+For all policies π ∈ {1, . . . , |Π|}, wπ,0 = 1.
+for t := 1, 2, . . . do
+For any π, pπ,t = wπ,t−1 /Wt−1 .
+With probability βt = wπt−1 ,t−1 /wπt−1 ,t−2 choose the previous policy, πt =
+πt−1 , while with probability 1 − βt , choose πt based on the distribution
+qt = (p1,t , . . . , p|Π|,t ).
+Learner takes the action at ∼ πt (.|xt )
+Adversary chooses transition model mt and loss function ℓt .
+Learner suffers loss ℓt (xt , at ).
+Learner observes mt and ℓt .
+Update state: xt+1 ∼ mt (.|xt , at ).
+π
+For allP
+policies π, wπ,t = wπ,t−1 (1 − η)E[ℓt (xt ,π)] .
+Wt = π∈Π wπ,t .
+end for
+Figure 4: SD-MDP: The Shrinking Dartboard Algorithm for Markov Decision Processes
+
+Consider a basic full information problem with N experts. Let RT (SD, i) be the regret of the SD
+algorithm with respect to expert i up to time T . We have the following results for the SD algorithm.
+Theorem 1. For any expert i ∈ {1, . . . , N },
+p
+RT (SD, i) ≤ 4 T log N + log N ,
+
+and also for any 1 ≤ t ≤ T ,
+
+P (Switch at time t) ≤
+
+r
+
+log N
+.
+T
+
+Proof. The proof of the regret bound can be found in (Geulen et al., 2010, Theorem 3). The proof
+of the bound on the probability of switch is similar to the proof of Lemma 2 in (Geulen et al., 2010)
+and is as follows: As shown in (Geulen et al., 2010, Lemma 2), the probability of switch at time t is
+αt =
+
+Wt−1 − Wt
+.
+Wt−1
+
+Thus, Wt = (1 − αt )Wt−1 . Because the loss function is bounded in [0, 1], we have that
+Wt =
+
+N
+X
+i=1
+
+wi,t =
+
+N
+X
+i=1
+
+wi,t−1 (1 − η)ct (i) ≥
+
+Thus, 1 − αt ≥ 1 − η, and thus,
+
+αt ≤ η ≤
+
+r
+
+N
+X
+i=1
+
+wi,t−1 (1 − η) = (1 − η)Wt−1 .
+
+log N
+.
+T
+
+3.2 Analysis of the SD-MDP Algorithm
+The main result of this section is the following regret bound for the SD-MDP algorithm.
+Theorem 2. Let the loss functions selected by the adversary be bounded in [0, 1], and the transition
+models selected by the adversary satisfy Assumption A2. Then, for any policy π ∈ Π,
+p
+E [RT (SD-MDP, π)] ≤ (4 + 2τ 2 ) T log |Π| + log |Π| .
+
+In the rest of this section, we write A to denote the SD-MDP algorithm. For the proof we use
+the regret decomposition (1):
+RT (A, π) = BT (A) + CT (A, π) .
+4
+
+3.2.1 Bounding E [CT (A, π)]
+Lemma 3. For any policy π ∈ Π,
+" T
+#
+T
+X
+X
+p
+πt
+π
+E [CT (A, π)] = E
+ℓt (xt , πt ) −
+ℓt (xt , π) ≤ 4 T log |Π| + log |Π| .
+t=1
+
+t=1
+
+Proof. Consider the following imaginary game between a learner and an adversary: we have a set
+of experts (policies) Π = {π 1 , . . . , π |Π| }. At round t, the adversary chooses a loss vector ct ∈ [0, 1]Π ,
+whose ith element determines the loss of expert π i at this round. The learner chooses a distribution
+over experts qt (defined by the SD algorithm), from which it draws an expert πt . Next, the learner
+observes the loss function ct . From the regret bound for the SD algorithm (Theorem 1), it is
+guaranteed that for any expert π,
+T
+X
+t=1
+
+hct , qt i −
+
+T
+X
+t=1
+
+p
+ct (π) ≤ 4 T log |Π| + log |Π| .
+
+Next, we determine how the adversary
+h chooses
+ithe loss vector. At time t, the adversary chooses a
+i
+πi
+i
+loss function ℓt and sets ct (π ) = E ℓt (xt , π ) . Noting that hct , qt i = E [ℓt (xπt t , πt )] and ct (π) =
+
+E [ℓt (xπt , π)] finishes the proof.
+
+3.2.2 Bounding E [BT (A)]
+First, we prove the following two lemmas.
+Lemma 4. For any state distribution d, any transition model m, and any policies π and π ′ ,
+kdP (π, m) − dP (π ′ , m)k1 ≤ kπ − π ′ k∞,1 .
+Proof. Proof is easy and can be found in (Even-Dar et al., 2009), Lemma 5.1.
+p
+Lemma 5. Let αt be the probability of a policy switch at time t. Then, αt ≤ log |Π|/T .
+
+Proof. Proof is identical to the proof of Theorem 1.
+Lemma 6. We have that
+E [BT (A)] = E
+
+" T
+X
+t=1
+
+ℓt (xA
+t , at ) −
+
+T
+X
+t=1
+
+#
+
+ℓt (xπt t , πt ) ≤ 2τ 2
+
+p
+log |Π|T .
+
+Proof. Let Ft = σ(π1 , . . . , πt ). Notice that the choice of policies are independent of the state
+variables. We can write
+" T
+#
+T
+X
+X
+πt
+A
+E [BT (A)] = E
+ℓt (xt , at ) −
+ℓt (xt , πt )
+t=1
+
+=E
+=E
+
+"
+
+"
+
+=E
+
+"
+
+≤E
+
+"
+
+=E
+
+"
+
+≤E
+
+"
+
+T
+X
+
+t=1
+
+X
+
+t=1 x∈X
+
+T X
+X
+
+t=1 x∈X
+
+T X
+X
+
+t=1 x∈X
+
+T
+X
+t=1
+
+T
+X
+t=1
+
+T
+X
+t=1
+
+#
+
+
+
+I{xA
+− I{xπt t =x} ℓt (x, πt (x))
+t =x}
+
+E
+
+h
+
+
+
+I{xA
+− I{xπt t =x} ℓt (x, πt (x)) FT
+t =x}
+
+#
+i
+
+i
+
+h
+πt
+F
+ℓt (x, πt (x))E I{xA
+−
+I
+T
+{xt =x}
+t =x}
+
+kℓt k∞ E
+
+h
+
+I{xA
+− I{xπt t =x}
+t =x}
+
+kℓt k∞ kut − vt,t k1
+#
+
+kut − vt,t k1 ,
+5
+
+#
+
+
+
+FT
+
+i
+
+1
+
+#
+
+#
+
+(3)
+
+i
+h
+
+
+A
+πt
+where us = E I{xA
+is the
+is
+the
+distribution
+of
+x
+for
+s
+≤
+t
+and
+v
+=
+E
+I
+F
+F
+s,t
+T
+T
+=x}
+s
+{x
+=x}
+s
+s
+distribution of xπs t for s ≤ t.1 Let Et be the event of a policy switch at time t. From inequality
+kπt−k − πt k∞,1 ≤ kπt−k − πt−k+1 k∞,1 + · · · + kπt−1 − πt k∞,1 ≤ 2
+
+t
+X
+
+I{Es } ,
+
+s=t−k+1
+
+and Lemma 5, we get that
+h
+
+i
+
+E kπt−k − πt k∞,1 ≤ 2
+
+r
+
+log |Π|
+k.
+T
+
+(4)
+
+Let Ptπ = P (π, mt ). We have that
+
+
+
+
+πt−1
+πt
+E kut − vt,t k1 = E ut−1 Pt−1
+− vt−1,t Pt−1
+1
+
+
+πt−1
+πt
+πt
+πt
+= E ut−1 Pt−1
+− ut−1 Pt−1
++ ut−1 Pt−1
+− vt−1,t Pt−1
+1
+
+
+πt−1
+πt
+πt
+πt
++ ut−1 Pt−1
+− vt−1,t Pt−1
+≤ E ut−1 Pt−1
+− ut−1 Pt−1
+1
+1
+h
+i
+≤ E kπt−1 − πt k∞,1 + e−1/τ kut−1 − vt−1,t k1
+h
+πt−2
+πt
+≤ E kπt−1 − πt k∞,1 + e−1/τ ( ut−2 Pt−2
+− ut−2 Pt−2
+1
+i
+πt
+πt
+)
++ ut−2 Pt−2
+− vt−2,t Pt−2
+1
+h
+i
+≤ E kπt−1 − πt k∞,1 + e−1/τ kπt−2 − πt k∞,1 + e−2/τ kut−2 − vt−2,t k1
+≤ ...
+≤
+≤
+
+t
+X
+
+k=0
+t
+X
+
+k=0
+
+≤2
+
+r
+
+h
+i
+e−k/τ E kπt−k − πt k∞,1 + e−t/τ ku0 − v0,t k1
+2e
+
+−k/τ
+
+r
+
+log |Π|
+k+0
+T
+
+By (4)
+
+log |Π| 2
+τ ,
+T
+
+(5)
+
+where we have used the fact that ku0 − v0,t k1 = 0, because the initial distributions are identical. By
+(5) and (3), we get that
+r
+T
+X
+p
+log |Π|
+2
+E [BT (A)] ≤ 2τ
+= 2τ 2 log |Π|T .
+T
+t=1
+
+What makes the analysis possible is the fact that all policies mix no matter what transition
+model is played by the adversary.
+Proof of Theorem 2. The result is obvious by Lemmas 3 and 6.
+The next corollary extends the result of Theorem 2 to continuous policy spaces.
+Corollary 7. Let Π be an arbitrary policy space, N (ǫ) be the ǫ-covering number of space (Π, k.k∞,1 ),
+and C(ǫ) be an ǫ-cover. Assume that we run the SD-MDP algorithm on C(ǫ). Then, under the same
+assumptions as in Theorem 2, for any policy π ∈ Π,
+p
+E [RT (SD-MDP, π)] ≤ (4 + 2τ 2 ) T log N (ǫ) + log N (ǫ) + τ T ǫ .
+1
+
+Notice that FT contains only policies, which are independent of the state variables.
+
+6
+
+hP
+i
+T
+π
+Proof. Let LT (π) = E
+ℓ
+(x
+,
+π)
+be the value of policy π. Let uπ,t (x) = P (xπt = x). First,
+t
+t
+t=1
+we prove that the value function is Lipschitz with Lipschitz constant τ T . The argument is similar
+to the argument in the proof of Lemma 6. For any π1 and π2 ,
+" T
+#
+T
+X
+X
+π1
+π2
+|LT (π1 ) − LT (π2 )| = E
+ℓt (xt , π1 ) −
+ℓt (xt , π2 )
+t=1
+
+≤2
+≤2
+
+T
+X
+t=1
+
+T
+X
+t=1
+
+t=1
+
+kuπ1 ,t − uπ2 ,t k1 kℓt k∞
+kuπ1 ,t − uπ2 ,t k1 .
+
+With an argument similar to the one in the proof of Lemma 6, we can show that
+kuπ1 ,t − uπ2 ,t k1 ≤ τ kπ1 − π2 k∞,1 .
+Thus,
+|LT (π1 ) − LT (π2 )| ≤ τ T kπ1 − π2 k∞,1 .
+
+Given this and the fact that for any policy π ∈ Π, there is a policy π ′ ∈ C(ǫ) such that kπ − π ′ k∞,1 ≤
+ǫ, we get that
+p
+E [RT (SD-MDP, π)] ≤ (4 + 2τ 2 ) T log N (ǫ) + log N (ǫ) + τ T ǫ .
+In particular if Π is the space of all policies, N (ǫ) ≤ (|A|/ǫ)|A||X |, so regret is no more than
+r
+|A|
+|A|
+2
++ |A||X | log
++ τT ǫ .
+E [RT (SD-MDP, π)] ≤ (4 + 2τ ) T |A||X | log
+ǫ
+ǫ
+p
+By the choice of ǫ = T1 , we get that E [RT (SD-MDP, π)] = O(τ 2 T |A| |X | log(|A|T )).
+
+
+
+We consider the problem of controlling a Markov decision process (MDP) with a large state
+space, so as to minimize average cost. Since it is intractable to compete with the optimal
+policy for large scale problems, we pursue the more modest goal of competing with a lowdimensional family of policies. We use the dual linear programming formulation of the MDP
+average cost problem, in which the variable is a stationary distribution over state-action pairs,
+and we consider a neighborhood of a low-dimensional subset of the set of stationary distributions
+(defined in terms of state-action features) as the comparison class. We propose two techniques,
+one based on stochastic convex optimization, and one based on constraint sampling. In both
+cases, we give bounds that show that the performance of our algorithms approaches the best
+achievable by any policy in the comparison class. Most importantly, these results depend on
+the size of the comparison class, but not on the size of the state space. Preliminary experiments
+show the effectiveness of the proposed algorithms in a queuing application.
+
+1
+
+Introduction
+
+We study the average loss Markov decision process problem. The problem is well-understood when
+the state and action spaces are small (Bertsekas, 2007). Dynamic programming (DP) algorithms,
+such as value iteration (Bellman, 1957) and policy iteration (Howard, 1960), are standard techniques
+to compute the optimal policy. In large state space problems, exact DP is not feasible as the
+computational complexity scales quadratically with the number of states.
+A popular approach to large-scale problems is to restrict the search to the linear span of a small
+number of features. The objective is to compete with the best solution within this comparison class.
+Two popular methods are Approximate Dynamic Programming (ADP) and Approximate Linear
+1
+
+Programming (ALP). This paper focuses on ALP. For a survey on theoretical results for ADP see
+(Bertsekas and Tsitsiklis, 1996, Sutton and Barto, 1998), (Bertsekas, 2007, Vol. 2, Chapter 6), and
+more recent papers (Sutton et al., 2009b,a, Maei et al., 2009, 2010).
+Our aim is to develop methods that find policies with performance guaranteed to be close to
+the best in the comparison class but with computational complexity that does not grow with the
+size of the state space. All prior work on ALP either scales badly or requires access to samples
+from a distribution that depends on the optimal policy.
+This paper proposes a new algorithm to solve the Approximate Linear Programming problem
+that is computationally efficient and does not require knowledge of the optimal policy. In particular,
+we introduce new proof techniques and tools for average cost MDP problems and use these techniques to derive a reduction to stochastic convex optimization with accompanying error bounds.
+We also propose a constraint sampling technique and obtain performance guarantees under an
+additional assumption on the choice of features.
+
+1.1
+
+Notation
+
+Let X and A be positive integers. Let X = {1, 2, . . . , X} and A = {1, 2, . . . , A} be state and action
+
+spaces, respectively. Let ∆S denote probability distributions over set S. A policy π is a map from
+the state space to ∆A : π : X → ∆A . We use π(a|x) to denote the probability of choosing action a
+
+in state x under policy π. A transition probability kernel (or transition kernel) P : X × A → ∆X
+
+maps from the direct product of the state and action spaces to ∆X . Let P π denote the probability
+
+transition kernel under policy π. A loss function is a bounded real-valued function over state and
+action spaces, ℓ : X × A → [0, 1]. Let Mi,: and M:,j denote ith row and jth column of matrix M
+P
+respectively. Let kvk1,c = i ci |vi | and kvk∞,c = maxi ci |vi | for a positive vector c. We use 1 and
+
+0 to denote vectors with all elements equal to one and zero, respectively. We use ∧ and ∨ to denote
+
+the minimum and the maximum, respectively. For vectors v and w, v ≤ w means element-wise
+inequality, i.e. vi ≤ wi for all i.
+
+1.2
+
+Linear Programming Approach to Markov Decision Problems
+
+Under certain assumptions, there exist a scalar λ∗ and a vector h∗ ∈ RX that satisfy the Bellman
+optimality equations for average loss problems,
+"
+
+λ∗ + h∗ (x) = min ℓ(x, a) +
+a∈A
+
+X
+
+x′ ∈X
+
+′
+
+#
+
+P(x,a),x′ h∗ (x )
+
+.
+
+The scalar λ∗ is called the optimal average loss, while the vector h∗ is called a differential value
+function. The action that minimizes the right-hand side of the above equation is the optimal action
+in state x and is denoted by a∗ (x). The optimal policy is defined by π∗ (a∗ (x)|x) = 1. Given ℓ and
+
+2
+
+P , the objective of the planner is to compute the optimal action in all states, or equivalently, to
+find the optimal policy.
+The MDP problem can also be stated in the LP formulation (Manne, 1960),
+max λ ,
+
+(1)
+
+λ,h
+
+s.t.
+
+B(λ1 + h) ≤ ℓ + P h ,
+
+where B ∈ {0, 1}XA×X is a binary matrix such that the ith column has A ones in rows 1 + (i − 1)A
+
+to iA. Let vπ be the stationary distribution under policy π and let µπ (x, a) = vπ (x)π(a|x). We can
+write
+X
+
+π∗ = argmin
+π
+
+x∈X
+
+= argmin
+π
+
+vπ (x)
+
+X
+
+X
+
+π(a|x)ℓ(x, a)
+
+a∈A
+
+µπ (x, a)ℓ(x, a) = argmin µ⊤
+πℓ .
+π
+
+(x,a)∈X ×A
+
+In fact, the dual of LP (1) has the form of
+min µ⊤ ℓ ,
+
+(2)
+
+µ∈RXA
+
+s.t. µ⊤ 1 = 1, µ ≥ 0, µ⊤ (P − B) = 0 .
+The objective function, µ⊤ ℓ, is the average loss under stationary distribution µ. The first two
+constraints ensure that µ is a probability distribution over state-action space, while the last constraint ensures that µ is a stationary distribution. Given a solution µ, we can obtain a policy via
+P
+π(a|x) = µ(x, a)/ a′ ∈A µ(x, a′ ).
+
+1.3
+
+Approximations for Large State Spaces
+
+The LP formulations (1) and (2) are not practical for large scale problems as the number of variables and constraints grows linearly with the number of states. Schweitzer and Seidmann (1985)
+propose approximate linear programming (ALP) formulations. These methods were later improved by de Farias and Van Roy (2003a,b), Hauskrecht and Kveton (2003), Guestrin et al. (2004),
+Petrik and Zilberstein (2009), Desai et al. (2012). As noted by Desai et al. (2012), the prior work
+on ALP either requires access to samples from a distribution that depends on optimal policy or
+assumes the ability to solve an LP with as many constraints as states. (See Section 2 for a more
+detailed discussion.) Our objective is to design algorithms for very large MDPs that do not require
+knowledge of the optimal policy.
+In contrast to the aforementioned methods, which solve the primal ALPs (with value functions
+as variables), we work with the dual form (2) (with stationary distributions as variables). Analogous
+3
+
+to ALPs, we control the complexity by limiting our search to a linear subspace defined by a small
+number of features. Let d be the number of features and Φ be a (XA) × d matrix with features as
+
+column vectors. By adding the constraint µ = Φθ, we get
+min θ ⊤ Φ⊤ ℓ ,
+θ
+
+s.t.
+
+θ ⊤ Φ⊤ 1 = 1, Φθ ≥ 0, θ ⊤ Φ⊤ (P − B) = 0 .
+
+If a stationary distribution µ0 is known, it can be added to the linear span to get the ALP
+min(µ0 + Φθ)⊤ ℓ ,
+
+(3)
+
+θ
+
+s.t. (µ0 + Φθ)⊤ 1 = 1, µ0 + Φθ ≥ 0, (µ0 + Φθ)⊤ (P − B) = 0 .
+Although µ0 + Φθ might not be a stationary distribution, it still defines a policy1
+πθ (a|x) = P
+
+[µ0 (x, a) + Φ(x,a),: θ]+
+,
+′
+a′ [µ0 (x, a ) + Φ(x,a′ ),: θ]+
+
+(4)
+
+We denote the stationary distribution of this policy µθ which is only equal to µ0 + Φθ if θ is in the
+feasible set.
+
+1.4
+
+Problem definition
+
+With the above notation, we can now be explicit about the problem we are solving.
+Definition 1 (Efficient Large-Scale Dual ALP). For an MDP specified by ℓ and P , the efficient
+large-scale dual ALP problem is to produce parameters θb such
+n
+o
+⊤
+µ⊤
+ℓ
+≤
+min
+µ
+ℓ
+:
+θ
+feasible
+for
+(3)
++ O(ǫ)
+θ
+b
+θ
+
+(5)
+
+in time polynomial in d and 1/ǫ. The model of computation allows access to arbitrary entries of Φ,
+ℓ, P , µ0 , P ⊤ Φ, and 1⊤ Φ in unit time.
+Importantly, the computational complexity cannot scale with X and we do not assume any
+knowledge of the optimal policy. In fact, as we shall see, we solve a harder problem, which we
+define as follows.
+Definition 2 (Expanded Efficient Large-Scale Dual ALP). Let V : ℜd → ℜ+ be some “violation
+
+function” that represents how far µ0 +Φθ is from a valid stationary distribution, satisfying V (θ) = 0
+
+if θ is a feasible point for the ALP (3). The expanded efficient large-scale dual ALP problem is to
+1
+
+We use the notation [v]− = v ∧ 0 and [v]+ = v ∨ 0.
+
+4
+
+produce parameters θb such that
+µ⊤
+ℓ
+θb
+
+
+
+1
+⊤
+d
+≤ min µθ ℓ + V (θ) : θ ∈ ℜ + O(ǫ),
+ǫ
+
+(6)
+
+in time polynomial in d and 1/ǫ, under the same model of computation as in Definition 1.
+Note that the expanded problem is strictly more general as guarantee (6) implies guarantee
+(5). Also, many feature vectors Φ may not admit any feasible points. In this case, the dual ALP
+problem is trivial, but the expanded problem is still meaningful.
+Having access to arbitrary entries of the quantities in Definition 1 arises naturally in many
+situations. In many cases, entries of P ⊤ Φ are easy to compute. For example, suppose that for any
+state x′ there are a small number of state-action pairs (x, a) such that P (x′ |x, a) > 0. Consider
+Tetris; although the number of board configurations is large, each state has a small number of
+possible neighbors. Dynamics specified by graphical models with small connectivity also satisfy
+this constraint. Computing entries of P ⊤ Φ is also feasible given reasonable features. If a feature ϕi
+is a stationary distribution, then P ⊤ ϕi = B ⊤ ϕi . Otherwise, it is our prerogative to design sparse
+feature vectors, hence making the multiplication easy. We shall see an example of this setting later.
+
+1.5
+
+Our Contributions
+
+In this paper, we introduce an algorithm that solves the expanded efficient large-scale dual ALP
+problem under a (standard) assumption that any policy converges quickly to its stationary distribution.
+Our algorithm take as input a constant S and an error tolerance ǫ, and has access to the various
+products listed in Definition 1. Define Θ = {θ : θ ⊤ Φ⊤ 1 = 1 − µ⊤
+0 1, kθk ≤ S}. If no stationary
+distribution is known, we can simply choose µ0 = 0. The algorithm is based on stochastic convex
+optimization. We prove that for any δ ∈ (0, 1), after O(1/ǫ4 ) steps of gradient descent, the algorithm
+finds a vector θb ∈ Θ such that, with probability at least 1 − δ,
+µ⊤
+ℓ ≤µ⊤
+θℓ+
+θb
+
+1
+1
+k[µ0 + Φθ]− k1 +
+(P − B)⊤ (µ0 + Φθ)
+ǫ
+ǫ
+
+1
+
++ O(ǫ log(1/δ))
+
+holds for all θ ∈ Θ; i.e., we solve the expanded problem for V (θ) equal to the L1 error of the
+
+violation. The second and third terms are zero for feasible points (points in the intersection of
+the feasible set of LP (2) and the span of the features). For points outside the feasible set, these
+terms measure the extent of constraint violations for the vector µ0 + Φθ, which indicate how well
+stationary distributions can be represented by the chosen features.
+
+The above performance bound scales with 1/ǫ that can be large when the feasible set is empty
+and ǫ is very small. We propose a second approach and show that this dependence can be eliminated
+if we have extra information about the MDP. Our second approach is based on the constraint
+5
+
+sampling method that is already applied to large-scale linear programming and MDP problems
+(de Farias and Van Roy, 2004, Calafiore and Campi, 2005, Campi and Garatti, 2008). We obtain
+performance bounds, but under the condition that a suitable function that controls the size of
+constraint violations is available. Our proof technique is different from previous work and gives
+stronger performance bounds.
+Our constraint sampling method takes two extra inputs: functions v1 and v2 that specify the
+amount of constraint violations that we tolerate at each state-action pair. The algorithm samples
+O( d log 1 ) constraints and solves the sampled LP problem. Let θe denote the solution of the sampled
+ǫ
+
+ǫ
+
+ALP and θ∗ denote the solution of the full ALP subject to constraints v1 and v2 . We prove that
+with high probability,
+
+ℓ⊤ µθe ≤ ℓ⊤ µθ∗ + O(ǫ + kv1 k1 + kv2 k1 ) .
+
+2
+
+Related Work
+
+de Farias and Van Roy (2003a) study the discounted version of the primal form (1). Let c ∈ RX
+
+be a vector with positive components and γ ∈ (0, 1) be a discount factor. Let L : RX → RX be
+P
+the Bellman operator defined by (LJ)(x) = mina∈A (ℓ(x, a) + γ x′ ∈X P(x,a),x′ J(x′ )) for x ∈ X . Let
+
+Ψ ∈ RX×d be a feature matrix. The exact and approximate LP problems are as follows:
+max c⊤ J ,
+
+max c⊤ Ψw ,
+
+J∈RX
+
+s.t.
+
+w∈Rd
+
+LJ ≥ J ,
+
+s.t.
+
+LΨw ≥ Ψw .
+
+which can also be written as
+max c⊤ J ,
+
+max c⊤ Ψw ,
+
+J∈RX
+
+w∈Rd
+
+s.t. ∀(x, a), ℓ(x, a) + γP(x,a),: J ≥ J(x) ,
+
+s.t.
+
+(7)
+
+∀(x, a), ℓ(x, a) + γP(x,a),: Ψw ≥ (Ψw)(x) .
+
+The optimization problem on the RHS is an approximate LP with the choice of J = Ψw. Let
+ P∞ t
+
+Jπ (x) = E
+t=0 γ ℓ(xt , π(xt ))|x0 = x be value of policy π, J∗ be the solution of LHS, and πJ (x) =
+
+argmina∈A (ℓ(x, a) + γP(x,a),: J) be the greedy policy with respect to J. Let ν ∈ ∆X be a probability
+
+distribution and define µπ,ν = (1 − γ)ν ⊤ (I − γP π )−1 . de Farias and Van Roy (2003a) prove that
+
+for any J satisfying the constraints of the LHS of (7),
+kJπJ − J∗ k1,ν ≤
+Define βu = γ maxx,a
+
+P
+
+x′
+
+1
+kJ − J∗ k1,µπ ,ν .
+J
+1−γ
+
+(8)
+
+P(x,a),x′ u(x′ )/u(x). Let U = {u ∈ RX : u ≥ 1, u ∈ span(Ψ), βu < 1}. Let
+
+6
+
+w∗ be the solution of ALP. de Farias and Van Roy (2003a) show that for any u ∈ U ,
+kJ∗ − Ψw∗ k1,c ≤
+
+2c⊤ u
+min kJ∗ − Ψwk∞,1/u .
+1 − βu w
+
+(9)
+
+This result has a number of limitations. First, solving ALP can be computationally expensive as
+the number of constraints is large. Second, it assumes that the feasible set of ALP is non-empty.
+Finally, Inequality (8) implies that c = µπΨw∗ ,ν is an appropriate choice to obtain performance
+bounds. However, w∗ itself is function of c and is not known before solving ALP.
+de Farias and Van Roy (2004) propose a computationally efficient algorithm that is based on
+a constraint sampling technique. The idea is to sample a relatively small number of constraints
+and solve the resulting LP. Let N ⊂ Rd be a known set that contains w∗ (solution of ALP). Let
+V
+V
+µVπ,c (x) = µπ,c (x)V (x)/(µ⊤
+π,c V ) and define the distribution ρπ,c (x, a) = µπ,c (x)/A. Let δ ∈ (0, 1)
+P
+and ǫ ∈ (0, 1). Let β u = γ maxx x′ P(x,π∗ (x)),x′ u(x′ )/u(x) and
+
+(1 + β V )µ⊤
+π∗ ,c V
+sup kJ∗ − Ψwk∞,1/V ,
+D=
+⊤
+2c J∗
+w∈N
+
+16AD
+m≥
+(1 − γ)ǫ
+
+
+
+2
+48AD
++ log
+d log
+(1 − γ)ǫ
+δ
+
+
+
+.
+
+Let S be a set of m random state-action pairs sampled under ρVπ∗ ,c . Let w
+b be a solution of the
+
+following sampled LP:
+
+max c⊤ Ψw ,
+
+w∈Rd
+
+s.t.
+
+w ∈ N , ∀(x, a) ∈ S, ℓ(x, a) + γP(x,a),: Ψw ≥ (Ψw)(x) .
+
+de Farias and Van Roy (2004) prove that with probability at least 1 − δ, we have
+kJ∗ − Ψwk
+b 1,c ≤ kJ∗ − Ψw∗ k1,c + ǫ kJ∗ k1,c .
+
+This result has a number of limitations. First, vector µπ∗ ,c (that is used in the definition of D)
+depends on the optimal policy, but an optimal policy is what we want to compute in the first
+place. Second, we can no longer use Inequality (8) to obtain a performance bound (a bound on
+kJπΨwb − J∗ k1,c ), as Ψw
+b does not necessarily satisfy all constraints of ALP.
+
+Desai et al. (2012) study a smoothed version of ALP, in which slack variables are introduced
+
+that allow for some violation of the constraints. Let D ′ be a violation budget. The smoothed ALP
+(SALP) has the form of
+max c⊤ Ψw ,
+
+max c⊤ Ψw −
+
+w,s
+
+s.t.
+
+Ψw ≤ LΨw + s,
+
+w,s
+
+µ⊤
+π∗ ,c s
+
+′
+
+≤ D , s ≥ 0,
+
+7
+
+2µ⊤
+π∗ ,c s
+,
+1−γ
+
+s.t. Ψw ≤ LΨw + s, s ≥ 0 .
+
+The ALP on RHS is equivalent to LHS with a specific choice of D ′ . Let U = {u ∈ RX : u ≥ 1}
+
+be a set of weight vectors. Desai et al. (2012) prove that if w∗ is a solution to above problem, then
+kJ∗ − Ψw∗ k1,c ≤ inf kJ∗ − Ψwk∞,1/u
+w,u∈U
+
+2(µ⊤
+π∗ ,c u)(1 + βu )
+c u+
+1−γ
+⊤
+
+!
+
+.
+
+The above bound improves (9) as U is larger than U and RHS in the above bound is smaller than
+RHS of (9). Further, they prove that if η is a distribution and we choose c = (1−γ)η ⊤ (I −γP πΨw∗ ),
+then
+
+JµΨw∗ − J∗
+
+1,η
+
+1
+≤
+1−γ
+
+inf kJ∗ − Ψwk∞,1/u
+
+w,u∈U
+
+2(µ⊤
+π∗ ,ν u)(1 + βu )
+c u+
+1−γ
+⊤
+
+!!
+
+.
+
+Similar methods are also proposed by Petrik and Zilberstein (2009). One problem with this result
+is that c is defined in terms of w∗ , which itself depends on c. Also, the smoothed ALP formulation
+uses π∗ which is not known. Desai et al. (2012) also propose a computationally efficient algorithm.
+Let S be a set of S random states drawn under distribution µπ∗ ,c . Let N ′ ⊂ Rd be a known set
+
+that contains the solution of SALP. The algorithm solves the following LP:
+max c⊤ Ψw −
+w,s
+
+s.t.
+
+X
+2
+s(x) ,
+(1 − γ)S
+x∈S
+
+∀x ∈ S, (Ψw)(x) ≤ (LΨw)(x) + s(x), s ≥ 0, w ∈ N ′ .
+
+Let w
+b be the solution of this problem. Desai et al. (2012) prove high probability bounds on
+the approximation error kJ∗ − Ψwk
+b 1,c . However, it is no longer clear if a performance bound
+on kJ∗ − JπΨwb k1,c can be obtained from this approximation bound.
+
+Next, we turn our attention to average cost ALP, which is a more challenging problem and is
+
+also the focus of this paper. Let ν be a distribution over states, u : X → [1, ∞), η > 0, γ ∈ [0, 1],
+
+Pγπ = γP π + (1 − γ)1ν ⊤ , and Lγ h = minπ (ℓπ + Pγπ h). de Farias and Van Roy (2006) propose the
+
+following optimization problem:
+
+min s1 + ηs2 ,
+
+(10)
+
+w,s1 ,s2
+
+s.t.
+
+Lγ Ψw − Ψw + s1 1 + s2 u ≥ 0, s2 ≥ 0 .
+
+Let (w∗ , s1,∗ , s2,∗ ) be the solution of this problem. Define the mixing time of policy π by
+τπ = inf
+
+(
+
+τ :
+
+t−1
+1 X ⊤ π t′
+τ
+ν (P ) ℓπ − λπ ≤ , ∀t
+t ′
+t
+t =0
+
+)
+
+.
+
+Let τ∗ = lim inf δ→0 {τπ : λπ ≤ λ∗ + δ}. Let πγ∗ be the optimal policy when discount factor is
+8
+
+γ. Let πγ,w be the greedy policy with respect to Ψw when discount factor is γ, µ⊤
+γ,π = (1 −
+P∞ t ⊤ π t
+γ) t=0 γ ν (P ) and µγ,w = µγ,πγ,w . de Farias and Van Roy (2006) prove that if η ≥ (2 −
+γ)µ⊤
+γ,πγ∗ u,
+
+λw ∗ − λ∗ ≤
+
+(1 + β)η max(D ′′ , 1)
+min h∗γ − Ψw
+w
+1−γ
+
+∞,1/u
+
++ (1 − γ)(τ∗ + τπw∗ ) ,
+
+⊤
+where β = maxπ kI − γP π k∞,1/u , D ′′ = µ⊤
+γ,w∗ V /(ν V ) and V = Lγ Ψw∗ − Ψw∗ + s1,∗ 1 + s2,∗ u.
+
+Similar results are obtained more recently by Veatch (2013).
+
+An appropriate choice for vector ν is ν = µγ,w∗ . Unfortunately, w∗ depends on ν. We should
+also note that solving (10) can be computationally expensive. de Farias and Van Roy (2006) propose constraint sampling techniques similar to (de Farias and Van Roy, 2004), but no performance
+bounds are provided.
+Wang et al. (2008) study ALP (3) and show that there is a dual form for standard value function
+based algorithms, including on-policy and off-policy updating and policy improvement. They also
+study the convergence of these methods, but no performance bounds are shown.
+
+3
+
+A Reduction to Stochastic Convex Optimization
+
+In this section, we describe our algorithm as a reduction from Markov decision problems to stochastic convex optimization. The main idea is to convert the ALP (3) into an unconstrained optimization over Θ by adding a function of the constraint violations to the objective, then run stochastic
+gradient descent with unbiased estimated of the gradient.
+For a positive constant H, form the following convex cost function by adding a multiple of the
+total constraint violations to the objective of the LP (3):
+c(θ) = ℓ⊤ (µ0 + Φθ) + H k[µ0 + Φθ]− k1 + H (P − B)⊤ (µ0 + Φθ)
+⊤
+
+⊤
+
+1
+
+= ℓ (µ0 + Φθ) + H k[µ0 + Φθ]− k1 + H (P − B) Φθ
+1
+X
+X
+⊤
+= ℓ (µ0 + Φθ) + H
+[µ0 (x, a) + Φ(x,a),: θ]− + H
+(P − B)⊤
+:,x′ Φθ .
+
+(11)
+
+x′
+
+(x,a)
+
+We justify using this surrogate loss as follows. Suppose we find a near optimal vector θb such that
+b ≤ minθ∈Θ c(θ) + O(ǫ). We will prove
+c(θ)
+1. that
+
+b−
+[µ0 + Φθ]
+
+1
+
+and
+
+b
+(P − B)⊤ (µ0 + Φθ)
+
+Lemma 2 in Section 3), and
+
+b ≤ minθ∈Θ c(θ) + O(ǫ).
+2. that ℓ⊤ (µ0 + Φθ)
+9
+
+1
+
+are small and µ0 + Φθb is close to µθb (by
+
+Input: Constant S > 0, number of rounds T , constant H.
+Let ΠΘ be the Euclidean projection onto Θ.
+Initialize θ1 = 0.
+for t := 1, 2, . . . , T do
+Sample (xt , at ) ∼ q1 and x′t ∼ q2 .
+Compute subgradient estimate gt (12).
+Update θt+1 = ΠΘ (θt − ηt gt ).
+end forP
+θbT = T1 Tt=1 θt .
+Return policy πθbT .
+Figure 1: The Stochastic Subgradient Method for Markov Decision Processes
+
+As we will show, these two facts imply that with high probability, for any θ ∈ Θ,
+µ⊤
+ℓ ≤ µ⊤
+θℓ+
+θb
+
+1
+1
+k[µ0 + Φθ]− k1 +
+(P − B)⊤ (µ0 + Φθ)
+ǫ
+ǫ
+
+1
+
++ O(ǫ) ,
+
+which is to say that minimization of c(θ) solves the extended efficient large-scale ALP problem.
+Unfortunately, calculating the gradients of c(θ) is O(XA). Instead, we construct unbiased
+estimators and use stochastic gradient descent. Let T be the number of iterations of our algorithm.
+Let q1 and q2 be distributions over the state-action and state space, respectively (we will later
+discuss how to choose them). Let ((xt , at ))t=1...T be i.i.d. samples from q1 and (x′t )t=1...T be i.i.d.
+samples from q2 . At round t, the algorithm estimates subgradient ∇c(θ) by
+(P − B)⊤
+Φ(xt ,at ),:
+:,x′t Φ
+I{µ0 (xt ,at )+Φ(xt ,at ),: θ<0} + H
+s((P − B)⊤
+gt (θ) = ℓ Φ − H
+:,x′t Φθ).
+q1 (xt , at )
+q2 (x′t )
+⊤
+
+(12)
+
+This estimate is fed to the projected subgradient method, which in turn generates a vector θt .
+P
+After T rounds, we average vectors (θt )t=1...T and obtain the final solution θbT = T θt /T . Vector
+t=1
+
+µ0 + ΦθbT defines a policy, which in turn defines a stationary distribution µθbT .2 The algorithm is
+shown in Figure 1.
+2
+
+Recall that µθ is the stationary distribution of policy
+πθ (a|x) = P
+
+[µ0 (x, a) + Φ(x,a),: θ]+
+.
+′
+′
+a′ [µ0 (x, a ) + Φ(x,a ),: θ]+
+
+With an abuse of notation, we use µθ to denote policy πθ as well.
+
+10
+
+3.1
+
+Analysis
+
+In this section, we state and prove our main result, Theorem 1. We begin with a discussion of
+the assumptions we make then follow with the main theorem. We break the proof into two main
+ingredients. First, we demonstrate that a good approximation to the surrogate loss gives a feature
+vector that is almost a stationary distribution; this is Lemma 2. Second, we justify the use of
+unbiased gradients in Theorem 3 and Lemma 5. The section concludes with the proof.
+We make a mixing assumption on the MDP so that any policy quickly converges to its stationary
+distribution.
+Assumption A1 (Fast Mixing)
+for all distributions d and
+
+d′
+
+For any policy π, there exists a constant τ (π) > 0 such that
+
+over the state space, kdP π − d′ P π k1 ≤ e−1/τ (π) kd − d′ k1 .
+
+Define
+C1 =
+
+max
+
+(x,a)∈X ×A
+
+Φ(x,a),:
+,
+q1 (x, a)
+
+C2 = max
+x∈X
+
+(P − B)⊤
+:,x Φ
+.
+q2 (x)
+
+These constants appear in our performance bounds. So we would like to choose distributions q1
+and q2 such that C1 and C2 are small. For example, if there is C ′ > 0 such that for any (x, a) and
+i, Φ(x,a),i ≤ C ′ /(XA) and each column of P has only N non-zero elements, then we can simply
+
+choose q1 and q2 to be uniform distributions. Then it is easy to see that
+Φ(x,a),:
+≤ C′ ,
+q1 (x, a)
+
+(P − B)⊤
+:,x Φ
+≤ C ′ (N + A) .
+q2 (x)
+
+As another example, if Φ:,i are exponential distributions and feature values at neighboring states
+are close to each other, then we can choose q1 and q2 to be appropriate exponential distributions so
+that Φ(x,a),: /q1 (x, a) and (P − B)⊤
+:,x Φ /q2 (x) are always bounded. Another example is when
+
+⊤ Φ / B ⊤ Φ < C ′′3 and we have access to
+there exists a constant C ′′ > 0 such that for any x, P:,x
+:,x
+P
+P
+⊤ Φ and can sample
+an efficient algorithm that computes Z1 = (x,a) Φ(x,a),: and Z2 = x B:,x
+
+from q1 (x, a) =
+
+Φ(x,a),: /Z1 and q2 (x) =
+
+⊤ Φ /Z . In what follows, we assume that such
+B:,x
+2
+
+distributions q1 and q2 are known.
+We now state the main theorem.
+Theorem 1. Consider an expanded efficient large-scale dual ALP problem. Suppose we apply the
+stochastic subgradient method (shown in Figure 1) to the problem. Let ǫ ∈ (0, 1). Let T = 1/ǫ4 be
+the number of rounds and H = 1/ǫ be the constraints multiplier in subgradient estimate (12). Let θbT
+be the output of the stochastic subgradient method after T rounds and let the learning rate be η1 =
+√
+√
+P
+· · · = ηT = S/(G′ T ), where G′ = d + H(C1 + C2 ). Define V1 (θ) = (x,a) [µ0 (x, a) + Φ(x,a),: θ]−
+3
+
+This condition requires that columns of Φ are close to their one step look-ahead.
+
+11
+
+and V2 (θ) =
+
+P
+
+x′
+
+(P − B)⊤
+:,x′ (µ0 + Φθ) . Then, for any δ ∈ (0, 1), with probability at least 1 − δ,
+ℓ
+µ⊤
+θbT
+
+≤ min
+θ∈Θ
+
+
+
+µ⊤
+θℓ
+
+
+1
++ (V1 (θ) + V2 (θ)) + O(ǫ) ,
+ǫ
+
+(13)
+
+where constants hidden in the big-O notation are polynomials in S, d, C1 , C2 , log(1/δ), V1 (θ),
+V2 (θ), τ (µθ ), and τ (µθbT ).
+Functions V1 and V2 are bounded by small constants for any set of normalized features: for any
+θ ∈ Θ,
+V1 (θ) ≤ kµ0 k1 + kΦθk1 ≤ 1 +
+V2 (θ) ≤
+≤
+
+X
+
+⊤
+P:,x
+′ (µ0 + Φθ) +
+
+x′
+
+X
+
+P:,x′
+
+x′
+
+!⊤
+
+X
+
+(x,a)
+
+X
+
+Φ(x,a),: θ ≤ 1 + Sd ,
+⊤
+B:,x
+′ (µ0 + Φθ)
+
+x′
+
+[µ0 + Φθ]+ +
+
+X
+
+B:,x′
+
+x′
+
+= (2)1⊤ [µ0 + Φθ]+
+
+!⊤
+
+[µ0 + Φθ]+
+
+≤ (2)1⊤ |µ0 + Φθ|
+= 2 + 2S .
+Thus V1 and V2 can be very small given a carefully designed set of features. The output θbT is a
+random vector as the algorithm is based on a stochastic convex optimization method. The above
+
+theorem shows that with high probability the policy implied by this output is near optimal.
+p
+The optimal choice for ǫ is ǫ = V1 (θ∗ ) + V2 (θ∗ ), where θ∗ is the minimizer of RHS of (13)
+and q
+not known in advance. Once we obtain θbT , we can estimate V1 (θbT ) and V2 (θbT ) and use input
+ǫ = V1 (θbT ) + V2 (θbT ) in a second run of the algorithm. This implies that the error bound scales
+p
+like O( V1 (θ∗ ) + V2 (θ∗ )).
+The next lemma, providing the first ingredient of the proof, relates the amount of constraint
+violation of a vector θ to resulting stationary distribution µθ .
+Lemma 2. Let u ∈ RXA be a vector. Let N be the set of points (x, a) where u(x, a) < 0 and S be
+complement of N . Assume
+X
+x,a
+
+u(x, a) = 1,
+
+X
+
+(x,a)∈N
+
+|u(x, a)| ≤ ǫ′ , u⊤ (P − B)
+
+1
+
+≤ ǫ′′ .
+
+Vector [u]+ / k[u]+ k1 defines a policy, which in turn defines a stationary distribution µu . We have
+
+that
+
+kµu − uk1 ≤ τ (µu ) log(1/ǫ′ )(2ǫ′ + ǫ′′ ) + 3ǫ′ .
+12
+
+Proof. Let f = u⊤ (P − B). From u⊤ (P − B)
+X
+
+(x,a)∈S
+
+such that
+
+P
+
+x′
+
+u(x, a)(P − B)(x,a),x′ = −
+
+≤ ǫ′′ , we get that for any x′ ∈ X ,
+
+1
+
+X
+
+(x,a)∈N
+
+u(x, a)(P − B)(x,a),x′ + f (x′ )
+
+|f (x′ )| ≤ ǫ′′ . Let h = [u]+ / k[u]+ k1 . Let H ′ = h⊤ (B − P ) 1 . We write
+H′ =
+
+X
+x′
+
+=
+
+X
+
+(x,a)∈S
+
+1 X
+1 + ǫ′ ′
+x
+
+h(x, a)(B − P )(x,a),x′
+X
+
+(x,a)∈S
+
+u(x, a)(B − P )(x,a),x′
+
+X
+1 X
+−
+u(x, a)(B − P )(x,a),x′ + f (x′ )
+1 + ǫ′ ′
+x
+(x,a)∈N
+
+
+X
+X
+X
+1 
+−
+u(x, a)(B − P )(x,a),x′ +
+≤
+f (x′ ) 
+1 + ǫ′
+x′
+x′
+(x,a)∈N
+
+
+X
+X
+1  ′′
+ǫ +
+|u(x, a)| (B − P )(x,a),x′ 
+≤
+1 + ǫ′
+′
+(x,a)∈N x
+
+
+′
+′′
+X
+1  ′′
+ ≤ 2ǫ + ǫ
+ǫ
++
+2
+|u(x,
+a)|
+≤
+1 + ǫ′
+1 + ǫ′
+=
+
+(x,a)∈N
+
+′
+
+′′
+
+≤ 2ǫ + ǫ .
+
+Vector h is almost a stationary distribution in the sense that
+h⊤ (B − P )
+Let kwk1,S =
+
+P
+
+(x,a)∈S
+
+1
+
+≤ 2ǫ′ + ǫ′′ .
+
+(14)
+
+|w(x, a)|. First, we have that
+kh − uk1 ≤ h −
+
+u
+1 + ǫ′
+
+1
+
++ u−
+
+u
+1 + ǫ′
+
+1,S
+
+≤ 2ǫ′ .
+
+Next we bound kµh − hk1 . Let ν0 = h be the initial state distribution. We will show that as we
+
+run policy h (equivalently, policy µh ), the state distribution converges to µh and this vector is close
+
+⊤
+′
+′′
+h
+to h. From (14), we have µ⊤
+0 P = h B + v0 , where v0 is such that kv0 k1 ≤ 2ǫ + ǫ . Let M be a
+h
+X × (XA) matrix that encodes policy h, M(i,(i−1)A+1)
+-(i,iA) = h(·|xi ). Other entries of this matrix
+
+13
+
+are zero. We get that
+h⊤ P M h = (h⊤ B + v0 )M h = h⊤ BM h + v0 M h = h⊤ + v0 M h ,
+⊤
+h
+where we used the fact that h⊤ BM h = h⊤ . Let µ⊤
+1 = h P M which is the state-action distribution
+
+after running policy h for one step. Let v1 = v0 M h P = v0 P h and notice that as kv0 k1 ≤ 2ǫ′ + ǫ′′ ,
+we also have that kv1 k1 = P h⊤ v0⊤
+
+1
+
+≤ kv0 k1 ≤ 2ǫ′ + ǫ′′ . Thus,
+
+⊤
+⊤
+µ⊤
+1 P = h P + v1 = h B + v0 + v1 .
+
+By repeating this argument for k rounds, we get that
+⊤
+h
+µ⊤
+k = h + (v0 + v1 + · · · + vk−1 )M
+
+and it is easy to see that
+(v0 + v1 + · · · + vk−1 )M h
+
+1
+
+≤
+
+k−1
+X
+i=0
+
+kvi k1 ≤ k(2ǫ′ + ǫ′′ ).
+
+Thus, kµk − hk1 ≤ k(2ǫ′ + ǫ′′ ). Now notice that µk is the state-action distribution after k rounds of
+policy µh . Thus, by mixing assumption, kµk − µh k1 ≤ e−k/τ (h) . By the choice of k = τ (h) log(1/ǫ′ ),
+
+we get that kµh − hk1 ≤ τ (h) log(1/ǫ′ )(2ǫ′ + ǫ′′ ) + ǫ′ .
+
+The second ingredient is the validity of using estimates of the subgradients. We assume access
+to estimates of the subgradient of a convex cost function. Error bounds can be obtained from
+results in the stochastic convex optimization literature; the following theorem, a high-probability
+version of Lemma 3.1 of Flaxman et al. (2005) for stochastic convex optimization, is sufficient.
+Theorem 3. Let Z be a positive constant and Z be a bounded subset of Rd such that for any
+
+z ∈ Z, kzk ≤ Z. Let (ft )t=1,2,...,T be a sequence of real-valued convex cost functions defined over
+
+Z. Let z1 , z2 , . . . , zT ∈ Z be defined by z1 = 0 and zt+1 = ΠZ (zt − ηft′ ), where ΠZ is the Euclidean
+
+projection onto Z, η > 0 is a learning rate, and f1′ , . . . , fT′ are unbiased subgradient estimates such
+√
+that E [ft′ |zt ] = ∇f (zt ) and kft′ k ≤ F for some F > 0. Then, for η = Z/(F T ), for any δ ∈ (0, 1),
+
+with probability at least 1 − δ,
+
+T
+T
+X
+X
+√
+ft (z) ≤ ZF T +
+ft (zt ) − min
+t=1
+
+z∈Z
+
+t=1
+
+Proof. Let z∗ = argminz∈Z
+
+PT
+
+t=1 ft (z)
+
+s
+
+(1 +
+
+4Z 2 T )
+
+
+
+
+
+1
+Z 2T
+2 log + d log 1 +
+.
+δ
+d
+
+(15)
+
+and ηt = ft′ − ∇ft (zt ). Define function ht : Z → R by
+
+ht (z) = ft (z) + zηt . Notice that ∇ht (zt ) = ∇ft (zt ) + ηt = ft′ . By Theorem 1 of Zinkevich (2003),
+14
+
+we get that
+T
+X
+t=1
+
+ht (zt ) −
+
+T
+X
+t=1
+
+ht (z∗ ) ≤
+
+T
+X
+t=1
+
+ht (zt ) − min
+z∈Z
+
+T
+X
+t=1
+
+√
+ht (z) ≤ ZF T .
+
+Thus,
+T
+X
+t=1
+
+Let St =
+
+Pt−1
+
+s=1 (z∗ −zs )ηs ,
+
+ft (zt ) −
+
+T
+X
+t=1
+
+T
+X
+√
+ft (z∗ ) ≤ ZF T +
+(z∗ − zt )ηt .
+t=1
+
+which is a self-normalized sum (de la Peña et al., 2009). By Corollary 3.8
+
+and Lemma E.3 of Abbasi-Yadkori (2012), we get that for any δ ∈ (0, 1), with probability at least
+
+1 − δ,
+
+v
+!
+u
+
+
+t−1
+u
+X
+Z 2t
+1
+t
+2
+|St | ≤
+(zt − z∗ )
+2 log + d log 1 +
+1+
+δ
+d
+s=1
+s
+
+
+
+1
+Z 2t
+2
+≤ (1 + 4Z t) 2 log + d log 1 +
+.
+δ
+d
+
+Thus,
+T
+X
+t=1
+
+ft (zt ) − min
+z∈Z
+
+T
+X
+t=1
+
+√
+ft (z) ≤ ZF T +
+
+s
+
+(1 +
+
+4Z 2 T )
+
+
+
+
+
+Z 2T
+1
+.
+2 log + d log 1 +
+δ
+d
+
+Remark 4. Let BT denote RHS of (15). If all cost functions are equal to f , then by convexity of
+P
+f and an application of Jensen’s inequality, we obtain that f ( Tt=1 zt /T ) − minz∈Z f (z) ≤ BT /T .
+As the next lemma shows, Theorem 3 can be applied in our problem to optimize cost function
+
+c.
+Lemma 5. Under the same conditions as in Theorem 1, we have that for any δ ∈ (0, 1), with
+probability at least 1 − δ,
+
+SG′
+c(θbT ) − min c(θ) ≤ √ +
+θ∈Θ
+T
+
+s
+
+1 + 4S 2 T
+T2
+
+
+
+
+
+S 2T
+1
+2 log + d log 1 +
+.
+δ
+d
+
+Proof. We prove the lemma by showing that conditions of Theorem 3 are satisfied.
+
+(16)
+We be-
+
+gin by calculating the subgradient and bounding its norm with a quantity independent of the
+number of states. If µ0 (x, a) + Φ(x,a),: θ ≥ 0, then ∇θ [µ0 (x, a) + Φ(x,a),: θ]− = 0. Otherwise,
+
+15
+
+∇θ [µ0 (x, a) + Φ(x,a),: θ]− = −Φ(x,a),: . Calculating,
+∇θ c(θ) = ℓ⊤ Φ + H
+= ℓ⊤ Φ − H
+
+X
+
+(x,a)
+
+X
+
+∇θ [µ0 (x, a) + Φ(x,a),: θ]− + H
+Φ(x,a),: I{µ0 (x,a)+Φ(x,a),: θ<0} + H
+
+X
+x′
+
+X
+x′
+
+(x,a)
+
+∇θ (P − B)⊤
+:,x′ Φθ
+
+⊤
+(P − B)⊤
+:,x′ Φs((P − B):,x′ Φθ) ,
+
+(17)
+
+where s(z) = I{z>0} − I{z<0} is the sign function. Let ± denote the plus or minus sign (the exact
+
+sign does not matter here). Let G = k∇θ c(θ)k. We have that
+
+v
+v
+2
+
+
+
+2
+u
+u
+uX
+uX
+d
+d
+X
+X
+X
+u
+u
+
+
+±
+G ≤ Ht
+Φ(x,a),i  .
+(P − B)(x,a),x′ Φ(x,a),i  + ℓ⊤ Φ + H t
+i=1
+
+x′
+
+i=1
+
+(x,a)
+
+(x,a)
+
+Thus,
+v
+v
+
+u
+u d
+uX
+d
+uX
+X
+√
+u
+
+G ≤ t (ℓ⊤ Φ:,i )2 + H d + H t
+i=1
+
+i=1
+
+(x,a)
+
+X
+±
+(P − B)(x,a),x′
+x′
+
+v
+
+2
+u
+uX
+d
+X
+√
+√
+√
+u
+2
+Φ(x,a),i  = d(1 + 3H) ,
+≤ d + H d + Ht
+i=1
+
+!
+
+2
+
+Φ(x,a),i 
+
+(x,a)
+
+where we used ℓ⊤ Φ:,i ≤ kℓk∞ kΦ:,i k1 ≤ 1.
+
+Next, we show that norm of the subgradient estimate is bounded by G′ :
+(P − B)⊤
+√
+Φ(xt ,at ),:
+:,x′t Φ
+d + H(C1 + C2 ) .
++H
+≤
+kgt k ≤ ℓ Φ + H
+q1 (xt , at )
+q2 (x′t )
+⊤
+
+Finally, we show that the subgradient estimate is unbiased:
+E [gt (θ)] = ℓ⊤ Φ − H
+
+X
+
+q1 (x, a)
+
+(x,a)
+
++H
+= ℓ⊤ Φ − H
+
+X
+
+Φ(x,a),:
+I
+q1 (x, a) {µ0 (x,a)+Φ(x,a),: θ<0}
+
+X
+x′
+
+′
+
+q2 (x )
+
+(P − B)⊤
+:,x′ Φ
+q2 (x′ )
+
+s((P − B)⊤
+:,x′ Φθ)
+
+Φ(x,a),: I{µ0 (x,a)+Φ(x,a),: θ<0} + H
+
+X
+⊤
+(P − B)⊤
+:,x′ Φs((P − B):,x′ Φθ)
+x′
+
+(x,a)
+
+= ∇θ c(θ) .
+The result then follows from Theorem 3 and Remark 4.
+
+16
+
+With both ingredients in place, we can prove our main result.
+Proof of Theorem 1. Let bT be the RHS of (16). Equation (16) implies that with high probability
+for any θ ∈ Θ,
+ℓ⊤ (µ0 + ΦθbT ) + H V1 (θbT ) + H V2 (θbT ) ≤ ℓ⊤ (µ0 + Φθ) + H V1 (θ) + H V2 (θ) + bT .
+
+(18)
+
+From (18), we get that
+
+1
+def
+V1 (θbT ) ≤
+(2(1 + S) + H V1 (θ) + H V2 (θ) + bT ) = ǫ′ ,
+H
+1
+def
+V2 (θbT ) ≤
+(2(1 + S) + H V1 (θ) + H V2 (θ) + bT ) = ǫ′′ .
+H
+
+(19)
+(20)
+
+Inequalities (19) and (20) and Lemma 2 give the following bound:
+
+µ⊤
+ℓ − (µ0 + ΦθbT )⊤ ℓ ≤ τ (µθbT ) log(1/ǫ′ )(2ǫ′ + ǫ′′ ) + 3ǫ′ .
+θb
+T
+
+(21)
+
+From (18) we also have
+
+ℓ⊤ (µ0 + ΦθbT ) ≤ ℓ⊤ (µ0 + Φθ) + H V1 (θ) + H V2 (θ) + bT ,
+
+which, together with (21) and Lemma 2, gives the final result:
+
+µ⊤
+ℓ ≤ ℓ⊤ (µ0 + Φθ) + H V1 (θ) + H V2 (θ) + bT + τ (µθbT ) log(1/ǫ′ )(2ǫ′ + ǫ′′ ) + 3ǫ′
+θb
+T
+
+′
+′
+′′
+′
+≤ µ⊤
+θ ℓ + H V1 (θ) + H V2 (θ) + bT + τ (µθbT ) log(1/ǫ )(2ǫ + ǫ ) + 3ǫ
+
++ τ (µθ ) log(1/V1 (θ))(2V1 (θ) + V2 (θ)) + 3V1 (θ) .
+√
+Recall that bT = O(H/ T ). Because H = 1/ǫ and T = 1/ǫ4 , we get that with high probability,
+1
+⊤
+for any θ ∈ Θ, µ⊤
+b ℓ ≤ µθ ℓ + ǫ (V1 (θ) + V2 (θ)) + O(ǫ).
+θT
+
+Let’s compare Theorem 1 with results of de Farias and Van Roy (2006). Their approach is to
+relate the original MDP to a perturbed version4 and then analyze the corresponding ALP. (See
+Section 2 for more details.) Let Ψ be a feature matrix that is used to estimate value functions.
+Recall that λ∗ is the average loss of the optimal policy and λw is the average loss of the greedy
+policy with respect to value function Ψw. Let h∗γ be the differential value function when the
+restart probability in the perturbed MDP is 1 − γ. For vector v and positive vector u, define the
+4
+
+In a perturbed MDP, the state process restarts with a certain probability to a restart distribution. Such perturbed
+MDPs are closely related to discounted MDPs.
+
+17
+
+weighted maximum norm kvk∞,u = maxx u(x) |v(x)|. de Farias and Van Roy (2006) prove that for
+
+appropriate constants C, C ′ > 0 and weight vector u,
+λw ∗ − λ∗ ≤
+
+C
+min h∗γ − Ψw
+1−γ w
+
+∞,u
+
++ C ′ (1 − γ) .
+
+(22)
+
+This bound has similarities to bound (13): tightness of both bounds depends on the quality of feature vectors in representing the relevant quantities (stationary distributions in (13) and value functions in (22)). Once again, we emphasize that the algorithm proposed by de Farias and Van Roy
+(2006) is computationally expensive and requires access to a distribution that depends on optimal
+policy.
+
+4
+
+Sampling Constraints
+
+In this section we describe our second algorithm for average cost MDP problems. Using the results on polytope constraint sampling (de Farias and Van Roy, 2004, Calafiore and Campi, 2005,
+Campi and Garatti, 2008), we reduce approximate the solution to the dual ALP with the solution
+to a smaller, sampled LP. Basically, de Farias and Van Roy (2004) claim that given a set of affine
+constraints in Rd and some measure q over these constraints, if we sample k = O(d log(1/δ)/ǫ)
+constraints, then with probability at least 1 − δ, any point that satisfies all of these k sampled
+
+constraints also satisfies 1 − ǫ of the original set of constraints under measure q. This result is
+
+independent of the number of original constraints.
+
+Let L be a family of affine constraints indexed by i: constraint i is satisfied at point w ∈ Rd
+if a⊤
+i w + bi ≥ 0. Let I be the family of constraints by selecting k random constraints in L with
+
+respect to measure q.
+
+Theorem 6 (de Farias and Van Roy (2004)). Assume there exists a vector that satisfies all con
+2
+straints in L. For any δ and ǫ, if we take m ≥ 4ǫ d log 12
+ǫ + log δ , then, with probability 1 − δ, a
+set I of m i.i.d. random variables drawn from L with respect to distribution q satisfies
+sup
+{w:∀i∈I,a⊤
+i w+bi ≥0}
+
+q({j : a⊤
+j w + bj < 0}) ≤ ǫ .
+
+Our algorithm takes the following inputs: a positive constant S, a stationary distribution µ0 ,
+a set Θ = {θ : θ ⊤ Φ⊤ 1 = 1 − µ⊤
+0 1, kθk ≤ S}, a distribution q1 over the state-action space, a
+distribution q2 over the state space, and constraint violation functions v1 : X × A → [−1, 0] and
+
+v2 : X → [0, 1]. We will consider two families of constraints:
+
+L1 = {µ0 (x, a) + Φ(x,a),: θ ≥ v1 (x, a) | (x, a) ∈ X × A} ,
+n
+o[n
+o
+⊤
+L2 = (P − B)⊤
+(µ
++
+Φθ)
+≤
+v
+(x)
+|
+x
+∈
+X
+(P
+−
+B)
+(µ
++
+Φθ)
+≥
+−v
+(x)
+|
+x
+∈
+X
+.
+2
+2
+:,x 0
+:,x 0
+18
+
+Input: Constant S > 0, stationary distribution µ0 , distributions q1
+and q2 , constraint violation functions v1 and v2 , number of samples
+k1 and k2 .
+For i = 1, 2, let Ii be ki constraints sampled from Li under distribution
+qi .
+Let I be the set of vectors that satisfy all constraints in I1 and I2 .
+Let θe be the solution to LP:
+min ℓ⊤ (µ0 + Φθ) ,
+
+(24)
+
+θ∈Θ
+
+s.t.
+
+θ ∈ I, θ ∈ Θ .
+
+Return policy µθe.
+Figure 2: The Constraint Sampling Method for Markov Decision Processes
+
+Let θ∗ be the solution of
+min ℓ⊤ (µ0 + Φθ) ,
+
+(23)
+
+θ∈Θ
+
+s.t.
+
+θ ∈ L1 , θ ∈ L2 , θ ∈ Θ .
+
+The constraint sampling algorithm is shown in Figure 2. We refer to (24) as the sampled ALP,
+while we refer to (3) as the full ALP.
+
+4.1
+
+Analysis
+
+We require Assumption A1 as well as:
+Assumption A2 (Feasibility)
+
+There exists a vector that satisfies all constraints L1 and L2 .
+
+Validity of this assumption depends on the choice of functions v1 and v2 . Larger functions ensure
+that this assumption is satisfied, but as we show, this leads to larger error.
+The next two lemmas apply theorem 6 to constraints L1 and L2 , respectively.
+
+
+2
+Lemma 7. Let δ1 ∈ (0, 1) and ǫ1 ∈ (0, 1). If we choose k1 = ǫ41 d log 12
++
+log
+ǫ1
+δ1 , then with
+P
+e − ≤ SC1 ǫ1 + kv1 k .
+probability at least 1 − δ1 , (x,a) [µ0 (x, a) + Φ(x,a),: θ]
+1
+
+Proof. Applying theorem 6, we have that w.p. 1 − δ1 , q1 (µ0 (x, a) + Φ(x,a),: θe ≥ v1 (x, a)) ≥ 1 − ǫ1 ,
+
+and thus
+
+X
+
+q1 (x, a)I{µ0 (x,a)+Φ
+
+e
+
+(x,a),: θ<v1 (x,a)}
+
+(x,a)
+
+19
+
+≤ ǫ1 .
+
+Let L =
+
+P
+
+(x,a)
+
+e − . With probability 1 − δ1 ,
+[µ0 (x, a) + Φ(x,a),: θ]
+L=
+
+X
+
+e− I
+[µ0 (x, a) + Φ(x,a),: θ]
+{µ0 (x,a)+Φ
+
+(x,a)
+
++
+
+X
+
+(x,a)
+
+≤
+≤
+≤
+
+X
+
+e− I
+[µ0 (x, a) + Φ(x,a),: θ]
+{µ0 (x,a)+Φ
+
+Φ(x,a),: θe I{µ0 (x,a)+Φ
+
+(x,a)
+
+X
+
+Φ(x,a),:
+
+(x,a)
+
+X
+
+e
+
+(x,a),: θ≤v1 (x,a)}
+
+e
+
+(x,a),: θ≤v1 (x,a)}
+
+θe I{µ0 (x,a)+Φ
+
+SC1 q1 (x, a)I{µ0 (x,a)+Φ
+
+e
+
+(x,a),: θ>v1 (x,a)}
+
++ kv1 k1
+
+e
+
+(x,a),: θ≤v1 (x,a)}
+
+e
+
+(x,a),: θ≤v1 (x,a)}
+
+(x,a)
+
++ kv1 k1
+
++ kv1 k1
+
+≤ SC1 ǫ1 + kv1 k1 .
+
+Lemma 8. Let δ2 ∈ (0, 1) and ǫ2 ∈ (0, 1). If we choose k2 =
+probability at least 1 − δ2 , (P − B)⊤ Φθe
+
+1
+
+≤ SC2 ǫ2 + kv2 k1 .
+
+Proof. Applying theorem 6, we have that q2
+X
+x
+
+Let L′ =
+
+P
+
+x
+
+
+
+4
+ǫ2
+
+
+d log
+
+12
+ǫ2
+
+
+e ≤ v2 (x) ≥ 1 − ǫ2 . This yields
+Φ
+θ
+(P − B)⊤
+:,x
+
+q2 (x)I{|(P −B)⊤
+
+e|≥v2 (x)}
+
+:,x Φθ
+
+e
+(P − B)⊤
+:,x Φθ . Thus, with probability 1 − δ2 ,
+X
+
+≤ ǫ2 .
+
+e
+(P − B)⊤
+e
+:,x Φθ I{|(P −B)⊤
+:,x Φθ |>v2 (x)}
+x
+X
+e
+(P − B)⊤
++
+e
+:,x Φθ I{|(P −B)⊤
+:,x Φθ |≤v2 (x)}
+x
+X
+θe I{|(P −B)⊤ Φθe|>v2 (x)} + kv2 k1
+≤
+(P − B)⊤
+:,x Φ
+:,x
+x
+X
+≤
+SC2 q2 (x)I{|(P −B)⊤ Φθe|>v2 (x)} + kv2 k1
+:,x
+
+L′ =
+
+
++ log δ22 , then with
+
+x
+
+≤ SC2 ǫ2 + kv2 k1 ,
+where the last step follows from (25).
+
+20
+
+(25)
+
+a1
+d4
+
+µ1
+
+d1
+
+µ2
+
+d2
+
+µ4
+
+d2
+
+µ3
+
+a3
+
+server1
+
+server2
+
+Figure 3: The 4D queueing network. Customers arrive at queue µ1 or µ3 then are referred to queue
+µ2 or µ4 , respectively. Server 1 can either process queue 1 or 4, and server 2 can only process queue
+2 or 3.
+
+We are ready to prove the main result of this section. Let θe denote the solution of the sampled
+
+ALP, θ∗ denote the solution of the full ALP (23), and µθe be the stationary distribution of the
+solution policy. Our goal is to compare ℓ⊤ µθe and ℓ⊤ µθ∗ .
+
+Theorem 9. Let ǫ ∈ (0, 1) and δ ∈ (0, 1). Let ǫ′ = SC1 ǫ + kv1 k1 and ǫ′′ = SC2 ǫ + kv2 k1 . If we
+
+
+4
+4
+4
+12
+sample constraints with k1 = 4ǫ d log 12
+ǫ + log δ and k2 = ǫ d log ǫ + log δ , then, with probability
+1 − δ,
+ℓ⊤ µθe ≤ ℓ⊤ µθ∗ + τ (µθe) log(1/ǫ′ )(2ǫ′ + ǫ′′ ) + 3ǫ′
++ τ (µ∗ ) log(1/ kv1 k)(2 kv1 k + kv2 k) + 3 kv1 k .
+Proof. Let δ1 = δ2 = δ/2. By Lemmas 7 and 8, w.p. 1 − δ,
+e
+(P − B)⊤ (µ0 + Φθ)
+
+1
+
+≤ ǫ′′ . Then by Lemma 2,
+
+P
+
+(x,a)
+
+e − ≤ ǫ′ and
+[µ0 (x, a) + Φ(x,a),: θ]
+
+e ≤ τ (µ e) log(1/ǫ′ )(2ǫ′ + ǫ′′ ) + 3ǫ′ .
+ℓ⊤ µθe − ℓ⊤ (µ0 + Φθ)
+θ
+
+e ≤ ℓ⊤ (µ0 + Φθ∗ ). Thus,
+We also have that ℓ⊤ (µ0 + Φθ)
+
+ℓ⊤ µθe ≤ ℓ⊤ (µ0 + Φθ∗ ) + τ (µθe) log(1/ǫ′ )(2ǫ′ + ǫ′′ ) + 3ǫ′
+≤ ℓ⊤ µθ∗ + τ (µθe) log(1/ǫ′ )(2ǫ′ + ǫ′′ ) + 3ǫ′
+
++ τ (µθ∗ ) log(1/ kv1 k)(2 kv1 k + kv2 k) + 3 kv1 k ,
+where the last step follows from Lemma 2.
+
+21
+
+5
+
+Experiments
+
+In this section, we apply both algorithms to the four-dimensional discrete-time queueing network
+illustrated in Figure 5. This network has a relatively long history; see, e.g. Rybko and Stolyar
+(1992) and more recently de Farias and Van Roy (2003a) (c.f. section 6.2). There are four queues,
+µ1 , . . . , µ4 , each with state 0, . . . , B. Since the cardinality of the state space is X = (1 + B)4 , even
+a modest B results in huge state-spaces. For time t, let Xt ∈ X be the state and si,t ∈ {0, 1},
+
+i = 1, 2, 3, 3 denote whether queue i is being served. Server 1 only serves queue 1 or 4, server 2
+only serves queue 2 or 3, and neither server can idle. Thus, s1,t + s4,t = 1 and s2,t + s3,t = 1. The
+dynamics are as follows. At each time t, the following random variables are sampled independently:
+A1,t ∼ Bernoulli(a1 ), A3,t ∼ Bernoulli(a3 ), and Di,t ∼ Bernoulli(di ∗ si,t ) for i = 1, 2, 3, 4. Using
+e1 , . . . , e4 to denote the standard basis vectors, the dynamics are:
+′
+Xt+1
+=Xt + A1,t e1 + A3,t e3
+
++ D1,t (e2 − e1 ) − D2,t e2
++ D3,t (e4 − e3 ) − D4,t e4 ,
+′ )) (i.e. all four states are thresholded from below by 0 and above
+and Xt+1 = max(0, min((B), Xt+1
+
+by B). The loss function is the total queue size: ℓ(Xt ) = ||Xt ||1 . We compared our method against
+
+two common heuristics. In the first, denoted LONGER, each server operates on the queue that is
+longer with ties broken uniformly at random (e.g. if queue 1 and 4 had the same size, they are
+equally likely to be served). In the second, denoted LBFS (last buffer first served), the downstream
+queues always have priority (server 1 will serve queue 4 unless it has length 0, and server 2 will serve
+queue 2 unless it has length 0). These heuristics are common and have been used an benchmarks
+for queueing networks (e.g. de Farias and Van Roy (2003a)).
+We used a1 = a3 = .08, d1 = d2 = .12, and d3 = d4 = .28, and buffer sizes B1 = B4 = 38, B2 =
+B3 = 25 as the parameters of the network.. The asymmetric size was chosen because server 1 is the
+bottleneck and tend to have has longer queues. The first two features are the stationary distributions
+corresponding to two heuristics. We also included two types of non-stationary-distribution features.
+For every interval (0, 5], (6, 10], . . . , (45, 50] and action A, we added a feature ψ with ϕ(x, a) = 1 if
+ℓ(x, a) is in the interval and a = A. To define the second type, consider the three intervals I1 =
+[0, 10], I2 = [11, 20], and I3 = [21, 25]. For every 4-tuple of intervals (J1 , J2 , J3 , J4 ) ∈ {I1 , I2 , I3 }4
+
+and action A, we created a feature ψ with ψ(x, a) = 1 only if xi ∈ Ji and a = A. Every feature was
+
+normalized to sum to 1. In total, we had 372 features which is about a 104 reduction in dimension
+from the original problem.
+
+22
+
+loss of running average
+
+total constraint violations
+
+average loss of the running average policy
+
+0.42
+
+0.395
+
+0.4
+
+0.39
+
+−2.3
+
+10
+
+0.385
+
+0.38
+
+0.38
+0.36
+
+−2.4
+
+10
+
+0.375
+
+0.34
+0.37
+0.32
+
+0.365
+
+−2.5
+
+10
+0.3
+
+0
+
+1
+
+2
+
+3
+
+4
+
+0
+
+1
+
+2
+
+4
+
+3
+
+4
+
+0.36
+
+0
+
+1
+
+2
+
+3
+
+4
+
+x 10
+
+x 10
+
+4
+4
+
+x 10
+
+Figure 4: The left plot is of the linear objective of the running average, i.e. ℓ⊤ Φθbt . The center
+plot is the sum of the two constraint violations of θbt , and the right plot is ℓ⊤ µ̃θbt (the average loss of
+the derived policy). The two horizontal lines correspond to the loss of the two heuristics, LONGER
+and LBFS.
+
+5.1
+
+Stochastic Gradient Descent
+
+We ran our stochastic gradient descent algorithm with I = 1000 sampled constraints and constraint
+gain H = 2. Our learning rate began at 10−4 and halved every 2000 iterations. The results of
+our algorithm are plotted in Figure 5.1, where θbt denotes the running average of θt . The left plot
+
+is of the LP objective, ℓ⊤ (µ0 + Φθbt ). The middle plot is of the sum of the constraint violations,
+[µ0 + Φθbt ]− + (P − B)⊤ Φθbt . Thus, c(θbt ) is a scaled sum of the first two plots. Finally, the
+1
+
+1
+
+right plot is of the average losses, ℓ⊤ µθbt and the two horizontal lines correspond to the loss of the
+two heuristics, LONGER and LBFS. The right plot demonstrates that, as predicted by our theory,
+minimizing the surrogate loss c(θ) does lead to lower average losses.
+All previous algorithms (including de Farias and Van Roy (2003a)) work with value functions,
+while our algorithm works with stationary distributions. Due to this difference, we cannot use
+the same feature vectors to make a direct comparison. The solution that we find in this different
+approximating set is slightly worse than the solution of de Farias and Van Roy (2003a).
+
+5.2
+
+Constraint Sampling
+
+For the constraint sampling algorithm, we sampled the simplex constraints uniformly with 10
+different sample sizes: 508, 792, 1235, 1926, 3003, 4684, 7305, 11393, 17768, and 27712. Since
+XA = 4.1 ∗ 106 , these sample sizes correspond to less that 1%. The stationary constraints were
+
+sampled in the same proportion (i.e. A times fewer samples). Let a1 , . . . , aAN and b1 , . . . , bN be
+the indices of the sampled simplex and stationary constraints, respectively. Explicitly, the sampled
+
+23
+
+LP is:
+min(Φθ)⊤ ℓ ,
+
+(26)
+
+θ
+
+s.t. (Φθ)⊤ 1 = 1, Φai ,; θ ≥ 0, ∀i = 1, . . . , AN,
+Φθ ⊤ (P − B):,bi ≤ ǫs , ∀i = 1, . . . , N, kθk∞ ≤ M
+
+(27)
+
+where M and ǫ are necessary to ensure the LP always has a feasible and bounded solution. This
+corresponds to setting v1 = 0 and v2 = ǫ. In particular, we used M = 3 and ǫ = 10−3 . Using
+differenc values of ǫ did not have a large effect on the behavior of the algorithm.
+For each sample size, we sample the constraints, solve the LP, then simulate the average loss of
+the policy. We repeated this procedure 35 times for each sample size and plotted the mean with
+error bars corresponding to the variance across each sample size in Figure 5.2. Note the log scale
+on the x-axis. The best loss corresponds to 4684 sampled simplex constraints, or roughly 1%, and
+is a marked improvement over the average loss found by the stochastic gradient descent method.
+However, changing the sample size by a factor of 4 in either direction is enough to obliterate this
+advantage.
+average loss produced by the constraint sampling algorithm with variance bars
+70
+65
+60
+
+average loss
+
+55
+50
+45
+40
+35
+30
+25
+
+3
+
+10
+
+4
+
+10
+number of simplex constraints sampled
+
+Figure 5: Average loss with variance error bars of the constraint sampling algorithm run with a
+variety of sample sizes.
+24
+
+First, we notice that the mean average loss is not monotonic. If we use too few constraints, then
+the sampled ALP does not reflect our original problem and we expect that the solution will make
+poor policies. On the other hand, if we sample too many constraints, then the LP is too restrictive
+and cannot adequately explore the feature space. To explain the increasing variance, recall that we
+have three families of constraints: the simplex constraints, the stationarity constraints, and the box
+constraints (i.e. |θ|∞ ≤ M ). Only the simplex and stationarity constraints are sampled. For the
+
+small sample sizes, the majority of the active constraints are the box constraint so θ̃ (the minimizer
+
+of the LP) is not very sensitive to the random sample. However, as the sample size grows, so does
+the number of active simplex and stationarity constraints; hence, the random constraints affect θ̃
+to a greater degree and the variance increases.
+
+6
+
+Conclusions
+
+In this paper, we defined and solved the extended large-scale efficient ALP problem. We proved
+that, under certain assumptions about the dynamics, the stochastic subgradient method produces
+a policy with average loss competitive to all θ ∈ Θ, not just all θ producing a stationary distri-
+
+bution. We demonstrated this algorithm on the Rybko-Stoylar four-dimensional queueing network
+
+and recovered a policy better than two common heuristics and comparable to previous results on
+ALPs de Farias and Van Roy (2003a). A future direction is to find other interesting regularity
+conditions under which we can handle large-scale MDP problems. We also plan to conduct more
+experiments with challenging large-scale problems.
+
+7
+
+Acknowledgements
+
+We gratefully acknowledge the support of the NSF through grant CCF-1115788 and of the ARC
+through an Australian Research Council Australian Laureate Fellowship (FL110100281).
+
+

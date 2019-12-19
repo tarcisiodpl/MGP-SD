@@ -1,0 +1,373 @@
+community,adi_author,titles_papers
+6,100229,Plausible reasoning from spatial observations
+6,31206,A Monte-Carlo Algorithm for Dempster-Shafer Belief;The Computational Complexity of Dominance and Consistency in CP-Nets;The Assumptions Behind Dempster's Rule;Generating Graphoids from Generalised Conditional Probability;Rules, Belief Functions and Default Logic;Order-of-Magnitude Influence Diagrams
+6,100228,New Results on Equilibria in Strategic Candidacy;Penalty logic and its Link with Dempster-Shafer Theory;Syntax-based Default Reasoning as Probabilistic Model-based Diagnosis;The Computational Complexity of Dominance and Consistency in CP-Nets;Possibilistic decreasing persistence;Group Activity Selection Problem;Plausible reasoning from spatial observations;A Logic of Graded Possibility and Certainty Coping with Partial Inconsistency;Possibility and Necessity Functions over Non-classical Logics
+6,135504,The Complexity of Plan Existence and Evaluation in Probabilistic Domains;The Computational Complexity of Dominance and Consistency in CP-Nets
+6,101892,Building a Stochastic Dynamic Model of Application Use
+6,101893,A Dynamic Approach to Probabilistic Inference;Solving Asymmetric Decision Problems with Influence Diagrams;Building a Stochastic Dynamic Model of Application Use;Exploring Localization in Bayesian Networks for Large Expert Systems;Incremental computation of the value of perfect information in stepwise-decomposable influence diagrams;What is an Optimal Diagnosis?;Sidestepping the Triangulation Problem in Bayesian Net Computations;High Level Path Planning with Uncertainty;The use of conflicts in searching Bayesian networks;Representing Bayesian Networks within Probabilistic Horn Abduction
+6,101898,Probabilistic Arc Consistency: A Connection between Constraint Reasoning and Probabilistic Reasoning;A Dynamic Approach to Probabilistic Inference
+6,101899,Probabilistic Arc Consistency: A Connection between Constraint Reasoning and Probabilistic Reasoning
+6,103920,Sidestepping the Triangulation Problem in Bayesian Net Computations;A Method for Speeding Up Value Iteration in Partially Observable Markov Decision Processes;Fast Value Iteration for Goal-Directed Markov Decision Processes;Incremental Pruning: A Simple, Fast, Exact Method for Partially Observable Markov Decision Processes;Incremental computation of the value of perfect information in stepwise-decomposable influence diagrams;Region-Based Approximations for Planning in Stochastic Domains;Independence of Causal Influence and Clique Tree Propagation;Inter-causal Independence and Heterogeneous Factorization;Solving Asymmetric Decision Problems with Influence Diagrams
+6,78646,Possibilistic Constraint Satisfaction Problems or "How to handle soft constraints?";Bounds Arc Consistency for Weighted CSPs;From influence diagrams to multi-operator cluster DAGs;Penalty logic and its Link with Dempster-Shafer Theory
+6,140361,High Level Path Planning with Uncertainty;Incremental computation of the value of perfect information in stepwise-decomposable influence diagrams;Solving Asymmetric Decision Problems with Influence Diagrams
+6,103921,A Method for Speeding Up Value Iteration in Partially Observable Markov Decision Processes
+6,103922,A Method for Speeding Up Value Iteration in Partially Observable Markov Decision Processes;Fast Value Iteration for Goal-Directed Markov Decision Processes
+6,106627,Ending-based Strategies for Part-of-speech Tagging;Probabilistic Semantics and Defaults
+6,135496,Incremental Pruning: A Simple, Fast, Exact Method for Partially Observable Markov Decision Processes
+6,135498,Exploring Parallelism in Learning Belief Networks
+6,135505,The Complexity of Plan Existence and Evaluation in Probabilistic Domains
+6,135529,Region-Based Approximations for Planning in Stochastic Domains
+6,140321,Arguments using ontological and causal knowledge;Possibility and Necessity Functions over Non-classical Logics
+6,140333,Penalty logic and its Link with Dempster-Shafer Theory
+6,142895,Possibilistic decreasing persistence
+6,146698,Exploring Localization in Bayesian Networks for Large Expert Systems
+6,164906,The Computational Complexity of Dominance and Consistency in CP-Nets
+6,164947,Bounds Arc Consistency for Weighted CSPs
+6,164948,Bounds Arc Consistency for Weighted CSPs
+6,164949,Bounds Arc Consistency for Weighted CSPs
+6,165376,Arguments using ontological and causal knowledge
+6,165377,Arguments using ontological and causal knowledge
+6,6474,Learning Belief Networks in Domains with Recursively Embedded Pseudo Independent Submodels;A Robust Quantum Random Access Memory;Exploring Parallelism in Learning Belief Networks;Exploring Localization in Bayesian Networks for Large Expert Systems
+6,31090,Learning is planning: near Bayes-optimal reinforcement learning via Monte-Carlo tree search;A Bayesian Sampling Approach to Exploration in Reinforcement Learning
+6,31091,CORL: A Continuous-state Offset-dynamics Reinforcement Learner;A Bayesian Sampling Approach to Exploration in Reinforcement Learning;Learning is planning: near Bayes-optimal reinforcement learning via Monte-Carlo tree search;Incremental Pruning: A Simple, Fast, Exact Method for Partially Observable Markov Decision Processes;The Complexity of Plan Existence and Evaluation in Probabilistic Domains;Exploring compact reinforcement-learning representations with linear regression;Incremental Model-based Learners With Formal Learning-Time Guarantees;A Polynomial-time Nash Equilibrium Algorithm for Repeated Stochastic Games;Graphical Models for Game Theory;An Efficient Optimal-Equilibrium Algorithm for Two-player Game Trees
+6,31208,Reversible Jump MCMC Simulated Annealing for Neural Networks;Bayesian Multi-Scale Optimistic Optimization;Predicting Parameters in Deep Learning;Exploiting correlation and budget constraints in Bayesian multi-armed bandit optimization;Theoretical Analysis of Bayesian Optimisation with Unknown Gaussian Process Hyper-Parameters;Learning about individuals from group statistics;Regret Bounds for Deterministic Gaussian Process Bandits;Distributed Parameter Estimation in Probabilistic Graphical Models;A Deep Architecture for Semantic Parsing;Rao-Blackwellised Particle Filtering for Dynamic Bayesian Networks;Adaptive Hamiltonian and Riemann Manifold Monte Carlo Samplers;Variational MCMC;Large-Flip Importance Sampling;Herded Gibbs Sampling;Intracluster Moves for Constrained Discrete-Space MCMC;Toward Practical N2 Monte Carlo: the Marginal Particle Filter;Bayesian Optimization in a Billion Dimensions via Random Embeddings;New inference strategies for solving Markov Decision Processes using reversible jump MCMC;Nonparametric Bayesian Logic;Exponential Regret Bounds for Gaussian Process Bandits with Deterministic Observations;Decentralized, Adaptive, Look-Ahead Particle Filtering;Asymptotic Efficiency of Deterministic Estimators for Discrete Energy-Based Models: Ratio Matching and Pseudolikelihood
+6,55886,Eccentricity distributions in nucleus-nucleus collisions;Independence of Causal Influence and Clique Tree Propagation;Non linearities in the harmonic spectrum of heavy ion collisions with ideal and viscous hydrodynamics;LP-rounding Algorithms for the Fault-Tolerant Facility Placement Problem
+6,58553,Nonparametric Bayesian Logic;Constraint Processing in Lifted Probabilistic Inference
+6,58554,Inter-causal Independence and Heterogeneous Factorization;Probabilistic Semantics and Defaults;Symmetric Collaborative Filtering Using the Noisy Sensor Model;Nonparametric Bayesian Logic;Constraint Processing in Lifted Probabilistic Inference;Seeing the Forest Despite the Trees: Large Scale Spatial-Temporal Decision Making
+6,58581,Seeing the Forest Despite the Trees: Large Scale Spatial-Temporal Decision Making
+6,58582,Three-dimensional, self-similar, light in unstable canonical optical resonators;Seeing the Forest Despite the Trees: Large Scale Spatial-Temporal Decision Making
+6,66605,The enriched Crouzeix-Raviart elements are equivalent to the Raviart-Thomas elements;The simplest mixed finite element method for linear elasticity in the symmetric formulation on $n$-rectangular grids;Nonconforming finite element methods on quadrilateral meshes;Learning Belief Networks in Domains with Recursively Embedded Pseudo Independent Submodels;Giant topological insulator gap in graphene with 5d adatoms;Chern Half Metals: A New Class of Topological Materials to Realize the Quantum Anomalous Hall Effect;Runge-Kutta Central Discontinuous Galerkin BGK Method for the Navier-Stokes Equations;SEAL: Spatio-Textual Similarity Search;Control of the magnetism and magnetic anisotropy of a single-molecule magnet with an electric field;Magnetism and Magnetic Anisotropy of Transition Metal-Phthalocyanine Molecules;Seminormal forms and cyclotomic quiver Hecke algebras of type $A$
+6,78645,From influence diagrams to multi-operator cluster DAGs
+6,78647,From influence diagrams to multi-operator cluster DAGs
+6,81173,Nonparametric Bayesian Logic
+80,105297,An Architecture for Probabilistic Concept-Based Information Retrieval
+80,135512,Computational Advantages of Relevance Reasoning in Bayesian Belief Networks
+80,140359,Knowledge Engineering for Large Belief Networks
+80,140360,An Approximate Nonmyopic Computation for Value of Information;Knowledge Engineering for Large Belief Networks
+80,100200,Computational Investigation of Low-Discrepancy Sequences in Simulation Algorithms for Bayesian Networks;Confidence Inference in Bayesian Networks
+80,100247,Approximating MAP using Local Search
+80,102659,User Interface Tools for Navigation in Conditional Probability Tables and Elicitation of Probabilities in Bayesian Networks
+80,105236,Qualitative Propagation and Scenario-based Explanation of Probabilistic Reasoning;Knowledge Engineering for Large Belief Networks;Intercausal Reasoning with Uninstantiated Ancestor Nodes;A Comparison of Decision Analysis and Expert Rules for Sequential Diagnosis;Efficient Estimation of the Value of Information in Monte Carlo Models;Search-based Methods to Bound Diagnostic Probabilities in Very Large Belief Nets;An Experimental Comparison of Numerical and Qualitative Probabilistic Reasoning
+80,105241,Tradeoffs in Constructing and Evaluating Temporal Influence Diagrams;Dynamic Network Updating Techniques For Diagnostic Reasoning;An Experimental Comparison of Numerical and Qualitative Probabilistic Reasoning;A Standard Approach for Optimizing Belief Network Inference using Query DAGs;Knowledge Engineering for Large Belief Networks;What is an Optimal Diagnosis?
+80,105296,Symbolic Probabilistic Inference with Evidence Potential;Symbolic Probabilistic Inference with Continuous Variables;An Architecture for Probabilistic Concept-Based Information Retrieval;Refinement and Coarsening of Bayesian Networks;Backward Simulation in Bayesian Networks
+80,140336,An Experimental Comparison of Numerical and Qualitative Probabilistic Reasoning;Backward Simulation in Bayesian Networks
+80,105298,An Architecture for Probabilistic Concept-Based Information Retrieval
+80,105299,An Architecture for Probabilistic Concept-Based Information Retrieval
+80,105306,Symbolic Probabilistic Inference with Continuous Variables;Refinement and Coarsening of Bayesian Networks;Symbolic Probabilistic Inference with Evidence Potential
+80,81169,Exploiting Evidence in Probabilistic Inference;Geotagging One Hundred Million Twitter Accounts with Total Variation Minimization
+80,140343,An Experimental Comparison of Numerical and Qualitative Probabilistic Reasoning
+80,142864,Causality in Bayesian Belief Networks
+80,140325,Efficient Estimation of the Value of Information in Monte Carlo Models
+80,106618,A Comparison of Decision Analysis and Expert Rules for Sequential Diagnosis
+80,31116,Node Splitting: A Scheme for Generating Upper Bounds in Bayesian Networks;A Variational Approach for Approximating Bayesian Networks by Edge Deletion;Approximating the Partition Function by Deleting and then Correcting for Model Edges;EDML: A Method for Learning Parameters in Bayesian Networks;On Bayesian Network Approximation by Edge Deletion
+80,31117,EDML: A Method for Learning Parameters in Bayesian Networks
+80,31118,On Bayesian Network Approximation by Edge Deletion;On the Relation between Kappa Calculus and Probabilistic Reasoning;Argument Calculus and Networks;Exploiting Evidence in Probabilistic Inference;On the Robustness of Most Probable Explanations;A Variational Approach for Approximating Bayesian Networks by Edge Deletion;A Standard Approach for Optimizing Belief Network Inference using Query DAGs;Approximating MAP using Local Search;Any-Space Probabilistic Inference;Objection-Based Causal Networks;A Differential Approach to Inference in Bayesian Networks;Action Networks: A Framework for Reasoning about Actions and Change under Uncertainty;Approximating the Partition Function by Deleting and then Correcting for Model Edges;EDML: A Method for Learning Parameters in Bayesian Networks;Node Splitting: A Scheme for Generating Upper Bounds in Bayesian Networks
+80,46338,Learning Why Things Change: The Difference-Based Causality Learner
+80,46339,Learning Why Things Change: The Difference-Based Causality Learner;Efficient inference in persistent Dynamic Bayesian Networks
+80,46340,Intercausal Reasoning with Uninstantiated Ancestor Nodes;Causality in Bayesian Belief Networks;Importance Sampling in Bayesian Networks: An Influence-Based Approximation Strategy for Importance Functions;Confidence Inference in Bayesian Networks;Qualitative Propagation and Scenario-based Explanation of Probabilistic Reasoning;Computational Advantages of Relevance Reasoning in Bayesian Belief Networks;Learning Why Things Change: The Difference-Based Causality Learner;Some Properties of Joint Probability Distributions;Causal Mechanism-based Model Construction;Computational Investigation of Low-Discrepancy Sequences in Simulation Algorithms for Bayesian Networks;User Interface Tools for Navigation in Conditional Probability Tables and Elicitation of Probabilities in Bayesian Networks
+80,72589,Efficient inference in persistent Dynamic Bayesian Networks
+80,75914,Exploiting Evidence in Probabilistic Inference;Node Splitting: A Scheme for Generating Upper Bounds in Bayesian Networks
+80,78624,On the Robustness of Most Probable Explanations;On Bayesian Network Approximation by Edge Deletion
+104,135497,Structured Arc Reversal and Simulation of Dynamic Probabilistic Networks
+104,103896,SPOOK: A System for Probabilistic Object-Oriented Knowledge Representation
+104,100240,A Case Study in Knowledge Discovery and Elicitation in an Intelligent Tutoring Application;Deliberation Scheduling for Time-Critical Sequential Decision Making;Sensor Validation Using Dynamic Belief Networks
+104,31239,Practical Linear Value-approximation Techniques for First-order MDPs;Symbolic Dynamic Programming for Discrete and Continuous State MDPs;Approximate Linear Programming for First-order MDPs
+104,77030,Monte Carlo Bayesian Reinforcement Learning;CAPIR: Collaborative Action Planning with Intention Recognition
+104,78642,Residual Belief Propagation: Informed Scheduling for Asynchronous Message Passing
+104,100239,Aggregating Learned Probabilistic Beliefs;Utilities as Random Variables: Density Estimation and Structure Discovery;Defining Explanation in Probabilistic Systems
+104,78688,Efficient Selection of Disambiguating Actions for Stereo Vision;Inference in Hybrid Networks: Theoretical Limits and Practical Algorithms;Policy Iteration for Factored MDPs
+104,81198,Asynchronous Dynamic Bayesian Networks
+104,100199,Using First-Order Probability Logic for the Construction of Bayesian Networks;Using New Data to Refine a Bayesian Network;Using Causal Information and Local Measures to Learn Bayesian Networks;Generating New Beliefs From Old;UCP-Networks: A Directed Graphical Representation of Conditional Utilities;Probability Distributions Over Possible Worlds;Solving #SAT and Bayesian Inference with Backtracking Search
+104,100233,Exact Inference in Networks with Discrete Children of Continuous Parents;Inference in Hybrid Networks: Theoretical Limits and Practical Algorithms
+104,100234,Exact Inference in Networks with Discrete Children of Continuous Parents
+104,100238,Aggregating Learned Probabilistic Beliefs
+104,100241,A Case Study in Knowledge Discovery and Elicitation in an Intelligent Tutoring Application
+104,106607,Probabilistic Causal Reasoning;Deliberation Scheduling for Time-Critical Sequential Decision Making;Model Reduction Techniques for Computing Approximately Optimal Solutions for Markov Decision Processes
+104,100242,A Case Study in Knowledge Discovery and Elicitation in an Intelligent Tutoring Application
+104,100243,A Case Study in Knowledge Discovery and Elicitation in an Intelligent Tutoring Application
+104,100244,A Case Study in Knowledge Discovery and Elicitation in an Intelligent Tutoring Application
+104,100252,Accelerating EM: An Empirical Study;Adaptive Importance Sampling for Estimation in Structured Domains;Value-Directed Sampling Methods for POMDPs
+104,105248,Reducing Uncertainty in Navigation and Exploration
+104,105249,Reducing Uncertainty in Navigation and Exploration
+104,105250,Probabilistic Causal Reasoning;Reducing Uncertainty in Navigation and Exploration
+104,105280,A New Approach to Updating Beliefs
+104,135501,Model Reduction Techniques for Computing Approximately Optimal Solutions for Markov Decision Processes
+104,135506,Probability Update: Conditioning vs. Cross-Entropy;Generating New Beliefs From Old;Probability Estimation in Face of Irrelevant Information;Learning Bayesian Nets that Perform Well
+104,135511,Nonuniform Dynamic Discretization in Hybrid Networks
+104,140327,Integrating Planning and Execution in Stochastic Domains
+104,140347,Using Causal Information and Local Measures to Learn Bayesian Networks;Using New Data to Refine a Bayesian Network
+104,142886,Deliberation Scheduling for Time-Critical Sequential Decision Making
+104,146680,Sensor Validation Using Dynamic Belief Networks
+104,153915,Tight Bounds for Set Disjointness in the Message Passing Model;Solving #SAT and Bayesian Inference with Backtracking Search
+104,75910,Learning to Map Sentences to Logical Form: Structured Classification with Probabilistic Categorial Grammars;Learning Probabilistic Relational Dynamics for Multiple Tasks
+104,75911,Accelerating EM: An Empirical Study;CAPIR: Collaborative Action Planning with Intention Recognition;Learning Probabilistic Relational Dynamics for Multiple Tasks;Adaptive Importance Sampling for Estimation in Structured Domains;Deliberation Scheduling for Time-Critical Sequential Decision Making
+104,164913,Solving #SAT and Bayesian Inference with Backtracking Search
+104,31102,Expectation Propagation for Continuous Time Bayesian Networks;Policy Improvement for POMDPs Using Normalized Importance Sampling;Factored Filtering of Continuous-Time Systems;Learning Continuous-Time Social Network Dynamics;Expectation Maximization and Complex Duration Distributions for Continuous Time Bayesian Networks;Visualization of Collaborative Data
+104,31109,Active Learning for Matching Problems;Hierarchical POMDP Controller Optimization by Likelihood Maximization;A Framework for Optimizing Paper Matching
+104,31111,Active Learning for Matching Problems;Regret-based Reward Elicitation for Markov Decision Processes;Approximate Linear Programming for First-order MDPs;Modal Logics for Qualitative Possibility and Beliefs;The Probability of a Possibility: Adding Uncertainty to Default Rules;Structured Arc Reversal and Simulation of Dynamic Probabilistic Networks;A Framework for Optimizing Paper Matching;Correlated Action Effects in Decision Theoretic Regression;Approximately Optimal Monitoring of Plan Preconditions;UCP-Networks: A Directed Graphical Representation of Conditional Utilities;Toward Experiential Utility Elicitation for Interface Customization;Integrating Planning and Execution in Stochastic Domains;Vector-space Analysis of Belief-state Approximation for POMDPs;Practical Linear Value-approximation Techniques for First-order MDPs;Value-Directed Sampling Methods for POMDPs;Minimax regret based elicitation of generalized additive utilities;Value-Directed Belief State Approximation for POMDPs
+104,77031,Bootstrapping Monte Carlo Tree Search with an Imperfect Heuristic;CAPIR: Collaborative Action Planning with Intention Recognition
+104,31240,Symbolic Dynamic Programming for Discrete and Continuous State MDPs
+104,31241,Symbolic Dynamic Programming for Discrete and Continuous State MDPs
+104,31265,Rank/Norm Regularization with Closed-Form Solutions: Application to Subspace Clustering;Maximum Margin Bayesian Networks;Monte Carlo Inference via Greedy Importance Sampling;Regularizers versus Losses for Nonlinear Dimensionality Reduction: A Factored View with New Convex Relaxations;Convex Structure Learning for Bayesian Networks: Polynomial Feature Selection and Approximate Ordering;Learning Bayesian Nets that Perform Well;Reinforcement Ranking
+104,39288,A logic for reasoning about ambiguity;Generating New Beliefs From Old;Weighted Sets of Probabilities and Minimax Weighted Expected Regret: New Approaches for Representing Uncertainty and Making Decisions;Probability Update: Conditioning vs. Cross-Entropy;Defining Explanation in Probabilistic Systems;A New Approach to Updating Beliefs;Ambiguous Language and Differences in Beliefs;Causes and Explanations: A Structural-Model Approach --- Part 1: Causes
+104,39289,Ambiguous Language and Differences in Beliefs;A logic for reasoning about ambiguity
+104,46239,Convex Point Estimation using Undirected Bayesian Transfer Hierarchies;Learning the Dimensionality of Hidden Variables;Residual Belief Propagation: Informed Scheduling for Asynchronous Message Passing;Inference-less Density Estimation using Copula Bayesian Networks
+104,46248,Identifying reasoning patterns in games;Learning Game Representations from Data Using Rationality Constraints;Networks of Influence Diagrams: A Formalism for Representing Agents' Beliefs and Decision-Making Processes;Temporal Action-Graph Games: A New Representation for Dynamic Games;Object-Oriented Bayesian Networks;SPOOK: A System for Probabilistic Object-Oriented Knowledge Representation;Sufficiency, Separability and Temporal Probabilistic Models;Learning and Solving Many-Player Games through a Cluster-Based Representation;Proceedings of the Twenty-Seventh Conference on Uncertainty in Artificial Intelligence (2011);Asynchronous Dynamic Bayesian Networks;Approximate Separability for Weak Interaction in Dynamic Systems
+104,46279,Comparative Analysis of Probabilistic Models for Activity Recognition with an Instrumented Walker
+104,46280,Comparative Analysis of Probabilistic Models for Activity Recognition with an Instrumented Walker
+104,46281,Comparative Analysis of Probabilistic Models for Activity Recognition with an Instrumented Walker
+104,46282,Value-Directed Belief State Approximation for POMDPs;Hierarchical POMDP Controller Optimization by Likelihood Maximization;Comparative Analysis of Probabilistic Models for Activity Recognition with an Instrumented Walker;Value-Directed Sampling Methods for POMDPs;Vector-space Analysis of Belief-state Approximation for POMDPs
+104,46283,Comparative Analysis of Probabilistic Models for Activity Recognition with an Instrumented Walker
+104,46284,Comparative Analysis of Probabilistic Models for Activity Recognition with an Instrumented Walker
+104,58484,Proceedings of the Twenty-Seventh Conference on Uncertainty in Artificial Intelligence (2011)
+104,58533,Regret-based Reward Elicitation for Markov Decision Processes
+104,58549,MAP Estimation of Semi-Metric MRFs via Hierarchical Graph Cuts;Modeling Latent Variable Uncertainty for Loss-based Learning
+104,58550,Exact Inference in Networks with Discrete Children of Continuous Parents;Expectation Propagation for Continuous Time Bayesian Networks;Object-Oriented Bayesian Networks;Convex Point Estimation using Undirected Bayesian Transfer Hierarchies;Policy Iteration for Factored MDPs;Generating New Beliefs From Old;Nonuniform Dynamic Discretization in Hybrid Networks;Utilities as Random Variables: Density Estimation and Structure Discovery;Being Bayesian about Network Structure;Continuous Time Markov Networks;Modeling Latent Variable Uncertainty for Loss-based Learning;Probabilistic Models for Agents' Beliefs and Decisions;Constrained Approximate Maximum Entropy Learning of Markov Random Fields;Ordering-Based Search: A Simple and Effective Algorithm for Learning Bayesian Networks;MAP Estimation of Semi-Metric MRFs via Hierarchical Graph Cuts;Residual Belief Propagation: Informed Scheduling for Asynchronous Message Passing;Update Rules for Parameter Estimation in Bayesian Networks;Reasoning at the Right Time Granularity;SPOOK: A System for Probabilistic Object-Oriented Knowledge Representation;Probability Estimation in Face of Irrelevant Information;Projected Subgradient Methods for Learning Sparse Gaussians;Expectation Maximization and Complex Duration Distributions for Continuous Time Bayesian Networks
+104,69155,Parallel random variates generator for GPUs based on normal numbers;A Case Study in Knowledge Discovery and Elicitation in an Intelligent Tutoring Application
+104,72550,Toward Experiential Utility Elicitation for Interface Customization
+104,72590,Newton methods for k-order Markov Constrained Motion Problems;Hierarchical POMDP Controller Optimization by Likelihood Maximization
+104,75488,Estimating Densities with Non-Parametric Exponential Families;Model Reduction Techniques for Computing Approximately Optimal Solutions for Markov Decision Processes
+104,75908,Learning Probabilistic Relational Dynamics for Multiple Tasks
+104,75909,SPOOK: A System for Probabilistic Object-Oriented Knowledge Representation;General-Purpose MCMC Inference over Relational Structures;Learning Probabilistic Relational Dynamics for Multiple Tasks;Probabilistic Models for Agents' Beliefs and Decisions
+104,75919,Minimax regret based elicitation of generalized additive utilities
+104,75924,Reasoning at the Right Time Granularity
+104,75925,Expectation Maximization and Complex Duration Distributions for Continuous Time Bayesian Networks;Reasoning at the Right Time Granularity;Expectation Propagation for Continuous Time Bayesian Networks
+104,77029,Bootstrapping Monte Carlo Tree Search with an Imperfect Heuristic;CAPIR: Collaborative Action Planning with Intention Recognition
+104,77032,CAPIR: Collaborative Action Planning with Intention Recognition;Representation Requirements for Supporting Decision Model Formulation;Representing Context-Sensitive Knowledge in a Network Formalism: A Preliminary Report;Causal Mechanism-based Model Construction;Bootstrapping Monte Carlo Tree Search with an Imperfect Heuristic
+104,77033,CAPIR: Collaborative Action Planning with Intention Recognition
+104,77034,CAPIR: Collaborative Action Planning with Intention Recognition
+116,68883,Multiple models of Bayesian networks applied to offline recognition of Arabic handwritten city names;Etude de Modeles a base de reseaux Bayesiens pour l'aide au diagnostic de tumeurs cerebrales;Use of Fuzzy Sets in Semantic Nets for Providing On-Line Assistance to User of Technological Systems
+116,164884,On the Qualitative Comparison of Decisions Having Positive and Negative Features;Analytical reasoning task reveals limits of social learning in networks
+116,68736,Loopy Belief Propagation in Bayesian Networks : origin and possibilistic perspectives
+116,46214,Compiling Possibilistic Networks: Alternative Approaches to Possibilistic Inference;Loopy Belief Propagation in Bayesian Networks : origin and possibilistic perspectives;Argumentative inference in uncertain and inconsistent knowledge bases;A Principled Analysis of Merging Operations in Possibilistic Logic;Graphical readings of possibilistic logic bases
+116,83033,Etude de Modeles a base de reseaux Bayesiens pour l'aide au diagnostic de tumeurs cerebrales
+116,83034,Etude de Modeles a base de reseaux Bayesiens pour l'aide au diagnostic de tumeurs cerebrales
+116,100194,On the Qualitative Comparison of Decisions Having Positive and Negative Features;Constraint Propagation with Imprecise Conditional Probabilities;Modeling uncertain and vague knowledge in possibility and evidence theories;A Symbolic Approach to Reasoning with Linguistic Quantifiers;A fuzzy relation-based extension of Reggia's relational model for diagnosis handling uncertain and incomplete information;Argumentative inference in uncertain and inconsistent knowledge bases;Updating with Belief Functions, Ordinal Conditioning Functions and Possibility Measures;Decision-making Under Ordinal Preferences and Comparative Uncertainty;An Ordinal View of Independence with Application to Plausible Reasoning;A Logic of Graded Possibility and Certainty Coping with Partial Inconsistency;Graphical readings of possibilistic logic bases;A Principled Analysis of Merging Operations in Possibilistic Logic
+116,100195,A Principled Analysis of Merging Operations in Possibilistic Logic;Graphical readings of possibilistic logic bases
+116,100196,Modeling uncertain and vague knowledge in possibility and evidence theories;A Logic of Graded Possibility and Certainty Coping with Partial Inconsistency;Constraint Propagation with Imprecise Conditional Probabilities;A Symbolic Approach to Reasoning with Linguistic Quantifiers;Argumentative inference in uncertain and inconsistent knowledge bases;Updating with Belief Functions, Ordinal Conditioning Functions and Possibility Measures;A Principled Analysis of Merging Operations in Possibilistic Logic;Decision-making Under Ordinal Preferences and Comparative Uncertainty;A fuzzy relation-based extension of Reggia's relational model for diagnosis handling uncertain and incomplete information;An Ordinal View of Independence with Application to Plausible Reasoning;Graphical readings of possibilistic logic bases
+116,101881,A Complete Calculus for Possibilistic Logic Programming with Fuzzy Propositional Variables
+116,101882,On Modal Logics for Qualitative Possibility in a Fuzzy Setting;Combining Multiple-Valued Logics in Modular Expert Systems;A Complete Calculus for Possibilistic Logic Programming with Fuzzy Propositional Variables;A Symbolic Approach to Reasoning with Linguistic Quantifiers
+116,135514,Combining Multiple-Valued Logics in Modular Expert Systems;Incremental Map Generation by Low Cost Robots Based on Possibility/Necessity Grids
+116,140331,An Ordinal View of Independence with Application to Plausible Reasoning
+116,147024,Constraint Propagation with Imprecise Conditional Probabilities
+116,140332,Tableaux for Dynamic Logic of Propositional Assignments;An Ordinal View of Independence with Application to Plausible Reasoning
+116,46213,Compiling Possibilistic Networks: Alternative Approaches to Possibilistic Inference
+116,140341,Combining Multiple-Valued Logics in Modular Expert Systems;On Modal Logics for Qualitative Possibility in a Fuzzy Setting
+116,8824,A Symbolic Approach to Reasoning with Linguistic Quantifiers;Incremental Map Generation by Low Cost Robots Based on Possibility/Necessity Grids;Evolution of Ideas: A Novel Memetic Algorithm Based on Semantic Networks
+116,31137,On the Qualitative Comparison of Decisions Having Positive and Negative Features;On the Complexity of Decision Making in Possibilistic Decision Trees;Decision-making Under Ordinal Preferences and Comparative Uncertainty
+116,31138,On the Complexity of Decision Making in Possibilistic Decision Trees;Compiling Possibilistic Networks: Alternative Approaches to Possibilistic Inference
+116,31139,On the Complexity of Decision Making in Possibilistic Decision Trees
+116,147023,Combining Multiple-Valued Logics in Modular Expert Systems
+116,46215,Compiling Possibilistic Networks: Alternative Approaches to Possibilistic Inference
+116,55151,Optimization of Fuzzy Semantic Networks Based on Galois Lattice and Bayesian Formalism;Fuzzy Knowledge Representation, Learning and Optimization with Bayesian Analysis in Fuzzy Semantic Networks;Use of Fuzzy Sets in Semantic Nets for Providing On-Line Assistance to User of Technological Systems;Softening Fuzzy Knowledge Representation Tool with the Learning of New Words in Natural Language;Uncertain and Approximative Knowledge Representation to Reasoning on Classification with a Fuzzy Networks Based System;Possibilistic Pertinence Feedback and Semantic Networks for Goal's Extraction;Loopy Belief Propagation in Bayesian Networks : origin and possibilistic perspectives;Pertinent Information retrieval based on Possibilistic Bayesian network : origin and possibilistic perspective;ViQIE: A New Approach for Visual Query Interpretation and Extraction;Fuzzy Knowledge Representation Based on Possibilistic and Necessary Bayesian Networks;VIQI: A New Approach for Visual Interpretation of Deep Web Query Interfaces;A Fuzzy Approach for Pertinent Information Extraction from Web Resources;Relevance Feedback for Goal's Extraction from Fuzzy Semantic Networks
+116,68614,Loopy Belief Propagation in Bayesian Networks : origin and possibilistic perspectives;A Fuzzy Approach for Pertinent Information Extraction from Web Resources
+116,140340,Combining Multiple-Valued Logics in Modular Expert Systems;On Modal Logics for Qualitative Possibility in a Fuzzy Setting
+116,68636,Fuzzy Knowledge Representation Based on Possibilistic and Necessary Bayesian Networks
+116,68637,Fuzzy Knowledge Representation Based on Possibilistic and Necessary Bayesian Networks
+134,87394,Selecting Computations: Theory and Applications;VOI-aware MCTS;MCTS Based on Simple Regret
+134,46343,Common dependence on earthquake magnitudes for the trapped particles bursts approaching the earthquake;Aspects of Electrodynamics Modified by Some Dimension-five Lorentz Violating Interactions;Rollout Sampling Policy Iteration for Decentralized POMDPs
+134,46359,Online Stochastic Optimization under Correlated Bandit Feedback;Regret Bounds for Reinforcement Learning with Policy Advice;RAPID: A Reachable Anytime Planner for Imprecisely-sensed Domains;CORL: A Continuous-state Offset-dynamics Reinforcement Learner
+134,31088,Extended Lifted Inference with Joint Formulas
+134,72745,Generic Preferences over Subsets of Structured Objects;Simple Regret Optimization in Online Planning for Markov Decision Processes;Unstructuring User Preferences: Efficient Non-Parametric Utility Revelation;Cost-Sharing in Bayesian Knowledge Bases;Online Speedup Learning for Optimal Planning
+134,31089,Extended Lifted Inference with Joint Formulas;Generic Preferences over Subsets of Structured Objects;UCP-Networks: A Directed Graphical Representation of Conditional Utilities;A Heuristic Search Approach to Planning with Continuous Resources in Stochastic Domains
+134,31112,A temporally abstracted Viterbi algorithm
+134,31113,A compact, hierarchical Q-function decomposition;Gibbs Sampling in Open-Universe Stochastic Languages;Variational MCMC;Rao-Blackwellised Particle Filtering for Dynamic Bayesian Networks;A temporally abstracted Viterbi algorithm;Fine-Grained Decision-Theoretic Search Control;Selecting Computations: Theory and Applications;Improving Gradient Estimation by Incorporating Sensor Data;Image Segmentation in Video Sequences: A Probabilistic Approach;RAPID: A Reachable Anytime Planner for Imprecisely-sensed Domains;General-Purpose MCMC Inference over Relational Structures
+134,31164,Suboptimality Bounds for Stochastic Shortest Path Problems;Policy Iteration for Decentralized Control of Markov Decision Processes;A Heuristic Search Approach to Planning with Continuous Resources in Stochastic Domains;Improving the Scalability of Optimal Bayesian Network Learning with External-Memory Frontier Breadth-First Branch and Bound Search;Solving Multistage Influence Diagrams using Branch-and-Bound Search;Sparse Stochastic Finite-State Controllers for POMDPs
+134,31190,Message-Passing Algorithms for Quadratic Programming Formulations of MAP Estimation;Anytime Planning for Decentralized POMDPs using Expectation Maximization;On model reduction for quantum dynamics: symmetries and invariant subspaces
+134,31191,A Bilinear Programming Approach for Multiagent Planning;Policy Iteration for Decentralized Control of Markov Decision Processes;The Complexity of Decentralized Control of Markov Decision Processes;Optimizing Memory-Bounded Controllers for Decentralized POMDPs;Rollout Sampling Policy Iteration for Decentralized POMDPs;Anytime Planning for Decentralized POMDPs using Expectation Maximization;Message-Passing Algorithms for Quadratic Programming Formulations of MAP Estimation
+134,31202,Improving the Scalability of Optimal Bayesian Network Learning with External-Memory Frontier Breadth-First Branch and Bound Search
+134,31203,Improving the Scalability of Optimal Bayesian Network Learning with External-Memory Frontier Breadth-First Branch and Bound Search;Most Relevant Explanation: Properties, Algorithms, and Evaluations;Solving Multistage Influence Diagrams using Branch-and-Bound Search;Importance Sampling in Bayesian Networks: An Influence-Based Approximation Strategy for Importance Functions
+134,31204,Improving the Scalability of Optimal Bayesian Network Learning with External-Memory Frontier Breadth-First Branch and Bound Search
+134,46210,Gibbs Sampling in Open-Universe Stochastic Languages
+134,46211,Gibbs Sampling in Open-Universe Stochastic Languages
+134,46212,Joint modeling of multiple time series via the beta process with application to motion capture segmentation;Gibbs Sampling in Open-Universe Stochastic Languages
+134,46344,Rollout Sampling Policy Iteration for Decentralized POMDPs
+134,46352,Solving Multistage Influence Diagrams using Branch-and-Bound Search
+134,58499,Most Relevant Explanation: Properties, Algorithms, and Evaluations
+134,58500,Causal Mechanism-based Model Construction;Most Relevant Explanation: Properties, Algorithms, and Evaluations
+134,58501,Most Relevant Explanation: Properties, Algorithms, and Evaluations
+134,62264,Methods for Ordinal Peer Grading;Online Structured Prediction via Coactive Learning;Reducing Dueling Bandits to Cardinal Bandits;Learning Trajectory Preferences for Manipulators via Iterative Improvement;Unstructuring User Preferences: Efficient Non-Parametric Utility Revelation
+134,72565,Improving Gradient Estimation by Incorporating Sensor Data
+134,72579,Observation Subset Selection as Local Compilation of Performance Profiles
+134,72580,Algorithms for Irrelevance-Based Partial MAPs;Relevant Explanations: Allowing Disjunctive Assignments;Complexity of Canadian Traveler Problem Variants;Belief Updating by Enumerating High-Probability Independence-Based Assignments;Generic Preferences over Subsets of Structured Objects;Selecting Computations: Theory and Applications;Bayes Networks for Sonar Sensor Fusion;A New Algorithm for Finding MAP Assignments to Belief Networks;MCTS Based on Simple Regret;Observation Subset Selection as Local Compilation of Performance Profiles;VOI-aware MCTS;Cost-Sharing in Bayesian Knowledge Bases
+134,72744,Simple Regret Optimization in Online Planning for Markov Decision Processes
+134,75921,Optimizing Memory-Bounded Controllers for Decentralized POMDPs;Incremental Clustering and Expansion for Faster Optimal Planning in Dec-POMDPs;Scalable Planning and Learning for Multiagent POMDPs: Extended Version;Policy Iteration for Decentralized Control of Markov Decision Processes
+134,75922,Optimizing Memory-Bounded Controllers for Decentralized POMDPs;The Complexity of Decentralized Control of Markov Decision Processes
+134,88293,Selecting Computations: Theory and Applications
+134,101884,The Complexity of Decentralized Control of Markov Decision Processes
+134,105243,IDEAL: A Software Package for Analysis of Influence Diagrams;Integrating Model Construction and Evaluation;Decision-Theoretic Control of Problem Solving: Principles and Architecture;Decision Making with Interval Influence Diagrams;Ideal Reformulation of Belief Networks;A New Look at Causal Independence
+134,105244,Computationally-Optimal Real-Resource Strategies
+134,105267,A Probabilistic Approach to Hierarchical Model-based Diagnosis;IDEAL: A Software Package for Analysis of Influence Diagrams;A Generalization of the Noisy-Or Model
+134,105245,Decision-Theoretic Control of Problem Solving: Principles and Architecture;Computationally-Optimal Real-Resource Strategies;Probabilistic Conceptual Network: A Belief Representation Scheme for Utility-Based Categorization;A Structured, Probabilistic Representation of Action;Decision Methods for Adaptive Task-Sharing in Associate Systems
+134,105246,Integrating Model Construction and Evaluation;Epsilon-Safe Planning;Dynamic Construction of Belief Networks
+134,105247,Dynamic Construction of Belief Networks;A New Algorithm for Finding MAP Assignments to Belief Networks;A Probabilistic Analysis of Marker-Passing Techniques for Plan-Recognition
+134,105252,Decision Making with Interval Influence Diagrams
+134,135483,Bayes Networks for Sonar Sensor Fusion
+134,135521,On the Generation of Alternative Explanations with Implications for Belief Revision;Cost-Sharing in Bayesian Knowledge Bases
+134,140326,A Structured, Probabilistic Representation of Action
+134,140337,Epsilon-Safe Planning
+134,140363,Belief Updating by Enumerating High-Probability Independence-Based Assignments
+134,146684,Decision Methods for Adaptive Task-Sharing in Associate Systems
+134,147031,A Probabilistic Analysis of Marker-Passing Techniques for Plan-Recognition
+134,155465,Incremental Clustering and Expansion for Faster Optimal Planning in Dec-POMDPs
+134,155466,Incremental Clustering and Expansion for Faster Optimal Planning in Dec-POMDPs
+134,155467,A Survey of Multi-Objective Sequential Decision-Making;Incremental Clustering and Expansion for Faster Optimal Planning in Dec-POMDPs
+134,155489,Online Speedup Learning for Optimal Planning;Wikipedia-based Semantic Interpretation for Natural Language Processing;Anytime Induction of Low-cost, Low-error Classifiers: a Sampling-based Approach;Learning to Predict from Textual Data
+134,155523,A Survey of Multi-Objective Sequential Decision-Making
+134,155524,A Survey of Multi-Objective Sequential Decision-Making
+134,155525,A Survey of Multi-Objective Sequential Decision-Making
+134,164855,A Heuristic Search Approach to Planning with Continuous Resources in Stochastic Domains
+134,164856,A Heuristic Search Approach to Planning with Continuous Resources in Stochastic Domains
+134,164857,A Heuristic Search Approach to Planning with Continuous Resources in Stochastic Domains
+134,164914,Generic Preferences over Subsets of Structured Objects
+134,164915,Policy Iteration for Decentralized Control of Markov Decision Processes
+134,164916,A Bilinear Programming Approach for Multiagent Planning
+134,167103,Online Speedup Learning for Optimal Planning
+134,176112,Scalable Planning and Learning for Multiagent POMDPs: Extended Version
+145,75002,A Generalized Loop Correction Method for Approximate Inference in Graphical Models
+145,100258,Bayesian Error-Bars for Belief Net Inference
+145,100311,Planning by Prioritized Sweeping with Small Backups
+145,31136,PAC-Bayesian Policy Evaluation for Reinforcement Learning;Online Learning under Delayed Feedback;Online Learning in Markov Decision Processes with Adversarially Chosen Transition Probability Distributions;A Randomized Mirror Descent Algorithm for Large Scale Multiple Kernel Learning;Statistical Linear Estimation with Penalized Estimators: an Application to Reinforcement Learning;Analysis of Kernel Mean Matching under Covariate Shift;Apprenticeship Learning using Inverse Reinforcement Learning and Gradient Methods;An Adaptive Algorithm for Finite Stochastic Partial Monitoring;Dyna-Style Planning with Linear Function Approximation and Prioritized Sweeping;Speeding Up Planning in Markov Decision Processes via Automatically Constructed Abstractions
+145,58563,Bayesian Error-Bars for Belief Net Inference;Improved Mean and Variance Approximations for Belief Net Responses via Network Doubling
+145,58564,Improved Mean and Variance Approximations for Belief Net Responses via Network Doubling;Online Learning in Markov Decision Processes with Adversarially Chosen Transition Probability Distributions;Linear Programming for Large-Scale Markov Decision Problems
+145,58565,Speeding Up Planning in Markov Decision Processes via Automatically Constructed Abstractions;Improved Mean and Variance Approximations for Belief Net Responses via Network Doubling;Learning Bayesian Nets that Perform Well;Bayesian Error-Bars for Belief Net Inference;A Generalized Loop Correction Method for Approximate Inference in Graphical Models;Training Restricted Boltzmann Machine by Perturbation
+145,58566,Improved Mean and Variance Approximations for Belief Net Responses via Network Doubling
+145,63480,Planning by Prioritized Sweeping with Small Backups;Dyna-Style Planning with Linear Function Approximation and Prioritized Sweeping;Off-Policy Actor-Critic
+145,72512,Speeding Up Planning in Markov Decision Processes via Automatically Constructed Abstractions
+145,72513,Speeding Up Planning in Markov Decision Processes via Automatically Constructed Abstractions
+145,72582,Dyna-Style Planning with Linear Function Approximation and Prioritized Sweeping
+145,72583,Bayes' Bluff: Opponent Modelling in Poker;Dyna-Style Planning with Linear Function Approximation and Prioritized Sweeping
+145,75001,Training Restricted Boltzmann Machine by Perturbation;A Generalized Loop Correction Method for Approximate Inference in Graphical Models
+151,72581,Bounding Search Space Size via (Hyper)tree Decompositions
+151,75901,Studies in Lower Bounding Probabilities of Evidence using the Markov Inequality;Cutset Sampling with Likelihood Weighting;Modeling Transportation Routines using Hybrid Dynamic Mixed Networks
+151,75933,AND/OR Multi-Valued Decision Diagrams (AOMDDs) for Weighted Graphical Models;The Relationship Between AND/OR Search and Variable Elimination;AND/OR Multi-Valued Decision Diagrams (AOMDDs) for Graphical Models;Join-Graph Propagation Algorithms
+151,81188,Modeling Transportation Routines using Hybrid Dynamic Mixed Networks
+151,81187,Modeling Transportation Routines using Hybrid Dynamic Mixed Networks
+151,31152,Exchangeable Variable Models;Learning Arithmetic Circuits;Formula-Based Probabilistic Inference;Sum-Product Networks: A New Deep Architecture;Probabilistic Theorem Proving;Approximation by Quantization
+151,31151,Studies in Lower Bounding Probabilities of Evidence using the Markov Inequality;AND/OR Importance Sampling;Probabilistic Theorem Proving;Join-Graph Propagation Algorithms;Approximate Inference Algorithms for Hybrid Bayesian Networks with Discrete Constraints;Approximation by Quantization;Formula-Based Probabilistic Inference;Modeling Transportation Routines using Hybrid Dynamic Mixed Networks
+151,21016,Learning Performance of Prediction Markets with Kelly Bettors
+151,31205,AND/OR Multi-Valued Decision Diagrams (AOMDDs) for Graphical Models;Best-First AND/OR Search for Most Probable Explanations;Order-of-Magnitude Influence Diagrams
+151,81222,A Scheme for Approximating Probabilistic Inference;Efficient Test Selection in Active Diagnosis via Entropy Approximation
+151,100204,Hybrid Processing of Beliefs and Constraints
+151,81221,Efficient Test Selection in Active Diagnosis via Entropy Approximation
+151,21014,Efficient Test Selection in Active Diagnosis via Entropy Approximation;Learning Performance of Prediction Markets with Kelly Bettors
+151,21015,Resourceful Contextual Bandits;Taming the Monster: A Fast and Simple Algorithm for Contextual Bandits;Logarithmic Time Online Multiclass prediction;Proceedings of the 29th International Conference on Machine Learning (ICML-12);Predicting Conditional Quantiles via Reduction to Classification;Learning Performance of Prediction Markets with Kelly Bettors;Efficient programmable learning to search;Contextual Bandit Learning with Predictable Rewards
+151,46259,Join-Graph Propagation Algorithms;BEEM : Bucket Elimination with External Memory
+151,46260,Hybrid Processing of Beliefs and Constraints;A Scheme for Approximating Probabilistic Inference;AND/OR Multi-Valued Decision Diagrams (AOMDDs) for Weighted Graphical Models;AND/OR Multi-Valued Decision Diagrams (AOMDDs) for Graphical Models;Join-Graph Propagation Algorithms;Modeling Transportation Routines using Hybrid Dynamic Mixed Networks;Bounding Search Space Size via (Hyper)tree Decompositions;Best-First AND/OR Search for Most Probable Explanations;Approximate Inference Algorithms for Hybrid Bayesian Networks with Discrete Constraints;The Relationship Between AND/OR Search and Variable Elimination;AND/OR Importance Sampling;BEEM : Bucket Elimination with External Memory;Cutset Sampling with Likelihood Weighting;Studies in Lower Bounding Probabilities of Evidence using the Markov Inequality
+151,46261,BEEM : Bucket Elimination with External Memory;A Graphical Transformation for Belief Propagation: Maximum Weight Matchings and Odd-Sized Cycles
+151,72564,Learning Arithmetic Circuits
+153,75949,Adjacency-Faithfulness and Conservative Causal Inference;A Transformational Characterization of Markov Equivalence for Directed Acyclic Graphs with Latent Variables;A Characterization of Markov Equivalence Classes for Directed Acyclic Graphs with Latent Variables
+153,100220,Location-Based Reasoning about Complex Multi-Agent Behavior;A Bayesian Approach to Tackling Hard Computational Problems
+153,72555,Discovering Cyclic Causal Models by Independent Components Analysis;Upper-Bounding Proof Length with the Busy Beaver;Causal discovery of linear acyclic models with arbitrary distributions
+153,31176,Estimating a Causal Order among Groups of Variables in Linear Models;Discovery of non-gaussian linear causal models using ICA;Discovering Cyclic Causal Models by Independent Components Analysis;Causal discovery of linear acyclic models with arbitrary distributions;Bayesian Discovery of Linear Acyclic Causal Models;Noisy-OR Models with Latent Confounding
+153,31120,Laplace's Method Approximations for Probabilistic Inference in Belief Networks with Continuous Variables;Evaluating influence diagrams with decision circuits;End-User Construction of Influence Diagrams for Bayesian Statistics;Sensitivity analysis in decision circuits;Structural Controllability and Observability in Influence Diagrams;Using Potential Influence Diagrams for Probabilistic Inference and Decision Making;Strictly Proper Mechanisms with Cooperating Players;Mixtures of Gaussians and Minimum Relative Entropy Techniques for Modeling Continuous Uncertainties;A Linear Approximation Method for Probabilistic Inference;Three new sensitivity analysis methods for influence diagrams;Directed Reduction Algorithms and Decomposable Graphs;Three Approaches to Probability Model Selection;A Graph-Based Inference Method for Conditional Independence;Efficient Value of Information Computation;Decision Making Using Probabilistic Inference Methods;Global Conditioning for Probabilistic Inference in Belief Networks;Dynamic programming in in uence diagrams with decision circuits;A Decision-Based View of Causality
+153,75939,Survey Propagation Revisited
+153,46220,Dynamic programming in in uence diagrams with decision circuits;Sensitivity analysis in decision circuits;Evaluating influence diagrams with decision circuits;Three new sensitivity analysis methods for influence diagrams
+153,46242,Playing games against nature: optimal policies for renewable resource allocation
+153,46243,Maximizing the Spread of Cascades Using Network Design;Playing games against nature: optimal policies for renewable resource allocation
+153,46244,On the Erdos Discrepancy Problem;Algorithm Portfolio Design: Theory vs. Practice;A Bayesian Approach to Tackling Hard Computational Problems;Maximizing the Spread of Cascades Using Network Design;Playing games against nature: optimal policies for renewable resource allocation
+153,72595,Importance Sampling via Variational Optimization;Inference for Multiplicative Models
+153,75940,Reformulating Inference Problems Through Selective Conditioning;A Bayesian Approach to Tackling Hard Computational Problems;Time-Dependent Utility and Action Under Uncertainty;An Approximate Nonmyopic Computation for Value of Information;Utility-Based Abstraction and Categorization;Time-Critical Reasoning: Representations and Application;Perception, Attention, and Resources: A Decision-Theoretic Approach to Graphics Rendering;Ideal Reformulation of Belief Networks;Conversation as Action Under Uncertainty;Reasoning about the Value of Decision-Model Refinement: Methods and Application;Problem Formulation as the Reduction of a Decision Model;Collaborative Filtering by Personality Diagnosis: A Hybrid Memory- and Model-Based Approach;On Discarding, Caching, and Recalling Samples in Active Learning;A Synthesis of Logical and Probabilistic Reasoning for Program Understanding and Debugging;Dynamic Network Models for Forecasting
+153,46245,Playing games against nature: optimal policies for renewable resource allocation;On the Erdos Discrepancy Problem;Understanding Sampling Style Adversarial Search Methods;Synthesizing Manipulation Sequences for Under-Specified Tasks using Unrolled Markov Random Fields;A Bayesian Approach to Tackling Hard Computational Problems;Algorithm Portfolio Design: Theory vs. Practice;Survey Propagation Revisited
+153,46311,Maximizing the Spread of Cascades Using Network Design;Understanding Sampling Style Adversarial Search Methods;Survey Propagation Revisited
+153,47496,Understanding Sampling Style Adversarial Search Methods
+153,54871,A Bayesian Approach to Learning Bayesian Networks with Local Structure;Learning Bayesian Networks: The Combination of Knowledge and Statistical Data;Advances in Probabilistic Reasoning;A New Look at Causal Independence;Similarity Networks for the Construction of Multiple-Faults Belief Networks;Separable and transitive graphoids;Determining the Number of Non-Spurious Arcs in a Learned DAG Model: Investigation of a Bayesian and a Frequentist Approach;A powerful and efficient set test for genetic markers that handles confounders;An Empirical Comparison of Three Inference Methods;Structure and Parameter Learning for Causal Independence and Causal Interaction Models;Dependency Networks for Collaborative Filtering and Data Visualization;Models and Selection Criteria for Regression and Classification;An Approximate Nonmyopic Computation for Value of Information;Problem Formulation as the Reduction of a Decision Model;A Combination of Cutset Conditioning with Clique-Tree Propagation in the Pathfinder System;A Decision-Based View of Causality;Inference Algorithms for Similarity Networks;Diagnosis of Multiple Faults: A Sensitivity Analysis;Addendum on the scoring of Gaussian directed acyclic graphical models;Continuous Time Dynamic Topic Models;A Decision Theoretic Approach to Targeted Advertising;Learning Gaussian Networks;Causal Independence for Knowledge Acquisition and Inference
+153,72553,Adjacency-Faithfulness and Conservative Causal Inference;Detecting Causal Relations in the Presence of Unmeasured Variables;A Transformational Characterization of Markov Equivalence for Directed Acyclic Graphs with Latent Variables;Semi-Instrumental Variables: A Test for Instrument Admissibility;Causal discovery of linear acyclic models with arbitrary distributions;A theoretical study of Y structures for causal discovery;Discovering Cyclic Causal Models by Independent Components Analysis
+153,72554,Adjacency-Faithfulness and Conservative Causal Inference;Causal discovery of linear acyclic models with arbitrary distributions;Discovering Cyclic Causal Models by Independent Components Analysis
+153,78658,A theoretical study of Y structures for causal discovery
+153,78659,Kutato: An Entropy-Driven System for Construction of Probabilistic Expert Systems from Databases;A Bayesian Method for Constructing Bayesian Belief Networks from Databases;A Bayesian Method for Causal Modeling and Discovery Under Selection;An Empirical Analysis of Likelihood-Weighting Simulation on a Large, Multiply-Connected Belief Network;A Method for Using Belief Networks as Influence Diagrams;A Randomized Approximation Algorithm of Logic Sampling;KNET: Integrating Hypermedia and Bayesian Modeling;A Structurally and Temporally Extended Bayesian Belief Network Model: Definitions, Properties, and Modeling Techniques;An Evaluation of an Algorithm for Inductive Learning of Bayesian Belief Networks Usin;A theoretical study of Y structures for causal discovery;A Combination of Cutset Conditioning with Clique-Tree Propagation in the Pathfinder System;Binary Classifier Calibration: Bayesian Non-Parametric Approach;Counting Markov Blanket Structures
+153,100219,A Bayesian Approach to Tackling Hard Computational Problems
+153,100221,Using Temporal Data for Making Recommendations;A Bayesian Approach to Tackling Hard Computational Problems;A Decision Theoretic Approach to Targeted Advertising;Dependency Networks for Collaborative Filtering and Data Visualization;A Bayesian Approach to Learning Bayesian Networks with Local Structure;Learning Bayesian Networks: The Combination of Knowledge and Statistical Data
+153,101883,Approximation Algorithms for the Loop Cutset Problem;Perfect Tree-Like Markovian Distributions
+153,101895,Dependency Networks for Collaborative Filtering and Data Visualization
+153,101896,Dependency Networks for Collaborative Filtering and Data Visualization;Rational Nonmonotonic Reasoning
+153,101908,Conversation as Action Under Uncertainty
+153,103918,Inference in Multiply Sectioned Bayesian Networks with Extended Shafer-Shenoy and Lazy Propagation;Time-Critical Dynamic Decision Making
+153,103919,Reasoning about the Value of Decision-Model Refinement: Methods and Application;Probabilistic Conceptual Network: A Belief Representation Scheme for Utility-Based Categorization;Directed Reduction Algorithms and Decomposable Graphs;Time-Critical Dynamic Decision Making
+153,105242,Kutato: An Entropy-Driven System for Construction of Probabilistic Expert Systems from Databases;A Bayesian Method for Constructing Bayesian Belief Networks from Databases;Ergo: A Graphical Environment for Constructing Bayesian
+153,105251,Ergo: A Graphical Environment for Constructing Bayesian
+153,105253,A Randomized Approximation Algorithm of Logic Sampling;KNET: Integrating Hypermedia and Bayesian Modeling
+153,105270,Directed Reduction Algorithms and Decomposable Graphs;Global Conditioning for Probabilistic Inference in Belief Networks
+153,105275,A Combination of Cutset Conditioning with Clique-Tree Propagation in the Pathfinder System
+153,105308,An Empirical Analysis of Likelihood-Weighting Simulation on a Large, Multiply-Connected Belief Network;Diagnosis of Multiple Faults: A Sensitivity Analysis
+153,135509,Perception, Attention, and Resources: A Decision-Theoretic Approach to Graphics Rendering
+153,135510,Time-Critical Reasoning: Representations and Application
+153,137766,An Evaluation of an Algorithm for Inductive Learning of Bayesian Belief Networks Usin;A Structurally and Temporally Extended Bayesian Belief Network Model: Definitions, Properties, and Modeling Techniques
+153,140312,Probabilistic Constraint Satisfaction with Non-Gaussian Noise
+153,140313,Probabilistic Constraint Satisfaction with Non-Gaussian Noise;Mixtures of Gaussians and Minimum Relative Entropy Techniques for Modeling Continuous Uncertainties;Three Approaches to Probability Model Selection
+153,140314,Probabilistic Constraint Satisfaction with Non-Gaussian Noise
+153,140316,Laplace's Method Approximations for Probabilistic Inference in Belief Networks with Continuous Variables
+153,140364,Global Conditioning for Probabilistic Inference in Belief Networks
+153,142865,End-User Construction of Influence Diagrams for Bayesian Statistics
+153,142868,Additive Belief-Network Models;Forecasting Sleep Apnea with Dynamic Network Models;Dynamic Network Models for Forecasting;Reformulating Inference Problems Through Selective Conditioning
+153,142869,Dynamic Network Models for Forecasting;Forecasting Sleep Apnea with Dynamic Network Models;Additive Belief-Network Models
+153,142875,Utility-Based Abstraction and Categorization
+153,142883,A Synthesis of Logical and Probabilistic Reasoning for Program Understanding and Debugging
+153,142892,Using Potential Influence Diagrams for Probabilistic Inference and Decision Making
+153,146667,Structural Controllability and Observability in Influence Diagrams
+153,146689,Decision Making Using Probabilistic Inference Methods
+153,147035,Time-Dependent Utility and Action Under Uncertainty
+153,140311,A Probabilistic Algorithm for Calculating Structure: Borrowing from Simulated Annealing;Probabilistic Constraint Satisfaction with Non-Gaussian Noise
+153,72596,Inference for Multiplicative Models;A Bayesian Approach to Learning Bayesian Networks with Local Structure;Using Temporal Data for Making Recommendations;Structure and Parameter Learning for Causal Independence and Causal Interaction Models;Models and Selection Criteria for Regression and Classification;Perfect Tree-Like Markovian Distributions;Dependency Networks for Collaborative Filtering and Data Visualization
+156,58586,Mean Field Variational Approximation for Continuous-Time Bayesian Networks;Continuous Time Markov Networks;Gibbs Sampling in Factorized Continuous-Time Markov Processes;Incorporating Expressive Graphical Models in Variational Approximations: Chain-Graphs and Hidden Variables
+156,46317,Modeling Events with Cascades of Poisson Processes;CT-NOR: Representing and Reasoning About Events in Continuous Time
+156,46326,Bayesian Model Averaging Using the k-best Bayesian Network Structures;Generating Markov Equivalent Maximal Ancestral Graphs by Single Edge Replacement;Probabilities of Causation: Bounds and Identification;A Branch-and-Bound Algorithm for MDL Learning Bayesian Networks;Causal Discovery from Changes;Local Markov Property for Models Satisfying Composition Axiom;Polynomial Constraints in Causal Bayesian Networks;Inequality Constraints in Causal Models with Hidden Variables;Identifying Dynamic Sequential Plans;Computing Posterior Probabilities of Structural Features in Bayesian Networks
+156,58537,Convexifying the Bethe Free Energy;Template Based Inference in Symmetric Relational Markov Random Fields
+156,31168,Convergent message passing algorithms - a unifying view;Tightening LP Relaxations for MAP using Message Passing;Convergent Propagation Algorithms via Oriented Trees;Discriminative Learning via Semidefinite Probabilistic Models;What Cannot be Learned with Bethe Approximations;Learning the Experts for Online Sequence Prediction;Convexifying the Bethe Free Energy
+156,31242,An Efficient Algorithm for Computing Interventional Distributions in Latent Variable Causal Models;Effects of Treatment on the Treated: Identification and Generalization;Counterfactual Graphical Models for Longitudinal Mediation Analysis with Unobserved Confounding;Identification of Conditional Interventional Distributions;On the Validity of Covariate Adjustment for Estimating Causal Effects
+156,46288,Confounding Equivalence in Causal Inference;On Testing Whether an Embedded Bayesian Network Represents a Probability Model;An Algorithm for Deciding if a Set of Observed Independencies Has a Causal Explanation;Deciding Morality of Graphs is NP-complete;Direct and Indirect Effects;A Probabilistic Calculus of Actions;Identification of Conditional Interventional Distributions;Reasoning With Qualitative Probabilities Can Be Tractable;On the Equivalence of Causal Models;Causal Discovery from Changes;On a Class of Bias-Amplifying Variables that Endanger Effect Estimates;Effects of Treatment on the Treated: Identification and Generalization;From Conditional Oughts to Qualitative Decision Theory;Causes and Explanations: A Structural-Model Approach --- Part 1: Causes;Probabilities of Causation: Bounds and Identification;On the Logic of Causal Models;On Measurement Bias in Causal Inference;Counterfactual Probabilities: Computational Methods, Bounds and Applications;Graphical Condition for Identification in recursive SEM
+156,46289,On Testing Whether an Embedded Bayesian Network Represents a Probability Model;Confounding Equivalence in Causal Inference
+156,58528,Rao-Blackwellised Particle Filtering for Dynamic Bayesian Networks;Group Sparse Priors for Covariance Estimation;Modeling Discrete Interventional Data using Directed Cyclic Graphical Models;The Factored Frontier Algorithm for Approximate Inference in DBNs;Bayesian structure learning using dynamic programming and MCMC
+156,58538,Convexifying the Bethe Free Energy;Template Based Inference in Symmetric Relational Markov Random Fields
+156,58539,Incorporating Expressive Graphical Models in Variational Approximations: Chain-Graphs and Hidden Variables;Image Segmentation in Video Sequences: A Probabilistic Approach;Template Based Inference in Symmetric Relational Markov Random Fields;Sequential Update of Bayesian Network Structure;Convexifying the Bethe Free Energy;Mean Field Variational Approximation for Continuous-Time Bayesian Networks;Multivariate Information Bottleneck;Continuous Time Markov Networks;Gaussian Process Networks;Gibbs Sampling in Factorized Continuous-Time Markov Processes;Learning the Dimensionality of Hidden Variables;Being Bayesian about Network Structure;Dimension Reduction in Singularly Perturbed Continuous-Time Bayesian Networks;Likelihood Computations Using Value Abstractions
+156,58540,Tightening LP Relaxations for MAP using Message Passing;MAP Estimation, Linear Programming and Belief Propagation with Convex Free Energies;Convergent message passing algorithms - a unifying view
+156,58541,The Factored Frontier Algorithm for Approximate Inference in DBNs;Latent Topic Models for Hypertext;MAP Estimation, Linear Programming and Belief Propagation with Convex Free Energies;Tightening LP Relaxations for MAP using Message Passing;Convergent message passing algorithms - a unifying view
+156,58585,Mean Field Variational Approximation for Continuous-Time Bayesian Networks
+156,58587,Dimension Reduction in Singularly Perturbed Continuous-Time Bayesian Networks;Gibbs Sampling in Factorized Continuous-Time Markov Processes;Mean Field Variational Approximation for Continuous-Time Bayesian Networks;Continuous Time Markov Networks;Metric Description of Defects in Amorphous Materials
+156,72573,CT-NOR: Representing and Reasoning About Events in Continuous Time;Sequential Update of Bayesian Network Structure;On the Relation between Kappa Calculus and Probabilistic Reasoning;Action Networks: A Framework for Reasoning about Actions and Change under Uncertainty;Reasoning With Qualitative Probabilities Can Be Tractable;Making life better one large system at a time: Challenges for UAI research
+156,75941,Inequality Constraints in Causal Models with Hidden Variables;Polynomial Constraints in Causal Bayesian Networks;Local Markov Property for Models Satisfying Composition Axiom
+156,72574,CT-NOR: Representing and Reasoning About Events in Continuous Time
+156,72575,CT-NOR: Representing and Reasoning About Events in Continuous Time
+156,72576,CT-NOR: Representing and Reasoning About Events in Continuous Time
+156,72577,CT-NOR: Representing and Reasoning About Events in Continuous Time
+156,72578,CT-NOR: Representing and Reasoning About Events in Continuous Time
+156,75953,Perfect Tree-Like Markovian Distributions;Importance Sampling via Variational Optimization;Learning Gaussian Networks;On the Logic of Causal Models;Learning Bayesian Networks: The Combination of Knowledge and Statistical Data;Inference Algorithms for Similarity Networks;Likelihood Computations Using Value Abstractions;On Testing Whether an Embedded Bayesian Network Represents a Probability Model;Advances in Probabilistic Reasoning;Separable and transitive graphoids;An Entropy-based Learning Algorithm of Bayesian Conditional Trees;Approximation Algorithms for the Loop Cutset Problem
+156,75954,MAP Estimation, Linear Programming and Belief Propagation with Convex Free Energies
+156,78626,Graphical Condition for Identification in recursive SEM
+156,101890,Likelihood Computations Using Value Abstractions
+156,101891,Gaussian Process Networks
+156,105268,An Algorithm for Deciding if a Set of Observed Independencies Has a Causal Explanation;On the Equivalence of Causal Models;Deciding Morality of Graphs is NP-complete
+156,140317,Counterfactual Probabilities: Computational Methods, Bounds and Applications
+256,101534,On reasoning in networks with qualitative uncertainty;Re-entrant Structural Phase Transition in a Frustrated Kagome Magnet, Rb2SnCu3F12;Pivotal Pruning of Trade-offs in QPNs;Risk Agoras: Dialectical Argumentation for Scientific Reasoning;Local structure correlations in plastic cyclohexane - a Reverse Monte Carlo study
+256,146683,aHUGIN: A System Creating Adaptive Causal Probabilistic Networks
+256,100197,Pre-processing for Triangulation of Probabilistic Networks
+256,100198,Pre-processing for Triangulation of Probabilistic Networks
+256,100236,Solving Influence Diagrams using HUGIN, Shafer-Shenoy and Lazy Propagation;Evaluating Influence Diagrams using LIMIDs
+256,100259,Enhancing QPNs for Trade-off Resolution;Pivotal Pruning of Trade-offs in QPNs;Analysing Sensitivity Data from Probabilistic Networks;How to Elicit Many Probabilities
+256,101901,Using ROBDDs for Inference in Bayesian Networks with Troubleshooting as an Example;A computational scheme for Reasoning in Dynamic Probabilistic Networks;Making Sensitivity Analysis Computationally Efficient;Nested Junction Trees;Reduction of Computational Complexity in Bayesian Networks through Removal of Weak Dependencies
+256,101906,Risk Agoras: Dialectical Argumentation for Scientific Reasoning
+256,101907,Welldefined Decision Scenarios;Representing and Solving Asymmetric Bayesian Decision Problems;Using ROBDDs for Inference in Bayesian Networks with Troubleshooting as an Example
+256,78621,aHUGIN: A System Creating Adaptive Causal Probabilistic Networks;Evaluating Influence Diagrams using LIMIDs;MAIES: A Tool for DNA Mixture Analysis
+256,103912,How to Elicit Many Probabilities
+256,103913,How to Elicit Many Probabilities
+256,101912,Pivotal Pruning of Trade-offs in QPNs
+256,46286,The Cost of Troubleshooting Cost Clusters with Inside Information
+256,46287,aHUGIN: A System Creating Adaptive Causal Probabilistic Networks;Inference in Multiply Sectioned Bayesian Networks with Extended Shafer-Shenoy and Lazy Propagation;Myopic Value of Information in Influence Diagrams;Using ROBDDs for Inference in Bayesian Networks with Troubleshooting as an Example;Representing and Solving Asymmetric Bayesian Decision Problems;Welldefined Decision Scenarios;Analysis in HUGIN of Data Conflict;Optimal Junction Trees;The Cost of Troubleshooting Cost Clusters with Inside Information;From Influence Diagrams to Junction Trees
+256,142893,On reasoning in networks with qualitative uncertainty
+256,72560,The Computational Complexity of Sensitivity Analysis and Parameter Tuning
+256,105255,Optimal Junction Trees;Analysis in HUGIN of Data Conflict;Approximations in Bayesian Belief Universe for Knowledge Based Systems;From Influence Diagrams to Junction Trees
+256,103911,How to Elicit Many Probabilities
+256,72561,Sensitivity Analysis for Threshold Decision Making with Dynamic Networks;Pivotal Pruning of Trade-offs in QPNs;Enhancing QPNs for Trade-off Resolution;Computing Probability Intervals Under Independency Constraints;How to Elicit Many Probabilities;The Computational Complexity of Sensitivity Analysis and Parameter Tuning;Learning Bayesian Network Parameters with Prior Knowledge about Context-Specific Qualitative Influences;Pre-processing for Triangulation of Probabilistic Networks;Making Sensitivity Analysis Computationally Efficient;Analysing Sensitivity Data from Probabilistic Networks
+256,105311,Analysis in HUGIN of Data Conflict
+256,105256,Approximations in Bayesian Belief Universe for Knowledge Based Systems
+256,72591,Propagation using Chain Event Graphs
+256,72592,Approximate Learning in Complex Dynamic Bayesian Networks;Propagation using Chain Event Graphs;Exact Estimation of Multiple Directed Acyclic Graphs
+256,72593,MAIES: A Tool for DNA Mixture Analysis;Conditions Under Which Conditional Independence and Scoring Methods Lead to Identical Selection of Bayesian Network Models;Propagation using Chain Event Graphs
+256,75904,A new parameter Learning Method for Bayesian Networks with Qualitative Influences;Learning Bayesian Network Parameters with Prior Knowledge about Context-Specific Qualitative Influences
+256,77053,Kernel Bounds for Structural Parameterizations of Pathwidth;Characterizing width two for variants of treewidth;Solving weighted and counting variants of connectivity problems parameterized by treewidth deterministically in single exponential time;Kernelization Lower Bounds By Cross-Composition;Pre-processing for Triangulation of Probabilistic Networks
+256,78622,MAIES: A Tool for DNA Mixture Analysis
+256,78623,Sensitivity Analysis for Threshold Decision Making with Dynamic Networks
+256,78644,Using ROBDDs for Inference in Bayesian Networks with Troubleshooting as an Example;Chi-square Tests Driven Method for Learning the Structure of Factored MDPs
+256,135502,From Influence Diagrams to Junction Trees;Myopic Value of Information in Influence Diagrams
+256,78660,Solving Influence Diagrams using HUGIN, Shafer-Shenoy and Lazy Propagation;Belief Update in CLG Bayesian Networks With Lazy Propagation
+256,105312,Analysis in HUGIN of Data Conflict

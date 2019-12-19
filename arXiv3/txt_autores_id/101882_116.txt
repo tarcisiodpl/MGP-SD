@@ -1,0 +1,5629 @@
+
+Within the possibilistic approach to uncer­
+tainty modeling, the paper presents a modal
+logical system to reason about qualitative
+(comparative) statements of the possibility
+(and necessity) of fuzzy propositions. We re­
+late this qualitative modal logic to the many­
+valued analogues MVS5 and MVKD45 of the
+well known modal logics of knowledge and be­
+lief 55 and KD45 respectively. Completeness
+results are obtained for such logics and there­
+fore, they extend previous existing results for
+qualitative possibilistic logics in the classical
+non-fuzzy setting.
+Keywords: Possibilistic Logic, Fuzzy Logic,
+Qualitative Possibility, Many-valued Modal
+
+Logic.
+
+1
+
+INTRODUCTION
+
+In the recent past, a lot of effort has been put in re­
+lating numerical and symbolic approaches to uncer­
+tain reasoning. Numerical formalisms attach degrees
+of belief to propositions. Belief degrees are understood
+as a measure on the set of possible worlds (possible
+state descriptions) that assigns to every proposition
+the measure of the set of worlds in which the proposi­
+tion is true. Therefore, uncertainty measures are not
+truth-functional, as it is welt known and established,
+i.e. the measure of a compound formula can not be in
+general obtained as a function of the measures of its
+subformulas.
+Possibilistic logic (cf. e.g. [Dubois & Prade, 88]) is
+a particular numerical formalism based on the use of
+the so-called possibility and necessity measures that
+provide to what extent a crisp piece of knowledge can
+be considered plausible and certain respectively. Even
+if formulas bear numerical possibilities, we may be in­
+terested not in the values themselves but only in their
+comparison, i.e. in formulas such as A <l B saying
+for instance that B is at least as possible as A_ In
+this direction, a qualitative characterization of possi-
+
+a
+
+Fuzzy Setting
+
+Francese Esteva
+Pere Garcia
+
+Lluis Godo
+
+Artificial Intelligence Research Institute (IliA)
+Spanish Council for Scientific Research (CSIC)
+e-mail: {esteva,p�re,godo }@ceab.es
+
+bility measures was first given in [Dubois 86), where
+it was established a formal relation between possibil­
+ity theory and qualitative possibility relations. Since
+then several logics of qualitative possibility have been
+proposed to allow specifying partial qualitative pos­
+sibility relations and deriving consequences based on
+this partial information. Farinas and Herzig [Farinas &
+Herzig, 91] axiomatize the logic of qualitative possibil­
+ity called QP L, introducing a conditional connective
+2:, and they relate it to the Lewis' conditional logic
+V N. They also propose a multi-modal logic based
+on sphere semantics to fully support possibility the­
+ory. Boutilier presents in [Boutilier, 92] a possible
+worlds semantics for qualitative possibility relations
+and defines two modal logics, co and co·, and he
+makes use of two modalities to capture possibilistic
+logic. One corresponds as usual to truth at acces­
+sible worlds while the other to truth to inaccessible
+worlds. Finally, in [Bendova & Hajek, 93] qualitative
+possibilistic logic is related to a tense logic with finite
+linearly preordered time called F LPOT, pushing fur­
+ther some aspects of the previous works, specially the
+incompleteness of Q P L and the ptecise relation of the
+above modal systems with unary modalities to QPL.
+It is also worth noticing that similar attempts of re­
+lating other quantitative and qualitative uncertainty
+measures have been proposed in the literature. See for
+instance [Segerberg, 71] or [Bacchus, 90] for the case
+of probability measures or [Harmanec & Hajek, 94],
+[Resconi, Klir & St. Clair, 92] for belief and plausibil­
+ity measures. See also [Wong et a!., 91].
+On the other hand, vagueness (fuzziness) concerns de­
+grees of truth, usually numerical, and therefore one
+is led to many-valued logics as underlying formalism.
+In this sense, fuzzy logic deals with fuzzy propositions
+that may have intermediate degrees of truth and it is
+usually understood as truth-functional, i.e. the truth
+degree of a compound formula is a function of the truth
+degrees of its subformulas using suitable connectives.
+Because of this key feature, fuzzy logic departs from
+any uncertainty logic.
+So far, as argued elsewhere ([Godo & Mantaras, 93],
+[Hajek, 93], [Hajek & Harmancova, 93]), we have
+seen that qualitative uncertainty (possibility) leads to
+
+On Modal Logics for Qualitative Possibility in a Fuzzy Setting
+
+modal logics, while fuzziness leads to many-valued log­
+ics. Therefore, presence of both fuzziness and uncer­
+tainty leads to calculi that are both many-valued and
+modal. Modal many-valued logics have been already
+investigated by some authors, see for instance [Oster­
+mann, 88} or [Fitting, 92}. Our goal is to study logical
+systems of qualitative possibility dealing with fuzzy
+propositions. It is clear then that the first question
+one is faced with is how to compare formulas of fuzzy
+logic with respect to their possibility or, more general,
+with respect to the possibility measures of worlds on
+which they have a given truth-value. This question
+has not an unique answer. For instance, in a recent
+and very related works [Hajek & Harmancova, 93},
+[Hajek, Harmancova & Verbrugge, oo] the possibility
+of a fuzzy formula is described by a fuzzy truth-value,
+i.e. a function that provides, for each truth-value c:r,
+the possibility of the fuzzy formula being a-true. The
+corresponding modal calculus QF L of comparison of
+possibilities is there shown to have a faithful interpre­
+tation in a certain many-valued tense logic (with lin­
+early preordered time), and thus naturally extending
+the results in [Bendova & Hajek, 93].
+In the present paper we investigate qualitative fuzzy
+logics based on an alternative definition of possibility
+of a fuzzy formula, following the well known Zadeh's
+extension of classical possibility measures to fuzzy
+propositions (cf. [Zadeh, 78] [Dubois & Prade, 85]).
+With this definition, the possibility of a formula of
+fuzzy logic is again only one value. Furthermore, in
+our setting the possibility of a formula is just a truth
+value. To simplify matters, we make the following de­
+sign choices: we investigate finitely valued Lukasiewicz
+fuzzy logics where the set Values of truth values co­
+incides with the set of allowed possibility degrees. We
+show that this notion is useful to express statements
+about qualitative possibility comparisons. The corre­
+sponding comparative logic QF £21 is shown to sat­
+isfy reasonable axioms and to be closely related to
+the many-valued analogue MV55 of the modal logic
+55. In Artificial Intelligence, 55 is often understood
+as the logic of knowledge whereas its weakening I< D45
+is understood as the logic of belief (cf [Voorbraak, 93},
+[Halpern & Moses, 92}). We relate our calculi also
+to K D45 and its many-valued counterpart MVKD45.
+Completeness theorems for MV55 and MVf{ D45 are
+obtained. This is not a too surprising result; [Fit­
+ting, 92] has much about completeness of many valued
+modal logics and [Ostermann, 88] too. But we present
+Hilbert-style systems and get their completeness. Cf.
+also [Nakamura, 91a, 91b] for a different approach.
+The paper is organized as follows. In Section 2 the
+underlying many-valued propositional calculus is de­
+scribed. In Section 3, possible world semantics for the
+qualitative fuzzy logic Q F L2 is introduced, while in
+Section 4 we prove its faithful interpretation on the
+many-valued modal MV55, also described in this sec1
+
+The subindex 2 distinguishes our logic from the logic
+
+QF L
+
+of
+
+[Hajek
+
+& Harmancova] .
+
+279
+
+tion. Finally, in Section 5 the logic MVf{ D45 is pre­
+sented and proved that Q F L2 can be also faithfully
+interpreted there. We end with some concluding re­
+marks.
+2
+
+MANY-VALUED
+PROPOSITIONAL CALCULUS
+USED
+
+Fix a natural number n ;?: 2; we base our investigations
+over the n-valued propositional Lukasiewicz's logic Ln,
+as described e.g. in [Gottwald, 88]. This choice does
+not imply that we claim Lukasiewicz's logic be the only
+formal logical system for fuzzy logic. Our set of truth
+values is Values= {0, 1/(n-1), . . . , 1}. Principal con­
+nectives are implication and negation, denoted respec­
+tively by-+ and ...,, with Lukasiewicz semantics: ...,A is
+interpreted by 1- x and A-+ B by min(l- x + y, 1)
+where x , y E Values are the interpretations of A
+and B respectively; occasionally we write I(x, y) for
+min(l- x + y, 1). Other connectives are defined from
+-+and-,, in particular, there are two conjunctions and
+two disjunctions. We have the connectives 1\ and V,
+interpreted by min(x, y) and max(x, y) respectively,
+and & interpreted by max(O, x + y- 1), and its dual
+Y... interpreted by min(l, x + y). The equivalence con­
+nective +-+ is interpreted by min(I(x, y), l(y, x)). A
+complete axiomatization of Ln extends the celebrated
+axiomatization of L00 [Rose and Rosser, 58] by some
+few additional axioms, namely:
+•
+•
+•
+•
+
+A-+ (B-+ A),
+(A_, B)-+ ((B-+ C)-+ (A-+ C)),
+(...,B_,...,A)-(A-+B),
+((A_, B)-+ B)-+ ((B-+ A)-+ A),
+i=l
+
+i=1
+
+m-1
+m
+A&
+(
+A
+L:cii y_ ..., L A)),
+
+n-1
+•
+
+i=1 j=1
+
+i=1
+
+for
+
+1 < m < n - 1 such that m - 1 does not divide
+n-1, and where 2:::7=1 A stands forAY... . . _n) . . . Y...A and
+
+07=1 A for A& . . ."l . . . &A. Note the !-tautologies
+(A-. (B ___.C)),..... ((A&B ) _,C) and (...,(A_, B)) ......
+(A&-,B). Further note the !-tautology (A -> B) ......
+( ...,B -+ ..,A). We extend Ln by unary connectives (co­
+efficients) (i) for each i E Values; the value of (i)A is
+1 iff the value of A is i, otherwise the value of (i)A is
+0. In fact the connectives (i) are definable in Ln, see
+[Ostermann, 88] or [Gottwald, 88]. Finally notice that
+Dienes and Godel's implications are also definable in
+Ln as -.A V B and (1)(A-> B) V B respectively.
+In the sequel, the constant True will stand forA -> A,
+False for -,True, and B0-formulas will be formulas
+generated from formulas of the form ( i)A using con­
+nectives and coefficients. Clearly, each such a formula
+
+Hajek, Hannancova, Esteva, Garcia, and Godo
+
+280
+
+is Boolean in the semantic sense: it takes only values
+1 and 0. (Later we introduce another class of formulas
+that are Boolean). We list next some axioms on formu­
+las containing coefficients (cf. [Hajek & Harmancova,
+93]); in fact they are provable (by definability of coef­
+ficients and completeness of axioms for Ln)·
+
+v (i)A,
+
+A ,((i)A "(j)A),
+
+;
+
+i:f.j
+
+(i)A--+ (1- i)--,A
+((i)A 1\ (j)B)
+
+__.
+
+(t.(i,j))(A *B),
+
+for * being /\, V, & , Y._, - , +-+ and t. being the corre­
+sponding truth interpretation,
+(1)A--+ A,
+
+for B0- formulas A, B, C:
+A+-+ (1)A,
+(A--+ (B--+ C))__. ((A__. B)__. (A__. C))2
+
+Definition 3.1
+
+II(A)
+
+=
+
+supw(rr(w)
+
+1\
+
+II A llw)·
+
+The corresponding dual notion of necessity can be
+then as N(A)= 1- II( -,A)= infw(1- rr(w)V II A llw)·
+The idea behind the above definition is to use it in next
+sections to interpret in our comparative logic QF L2
+sentences of type B is at least as possible as A, being
+A and B many-valued, as II(A) ::; II(B). This inter­
+pretation extends to the fuzzy (many-valued) case , in
+a different way than QF L, the comparison of possibili­
+ties that is present in the qualitative possibilistic logics
+QPL, CO and F LPOT mentioned in the introduction
+section. However, it is worth noticing that other ways
+of extending the notion of possibility for fuzzy propo­
+sitions have been also advocated; see [Dubois & Prade,
+92] for a discussion of such extensions. Next lemmas
+show a characterization of possibility measures II given
+by possibilistic Kripke models.
+Lemma 3.2 {cf. {Dubois fj Prade, 1988]} For each
+possibilistic Kripke model K, II satisfies the following:
+
+(IIl) II(True)
+
+=
+
+II(False)= 0
+
+1,
+
+(II2) II(A VB)= max(II(A), II( B ))
+
+(II3) if Ln f-A+-+ B then II(A) = II(B)
+
+The only deduction rule is modus ponens. This ends
+our description of the underlying propositional calcu­
+lus.
+
+(II4) II(A) =
+
+3
+
+Proof" We only prove the last equality.
+
+KRIPKE MODELS,
+POSSIBILITIES
+
+Our possibilistic Kripke models over a set Atom of
+propositional atoms have the form
+[{= (W, lh rr)
+
+where W is a non-empty set of possible worlds, If­
+maps Atom x W into Values, 1r maps W into Values
+and maxw EW rr ( w) = 1. Recall that we consider possi­
+bilities taking values only in Values. We extend If- in
+the obvious way to a mapping (denoted again by If-)
+of Forma x W into Values where Form0 is the set
+of all formulas of our propositional logic satisfying the
+usual inductive conditions. We write II A llw= i for
+If-(A, w) = i. Concerning satisfiability, we shall write
+wlf-A iff I I A llw= 1. (Note II A llw= i i ff wlf-(i)A.)
+The corresponding notions of validity and semantical
+entailment are the usual ones.
+After Zadeh (cf. [Zadeh 1978], [Dubois & Prade, 86)),
+we introduce the following notion of the possibility
+degree of a {fuzzy) formula A E Form0 in a possibilis­
+tic Kripke model, that extends to many-valued propo­
+sitions the notion of classical possibility measure for
+two-valued propositions which plays a central role in
+possibilistic logic.
+2 Nate
+
+that this formula is one of famous axioms of the
+
+classical two-valued propositional calculus; it is sound for
+boolean formulas but not for all formulas.
+
+V {i
+
+1\
+
+II((i)A))
+
+i
+
+supw(rr(w)
+i)= sup;(i
+
+1\
+1\
+
+II(A)
+II A llw) = sup;((supiiAII .. =i1T(w))
+II((i)A).
+
+1\
+
+•
+
+Atom of propositional
+atoms to be finite. If a mapping II : Forma --+ [0, 1]
+satisfies the axioms (II 1- II4) of the preceding lemma
+then there is a finite Kripke model f{ such that II is
+the possibility given by f{.
+Lemma 3.3 Assume the set
+
+Proof" Note that (II4) guarantees that it is enough to
+produce a Kripke model f{ whose possibility coincides
+with II for B0-formulas. Now it is easily seen that each
+B0-formula .is equivalent to a Boolean combination of
+formulas of the form (i)p where p is a propositional
+atom.
+Therefore, we may produce a model f{ in full
+'
+analogy to the two-valued case: each B0-formula B
+is Ln-equivalent to a disjunction of maximal elemen­
+tary conjunctions of the form (\7':_1 (j; )p;, where m is
+the cardinality of the set Atom, thus for each such B
+there is a maximal elementary conjunction C such that
+II(B) = II(C). Thus we construct our model from the
+•
+elementary conjunctions in the usual way.
+
+Notice that, given a possibilistic Kripke model K =
+{W, If-, rr) over a set Atom of atoms, if p is a propo­
+sitional variable not in Atom, I< clearly determines
+uniquely a model I<' = {W, If-') over Atom' = Atom U
+{p} such that If-' coincides with If- on Atom and
+lf-'(p, w) = rr(w) for each w E W. (K' has no ex­
+plicit structure on W .) Models of the form {W, IH
+
+281
+
+On Modal Logics for Qualitative Possibility in a Fuzzy Setting
+
+will be called MVS5-models (for obvious reasons, see
+below). If ]{' = (W, It-') is an MVS5-model over
+Atom U {p} such that max{ll p llwl w } = 1 then it de­
+termines uniquely a possibilistic model I< = (W, lh 1r)
+where If- is the restriction of If-' to At om x W and
+1r(w) = lf-(p, w) for all w E W. We shall identify /{
+and K' without any danger of misunderstanding.
+In the next section we shall introduce various modal­
+ities defined in our Kripke models, among them the
+modality of comparison of possibilities.
+4
+
+SOME MODALITIES, THE
+FUZZY LOGIC
+
+QF L2
+
+AND ITS
+
+RELATION TO THE MODAL
+
+definable from 0. So it makes sense, for our purposes
+of investigating the logic of comparison of possibilities,
+to axiomatize the D modality. This is our next task.
+First, observe that if a formula A is Boolean (takes
+only values 0,1) then OA is also Boolean; but of course
+OpA need not be Boolean. Define the class of B­
+formulas to be the class of formulas resulting from
+formulas of the form (i)A, where A is an arbitrary
+formula, possibly containing modalities, using connec­
+tives. Thus each B-formula is Boolean.
+Definition 4.2
+
+•
+
+MANY-VALUED LOGIC MVS5
+
+We enrich our language by three modalities, 0, Op and
+<lp (for Atom' = AtomU{p}) and define their seman­
+tics as follows.
+II OA l]w= max{ll A llw'l w' E W};
+II OpA llw = max{ll pi\ A llw'l w' E W};
+A <lp B is OrA- OpB
+the corresponding duals DA, DpA and A -<p B being
+defined as· -,0-,A, ....,op...,A and ...,{...,A <lp -.B) respec­
+tively.
+
+Note that formulas OA, OpA and A <lp B take a con­
+stant value independently of a given wE W. Thus we
+shall write from now on II OA I I, II OpA II etc. Next
+lemma summarizes properties and relations among the
+above modalities; note that we work with models K'
+in which max(ll p llwl w) = 1, i.e. II Op II= 1.
+Lemma 4.1 The
+
+following properties hold for any
+
+formulas A and B:
+(a) II DA II= min{II A llw I wE W}
+
+(b) II OpA II= II(A),
+II DpA II = N(A)
+
+{c) OpA is equivalent to O(p A A),
+DpA is equivalent to D( ...,p VA)
+{d) A -<p B is equivalent to DpA- DPB
+(e) II A <l p B I I = 1 iff II (A) ::; II (B),
+II A -<p B II= 1 iff N(A) ::; N(B)
+
+propositional axioms as in Section 2 but the ax­
+IOms
+A..,_. (l)A,
+A- (B ___.C)- ({A___. B)- (A- C))
+
+are postulated for all B-formulas, not only
+formulas;
+•
+
+where ll (and N) is defined by extension of definition
+3.1 to any formula in the obvious way.
+Thus it is clear that the modality Op captures the pos­
+sibility n whereas the binary modality <lp captures the
+comparison of possibilities. Furthermore, the lemma
+shows that OP and <l P are interdefinable and both are
+
+Eo­
+
+modal axioms:
+D(A -> B) - (DA - DB)
+DA ->A
+DA- DDA
+OA---+ DOA
+(� i)(DA)
+
++-+
+
+D(� i)A } Fitting- like
+
+(Clearly, (� i)A stands for Vr?.;(j)A .)
+Deduction rules are : modus ponens, necessitation and
+''from A infer (1)A ".
+(Completeness). MVS51- A iff A is a
+1-tauto/ogy for MVSS-models.
+
+Theorem 4.3
+
+The proof is standard and sketched at the end of this
+section.
+Next step is to formally introduce our qualitative
+modal logic for comparison of possibilities of fuzzy
+propositions, and to faithfully embed it in MVS5
+Definition 4.4 The qualitative modal fuzzy logic
+QFL2 over a set Atom of atoms has formulas built
+
+up from atoms (propositional variables) using logical
+connectives and a binary modality <l; models are pos­
+sibilistic models (W, lh rr) and the semantics is
+
+(f) OpA is equivalent to True <l P A,
+
+DpA is equivalent to True -<p A
+
+The modal logic MVSS has the fol­
+
+lowing axioms:
+
+II A<] B II=
+= I(maxw(ll A l[w A7r(w)), maxw(ll B llw J\1r (w))).
+
+It is worth noticing that Jl A <l B II= 1
+ll(B).
+Definition 4.5
+
+iff
+
+II(A) ::=::;
+
+Given a variable p not in Atom, the
+translation of QFL2 formulas to MVSS formulas is de­
+fined recursively as follows:
+
+Hajek, Harmancova, Esteva, Garcia, and Godo
+
+282
+
+*
+q
+
+is q for q E Atom,
+
+(A
+
+---->
+
+B)* is A*
+
+---->
+
+B* and similarly for other con­
+
+nectives,
+(A <l B) * is A* <lp B*.
+
+Finally define A
+
+••
+
+to be (1)Op ----> A
+
+• .
+
+The above mapping ** is a faithful in­
+terpretation of QFL2 in MVS5, i.e. a formula A of
+Q F L2 is a )-tautology iff A"* is a MVS5-tautology.
+Proof: Let K = {W, lh 1r) be a rriodel of Q F L2 and let
+
+wlf-(i)A. Then K' = (W, I�') constructed above is a
+model of MVS5 and K'lf-'(l)Op, wlf-'(i)A* and hence
+wlf-'A**. Thus if A** is a 1-tautology of MVSS, then
+A is a 1-tautology of QFL2.
+
+Conversely, let K1 = {W, I�' ) be a MVS5-model (of
+the language extended by p). If Kdf-'( < l)Op then
+clearly K1lf-'(l)A**; if I<d�'(l)Op then I<1 =I<' for
+the obvious I<. If wlf-'(i)A** then wl�'(i)A* and
+wlf-(i)A. Thus if A is a 1-tautology of QF L2 then
+•
+A** is a 1-tautology of MVS5.
+In the rest of this section we sketch a proof of the
+completeness of MVS5.
+Recall B-formulas; a theory is a set of B-formulas in­
+cluding all formulas (1)C where Cis MVS5-provable.
+T f- C (T proves C) if there is a proof of C from T
+using only modus ponens (no necessitation). T is com­
+plete if for each B-formula C, T f- C or T f- ...,c. As
+usual, it suffices to show the following Lemma.
+Lemma 4. 7
+
+(Mazn Lemma) If To is a complete the­
+ory and T0 f- (i)A then there is a model /{ = {W, I�)
+and a wE W such that wiHi)A.
+
+To build such a model we need first some previous
+results.
+
+Let T and To be complete theories.
+We say that T and To are equivalent, written T Ri T0,
+provided that for each i and A, T f- (i) DA iff T0 f­
+(i)DA, or equivalently, T f- (i)OA iff To f- (i)OA.
+
+Definition 4.8
+
+MVS5 f- (i)OC----> (D(:S i)C 1\ O (i ) C ) .
+
+Corollary 4.10
+
+IfTo
+
+f-
+
+(i)OC then
+
+For each formula B, and each T E W,
+iff Tlf-(i)B.
+
+Lemma 4.12
+
+T f- (i)B
+
+Proof: Induction step for <>B: Assume T f­
+(i)OB, T E W . Then T f- D(:S; i)B, thus for each
+T' E W, T' f- D(:S i)B, thus T' f- (:S i)B (using
+D D ----> D), thus T'lf-(j)B for some j :S i, by the in­
+duction hypothesis. On the other hand, T0 f- <>(i)B
+implies TB f- (i)B and by the induction hypothe­
+sis, TBJf-(i)B. Hence i = max{jj B JITJ T E W},
+i =II <>B II- T hi s completes the proof of this lemma
+•
+and of the Main Lemma 4.7.
+Corollary 4.13
+
+MVSS is complete with respect to the
+
+given semantics.
+5
+
+THE LOGIC
+
+Q F L2
+
+(b) (3TRiT0)(Tf-(i)C)
+
+The QF L2 comparative modality <l introduced in the
+previous section relies fundamentally on the MVS5
+modality <>p. Therefore it seems interesting to inves­
+tigate a possible axiomatization of the modality Op
+itself, without needing to refer it to any other modal­
+ity. To this end, in this section we relate our QF L2 to
+a many-valued version of the belief logic K D45 (see
+e.g. [Voorbraak]). Our MV/{ D45 will be a subtheory
+of MVS5 (like f{ D45 is a subtheory of 55); if there
+are only two values (Values= {0, 1}) then MVK D45
+becomes K D45 like MV 55 becomes 55. Moreover,
+a faithful embedding of QF L2 into MV/{ D45 is very
+easy to define.
+Models of MV /{ D45 are again possibilistic Kripke
+structures /{ :::: (W, 1�, 11'), where 71' is a normalized
+possibility distribution on W with values in Values
+that can be understood as a many-valued accessibility
+relation R defined as R(w, w') = 1r(w' ). Such many­
+valued accessibility relations already occur in [Fitting,
+92].
+
+IIOBII= maxw( IIBIIw l\1r(w) ),
+
+Proof: Easy, from compactness, like in [Hajek & Har­
+•
+
+For each i and C such that To f­
+(i)OC, let Tc be a complete theory satisfying (b) in
+
+D, 0 is
+
+as
+
+IIDB II=II-.0-.BII-
+
+Next lemmas show the M V f{ D45-validity of some for­
+mulas that will be taken later as axioms of our logic.
+
+Now the definition of the model follows.
+Definition 4.11
+
+AND A
+
+MANY-VALUED BELIEF LOGIC
+
+The semantics of the MV [{ D45 mod aliti es
+follows:
+
+(a) (VT Ri T0 )(T f- (:S i)C)
+
+mancova, 93].
+
+=
+
+Finally, completeness comes immediately from next
+lemma.
+
+Theorem 4.6
+
+Lemma 4.9
+
+the above corollary. We define the model I<= {W, If-)
+such that the set of models is W
+{To} U {Tc I
+C arbitrary} and the forcing relation is defined by
+Tlf-(i)p i!JT f- (i)p, for any T E W.
+
+Lemma 5.1
+
+D(A----> B)
+
+The formulas
+
+---->
+
+(DA --t DB),
+
+On Modal Logics for Qualitative Possibility in a Fuzzy Setting
+
+DA ._... DDA, (j)DA ..... D(j)DA,
+OA ..... DOA, (j)OA
+
+._...
+
+D(j)OA and (1)0True
+
+are }-tautologies.
+Proof: We only prove the first formula (axiom K).
+The rest are easily proved by straightforward compu­
+tations. It suffices to show that
+
+II DA--+ DB 11211 D(A--+ B) II.
+II DA-+DB II= I(minw{ 17r(w) v IIAIIw},minw•{l - 1r(w') v IIBIIw•l) =
+maxwminw•I(l-7r(w) VIIA llw, 1-1r(w') VIIBllw,) 2:
+min wi(l-7r(w) VJIAIIw,l-7r(w) V IIB IIw), and in
+the other hand II D(A --+ B) II= minw{l-1r(w) V
+I(ll A llw, IIBllw)}. Thus if we prove
+We have in the one hand
+
+I(l-1r(w) v IIAIIw,1-1r(w) v IIBIIw) 2:
+2: 1- 1r(w) v I(I/AIIw, I!BII w)
+
+•
+
+--+
+
+V £(2: i)O(E A (i)(A A
+
+Proo[- If i = 0 it is obvious. If i = maxv ( II A 11,
+A1r(v)) > 0 then, it is easy to prove that, there ex­
+ists vo and E such that II A JJ,o A7r( vo ) = i, vol f-E
+and 7r ( vo ) =II OE II· Therefore II A llvo A7r(vo) =
+IIAIIvo A IIOE II= i. Thus II E A (i)(A A OE) llvo=
+1, IIE A(i)(A AOE) IIvo A7r (vo ) = i, and therefore
+•
+II O(E A(i)(AA OE)) 11 2: i.
+Now
+
+we
+
+are
+
+ready
+
+to
+
+present
+
+our
+
+axioms
+
+of
+
+MVKD45.
+Definition 5.6 The modal logic MVKD45 has the
+following axioms:
+•
+
+axioms of propositional calculus (as above)
+
+•
+
+axioms of KD45:
+
+D(A--+ B)--+ (DA--+ DB),
+DA ..... DDA, OA ._... DOA
+
+the lemma will be proved. But observe that:
+•
+
+I<lf-(i)OA
+
+Lemma 5.5
+
+OE)).
+
+283
+
+I(l - 1r(w)V II A llw,1- 1r(w)V II B llw) =
+min(I(1-1r(w),1- 1r(w)V II Bllw), I( IIAllw' 11r(w) V I!BIIw) = I( IIAIIw,1-7r(w) V IIBIIw) 2:
+I(ll A IJw , II Bllw)
+I(1-1r(w)V II A JJw, 1- 1r(w)V II B JJw) 2: 1 1r(w)V II B llw2: 1-1r(w)
+
+Thus the above inequality holds and the lemma too.
+
+•
+
+(j)DA ._. D(j)DA, (j)OA ._... D(j)OA,
+
+•
+
+(1)<>True
+
+•
+
+((j)OA AE)--+(::; j)(A A0£),
+
+(1)
+
+(j)OA-+ V E(> O)<>(E A (j)(AA OE)) ,
+
+(2)
+
+being E a m. e. c.
+•
+
+for j > 0 and E being a m.e.c.
+
+Deduction rules are Modus Ponens, necessitation and
+"from A infer (1)A".
+
+•
+
+Recall the notion of a maximal elementary conjunction
+(m.e.c.) of the form /\7':1 (j;)Pi· Let I<= (W, lh 1r) be
+a possibilistic model and let E be a m.e.c. and A any
+formula. Then we have the following further lemmas.
+
+Previous lemmas
+
+MVI<D45.
+
+5.1
+
+to
+
+5.5
+
+prove the soundness of
+
+Therefore, the rest of this section is de­
+
+voted to get the completeness results for our logic as
+well as the embedding of Q F L2 into M VI< D45 as
+
+Lemma 5.2
+
+mentioned before.
+
+Proof: Evident for A atomic, induction step clear for
+
+case of MVS5, i.e. for any formula provable in a com­
+plete theory we can build a possibilistic model where it
+is satisfiable. First of all we need the following lemma.
+
+There exists a unique j E Values such
+that for each w E W, w lf- E --+ (j)A.
+
+connectives as well as for modalities (since the truth
+
+value of a m odalized formula is independent of
+Lemma 5.3
+
+w).
+
+•
+
+KJf-(> O)O((j)A AE)--+ (E--+ (j)A)
+
+I<IH> O)O((j)AAE) then there is awE W
+1r(w) A II(j)A AE llw> 0, thus IJ(j)AAE llw=
+1,wl
+f
+-(j)A A E, so this j is the unique j of Lemma 5.2.
+Thus, for each wo E W, wolf-E --+ (j)A.
+•
+Proof: If
+such that
+
+Lemma 5.4
+
+I<Jf-((i)OA AE)-+(:::; i)(A AOE)
+
+Proo[- Assume wlf-(i)OA A E; then II OE II=
+max{1r(v) I vlf- E} = 1r( v0), and i = max,(1r(v) A
+IJAJJ,). Let j be such that (Vv)(vlf-E --+ (j)A); we
+have IIAAOE IIw=IIAAOE IIva (since II Allw= II AIIvo=
+j) and IJAAOEIIvo=IIAIIvo A7r(vo) :::;IIOAII= i. Thus
+•
+JIAAOE IIw::; i.
+
+Lemma 5. 7
+
+The techniques are similar to the
+
+Let T0 be a complete theory such that
+
+T0 1-
+
+(i)OC. Then
+
+(a)
+
+(VT
+
+�
+
+T0)(VE)(T
+
+1-
+
+(E--+ (::; i)(C A OE))),
+
+(b)
+
+(:JT
+
+�
+
+T0)(:3E)(T
+
+1-
+
+(E A (i)(C A OE))).
+
+Proof: (b - sketch) Assume To 1- (j)OC, j > 0. Then
+for some E, To 1- (> O)O(E 1\ (j)(C A OE)). Put D =
+(E 1\ (j)(C A OE)). Let To 1- (ir.)DBk , k = 1, ... , n;
+
+To 1- D(ik)D Bk and To 1- D/\�=t(ik)DBk (note
+(ik)DBk is a B-formula!). Since MVKD45 proves
+OD-+ (DH--+ O(D A H)) for H, D being B-formulas,
+we get, for H = 1\(ik)DBk, To 1- OD - O( D A H),
+thus To 1- (> O)OD -+ (> O)<>(D A H), thus To 1(> O)O(D A H), and therefore D 1\ H is consistent3.
+then
+that
+
+3Recall that a formula A is MV K D45-consistent
+
+MV K D45 fj-.A.
+
+if
+
+284
+
+Hajek, Hannancova, Esteva, Garcia, and Godo
+
+Consequently, D is consistent with the set of all To­
+provable formulas of the form (i)DB, completing this
+•
+theory we get our T.
+This last lemma enables us to define our model as fol­
+lows.
+For each i and C such that To 1(i)OC let Tc be a theory T as in (b) in the above
+lemma. We define the model (W, lh 1r ) such that the
+set of worlds is W ={To} U {Tc I C}; forT E W, the
+forcing relation is defined by TH-( i)p iff T f- ( i)p, and
+finally, the possibility distribution is given by 1r(T) = i
+i!JT r E 1\ (i)OE.
+Definition 5.8
+
+more natural choice would be II DA II= minw ( 1r ( w ) )
+II A llw) but then to have duality of D and 0 we should
+have II OA II= maxw(7r & II A llw) (strict conj u nction).
+Unfortunately, for this semantics of D one of the basic
+axioms of modal logic, namely D(A -+ B) -+ (DA ->
+DB), is not a tautology.
+--->
+
+(3) To find an elegant (non-pedestrian) axiomatization
+of QF L2 in its own language still remains. As a matter
+of fact, it is worth noticing that some of the axioms of
+Farinas and Herzig's QP L logic, e.g.
+•
+•
+•
+
+Completeness is obtained by proving next main lemma
+in a similar way as in lemma 4.12.
+Lemma 5.9
+
+For each i, B, and for eachT E W,
+Tlf--Ci)B
+iff T r (i)B.
+
+•
+
+(A<JB) v (B<l A)
+(A <1 B)-+ ((A V C) <1 (B V C))
+A <1 True
+-.(True <1 False)
+
+are 1-tautologies of QF L2 too, so they are potential
+candidates.
+
+com­
+
+(4) Furthermore, one should give up the assumption
+that Values is finite and study the full Lukasiewicz's
+logic with real values.
+
+Finally, QF L2 is related to MVKD45 in the way next
+theorem shows.
+
+(5) The relationship between the semantics of the com­
+parative modality in [Hajek & Harmancova, 93] and in
+this present paper it is also a matter of future research.
+
+Corollary 5.10 (Completeness)
+
+MVKD45 is
+plete with respect to the given semantics.
+
+Define an interpretation of QF L2formulas in MV]{ D45 by putting (A <l B)*
+(OA -+ OB) and extending trivially to all QF L2formulas. Then * is a faithful interpretation of QF L2
+in M I<V D45, i.e. a QF L2-formula A is a QF L2tautology iff A* is a MV I< D 45-t aut ol o gy.
+Theorem 5.11
+
+6
+
+CONCLUDING REMA RKS AND
+FUTURE WORK
+
+In this paper we have investigated, from a logical point
+of view, a modality for comparison of possibilities of
+fuzzy propositions. In this sense, this paper tackles
+the same problem as in [Hajek & Harmancova, 93]
+but with another approach. Taking as referen ce the
+Zadeh's extension of the concept of possibility mea­
+sures to fuzzy propositions, the corresponding com­
+parative logic QF L2 has been related to two many­
+valued modal systems namely MVS5 and MVKD45,
+for which complete axiom systems, Hilbert style, h ave
+been given. However a number of open questions re­
+main for future investigation. Some of them are listed
+below.
+(1) It would be desirable to replace axioms (1), (2) of
+definition 5.6 by some other more elegant axioms (in
+particular not dealing explicitly with m.e.c.'s). One
+tautology more similar to the axioms of MVS5 is
+(;?: i)DC ,..... ( ;?: i )D ( ;?: i)C.
+
+(2) Our choice of semantics of DA in MVKD45 might
+seem unnatural:
+II DA II= minw((l- 1r(w)) V II A llw)- A seemingly
+
+Acknowledgements
+
+Francese Esteva, Pere Garcia and Lluis Godo have
+been partially supported by the Esprit III Basic Re­
+serach Action 6156 DRUMS II and by a grant from
+the Spanish DGICYT (Pr. No. PB91-0334-C03-03).
+Petr Hajek and Dagmar Harmancova have been par­
+tially supported by the grant Nr. 130108 of the Grant
+Agency of the Academy of Sciences of Czech Republic.
+Partial support by the COPERNICUS grant No.10053
+(MUM) in the final stages of preparation of this paper
+is also acknowledged.
+
+
+
+The way experts manage uncertainty usually
+changes depending on the task they are
+performing. This fact has lead us to consider the
+problem of communicating modules (task
+implementations) in a large and structured
+knowledge based system when modules have
+different uncertainty calculi. In this paper, the
+analysis of the communication problem is made
+assuming that (i) each uncertainty calculus is an
+inference mechanism defining an entailment
+relation, and therefore the communication is
+considered to be inference-preserving, and (ii) we
+restrict ourselves to the case which the different
+uncertainty calculi are given by a class of truth­
+functional Multiple-valued Logics.
+
+1
+
+INTRODUCTION
+
+Most expert system (ES) building tools with uncertainty
+management capabilities provide a unique and global
+method for representing and combining evidence.
+Nevertheless, human experts usually change the way they
+manage uncertainty depending on the task they are
+performing. To be able to model this behaviour, an ES
+building tool must allow to attach different uncertainty
+calculi to the structures implementing the different tasks
+(in modular ES shells the notion of task is usually
+implemented as goal-oriented modules).However, tasks or
+modules in a knowledge base are not independent one of
+each other, they need to cooperate and communicate, as
+human experts do when solving complex problems. This
+can be shown in the following example.
+A physician diagnosing a pneumonia could ask to a
+radiologist about the results of a radiological analysis. The
+simplest and more frequent type of communication is to
+get an "atomic" answer like
+
+"it is likely that the patient has a cavitation in
+his left lung."
+Then, to use this information in his own reasoning, the
+physician must only interpret in his language the
+linguistic expression likely used by the radiologist, and
+perhaps to identify it with another uncertainty term, say
+for example acceptab le, used by himself. But the
+communication could have been richer than that "atomic"
+answer, and consist of a more complex piece of
+information. For instance, the radiologist could have
+answered:
+
+"if from a clinical point of view you are very
+confident that the patient has a bacterial disease
+and he is also inmunodepressed, then its nearly
+sure he has a cavitation in his left lung."
+As in the previous case, to use the radiologist information
+the physician must again interpret it. However, this time
+the interpretation can not be only a matter of uncertainty
+terms (very confident, nearly sure) but also a matter of
+way of reasoning, if he wants to make use of this
+information in other situations (i.e., patients) which do
+not match exactly the one expressed above.
+Therefore, if in a knowledge base we have different
+uncertainty calculi for different tasks (or modules), and
+these modules need to communicate, a correspondence
+between their uncertainty calculi must be established. To
+model the first type of communication shown in the
+example, in a modular ES shell only a way of translating
+the languages of different uncertainty calculi, attached to
+different modules, is required. However, to model the
+second type of communication the correspondence is also
+required to be made inference-preserving. The need to
+preserve sometimes inferences through the communication
+among tasks can be made clearer by means of another
+little example from an existing expert system,
+PNEUMON-IAl [Verdaguer, 1989], for the diagnosis of
+
+1 PNEUMON-IA is an application developped in the modular rule­
+MILORD [Sierra, 1989]. that manages
+linguistically expressed uncertainty (see section 3 for more details)
+
+based expert system shell
+
+18
+
+Agusti-Cullell, Esteva, Garcia, God6, and Sierra
+
+pneumoniae. The module (task) Bacteria of this expert
+system comprises the following rule:
+
+[If a patient has leukopenia and left-deviation
+then he has a bacterial disease, sure]
+stating that the certainty about the bacterianicity of a
+disease depends on the certainty of the facts leukopenia and
+/eft-deviation, which are investigated in another module
+named Laboratory. Let's suppose that these two modules
+have different uncertainty calculi. Then we could have two
+types of communication between them. A first possibility
+is that Bacteria asks to Laboratory for the two facts,
+translates the answers and makes its "and" combination to
+conclude about bacterianicity. The second possibility is
+Bacteria asks the certainty value of the non-atomic
+sentence "leucopenia and /eft-deviation" and translates it.
+In this last case the "and" combination of the certainty
+values is performed in the Laboratory module, and the
+result is afterwards translated to the Bacteria uncertainty
+calculus and used to conclude about bacterianicity. It
+seems clear that in order to keep the coherence of the
+whole diagnosis task, the certainty degree of bacterianicity
+found out in each case should be the same. To make this
+sure, the correspondence between the uncertainty calculi of
+those modules should preserve the inferences made in the
+Laboratory module when moving to the Bacteria module.
+The general problem of analyzing conditions under which
+a correspondence or communication between different
+tasks with different uncertainty calculi preserves inference
+is a very hard one. In order to deal with this problem,
+several approaches could be taken into account, from pure
+logical ones to more cognitive ones. In [Meseguer, 1989],
+in another but not very different setting, it is argued that
+
+"if the approach taken lacks a logical basis to serve as a
+criterion of correctness the result may be quite ad hoc and
+unsatisfactory, and it will probably involve a good deal of
+costly engineering trial and error". Following this
+
+argument, the approach we have chosen is a logical one,
+but without forgetting cognitive aspects. More concretely,
+our analysis will be carried out from two main points:
+- first, we will consider uncertainty calculi as inference
+mechanisms defining logical entailment relationships.
+Therefore, correspondences (or communications) between
+different uncertainty calculi will be analyzed as mappings
+between different entailment systems.
+
+interactive algorithm for defining such inference
+preserving correspondences is proposed. This algorithm
+has been thought as a mechanism to support human
+experts when developing applications.
+
+2
+
+ENTAILMENT SYSTEMS
+
+Inference engines of many rule-based ES can be considered
+as implementations of proof calculi (from a set of axioms
+and a set of inference rules) of some underlying Logical
+Systems. As it is known, every logical system should
+have a syntactical and semantical formalizations. The
+theories of Institutions and Entailments Systems allow to
+formalize an intuitive notion of logical system from the
+model and proof theoretic approach point of view
+respectively ([Goguen and Burstall, 1983], [Meseguer,
+1989], [Harper et a!., 1989]). In this way the Institution
+approach takes the satisfaction relation between models
+and sentences as basic whereas the Entailment System
+approach takes the entailment relation.
+The communication problem among tasks or modules has
+been introduced as the problem of defining inference
+preserving mappings. Therefore, in this paper we focus
+our attention in the entailment systems approach rather
+than in the Institutions one, and thus, we are mainly
+interested in correspondences between different entailment
+systems.
+Although a categorical definition of Entailment Systems
+has been given [Meseguer, 1989], for our purposes an
+Entailment System will consist of a pair (L, /-), where L
+is a language (a set of sentences, usually built from a set
+of connectives and a signature that provides a set of sorted
+symbols), and/- is an entailment relation on zLxL, i.e. a
+relation satisfying the following properties:
+El.- reflexivity: for any sentence E, {E}I- E
+E2.- mono tonicity: if r 1- E and r � r' then r• 1- E
+E3.- transitivity: if r 1- Ei, for iE I and
+ru{Ei, iE I} 1- E then r 1- E,
+
+where r and r' are sets of sentences, and E and Ei are
+sentences of L.
+In [Meseguer, 1989] the following notion of a map of
+entailment systems has been proposed.
+
+- and second, we will use finite truth-functional multiple­
+valued logics (MY-logics, for short) as uncertainty calculi,
+as long as this is a simplified view of the uncertainty
+reasoning model that our laboratory has been working
+with in developing applications with the MILORD
+system [ Sierra, 1989], mainly in the medical diagnosis
+field.
+
+Definition 2.1. (map of entailment systems)
+Given the entailment systems (L, /-) and (L', /-' ), a
+mapping H:L-->L' is said to be a map of entailment
+systems if the following condition
+If T/- E then H(T) /-' H(E),
+holds for all set of sentences rand for all sentence E of L.
+The map H is said to be conservative if r/- E whenever
+H(T)/-' H(E).
+
+The paper is structured in the following way. After this
+introductory section, in section two there is a general
+overview on entailment systems and their inference­
+preserving mappings. In section three, we describe the
+class of finite truth-functional multiple-valued logics we
+will use as uncertainty calculi for different tasks. Section
+four is devoted to a detailed study of inference-preserving
+mappings for our uncertainty calculi, and finally, an
+
+A map between entailment systems allows to preserve
+inference in a strict sense. In partiCular, when the map is
+conservative one entailment system is an extension of the
+other one. However these strong conditions sometimes
+can be weakened in the uncertainty reasoning framework.
+From the point of view of the correspondence problem
+between different tasks with different uncertainty calculi,
+when a task imports information from another task, it
+
+Combining Multiple-valued Logics in a Modular Expert Systems
+
+doesn't need always to deduce exactly the s ame
+_
+conclusions as the previous one could deduce. Sometimes
+it only needs that its conclusions be coherent with the
+_
+deduction system of the other task . In other words, It
+allows its reasoning to be less accurate when dealing with
+the other task information, but not incorrect in any case.
+To model this last situation a definition weaker than the
+conservative one is introduced below. We will call it weak
+conservative.
+Definition 2.2. (weak con servative map).
+Given entailment systems (L, /-) and (L' , /- ') a map H
+from L to L ' is called weak conservative if the following
+condition holds:
+If H(r) J- ' E' then there exists a sentence Eof L
+such that Tj- Eand H(E) f-'E'
+
+for all set of sentences r of L and all sentence E'of L '.
+If H is also a map of entailment systems we call it weak
+conservative map .
+3
+
+A C LASS OF MULTIPLE-VALUED
+LOGICS FOR THE UNCERTAINTY
+MANA GEMENT IN RULE-BASED
+EXPERT SYSTEMS
+
+Taking the uncertainty management of MILORD as a
+reference, in this section we consider a restricted type of
+MV -logics which are expressive enough to model the
+uncertainty reasoning used in many rule-based systems.
+The uncertainty management approach used in MILORD
+has the following characteristics [Godo et al., 1989]:
+1) The expert defines a set of linguistic terms expressing
+uncertainty corresponding to the verbal scale he will use
+to weight facts and rules.
+2) The set of linguistic terms is supposed to be ordered, at
+least partially, according to the amount of uncertainty they
+express, being always the booleans 'true' and 'false' their
+maximum and minimum elements respectively.
+3) The combination and propagation of uncertainty is
+performed by operators defined over the set of linguistic
+terms, basically conjunction, disjunction, negation and
+detachment operators. A method for the elicitation of these
+operators from the expert has been proposed in {Lopez de
+Mantaras et al., 90). The main difference of this approach
+with respect to other ones is that no underlying numerical
+representation of the linguistic terms is required.
+Linguistic terms are treated as mere labels. The only a
+priori requirement is that these labels should represent an
+ordered set of expressions about uncertainty. For each
+logical connective, a set of desirable properties of the
+corresponding operator is listed. Many of thes� propertie�
+are a finite counterpart of those of the uncertamty calcuh
+based on t-norms and t-conorms, which are in turn the
+basis of the usual [ 0,1)-valued systems underlying Fuzzy
+Sets Theory [Alsina et al., 1983]. The listed properties act
+as constraints on the set of possible solutions. In this
+way, all operators fulfilling them are gener ated: This
+_
+approach has been implemented by formulating
+1t as a
+constraint satisfaction problem [Godo and Meseguer,
+1991]. Finally, the expert may select the one he thinks
+
+fits better his own way of uncertainty management in the
+current task.
+These characteristics make clear that the logics associated
+to the different MILORD uncertainty calculi are a class of
+finite multiple-valued logics, taking the linguistic terms
+as truth-values and the operators as the interpretations of
+the logical connectives. In other words, each linguistic
+term set, together with its set of operators, defines a truth­
+values algebra and therefore a corresponding multiple­
+valued logic. In (Agusti-Cullell et al., 1990), MV-logics
+have been analyzed from the semantic point of view and
+formalized as families of Institutions.
+Following that line, the main characteristics of our MV­
+logics for uncertainty management we are concerned with
+are given by:
+- An algebra of truth-values: a finite algebra A =
+<An , 0, 1, N, T, l> such that:
+1) The set of truth-values An is a chain2 represented by
+0 = ao < a1 < ...< an-! 1,
+where 0 and 1 are the booleans False and T r u e
+respectively.
+2) The negation operator N is an unary operation such
+that the following properties hold:
+N1: if a < b then N(a) > N(b)
+N2: N 2 = Id.
+3) The "and" operation T is any binary operation such
+that the following properties hold:
+Tl: T{a,b)=T(b,a)
+T2: T(a,T(b,c)) = T(T(a,b),c)
+T3: T(O,a)=0
+T4: T(1,a) = a
+TS: if a :<>b then T(a,c) i> T{b,c) for all c.
+Note that in the unit interval these properties define
+t-norms functions if we add the condition of
+continuity.
+4) The implication operator I is defined by residuation
+with respect to T,.
+I(a,b) = Max{ c E An such that T(a,c) :5 b}
+i.e., I is the finite counterpart of an R-implication
+generated by the "and" operator T [Trillas and Valverde,
+1985].
+- A set of Connectives: "not"(--,), "and"(&) and
+"implication"(-->)
+- A set of Sentences: sentences are pairs of classical-like
+propositional sentences and intervals of truth-values. The
+classical like-propositional sentences are built from a set
+of atomic symbols and the above set of connectives.
+However the sentences we will consider through this case
+study are only of the following types:
+(pJ, V),
+(P! & P2 & ... & Pn , V),
+(PI & P2 & & Pn --> q, V),
+where pJ, ... , Pn are literals (atoms or negations of
+atoms), q is an atomic sentence and V is a subset of truth­
+values. For each truth-values algebra A, LA will stand for
+=
+
+···
+
+2 Usually the set of truth-values An stands for a totally ordered set of
+linguistic terms that the expert uses to express uncertainty, but
+nothing changes if it is only partially ordered.
+
+19
+
+20
+
+Agusti-Cullell, Esteva, Garcia, God6, and Sierra
+
+the set of sentences with intervals of truth-values
+belonging to A
+-Models : are defined by valuations, i.e. mappings p
+from to the firsts components of sentences to An provided
+that:
+p(-,p) = N( p(p) )
+P(Pl & pz) = T( P(Pl), P(P2) )
+p(p --> q) = I(p(p), p(q))
+- Satisfaction Relation: between models and
+sentences is defined by:
+Mp I= (p, V) if, and only if p(p) E V,
+where Mp stands for the model �e�ined by a valuation p.
+- Entailment Relation: the rmmmal one generated by
+1) the following set of axioms:
+(A-1 ) ((p1 & pz)&p 3 --> P1& (pz & p3), 1)
+(A- 2) (p1 & (pz& p3) --> (p1 &P2)& p3, 1)
+(A-3) (pl& pz-->pz& pl , 1)
+(A-4) (-,-,p-->p, 1)
+2) the following inference rules, which are sound with
+respect to the satisfaction relation (Agusti-Cullell et
+a!., 1990):
+(RI-1 ) WEAKENING: 1, (p, V) I- (p, V'),
+where V c;;;; V' and 1 is a set of sentences,
+(RI-2) NOT-introduction: (p, V) 1- (-,p, N(V)),
+(RI-3) AND-introduction:
+(Pl· Vl ), (P2, Vz) 1- (Pl & pz, T (V1, Vz)),
+(RI-4) MODUS PONENS:
+(p, V1), (p-->q, Vz) 1- (q, MP(V1, Vz)), being
+if a and b are inconsistent
+MP(a,b) = [ a,l], if b = 1
+T(a,b), otherwise
+where a and b are said to be inconsistent if there exists
+no c such that I(a,c) = b.
+
+{0,
+
+Notice that these inference rules are the only ones that an
+inference engine would need when working on sets of
+sentences of the above specified types, very common in
+fact in rule-based ES. However, instead of the rule RI-4
+and for the sake of simplicity, we will consider the
+following inference rule:
+(RI-4') MODIFIED MODUS PONENS:
+(p, V1), (p-->q, Vz) I- (q, T(V1, Vz)).
+Although it is correct for instance in the usual case of
+upper intervals of truth-valu�s, this inference rule is �ot
+logically sound in general with respect to the sem� n�1cs
+.
+(satisfaction relation) above defmed. Nevertheless, It IS a
+well known fact that, from the cognitive point of view,
+detachment operators share the same properties required to
+conjunction operators [ Bonissone, 1987]. These
+arguments, together with self-evident simplicity reasons,
+have lead us to adopt the inference rule RI-4'. Therefore,
+from now on, given a truth-values algebra A we will
+denote by MVLA the multiple-valued logic defined above,
+and by (LA, 1-A) its associated entailment system. The
+language of this entailment system is LA and its
+entailment relation is the minimal one determined by
+axioms A-1, A-2, A-3 and A-4, and by inference rules RI1, RI-2, RI-3 and RI-4'.
+
+On the other hand, the disjunction operator needed for
+parallel combination can be obtained from the negation
+and conjunction operators using the De Morgan laws. For
+these reasons, and for deductive purposes, only the ordered
+set of truth-values (linguistic terms) and the conjunction
+and negation operators should be specified in the truth­
+values algebra definitions. Therefore, from now on, truth­
+values algebras will be represented by <A,T,N>, omitting
+the booleans 0 and 1, as long as they belong to all
+algebras.
+4
+
+INFERENCE P RESERVING
+BETWEEN MV -LOGICS
+
+MAPS
+
+The aim of this section is to analyze the problem of
+preserving inference in communicating modules,
+assuming that each one has its own finite MY -logic as
+uncertainty calculus. In section two, maps and weak
+conservative maps of entailment systems have been
+introduced in order to model inference preserving
+correspondences. In the first subsection of this section, it
+is shown that morphisms and quasi-morphisms of truth­
+values algebras generate maps and weak conservative maps
+respectively of the corresponding entailment systems. In
+the second and third subsection, morphisms and quasi­
+morphisms of truth-values algebras are studied. Finally, in
+the fourth subsection an interactive algorithm to define
+such mappings to assist human experts when developing
+applications, is proposed.
+4.1 WEAK CONSERVATIVE MAPS
+
+Now we consider the problem of finding inference
+preserving correspondences between two of these logics
+MVLA and MVLB, where A= <An, T, N> and B = <Bm,
+T', N'> are their corresponding truth-values algebras. As !t
+has been noted in section 2, the mappings between therr
+entailment systems (LA, I-A) and (LB,I-B) we are mainly
+interested in are the weak conservative ones. In order to
+give a sufficient condition for a mapping
+f: An --> B m to generate a weak conservative
+mapping between the entailment systems of MVLA and
+MVLB, we need some new definitions and results:
+Given a truth-values algebra A = <A11,T,N>, we consider
+the set of intervals of A11, I(An)={[a,b]l a,b E An} where
+[ a,b] = {x 1 x E A n. a � x � b }. We can define the
+following order relation in I(An ):
+I]� 1 2 ifa�b for all a E /]and for all b E f2.
+Let's consider now the following operations on I(An)
+1) N*([a,b]) [ N(b), N(a)]
+2) T*([at.b1J,[a z,bzJ) = [ T(apz), T(bt.bz)J
+It is easy to check that N* is a negation mapping and T*
+fulfils T1+TS. Moreover, identifying every element a of
+An with the interval [a,a] of I(An ), <An , T, N> is a
+subalgebra of d(An ).T*,N*>, that is, we have the
+following proposition.
+=
+
+Combining Multiple-valued Logics in a Modular Expert Systems
+
+Proposition 4.1. Any truth-value algebra<An. T, N>
+can be extended to an algebra<I(An ). T*, N* > of the
+same type that has<An, T, N> as a subalgebra.
+It is worth noticing that (I(An), �*) is only a partial
+ordered set with minimum 0 [0,0] and maximum 1 =
+[1,1], and N* and T* are univocally defined by N and T.
+Next we give a small example of an algebra of intervals
+generated by a truth-values algebra of four elements
+=
+
+Example. Let A
+{0 < a < b < 1} the chain of four
+elements. The set of intervals of A is I(A)= {[O,a], [O,b],
+[0,1], [a,b], [a,l], [b,l], [0,0], [a,a], [b,b], [1,1] }.
+Identifying every interval [x,x] with the element x of A,
+the order relation on A and I(A) can be represented by the
+graphs of figure 1.
+=
+
+A
+
+r
+r
+r
+•
+
+<A n . T, N> and B <Bm. T', N'> respectively. Then
+every quasi-morphism of A to B generates a weak
+conservative mapping between the entailment systems of
+MVL A and MVLs.
+=
+
+Proof. Let f: An --> I(B m ) be a quasi-morphism
+between A and B, and let r {(pr, Vl), ..., (pn, Vn)} a
+set of sentences of MVLA. We will denote by H f the
+translation function from MVLA to MVLa defined by
+H f((s,V)) = (s,f(V)).Obviously H f translates axioms of
+MVLA into axioms of MVLa. Suppose that in MVLa a
+sentence E' (q, V') can be derived from Hf(r) = {(Pl .
+f(Vl)), ..., (pn, f(Vn))} and axioms of MVLa by applying
+a sequence of RI-1, RI-2, RI-3 and RI-4' inference rules
+and let's denote by g' the composition of their
+corresponding inference functions (only functions N' and
+T' will appear). Then it must be the case that g'(f(V 1), ...,
+f(Vn )) c V'. We have to show that there exists a sentence
+E of MVLA such that it can be derived from r 1-A E and
+thatHf(E) 1-B E'. Let E be the sentence (q, g(Vr, ..., Vn)),
+where g is the function obtained from g' replacing the
+occurrences of N' and T' by N and T. Then it is clear that
+rI-A E holds and, because f is a quasi-morphism, we have
+f(g(Vr, ... , Vn)) c g'(f(V l ), ... , f(Vn )) c V', soH f(E) 1-B
+E' also holds and the theorem have been proved. •
+=
+
+=
+
+In the particular case of algebra morphisms, the following
+proposition shows that they also generate maps of
+entailment systems.
+Proposition 4.3. Let MVL A and MVLB be the
+multiple-valued logics defined on the truth-values algebras
+A =<An, T, N > and B <Bm , T', N'> respectively. Then
+every order-preserving morphism of A to B generates a
+map between the entailment systems of MVLA and
+MVLB.
+=
+
+0
+
+Figure 1: Graphs of the order relation of A and I(A).
+Next we introduce what we call a quasi-morphism of
+algebras as a weakened notion of morphism, allowing to
+map values of an algebra into intervals of the other. This
+tries to capture the possibility of being imprecise when
+renaming truth-values from a MV-logic to another.
+Definition 4.1. Given two truth-values algebras A =
+< A n , Tj, Nj> and B =<Bm, T2, N2>. a mapping
+f : A n --> I(Bm) is a quasi-morphism from A to B if
+the following conditions hold:
+l ) f is non-decreasing, i.e. ifa :5 b , then f(a ) f> f(b),
+2) f (O ) = 0,
+3) f ( N J(x) ) = N2* ( f(x) ),
+4) f( TJ(x,y) ) c T2*(/(x)f(y)),
+It is clear from this definition that :
+(i) algebra morphisms are a particular case of algebra
+quasi-morphisms, identifying every element b of B with
+the interval [b,b]. Moreover, a quasi-morphism f is a
+morphism if, and only if, f(Am) c Bm.
+(ii) algebra morphisms from <A n, T1, N 1> to
+<l(Bm), T1*, Nz*> are also quasi-morphisms.
+Theorem 4.2. Let MVLA and MVLB be the multiple­
+valued logics defined on the truth-values algebras A
+=
+
+4.2
+
+MORPHISMS OF TRUTH-VALUES
+ALGEBRAS
+
+In this subsection we tum our attention to the problem of
+relating truth-values algebras by means of order-preserving
+mappings which are algebra morphisms, and some
+necessary and/or sufficient conditions for their existence
+are given. Although there can exist algebra morphisms
+which are not order-preserving, for cognitive and logical
+reasons it seems reasonable to require this condition.
+Therefore, as long as we are only interested in order­
+preserving mappings, from now on, and for the sake of
+simplicity, we will use the term morphisms as an
+abbreviation of order-preserving morphism with f(O)=0.
+We begin with some well-known results on negation
+operators. For each chain A0, there exists only one
+negation N and it is defined by
+N(ai) = an-i-1·
+Then every chain A0 can be partitioned in three subsets:
+- the set of negative elements Nn ={xI x < N(x)}
+- the set of fixed elements :Fn={xI x N(x) }
+=
+
+- the set of positive elements Pn={xI x > N(x) }
+
+21
+
+22
+
+Agusti-Cullell, Esteva, Garda, God6, and Sierra
+
+being these subsets :F'n= { ak }, Nn = { ai I kk }, P n =
+{ ai I i>k }, if n =2k+1, and :F'n= 0, Nn = { ai I kk} and
+= { ai I i�k }, if n=2k.
+The following equalities also hold: N(Nn) = Pn,
+N(:F'n) = :F'n and N(Pn)= Nn.
+
+Pn
+
+Proposition 4.4. Given two chains An and Bm . a
+mapping f: An --> Bm is a morphism with respect to
+the negation operator if, and only if, the following
+conditions hold:
+1.f;Nn is an order preserving mapping from Nn to
+
+Nmu1'm such that f(O)
+0
+2.f(1'n) F'm
+3.1f ai belongs to Pn.J(ai) = N'(j(an-i-1)), where N ' is
+the negation associated to Bm.
+=
+
+=
+
+From this proposition it is easy to show that:
+- If n is odd then, in order to be f a morphism, m must
+be also odd, as long as f(:F'n) = :F'm # 0.
+- In the case of being n even or both n and m odd,
+every mapping ft: Nn --> Nmu:F'm defines a negation
+morphism/in the following way:
+if a i E N n
+f1 (ai),
+
+{
+
+if a r E :F' n and :F' m = {br }
+f(ai)= br ,
+N'(f1 (N(ai))), if a i E P n
+and reciprocally, every negation morphism/ is defined by
+the mapping f1 = fiN n·
+
+We follow now with two propositions about how "and"
+operations can defined in order to have algebra morphisms.
+Proposition 4.5. Let< An , N, T > be a truth-values
+
+algebra and let Bm a chain containing An such that the
+negation N' associated to B fulfils N'jAn = N, i.e. if ai =
+bj then N (ai) bm-j-1· Then there exists at least an "and"
+operation T' on Bm such that<An. N, T> is a subalgebra
+of< Bm . N ', T' >.
+=
+
+Proof It can be easily checked that the mapping T' defined
+as:
+T(p-,q- ) if p # 1 and q # 1
+:
+T ,(p,q)
+If q = 1
+p,
+q,
+if p = 1
+where p- =max{ x E An I x :S p }, is an "and" operation
+on Bm , and that it also verifies T'IAnxAn= T. •
+
+{
+
+=
+
+Proposition 4.6. Let <An . T, N> be a truth-values
+algebra and letf: An --> Bm be a negation morphism.
+Then there exists an "and" operation T' on Bm such that f
+is an algebra morphism if, and only if, f is compatible
+with T, that is, for all a,b,c,d E An,fa
+( ) =f (b) andf(c) =
+f(d) imply f(T (a,c)) f(T(b,d)).
+=
+
+Proof. Obviously, if f is an algebra morphism it is
+compatible with T. On the other hand, if f is compatible
+with T, the relation =f defined as
+a =f b ifbEF f(a) = f(b)
+is a congruence relation on An. Let < A nl=f , Tf, Nf> be
+the quotient algebra. Therefore, identifying An/=f with
+
+f(An). f will be a morphism from <An , T, N> to < f(An),
+Tf, Nf>. By proposition 4.5 there exists T' on Bm such
+that < f(An). T f, Nf> is a subalgebra of <Bm , T', N'>,
+where N' is the negation associated to Bm. •
+Now, taking into account the above results, it is
+interesting to point out some considerations about the
+problem of algebra morphism generation. In the following
+A will stand for a truth-values algebra <An , T, N> and
+Bm for a chain of m elements.
+1) If n is odd and m even, there is no possible morphism
+between A and B, being B any truth-values algebra defined
+on Bm. Then, this case will not be considered any more.
+2) In order to define a morphism f: An --> Bm with
+respect to the negation operator we only need to take any
+mapping fi: Nn --> N m u:F' m with f1 (0) 0 and to
+extend it in the way above indicated.
+=
+
+3) The generation of possible operations T' on Bm .
+together with renaming mappings f from An to Bm such
+that f: <An. T, N> --> <B m , T', N'> are morphisms,
+is a process that can be automated without difficulties.
+The problem reduces to:
+- first, to generate all mappings f from all order
+
+preserving mappings f1: N n --> N mu:F'm with
+f1(0) =0,
+- second, to check which ones are compatible with T,
+- and third, to generate all algebras B m containing
+f(Am) as subalgebra.
+This method will provide us with a family of suitable
+algebras <Bm. T', N'> for each mapping f1.
+4) Nevertheless, in general, it can be the case that the set
+of possible solutions would be empty. As an example,
+consider the algebra <A.4,T,N>, where A4 ={O<al<az<l},
+and the "and" operation T is the one given in figure 2.
+
+2...J
+0
+a1
+az
+1
+
+0
+
+a1
+
+az
+
+1
+
+0
+0
+0
+0
+
+0
+0
+0
+a1
+
+0
+0
+al
+az
+
+0
+a1
+az
+1
+
+Figure 2: "And" operation in a chain of four elements
+It is easy to check that there exists no renaming mapping
+from A4 to B3 such that a morphism between <A4,T,N>
+and <B3, T', N'> can be defined for any "and" operation
+T'. Let B3 = {O<b<l}, and thus N '= {0}, :F''= {b}, and
+P'={1}. It is clear that if f1 :{0,a1} --> {O,b} is order­
+preserving and f 1 (0) = 0, then there are only two
+possibilities:
+1) f1(a1) = 0, and then the mapping f: A4--> B3 is
+defined by f(O) = f(a1 ) and f(az) = f(1) = 1, but f is not
+compatible with T, because f(az) = f(l) but f(T(az,az)) =
+0 * 1= f(T(az,1));
+
+Combining Multiple-valued Logics in a Modular Expert Systems
+
+2 ) f1(a) = b, and then the mapping f: A4 --> B3 is
+defined by f(O)
+0, f(al) = f(az ) = b, and f(1) = 1, but
+again f is not compatible with T, because f(al)= f(az) but
+0 * b=f(T(az,az)).
+f(T(a1,a1))
+=
+
+=
+
+4.3
+
+QUASI-MO RPHISMS OF
+TRUTH-VALUES ALGEBRAS
+
+As we have seen in last section, given any truth-values
+algebras A and B, it is not always possible to find a
+morphism between them. However, this is not the case of
+quasi-morphisms because of the additional freedom of
+mapping (or renaming) a truth-value of A to an interval of
+B. This point is proved in the following proposition.
+Proposition 4.7: Let A = <An. TJ, NJ> and B <Bm.
+Tz, Nz> be two truth-values algebras. Let C =<Cko T',
+N'> be an algebra that can be imbedded in both A and B,
+and let h1 and hz their corresponding monomorphisms.
+Then there exists at least one quasi-morphism f from A to
+B such that f(hz(c)) hz(c), for a/1 c E Ck.
+=
+
+Figure 3. "And" operations in chains of five and seven
+elements
+
+It can be checked that there is no morphism from A to B.
+On the other hand C = <C3, T'', N">, being C3={0<b<l}
+and T"(x,y) = min(x,y), is the maximal subalgebra that
+can be imbedded into A and B, and the monomorphisms
+h1 and h2 are defined by:
+hz(O)=o
+h 1( 0) o
+hz(b)=b3
+h1(b)=a2
+h1(1)=1
+hz <O =1
+respectively. The above proposition 4.7 assures that the
+mapping f: As-> I(B7) defined by:
+f(O)=0
+f(ai) [O,b3]
+f(az) b3
+f(a3) = [b3,l]
+f(l) 1
+is a quasi-morphism from A to B.
+=
+
+=
+
+=
+
+=
+
+=
+
+Proof. First of all, notice that given A and B there always
+exists the algebra C, because at least the algebra of
+booleans satisfies the required condition for any pair of
+truth-values algebras. So, let h1 and h z be the
+corresponding monomorphisms from C to A and B
+respectively, and consider the mapping f: A n --> l(Bm )
+defined by:
+f(x) = [ h2(Cx-), h2(Cx+) l
+where ex-=max{c of Ck 1 h l (c)$x} and ex+= min { c
+of Ck 1 h1 (c) � x }. Straightforward computation shows
+that the required properties for f to be a quasi-morphism
+hold.•
+As an example, let's consider the algebras A = < As, T,
+N> and B = <B7, T', N'>, where the "and" operations T
+and T' are given in figure 3 respectively.
+
+0
+
+a1
+
+a2
+
+a3
+
+1
+
+0
+a1
+az
+a3
+1
+
+0
+0
+0
+0
+0
+
+0
+0
+a1
+a!
+a!
+
+0
+a!
+az
+az
+az
+
+0
+a!
+az
+a3
+a3
+
+0
+a1
+az
+a3
+1
+
+.LJ
+
+0
+
+bl
+
+b3
+
+b4
+
+bs
+
+1
+
+0
+br
+
+0
+0
+
+0
+bl
+
+bz
+0
+bj
+
+0
+bj
+
+0
+bj
+
+0
+bl
+
+0
+bj
+
+bz
+b3
+b4
+bs
+
+0
+0
+0
+0
+0
+
+bj
+bl
+bj
+bj
+br
+
+bz
+bz
+bz
+bz
+bz
+
+bz
+b3
+b3
+b3
+b3
+
+bz
+b3
+b4
+b4
+b4
+
+bz
+b3
+b4
+bs
+bs
+
+bz
+b3
+b4
+bs
+
+..lJ
+
+1
+
+1
+
+4.4
+
+P R AGMATICS OF INFERENCE
+PRESERVING MAPPINGS
+
+In the previous sections we have seen that when two
+modules, that use different multiple-valued logical
+languages, need to communicate, an inference preserving
+mapping between their logics has to be defined. The
+process of defining these mappings could be supported by
+an interactive algorithm based on the notion of morphism
+and quasi-morphism between truth-values algebras. This
+process could be as follows:
+Initially the expert determines a MV -logic for each
+module, giving the set of truth-values and the "and" truth­
+table, and proposes as many as needed renaming functions
+between different truth-values sets. Then, for each pair of
+modules having different MV -logics, the interactive
+algorithm will take their truth-values algebras and the
+renaming between them and check if the initial renaming
+is an algebra quasi-morphism. If not, the algorithm
+presents to the expert the set of possible modifications of
+the renaming function, each one being a morphism or a
+quasi-morphism. The expert may then select the one that
+fits better his aims. If no selection is made, possible
+modifications of the "and" truth-table are suggested,
+keeping the initial renaming function. Finally, if there has
+not been any solution, possible modifications of both
+renaming and truth-table are suggested.
+Next, we give an scheme of the algorithm in a Pascal-like
+style. The notation used is the one of the previous
+sections.
+Quasi-morphism_generator((A n. T) (Bm. T'), f)=
+; An and Bm are the truth-values sets,
+; T and T' are the "and" connectives
+; and f is a renaming from An to I(Bm)
+; 1: Renaming checking
+if quasi-morphism?(A, B, f)
+; A= (An. T) and B (Bm. T')
+; This predicate is implicitly defined
+=
+
+23
+
+24
+
+Agusti-Cullell, Esteva, Garda, God6, and Sierra
+
+; in the previous sections.
+Then Return (A, B, f)
+; If the renaming given by the expert
+; determines a quasi-morphism we return
+; it.
+
+;2: Renaming generation
+R
+
+=
+
+{f: An-> I(Bm) I quasi-morphism?(A, B,
+
+f)}
+
+; R is the set of all acceptable
+; renaming functions
+; The way they are computed is described
+; below.
+
+print(R)
+
+if select(r)
+; r E R is selected by the expert
+then return (A, B, r)
+
+;3: "And" truth-tables generation
+C
+
+=
+
+{ T' IT' is an "and" operation on Bm and
+
+quasi-morphism?(A, (Bm , T'),
+print(C)
+if select(c)
+
+f) }
+
+on Bm such that f be a quasi-morphism. The method for
+finding "and" operations is the following:
+1 . If f is not a negation morphism, it returns the
+empty set.
+2. Find all "and" operations T' on Bm.
+
+3. Check if f is a quasi-morphism.
+Remarks: A general algorithm for finding truth-values
+algebras over a partially ordered set of n elements is given
+in [Godo and Meseguer, 1991).
+
+d) Renaming and truth-table generation: Let A
+be a truth-value algebra and let B m be a chain of m
+elements. Renaming and truth-table generation is a
+
+function that, given An and Bm, returns pairs (T',f), where
+T' is an "and" operation on Bm and f is a quasi-morphism
+from A to <I(Bm),T'*,N'*>. In this case, the method for
+
+finding pairs (T', f) is the following one:
+1 . Define N'* on I(Bm).
+
+2. Define all the possible functions f1 as in the case of
+renaming generation.
+3. For every f1, define the negation morphisms as in
+the case of renaming generation.
+4. Find all "and" operations T' on Bm.
+5. Check if f is a quasi-morphism.
+
+; c E C is selected by the expert
+then return (A, (Bm, c), f)
+
+;4: Renaming and "and" truth-table generation
+RC = { (f, T') If: An-> I(Bm) and
+quasi-morphism?(A, (Bm, T'), f) }
+
+Final remarks:
+
+print(RC)
+if select((x, y))
+
+; (x,y) E RC is selected by the expert
+then return (A, (Bm , y), x)
+else return nil
+
+In the following a constructive description of predicates
+and functions used in the algorithm is given.
+
+a) Renaming checking: It is only a checking
+predicate. It checks if a given function (renaming) is a
+quasi-morphism from A to B, where A and B are two
+given algebras.
+b) Renaming generation: Let A and B be two truth­
+values algebras. Renaming generation is a predicate that
+
+returns all possible quasi-morphisms from the truth-values
+algebra A to the interval algebra I(B). The method to find
+these quasi-morphisms is the following:
+1. Define the operations T'* and N'* on I(B).
+
+2. Define mappings f 1 : N u :f'
+such that f 1 (0)
+
+f1 (x) I> f1 (y).
+
+=
+
+0, f1 (:f)
+
+=
+
+>
+
+N'*u:f''*
+
+:f'' * and x
+
+$ y implies
+
+----
+
+3. For every f1, define the negation morphism f by,
+f(x)
+
+{
+
+f1(X),
+
+if X E N u
+
+:f'
+
+N'*(f1(N(x))), if x E :P
+4 Check if f is a quasi-morphism.
+Remarks: The solutions, if any, contain as a particular
+case all the possible morphisms from A to B. By
+proposition 4.7, for every pair of algebras A and B, the
+renaming generation set (A,B) is not empty.
+=
+
+c) "And" truth-table generation: Let A be a truth­
+value algebra, let B m be a chain of m elements and let f
+be a renaming function from A n to I(Bm ). "And" truth­
+table generation is a predicate that returns "and" operations
+
+1.- All these methods can be automated.
+2.- Some of the functions can return the empty set. (see
+examples of subsections 4. 2 and 4.3)
+3.- An order of preference on the sets R, C and RC should
+be given. There are many possibilities to do this. For
+example, several distances with respect to the initial
+renaming and truth-table operation can be defined on the
+above sets to obtain preference orderings. It seems
+reasonable that in all cases algebra morphisms should be
+preferred to algebra quasi-morphisms.
+4.- The complexity of the algorithm is exponential in the
+number of truth-values. However, two factors make
+acceptable the execution time of the algorithm: (i) the
+number of different uncertainty linguistic terms used by an
+expert is usually not greater then nine [Miller, 1967), and
+(ii) the strong conditions required to "and" operations (see
+section 3) restrict the combinatorial explosion in the
+generation of such operations..
+
+5
+
+CONC LUSIONS A N D FUTURE
+WORK
+
+In this paper, the problem of communicating tasks with
+different uncertainty calculi has been introduced in a very
+general framework. This problem arises when dealing with
+large knowledge-based systems in which a better
+modelling of reasoning for different tasks requires working
+together with different uncertainty reasoning systems In
+the framework of rule-based expert systems, this problem
+has been analyzed in detail in the particular case in which
+different MY-logics are used to model the management of
+uncertainty in different tasks. Necessary and/or sufficient
+conditions for the correspondence mappings between them
+to be inference preserving have been given. Also an
+interactive algorithm to define such mappings has been
+
+Combining Multiple-valued Logics in a Modular Expert Systems
+
+proposed to assist the human expert in relating tasks or
+modules by inference preserving correspondences.
+However the general problem of communicating different
+uncertainty reasoning systems is very complex, and
+further research is needed as much in the field of
+distributed knowledge based systems as in the case of
+considering more complex models of uncertainty
+reasoning systems.
+Acknowledgements
+This research has been partially supported by the CICYT
+id.880j382 project SPES, and by the ESPRIT-II Basic
+Research Action DRUMS.
+
+
+
+In this paper we present a propositional
+logic programming language for reasoning
+under possibilistic uncertainty and represent­
+ing vague knowledge. Formulas are repre­
+sented by pairs (ip, a), where ip is a many­
+valued proposition and a E [0, 1] is a lower
+bound on the belief on ip in terms of necessity
+measures. Belief states are modeled by pos­
+sibility distributions on the set of all many­
+valued interpretations. In this framework, (i)
+we define a syntax and a semantics of the gen­
+eral underlying uncertainty logic; (ii) we pro­
+vide a modus ponens-style calculus for a sub­
+language of Horn-rules and we prove that it
+is complete for determining the maximum de­
+gree of possibilistic belief with which a fuzzy
+propositional variable can be entailed from a
+set of formulas; and finally, (iii) we show how
+the computation of a partial matching be­
+tween fuzzy propositional variables, in terms
+of necessity measures for fuzzy sets, can be
+included in our logic programming system.
+1
+
+INTRODUCTION
+
+Logic programming languages have been applied to a
+wide range of areas such as Artificial Intelligence or
+Deductive Databases. Among these languages, Prolog
+is the most representative but it is not powerful enough
+for reasoning and representing knowledge in situations
+where there is vague, incomplete or imprecise informa­
+tion. To overcome this problem, new logic program­
+ming languages have been developed. They are based
+on a variety of non-standard logics such as multiple­
+valued logics [Ishizuka and Kanai, 1985; Mukaidono et
+al., 1989; Li and Liu, 1990; Alsinet and Manya, 1996;
+Vojtas, 1998], possibilistic logic [Dubois et al., 1991],
+probabilistic logic [Heinsohn, 1994; Lukasiewicz, 1998],
+evidential logic [Baldwin, 1987; Baldwin et al., 1995] or
+fuzzy operator logic [Weigert et al., 1993]. Depending
+on the underlying logic some systems are more suit­
+able for dealing with vague knowledge, while others
+
+Lluis Godo
+AI Research Inst. (IliA)
+CSIC
+08193 Bellaterra, Spain
+godo@iiia.csic.es
+
+are more appropriate for reasoning under incomplete
+or imprecise knowledge. Although all of the fuzzy ex­
+tensions of logic programming implement proof proce­
+dures for fuzzy reasoning, only some of them allow to
+represent ill-known information in the language.
+Our first objective in this paper is to define a proposi­
+tional logic programming language for reasoning under
+possibilistic uncertainty and representing vague knowl­
+edge. We represent formulas by pairs (ip, a), ip being a
+many-valued proposition built on fuzzy propositional
+variables and a E [0, 1] being a lower bound on the
+belief on ip in terms of necessity measures.
+On the one hand, fuzzy propositional variables pro­
+vide us a suitable representation model in situations
+where there is vague, incomplete or imprecise infor­
+mation about the real world. For instance, the fuzzy
+statement "Peter is abouL35 years old" can be nicely
+represented by the fuzzy proposition P eter _is_about35
+defined over the finite domain years_old. In the case
+abouL35 denotes a crisp interval of ages, the above
+proposition can be interpreted as "3x E about35 such
+that Peter is x years old". In the case abouL35 denotes
+a fuzzy interval with a membership function /-Labout-35,
+the above proposition can be interpreted in possibilis­
+tic terms as "3x E [P,abouL35]a such that Peter is x
+years old is certain with a necessity of at least 1- a"
+for each a E [0,1] , where [!-LabouL35] a denotes the a-cut
+of /-Labout-35. So, fuzzy propositions can be seen as
+(flexible) restrictions on an existential quantifier (see
+[Dubois et al., 1998]).
+On the other hand, since we want to deal with fuzzy
+propositional variables in the language, the truth eval­
+uation of formulas cannot be Boolean but many­
+valued, and thus, our possibilistic logic programming
+language should be based on a many-valued logic as
+in [Alsinet et al., 1999]. Moreover, like in classi­
+cal propositional logic programming systems, the lan­
+guage should enable us to define an efficient proof
+method based on a complete calculus for determin­
+ing the maximum degree of possibilistic belief with
+which a fuzzy propositional variable can be entailed
+from a set of formulas. To this end, first we define
+a general possibilistic logic based on the propositional
+
+2
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+Godel fuzzy logic and then, we focus our attention on
+the possibilistic language that results from considering
+the Horn-rule sublogic of Godel fuzzy logic.
+The reason for choosing Godel logic as the underlying
+many-valued logic where to model fuzziness is two-fold:
+first, truth-functions of Godel logic are purely ordinal,
+that is, they are definable just from the ordering of the
+truth scale (see next section), no further algebraic op­
+erations are required, and thus the use of this logic is in
+accordance with the simplest understanding, in terms
+of an ordering, of what a fuzzy, gradual property can
+be; and second, and non negligible at all, Godel logic
+has been proved to be fully compatible with an already
+proposed and suitable extension of necessity measures
+for fuzzy events, in the sense that Godel logic will al­
+low to define a well behaved and featured possibilistic
+semantics on top of it (see Sections 3 and 4).
+Our second objective is to extend the possibilistic logic
+programming language with a partial matching mech­
+anism between fuzzy propositional variables based on
+a necessity-like measure. As we have recently proved
+in [Alsinet and Godo, 2000b], this extension preserves
+completeness for a particular class of formulas. In our
+opinion, this is a key feature that justifies by itself the
+interest of such a logic programming system.
+The paper is organized as follows. In Section 2, we
+present the syntax and the many-valued semantics of
+the language of propositional Godel fuzzy logic. In
+Section 3 we extend the language to allow possibilistic
+reasoning. In Section 4 we describe the uncertainty
+sublogic that our proof method can deal with and we
+prove that it is complete for determining the maximum
+degree of possibilistic entailment of fuzzy propositional
+variables. In Section 5, we show how the proof method
+can be extended to allow a semantical matching be­
+tween fuzzy propositional variables. And, finally, in
+the last section we discuss some related work. Be­
+cause of the lengthy proofs, proofs of propositions can
+be found in [Alsinet and Godo, 2000a].
+2
+
+MANY-VALUED SEMANTICS:
+GODEL LOGIC
+
+Following [Hajek, 1998] , the language of propositional
+Godel fuzzy logic (denoted hereafter G) is built in the
+usual way from a (countable) set of propositional vari­
+ables, a conjunction A, an implication-tand the truth
+constant 0. Further connectives are defined as follows:
+<p V 'ljJ is ((<p -t'If;)-t'If;) 1\ (('If;-t<p)-t<p)
+•<p
+is <p-t0
+<p=:'lj; is (<p-t'lj;)l\('1/;-t<p)
+The semantics of G is given by interpretations I of the
+propositional variables into the real unit interval [0, 1]
+which are extended to arbitrary formulas by means of
+the following rules:
+I(O)
+
+=
+
+0
+
+I(<pi\'1/J)
+I(<p -t'lj;)
+
+{
+
+min(I(<p), I('If;))
+1,
+if I(<p) � I('lj;)
+I('ljJ), otherwise
+
+For the derived connectives the truth-interpretations
+take these forms:
+
+{
+{
+
+max(I(<p), I('If;))
+1, if I(<p) 0
+0, otherwise
+=
+
+1,
+if I(<p) I('lj;)
+min(I(<p), I('lj;)), otherwise
+=
+
+The following is an axiomatization1 of G:
+(A1)
+(A2)
+(A3)
+(A4)
+(AS)
+(A6)
+(A7)
+(A8)
+
+(<p-t'1/J)-t(('1/J-tx) -t (<p-tx))
+(<pl\'lj;)-t<p
+(<p 1\ 'If;)-t ('If; 1\ <p)
+(<p 1\ (<p-t'If;))-t ('If; 1\ ('If;-t<p))
+(<p -t('1/J -t x)) = ((<p A '1/J)-tx)
+((<p-t'1/J)-tx)-t((('1/J-t<p)-tx)-tx)
+0-t<p
+<p-t<p 1\ <p
+The deduction rule of G is modus ponens. The no­
+tion of proof is as usual. Completeness for G reads as
+follows: <p is provable in G, written f-a <p, iff I(<p) = 1
+for any interpretation I. Furthermore, G enjoys strong
+completeness as well. Namely, let T be an arbitrary
+theory over G, i.e. just a set of formulas. An inter­
+pretation I is a model ofT iff I('If;) 1 for all 'ljJ ET.
+Then, T proves <p, written T f- <p, iff I(<p) 1 for any
+interpretation I which is a model ofT.
+=
+
+=
+
+3
+
+GENERAL POSSIBILISTIC
+
+REASONING OV ER GODEL
+
+LOGIC
+
+We have seen that fuzzy propositional variables are
+suitable for representing imprecise information as in
+the statement "Peter is abouL35 years old". Now,
+we are interested in extending the fuzzy propositional
+language to allow fuzzy reasoning under uncertainty
+which leads us to a more expressive language. For in­
+stance, the statement "it is almost sure that Peter is
+abouL35 years old" is represented in this setting by a
+certainty-weighted fuzzy proposition
+(Peter _is_about35, 0.9),
+
+where the certainty value 0.9 expresses how much is
+believed the fuzzy statement "Peter is abouL35 years
+old" in terms of necessity measures.
+In general, certainty weights are employed to model
+statements of the form "<p is a-certain", where <p repre­
+sents vague, incomplete or imprecise knowledge about
+the real world. In this framework, this is formalized
+1 Actually, logic G is equivalent to the extension of lntu­
+itionistic logic with the pre-linearity axiom ( <p -t 1/J) V ( 1/J -t
+
+<p).
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+as "rp is certain with a necessity of at least a" and is
+represented through a certainty-weighted Godel logic
+formula (rp,a).
+Within the possibilistic model of uncertainty, belief
+states are modeled by normalized possibility distribu­
+tions 1r : I -+ [0,1] on a set of interpretations I. In
+the standard possibilistic logic, the uncertainty about
+whether a (Boolean) formula holds true or not is esti­
+mated by the necessity measure
+N([rp]l1r)
+
+=
+
+inf{1-1r(I) I IE I, I(r.p) =0}.
+
+However, in our framework and according to the pre­
+vious subsection, the truth evaluation of a formula r.p
+in each interpretation I is a value I(r.p) E [0, 1]. There­
+fore, each formula does not induce a crisp set of inter­
+pretations, but a fuzzy set of interpretations [rp], defin­
+ing JL['P] (I) =I(r.p), for each interpretation I. Hence,
+to measure the uncertainty induced on a formula by
+a possibility distribution on the set of interpretations
+I we have to consider some extension of the notion
+of necessity measure for fuzzy sets, in particular for
+fuzzy sets of interpretations. In [Dubois and Prade,
+1991] the authors propose to define
+N([rp] l 7r) =inf 1r(I):::} JL['PJ(I),
+lEI
+where JL['PJ(I) =I(r.p) E [0,1] and :::} is the reciprocal
+of Godel's many-valued implication, which is defined
+as x:::} y =1 if x :S y and x:::} y 1- x, otherwise.
+=
+
+The following remarks are worth noticing. The first
+one is that this definition is indeed an extension of
+the classical definition, in the sense that we recover it
+whenever [rp] is a crisp set. The second one is that
+with this definition, the condition N([rp] I 1r) 2: a is
+equivalent to
+1r(I) :S max(1- a,JL['P] (I))
+for every I E I, analogously to the crisp case as well.
+And the third one is that the equivalence
+N((rp] l1r) =1 iff 1r :S JL["'J
+is also an interesting consequence. It is not difficult to
+see that this kind of necessity measures on fuzzy sets
+is characterized by the following set of axioms:
+N1
+N2
+N3
+N4
+
+N(D.) =1
+N(0) =0
+N(A n B) =min(N(A),N(B))
+( N(niEIAi) =inf iEI N(Ai) )
+if A is crisp,
+1,
+if 1- a :S N(A)
+.
+then N(A U a) = N(
+A), otherw1se
+
+{
+
+3
+
+Definition 2 (Possibilistic satisfaction and en­
+tailment) A possibilistic model 7r : I - + [0,1] sat­
+
+isfies a weighted formula (rp,a), written 1r I= (rp,a ) ,
+iff N([rp] I 1r) 2: a. Now let r be a set of weighted
+formulas. We say that r entails a weighted formula
+(rp,a), written r I= (rp,a), iff every possibilistic model
+satisfying all the weighted formulas in r also satisfies
+
+(rp,a).
+
+We propose now a Hilbert-style axiomatization2 of this
+logic: axioms of PGL (for Possibilistic Godel logic) are
+Godel logic axioms weighted by 1 plus the triviality
+axiom (rp,0), and PGL inference rules are :
+Generalized modus ponens:
+
+(rp-+ '1/J,a)
+(r.p,/3)
+('l/;,min(a,/3))
+Weakening:
+
+(rp,a)
+[if f3 <a]
+(r.p,/3)
+
+Then the notion of proof in PGL is as usual and it will
+be denoted as f-PG. The soundness of this axiomatic
+system is given in the next theorem.
+Theorem 1 PGL is sound with respect the possibilis­
+tic entailment, i.e. iff f- PG (rp,a) then f F (rp,a ) .
+Proof: Soundness of the axioms and the weakening
+rule is straightforward, thus we only prove the sound­
+ness of the modus ponens rule. This reduces to
+check, for all possibilistic distribution 1r on I, that if
+N([r.p-+ '1/J] I1r) 2: a and N([rp] l 1r) 2: /3, then N(['l/J] I
+1r) 2: min(a,(3). The two conditions amount to, for
+each interpretation I E I, 1r(I) :::} I(r.p -+ '1/J) 2: a
+and 1r(I) :::} I(rp) 2: /3. Thus,1r(I) :::} min(I(rp - +
+'1/J),I(r.p)) ;::: min(a,/3). But, by Godel semantics,
+min(I(rp - + '1/J),I(r.p)) = min(I('l/;),I(r.p)) :S I('lf;).
+Therefore, we have that 1r(I) :::} I('lf;) 2: min(a,/3)
+for each interpretation IE I, and thus, N( ['l/J] I 1r) 2:
+D
+min(a,(3).
+
+Unfortunately we have not been able so far to prove
+whether PGL is complete or incomplete. So it remains
+as an open question to be solved in the near future.
+4
+
+A POSSIBILISTIC LOGIC
+
+PROGRAMMING LANGUAGE
+
+Definition 1 (Possibilistic model) Let I be the set
+
+In the previous section we have defined PGL, a general
+possibilistic logic over the many-valued Godel logic.
+Our aim in this section is, as in classical propositional
+logic programming systems, to define a sublanguage
+
+of (many-valued) Godel interpretations over a given
+language. A possibilistic model is a normalized possi­
+bility distribution1r : I- + [0,1] on the set of interpre­
+tations I.
+
+[Dubois et a!., 1994c], here we have just replaced the ax­
+ioms of classical propositional logic with those of many­
+valued Godel logic.
+
+Now let us go into formal definitions.
+
+2Notice the analogy with the classical Possibilistic logic
+
+4
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+for logic programming which would enable us to de­
+sign an efficient proof algorithm, based on a complete
+calculus for computing the maximum degree of pos­
+sibilistic entailment of a propositional variable, called
+goal, from a set of weighted formulas.
+To this end, we restrict ourselves to a Horn-rule sub­
+language of the logic G, i.e. to formulas of the form:
+1\ Pk -+ q
+P1 1\
+with k 2: 0, where p1, . . . , Pk , q are propositional vari­
+ables, in the traditional logic programming style. As
+usual, we shall refer to the conclusion q and the set of
+premises p1, . . . , Pk as the head and the body, respec­
+tively. We distinguish between two types of formulas
+in this sublanguage: fact when k = 0 (empty body)
+and are simply written q, and rule, otherwise.
+· ·
+
+·
+
+Definition 3 (PGL clause) A PGL clause is a pair
+of the form (£P,a), where £P is either a fact or a rule
+and a E [ 0,1] is a lower bound on the belief on £P in
+
+terms of necessity measures.
+
+For PGL clauses we shall develop a simple and efficient
+calculus which will not need the whole logical appara­
+tus of PGL of the previous section. But before we need
+to introduce some extra definitions and results.
+Definition 4 (Maximum degree of possibilistic
+entailment) The maximum degree of possibilistic en­
+
+tailment of a goal q from a set of PGL clauses P, de­
+noted by llqiiP , is the greatest lower bound a E [0,1]
+on the belief on q such that P f= (q, a). Thus,
+llqiiP =sup {a E [0,1] 1 P f= (q, a)} .
+
+Theorem 2 The maximum degree of possibilistic en­
+
+Axiom: (£P, 0)
+Generalized modus ponens:
+
+1\ Pk -+ q, 'Y)
+(Pl 1\
+(Pl, /31), , (pk , f3k )
+( q, min ('Y, /31, ..., /3k ))
+·
+
+· ·
+
+·
+
+·
+
+·
+
+Obviously, the axiom is a valid PGL clause and the in­
+ference rule is sound as already proved in the previous
+section.
+Definition 5 (Degree of deduction) A goal q is
+deduced with a degree of deduction a from a set of
+PGL clauses P, denoted by P f-* (q, a), iff there exists
+a finite sequence of PGL clauses C1, ..., Cm such that
+Cm = (q, a) and, for each i E {1, . . . , m}, it holds that
+Ci E P, Ci is an instance of the axiom or Ci is ob­
+
+tained by applying the above inference rule to previous
+clauses in the sequence.
+
+Next, we define the syntactic counterpart of maximum
+degree of possibilistic entailment.
+6 (Maximum degree of deduction)
+The maximum degree of deduction of a goal q from
+a set of PGL clauses P, denoted lqlp, is the greatest
+a E [0,1] such that P f-* (q, a).
+
+Definition
+
+As the only inference rule of our proof method is the
+generalized modus ponens, within the framework of
+logic programming in which P is always a finite set of
+PGL clauses, there exists a finite number of proofs of
+a goal q from P, and thus, the above definition turns
+into lqlp =max{a E [0,1] 1 P f-* (q, a)}.
+
+tailment of a goal q from a set of PGL clauses P is
+the least necessity evaluation of q given by the models
+of P. Thus, llqiiP inf{N([ q] l 7r ) l1r f= P}.
+
+The following propositions are needed to prove com­
+pleteness.
+
+Proof: We define a1 = sup{a E [0,1] I P f= (q, a)}
+and az= inf {N([q] l1r) l1r f= P}.
+
+Proposition
+
+=
+
+az 2: a1: As a1 = sup{a E [0,1] I P f= (q, a)} we
+have that P f= (q, a), for all a < a1. Then, for
+every model1r of P we have that N([q] l1r) 2: a
+for all a < a1. Thus, az = inf { N([ q] l1r) l1r f=
+P} 2: a, for all a < a1, hence, az 2: a1.
+az ::; a1: As az = inf{N([q] l1r) l1r f= P} we have
+that N([q] l1r) 2: a2 for all model1r of P, that is
+P f= (q, az), and thus, az ::; sup{a E [0,1] 1 P f=
+(q, a)}= a1.
+0
+Corollary 1 Let P be a of PGL clauses and let s be
+a propositional variable. Then, P f= (s, l l sl l p).
+
+To provide our possibilistic logic programming lan­
+guage with a complete calculus for determining the
+maximum degree of possibilistic entailment we only
+need the triviality axiom and a particular instance of
+the generalized modus ponens rule introduced in the
+previous section:
+
+1 If the only formulas in P with head q
+are recursive3, then llqiiP= lqlp = 0.
+
+Proposition 2 Let (p, /3 ) and (p
+
+clauses such that p "# q.
+min(/3, 'Y).
+
+-t q, 'Y) be two PGL
+Then, llqll{(p ,/3),(p-+q,-y)}
+=
+
+3 Let P be a set of PGL clauses and let
+(r -t q, 'Y) be a clause of P. If llqiiP > llqiiP\{(r-+q,-y)}'
+then llqiiP = llqll{(r,<>r),(r-+q,-y)}> where ar = llriiP·
+
+Proposition
+
+Proposition 4 Let P be a set of PGL clauses and let
+(q -t p,"f) be a clause of P. It holds that llq llp =
+llqiiP\{(q-tp,-y)}
+·
+
+Theorem 3 (Completeness) Let P be a set of PGL
+clauses and let q be a goal. Then, llqiiP= lqlp.
+
+Proof: By the soundness of the modus ponens infer­
+ence rule, we have llqiiP 2: l ql p. Therefore, we must
+3A
+
+with
+
+recursive formula is of the form Pl 1\ ·
+0.
+
+k�
+
+· ·
+
+1\pk 1\ q-+ q
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+prove llqiiP :::; lqlp and we proceed by induction on n,
+where n is the number of clauses of P.
+
+If llqiiP > llqiiP', by Proposition 3, llqiiP =
+llqll{(p ,ap),(p--+q,7)}, where a p == IIPIIP, and, by
+Proposition 2, llqll{(p ,ap),(p--+q,7)} = min(ap,"'f).
+Now,by Proposition 4, IIPIIP =IIPIIP' and,by the
+induction hypothesis,IIPIIP' :::; IPIP'· Since IPIP' :::;
+IPIP and (p--+ q, "'f)E P,applying the modus po­
+nens inference rule, we get P f-* (q, min(IPIP,"'f))
+with min(IPIP,"'f) 2 min (ap ,"'f). Then, lqlp =
+max{a E [0, 1]1 P f-* (q, a)} 2 min(IPIP,"'f), and
+thus, lqlp 2 min(a p ,"Y) =llqiiP·
+D
+
+If n =1,then it must be that P contains only either
+one certainty-weighted fact or rule. We assume that
+q occurs in P as the head of a non recursive formula;
+otherwise,by Proposition 1, we have llqiiP =lqlp =0.
+Suppose that P contains only the certainty-weighted
+fact (q, "'(). Let I0 and h be two interpretations such
+that Io(q) < 1- "'( and ft(q) = 1. Now, let 1r be a
+possibility distribution with the following definition:
+1r(I) =
+
+{
+
+1,
+if I =I1
+1- "'f, if I =Io
+0,
+otherwise
+
+It is easy to check that 1r f= (q,"'f) and N([q]I 1r)
+"'f· Then, by Theorem 2, we have llqiiP =inf{N([qJI
+1r ) I 1r f= (q,"'()} :::; "Y· Now, lqlp =max{a E [0, 1]I
+(q,"'() f-* (q,a )} ="'(,and thus, llqiiP:::; lqlp .
+Suppose that P contains only the certainty-weighted
+rule (r --+ q, 'Y). Let I0 be an interpretation such that
+I0 (r) :::; I0 (q) < 1 and let 1r be a possibility distribution
+with the following definition:
+7r (I) =
+
+{
+
+1, if I = I0
+0, otherwise
+
+5
+
+In the particular case that we do not allow recursive
+formulas in the language, the underlying uncertainty
+logic of our logic programming system is syntactical
+equivalent to the family of infinitely-valued proposi­
+tional logics the interpreter defined in [Escalada-Imaz
+and Manya, 1995] can deal with. The interpreter is
+based on a backward proof algorithm for computing
+the maximum degree of deduction of a propositional
+variable from a set of formulas whose worst-case time
+complexity is linear in the total number of occurrences
+of propositional variables in the set of formulas. We
+show bellow an example of PGL clauses the interpreter
+can deal with.
+Example 1 The maximum degree of deduction of the
+
+It is easy to check that1r f= (r --+ q, "'f) and N([qJI 1r)
+0. Then, by Theorem 2, we have llqllp =inf { N ( [q]l
+1r ) l1r f= (r--+ q,"'() } = 0, and thus,llqiiP:::; lqlp .
+
+goal friend_Mary_J ohn from the set of clauses
+
+=
+
+Suppose now that for any set P' that contains n clauses
+it holds that llsiiP' :::; lsiP' for any propositional vari­
+able s, and suppose that P contains n + 1 clauses.
+Since we are assuming that q occurs in P as the head
+of a non recursive formula, let (<.p,"'f) be a clause of
+P such that <.p is a non recursive formula with head q
+and "'( 2 8, for any clause ( 'ljJ, 8) of P such that 'ljJ is
+a non recursive formula with head q. We distinguish
+two cases:
+Case ( <.p, 'Y) =(q, "'(). Let I0 and h be two interpreta­
+tions such that I0(q) < 1- "'( and Io(p) = 1 for
+any propositional variable p =J. q, and h ( s) =1
+for any propositional variable s. Now,let 1r be a
+
+possibility distribution with the following defini­
+tion:
+1,
+if I =I1
+1r(I) = 1- "'f, if I =Io
+otherwise
+0,
+Since "'( 2 8 for any non recursive clause ('1/J,8) of
+P such that q is the head of 'ljJ, we have that1r f= P
+and N([q]l1r) ='Y· Therefore,by Theorem 2, we
+have llqiiP =inf{N([qJ I 1r) I 1r f= P} :::; "Y· Now,
+lqlp =max{a E [0, 1] I P f-* (q,a )} 2 "'(, and
+thus, llqiiP :::; lqlp .
+
+{
+
+Case (<.p,"'f) = (p--+ q,"'(). If we define P' =P\{(p--+
+q, "'()} we have that llqiiP 2 llqiiP'·
+If llqiiP =llqiiP', by the induction hypothesis, we
+have that llqiiP':::; lqiP', and thus,llqiiP :::; lqiP·
+
+P={ (Mary_i s_young, 0.8),
+(John_is_young, 0.9),
+(Mary_is_young 1\ John_is_young--+
+friend_Mary_John, 0.6) },
+is 0.6 which corresponds with the deduction degree
+comp uted by the interp reter when taking as triangular
+norm the min -conjunction function and as imp lication
+Godel's many-valued imp lication function.
+5
+
+ADDING FUZZY UNIFICATION
+
+Our aim is to extend the calculus of our possibilistic
+language to allow a semantical matching between fuzzy
+propositional variables based on a necessity evaluation
+of fuzzy events. For instance, given the set of PGL
+clauses
+P={ (Mary_is_young, 0.8),
+(John_is_aboutr6, 0.9),
+(Mary_is_young 1\ John_is_young--+
+friend_Mary_John, 0.6) },
+where John_is_young and John_is_about16 are two
+fuzzy propositional variables,the maximum degree of
+deduction of the goal friend_Mary_John from P is 0
+unless we be able to compute the necessity evaluation
+of the propositional variable John_is_young from the
+fact that the propositional variable John_is_about16 is
+certain with a necessity of at lest 0.9.
+To tackle the fuzzy unification problem within our pos­
+sibilistic framework we are lead (i) to fix a domain
+and an interpretation of fuzzy propositional variables
+
+6
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+in terms of its membership functions, otherwise we
+would not be able to identify when two propositional
+variables A and B are related and, furthermore, we
+would not be able to reason about the certainty of
+the propositional variable B from the fact that the
+domain-related propositional variable A is certain with
+a necessity of at least o:; and (ii) to define some mea­
+sure to compute the necessity evaluation of a fuzzy
+propositional variable B based on a domain-related
+fuzzy propositional variable A.
+5.1
+
+PROPOSITIONAL VARIABLES WITH
+FINITE DOMAINS
+
+With respect the underlying uncertainty logic de­
+scribed in Section 2, the main difference is that now
+we attach propositional variables with a sort. In doing
+so, we are introducing a minor change in the seman­
+tics. Many-valued interpretations should map a sort
+into a non-empty domain and a propositional variable
+into a value of its domain, and thus, in turn we need
+to provide a new notion of interpretation.
+A more rigorous approach should be to define a first­
+order language with typed regular predicates and
+sorted fuzzy constants (cf. [Alsinet et al., 1999]) which
+would allow us to represent, for instance, the fuzzy
+statement "Mary is young" as age(M ary, young).
+However, since variables and function symbols are not
+allowed in the language, fuzzy propositional variables
+give us a more simple representation model without
+lost of expressiveness.
+Definition 7 (Extended many-valued interpre­
+tation) An interpretation I= (U, i, m) maps:
+1. each sort
+
+a
+
+into a non-empty domain U,;
+
+2. all propositional variables p of sort
+
+value i(p) E U,; and
+
+3. a propositional variable p of sort
+
+malized} fuzzy set m(p): U,
+
+--t
+
+a
+
+a
+
+[0, 1].
+
+into a same
+into a (nor­
+
+Notice that an interpretation I = (U, i, m) is disjunc­
+tive in the sense that i(p) is a unique value of the
+domain U, for any propositional variable p of sort a,
+and i(p) =/:. i(p') iff p and p' are of different sorts.
+In what follows, we shall denote by J.Lm(p) the member­
+ship function of m(p). The truth value of a proposi­
+tional variable p under an interpretation I= (U, i, m),
+denoted by I(p), is computed as
+I(p)= J.Lm(p) (i(p)).
+
+fuzzy set m(p). Therefore, in order to measure the
+certainty of a sorted propositional variable in a possi­
+bilistic model we cannot take into account any possible
+interpretation, but only those which share a common
+interpretation of propositional variables, and hence
+which also share their domain. This leads us to de­
+fine the notion of context (cf. [Alsinet et al., 1999])
+8 (Context) Let U be a collection of
+non-empty domains and let m be an interpretation
+of propositional variables over U such that for every
+propositional variable p there exist u,v E U,, a being
+the sort of p, such that J.Lm (p) (u)= 0 and J.Lm (p) (v) 1.
+We define the context determined by U and m, denoted
+by 'Iu,m , as the set of extended many-valued interpre­
+tations having U as domain and m as interpretation
+of propositional variables. Thus,
+
+Definition
+
+=
+
+'Iu,m = {IE 'I I I= (U, i, m)},
+where 'I denotes the set of all extended many-valued
+interpretations.
+Remark that given a context 'Iu,m and a proposi­
+tional variable p, there exist at least two interpreta­
+tions Io,l1E 'Iu,m such that Io(p)= 0 and h (p) = 1.
+Let us briefly discuss the reason for defining the notion
+of context by means of an example.
+Example 2 Let age_Mary_around19 be a proposi­
+
+tional variable of sort Mary_years_old and let Io
+(U, i, mo) and h = (U, i, m1) be two interpretations
+such that
+=
+
+•
+
+UMary_years-old = [0, 120](years) ,
+
+•
+
+i(age_Mary_around19) = 20,
+
+•
+
+mo(age_Mary_aroundlg) = [17; 18; 20; 21]-trape­
+zoidal fuzzy set4- and
+
+•
+
+m1 (age_M ary_around19)= [18; 19; 19; 20].
+
+Although the age of Mary is the same value in both
+interpretations, we have a different truth value in each
+interpretation depending on the membership function
+of the fuzzy set assigned to the propositional variable.
+Thus,
+Io(age_Mary_aroundlg)= J.L[l7;1B;20;21] (20)= 1
+and
+Il(age_Mary_aroundlg)= J.L[l8;19;19;20J (20)= 0.
+Then, for instance, the possibility distributions 1r that
+satisfy the PGL clause
+(age_Mary_around1g, 1)
+
+These truth evaluations extend to rules in the usual
+way by using the truth functions described in Sec­
+tion 2.
+
+are those such that 1r(I0) � 1 and1r(h )= 0, and thus,
+Io can be fully plausible while h is inadmissible, how­
+ever, Mary is twenty years old in both interpretations.
+
+Remark that the truth value of a propositional vari­
+able p under an interpretation I = (U, i, m) depends
+not only on the value i(p) assigned to p, but on the
+
+4
+We represent a trapezoidal fuzzy set as [t1; tz; t3; t4],
+where the interval [h, t4] is the support and the interval
+[tz, t3] is the core.
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+Therefore, when fixing a particular context we are en­
+suring that belief states modeled by normalized possi­
+bility distributions on a set of possible interpretations
+(or possible states) are consistent, in the sense that
+possible states are sharing a common view of the real
+world.
+Finally, the notion of possibilistic satisfaction can be
+easily extended in a particular context Iu,m in the fol­
+lowing way. Given a context Iu,m, the models of a
+set of PGL clauses P are the normalized possibility
+distributions on the set of extended many-valued in­
+terpretations Iu,m that satisfy all the clauses in P.
+5.2
+
+EXTENDED INFERENCE WITH
+POSSIBILISTIC PATTERN
+MATCHING
+
+To provide PGL with a semantical matching mecha­
+nism we need a measure for computing the necessity
+evaluation of the propositional variable B based on
+the domain-related propositional variable A. Further­
+more, this measure should enable us to include new in­
+ference patterns in our previous calculus of Section 4 in
+order to keep completeness for determining the maxi­
+mum degree of possibilistic entailment of a goal form
+a set of PGL clauses in a particular context.
+Again there are several alternatives. After a careful
+analysis we have chosen the same type of measure
+used when defining the possibilistic semantics for PGL.
+Namely, given a context Iu,m, the necessity evaluation
+of B based on the domain-related propositional vari­
+able A is defined as
+N (m (B) I m(A)) = inf f.-Lm(A)(u) =? f.-Lm(B)(u),
+uEU�
+where =? is the reciprocal of Godel's many-valued im­
+plication.
+At this point we are ready to extend the calculus
+to allow a semantical matching of propositional vari­
+ables with finite domains through a possibilistic pat­
+tern matching measure based on a necessity evaluation
+of fuzzy events. Although there may exist several ap­
+proaches, we have finally decided to extend the calcu­
+lus with three inference rules. Given a context Iu,m,
+these inference rules are defined as follows:
+Semantical unification:
+
+(p, a)
+[SU ]'
+(p', min(a,;3))
+where ;3 =N(m (p') I m (p)).
+Intersection:
+(Pl, a), (p2, ;3)
+[I N]'
+(p',min(a,;3))
+if f.-Lm(p');::: min(f.-Lm(p,)' f.-Lm(p2))·
+Resolving Uncertainty:
+(p, a)
+[U N]'
+(p'' 1)
+if f.-Lm(p') ;::: max(1- a,f.-Lm(p))·
+
+7
+
+Theorem 4 The SU, IN and UN inference rules are
+
+sound in a context Iu,m with respect to the possibilistic
+entailment of PGL clauses.
+
+Proof: Soundness of the IN and UN rules is straight­
+forward, thus we only prove the soundness of the SU
+rule. We must prove that for all possibilistic distri­
+bution 7r : Iu,m -+ [0, 1], if 7r I= (p, a) then 7r I=
+(p',min(a,;3)), where ;3
+N (m (p') I m(p)). Assume
+that 7r I= (p, a). This means that, N ([P] I 1r) ;::: a, and
+thus, 1r(I) =? I(p);::: a, for all interpretation IE Iu,m·
+Then, we have the following consecutive inequalities:
+=
+
+1. 1r(J)
+
+=?
+
+f.-Lm(p)(i (p)) 2 a
+
+2. min(1r(I) =? f.-Lm(p)(i (p)),
+f.-Lm(p)(i (p)) =? 1-Lm(p')(i (p')));:::
+min(a,f.-Lm(p)(i (p)) =? f.-Lm(p')(i (p')))
+J..lm(p)(i (p)),
+i
+(
+(
+f.-Lm(p) p)) =? /-Lm(p')(i (p'))) �
+(I)
+7r
+=} f.-Lm(p')(i ( p'))
+
+3. min(1r(I)
+
+=?
+
+4. 1r(I) =? f.-Lm(p')(i (p'));:::
+min(a,f.-Lm(p)(i (p)) =? f.-Lm(p')(i (p')))
+5. inflEiu,m 1r(J ) =? f.-Lm(p')(i (p'));:::
+infiEiu,m min (a,f.-Lm(p)(i (p)) =? f.-Lm(p')(i (p')))
+
+6. inflEiu,m 1r(I) =? f.-Lm(p')(i (p' ));:::
+min(a,infiEiu,m f.-Lm(p)(i (p)) =? f.-Lm(p')(i (p')))
+7. N ([p'] l1r);:::
+min(a,infuEU� f.-Lm(p)(u) =? f.-Lm(p')(u))
+8. N ([p' ] l1r) ;::: min(a, N (m (p' ) I m (p)))
+Thus, 7r I= (p' , min (a , N (m (p') I m (p)))) as well.
+
+D
+
+Moreover, for a given a context Iu,m, the modus­
+ponens style calculus extended with the SU, IN and
+UN inference rules is complete for determining the
+maximum degree of possibilistic entailment of a goal
+from a particular class of PGL clauses called well­
+formed and satisfiable PGL programs. The formaliza­
+tion of the notion of well-formed and satisfiable PGL
+program and the proof of completeness for this class
+of PGL clauses can be found in [Alsinet and Godo,
+2000b].
+3 Let John_is_about16, John_is_14_16 and
+John_is_16_18 be three propositional variables of sort
+John_year s_old, and let Iu,m be a context such that
+
+Example
+
+•
+
+U J ohn_years-old =[0, 120] (yearS),
+
+•
+
+m (John_is_aboutl6) =[14; 16; 16; 18],
+
+•
+
+m (John_is_14_16) = (12; 14; 16; 18] and
+
+•
+
+m(John_is_16_18)
+
+=
+
+(14; 16; 18; 20] .
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+8
+
+Now, given the set of PGL clauses
+
+[Formato et al., 2000] extended the unification algo­
+rithm of Martelli-Montanari to allow a partial match­
+ing between crisp constants through similarity rela­
+tions. Finally, [Dubois et al., 1998] proposed an exten­
+sion of possibilistic logic dealing with fuzzy constants
+and fuzzily restricted quantifiers (called PLFC), and
+[Alsinet et al., 1999] provided PLFC logic with a for­
+mal semantics and a sound resolution-style calculus by
+refutation.
+
+P={ (John_is_14_16, 1),
+(John_is_16_18, 1) },
+we have that
+N(m(John_is_abouh6) I m(John_is_14_16))
+
+=
+
+0
+
+and
+N(m(John_is_aboutl6) I m(John_is_16_18)) = 0.
+However, each model 1r
+that
+
+:
+
+Iu,m -+ [0, 1] of P verifies
+
+1r(I) ::=; min(J(John_is_14_16), I(John_is_16_18)),
+for all I E Iu,m. Therefore, because of the three
+propositional variables have the same domain, we
+have that i (John_is_14_16)
+i (John_is_16_18)
+i(John_is_aboutl6) , for all IE Iu,m· Then, because of
+this particular interpretation m of propositional vari­
+ables,
+=
+
+=
+
+7r (I ) :::; JLm(John_is_aboutl6) (i (John_is_aboutl6)),
+for all I E Iu,m· Hence, P f= (John_is_aboutl6, 1),
+1. On the other
+and thus, 11John_is_about16IIP
+hand, applying the IN rule to (John_is_14_16, 1) and
+(John_is_16_18, 1) we deduce (John_is..aboutl6, 1) ,
+and thus, 1John_is_abouh61P 11John_is_abouh611P·
+=
+
+=
+
+6
+
+RELATED WORK
+
+The introduction of fuzzy constants in logic program­
+ming languages was suggested in the early eighties by
+[Cayrol et al., 1982] and [Bel et al., 1986] with the
+aim of including fuzzy values in a pattern matching
+procedure. Subsequently, [Umana, 1987] defined a
+fuzzy pattern matching process using the extension
+principle for one and two variate functions, and in
+[Baldwin et al., 1995] the authors implemented a se­
+mantic unification procedure based on the theory of
+mass assignments which allows a unified framework for
+the treatment of fuzzy and probabilistic data. [Godo
+and Vila, 1995] proposed a possibilistic-based logic to
+deal with fuzzy temporal constraints based on many­
+valued semantics and a necessity-like measure to allow
+a pattern matching mechanism between fuzzy tempo­
+ral constraints. [Virtanen, 1998] defined a fuzzy unifi­
+cation algorithm based on fuzzy equality relations and
+[Arcelli et al., 1998] proposed three different kinds of
+unification in the fuzzy context: the first one is based
+on similarity relations, the second one identifies sim­
+ilar objects through an equivalence relation and the
+last one uses "semantic constraints" for defining a
+more flexible unification. More recently, [Gerla and
+Sessa, 1999] formalized a methodology for transform­
+ing an interpreter for SLD Resolution into an inter­
+preter that computes on abstract values which express
+similarity properties on the set of predicate and func­
+tion symbols of a classical first-order language and
+
+The main differences between this framework and
+PLFC [Alsinet et al., 1999] are (i) at the level of the
+syntax and semantics of the language, (ii) at the level
+of providing the language with a complete calculus,
+and (iii) at the level of defining a semantical unifica­
+tion mechanism between fuzzy propositions.
+In PLFC, formulas are pairs of the form (<p(x), f (Y)),
+where x and y denote sets of free and implicitly uni­
+versally quantified variables and y ;2 x, <p(x) is a dis­
+junction of literals with fuzzy constants, and f (Y) is a
+valid valuation function which expresses the certainty
+of <p(x) in terms of necessity measures. Basically, val­
+uation functions f (Y) are constant values and vari­
+able weights which are not considered in our possibilis­
+tic language. Variable weights [Dubois et al., 1994a;
+1994b] are suitable for modeling statements of the form
+"the more x is A (or x belongs to A), the more certain
+is p(x)", where A is a fuzzy set. This is formalized in
+PLFC as, for all x, "p(x) is true with a necessity of at
+least JLA(x)", and is represented as (p(x), A(x)) . When
+A is imprecise but not fuzzy, the interpretation of such
+a formula is just "VxE A, p(x)". So A acts as a (flexi­
+ble if it is fuzzy) restriction on the universal quantifier.
+On the other hand, fuzzy constants in PLFC can be
+seen as (flexible) restrictions on an existential quanti­
+fier. In general, "L(B) is true at least to degree o:", is
+represented in PLFC as (L(B), o:), where L is either
+a positive or a negative literal and B is a fuzzy set.
+For instance, if B is imprecise but not fuzzy, (p(B), o:)
+and (•p(B), o:) have to be read as "3xE B, p(x)" and
+"3x E B, •p(x)", respectively.
+Therefore, because of the calculus for PLFC is defined
+by refutation through a generalized resolution rule be­
+tween positive and negative literals, the unification (in
+the classical sense) between fuzzy constants is not al­
+lowed. For instance, from
+s1: (•p(A) V '1/J, 1) and s2: (p(A), 1),
+which, if A is not fuzzy, are interpreted respectively as
+"(3x E A, •p(x)) V 'l/J" and
+
+"3x E A, p(x)",
+
+we can infer '1/J iff A is a precise constant. However,
+a semantical unification between fuzzy events is per­
+formed through variable weights and fuzzy constants.
+For instance, from
+s1: (•p(x) V '1/J (x), A(x)) and s2: (p(B), 1),
+which, if A and B are not fuzzy, are interpreted re­
+spectively as
+
+UNCERTAINTY IN ARTIFICIAL INTELLIGENCE PROCEEDINGS 2000
+
+"YxE A, •p(x) V 7/J(x)" and
+
+"3xE B, p (x)",
+
+9
+
+
+
+This paper investigates the possibility of
+performing automated reasoning in probabilistic
+logic when probabilities are expressed by means
+of linguistic quantifiers. Each linguistic term is
+expressed as a prescribed interval of proportions.
+Then instead of propagating numbers, qualitative
+terms are propagated in accordance with the
+numerical interpretation of these terms. The
+quantified syllogism, modelling the chaining of
+probabilistic rules, is studied in this context. It
+is shown that a qualitative counterpart of this
+syllogism makes sense, and is relatively
+independent of the threshold defining the
+linguistically meaningful intervals, provided that
+these threshold values remain in accordance with
+the intuition. The inference power is less than
+that of a full-fledged probabilistic constraint
+propagation device but better corresponds to
+what could be thought of as commonsense
+probabilistic reasoning.
+1
+
+INTRODUCTION
+
+Precise values of probabilities are not always available.
+Experts often assess probabilities under the form of
+intervals (e.g. "between 80 and 90 % of A's are B's") or
+even linguistically (e.g. "almost all A's are B's"), or are
+only able to rank-order probability values, stating that a
+probability is certainly greater than another. Thus it
+raises the question of the possibility of reasoning with
+probabilities in a qualitative way. The main appeal of a
+qualitative approach (when such an approach is feasible),
+is that it requires less precision than a pure numerical
+representation while still leading to meaningful
+conclusions in the reasoning process. Also, the
+qualitative approach allows us to have a better interface
+with human users, in a way more compatible with their
+own reasoning processes. The idea of reasoning
+qualitatively with probabilities has been investigated
+along different lines by various researchers in Artificial
+Intelligence especially in the last five years. A first
+family of approaches works with inequalities between
+probabilities (e.g.Wellman (1990)). A second type of
+approach considers probability-like functions which take
+
+Lluis Godo
+Ramon L6pez de Mantaras
+
+Institut d'Investigacio en Intelligencia Artificial
+CEAB-CSIC
+Cami de Santa Barbara
+17300 Blanes, Spain
+
+their values in a finite totally ordered set not related to
+[0,1] (e.g.Yang, Beddoes and Poole, 1990). Another kind
+of qualitative probability approach is Adams (1975)'
+conditional logic (see also Pearl (1988)) which
+manipulates infinitesimal probabilities. For the sake of
+brevity we do not mention other logical approaches to
+probabilities here.
+The approach developed in this paper maintains an
+interpretation of qualitative (linguistic) probability values
+in terms of numerical intervals. Here, linguistic
+quantifiers such as most, few, etc ... are viewed as
+imprecisely or fuzzily known conditional probabilities,
+i.e. terms represented by crisp, or in the most general
+case, fuzzy subintervals of [0,1] (Zadeh, 1985 ; Dubois
+and Prade, 1988). Here, an ordered set of elementary
+labels of quantifiers is chosen in order to provide a
+linguistic scale for conditional probabilities (or
+proportions) used in default rules like "Q A's are B's",
+where Q is viewed as the answer to the question : "how
+many A's are B's ?". A qualitative algebra (Q-algebra)
+(Trave-Massuyes and Piera, 1989) is defined on the set of
+possible labels, built from the elementary labels forming
+the scale. Inference rules which are the qualitative
+counterparts of numerical formulas for computing bounds
+on probabilities in quantified syllogisms or similar
+propagation rules, can be proposed for reasoning in
+qualitative probability networks.
+The next section discusses how to build a set of
+linguistic labels to be used in the qualitative probability
+computations. Section 3 gives the necessary background
+about local patterns of inference used to propagate
+constraints on probabilities known to belong to intervals.
+Section 4 defines qualitative versions of these rules of
+inference. Section 5 discusses the robustness of the
+approach, i.e. to what extent the qualitative calculus
+remains unchanged when the numerical interpretation of
+the linguistic labels is slightly modified. A qualitative
+analysis of inference rules in Adams' probabilistic logic
+is given in Section 6. Section 7 discusses the problems
+encountered when trying to develop a qualitative
+constraint propagation rule based on Bayes theorem.
+Section 8 gives an example and shows how the constraint
+propagation-based strategy, recalled in Section 3, to
+answer queries about conditional probabilities can be
+adapted to the qualitative setting.
+
+A Sym bo l ic Approach to Reasoning with L in gu is tic Quantifiers
+
+2
+
+LATTICES OF LABELS
+
+Let us consider an ordered set of elementary labels of
+linguistic quantifiers that may account for any probability
+value. Each label corresponds to a subinterval of the unit
+interval, and the set of labelled subintervals completely
+covers it. So a linguistic scale will be made of the labels
+of a collection of subintervals covering (0,1] of the form
+[an-1· an ], [an, 1), 1}. For
+{0, (0, a11. (at, a21
+•
+
+... ,
+
+convenience we shall call a "partition" such a collection,
+although the intervals overlap at their edges, except in 0
+and 1 which are dealt with separately due to their
+particular meanings corresponding to 'none' and 'all'.
+
+Let fP be a partition of [0,1] in subintervals representing
+quantifiers from a linguistic scale. By convention, both
+the linguistic scale and the corresponding partition will
+be denoted fP. It seems reasonable that this linguistic
+scale should be symmetric with respect to 0.5 since the
+antonym of each linguistic quantifier in the scale should
+also be in the scale. Linguistic antony my, for instance
+ANT(Almosr none) =Almost all or ANT(Few) = Most,
+is expressed at the numerical level by relations like
+ANT([a,b]) = [1 - b, 1 -a], since intervals are used to
+represent the meaning of linguistic quantifiers. As a
+consequence if P(A) is the probability of event A,
+linguistically qualified by X E fP, then P(A) the
+probability of the complementary event A should be
+ANT(X} E fP.
+
+The universe of description U induced by a partition fP is
+defined as the set of intervals that are union of adjacent
+elements of fP. The set inclusion relationship (�:;)
+provides U with an ordered structure that has a tree
+representation. For instance, if we take parameters "a" and
+"b" to be smaller than 0.5, then [0,1] can be (non
+strictly) symmetrically partitioned as
+
+Fi!Nre 1 :
+
+The set of elementary (most specific) linguistic
+quantifiers can also be ordered according to the usual
+certainty ordering in the unit interval :
+
+None� Almost none� Few� About half� Most�
+Almost all � All
+This ordering enables us to consider higher level elements
+of the universe U as intervals defined on the partition set,
+for instance, [Few Most] = {X E fP I Few s; X :S Most)
+and it is fully compatible with the above numerical
+interpretation in terms of probability intervals. The
+semantics of the higher level elements of the universe
+corresponds to the convex hull of the intervals attached to
+their edges. For instance, the (numerical} interpretation of
+[Few Most}, i.e. 'From few to most', is the interval
+[a, 1-a}. The certainty ordering can be partially extended
+to the whole universe U as well, by defining for every
+[Xt. Y1 ], [X2, Y2] E U
+[XI, YI] =:;; [X2, Y2] if, and only if, Xt s; X2 and
+Y1 :S Y2,
+
+iP = { 0, (O,a], [a, b], [b, 1-b], [1-b, 1 -a],
+[1-a, 1), 1}
+
+corresponding to the following linguistic quantifiers :
+0 ::=None
+(0, a] ::=Almost none (Al-none for short)
+[a, b} ::=Few
+[b, 1-b] ::=About half (Ab-half for short)
+[1 - b, 1 -a] ::=Most
+[1 - a, 1} ::=Almost all (Al-a/1 for short)
+1 ::=All
+The set fP constitutes the highest meaningful level of
+specificity with respect to the language. Between this
+level and the least specific one (i.e. the whole interval
+[0, 1]), the universe of description U contains several
+internal ordered levels of specificity. For example, with
+the seven terms defined above we have five levels in
+between ; see Figure 1.
+
+Specificityorderinl{
+
+giving rise to a structure which differs from the previous
+one. Such a double ordering structure is in accordance
+with bilattices as discussed in (Ginsberg, 1988).
+
+3
+
+LOCAL PROPAGATION OF
+INTERVAL-VALUED
+PROBABILITIES
+
+In (Amarger, Dubois and Prade, 1991b), a local
+computation approach which deals with interval-valued
+conditional probabilities is presented. In the approach a
+basic pattern for local inference is the following so-called
+'quantified syllogism' :
+P(BIA)E [P* (BIA),P*(BIA)]; P(AIB}E [P*(AIB),P*(AIB)]
+P(CIB)e [P*(CIB),P*(CIB)];P(BIC} e [P*(BIC),P*(BIC)]
+P(CIA)
+
+=
+
+?
+
+P(AIC) = ?
+
+75
+
+76
+
+Dubois, Prade, Godo, and Lopez de Mantaras
+
+where P• and P* respectively denote lower and upper
+bounds, and where we want to compute (the tightest)
+bounds which can be deduced for P(CIA) and P(AIC).
+The following bounds have been established in (Dubois
+and Prade, 1988; Dubois, Prade and Toucas, 1990) and
+have been shown to be the tig htes t ones when P(BIA),
+P(AIB), P(BIC) and P(CIB) are precisely known (i.e.
+P(BIA) = P•(BIA) = P*(BIA), etc.), and are different from
+0 or 1:
+
+(
+
+lower bound :
+P•(CIA)
+
+==
+
+P•(BIA) max 0, 1 -
+
+l
+
+; ��(��
+
+B)
+
+.
+
+)
+
+upper bound :
+P*(CIA);:;
+1'
+min
+
+l
+
+_
+
+p•(BIA)+
+
+P•(BIA)·P*(CIB)
+P•(AIB)
+
+'
+
+P * (BIA) ·P * (CIB)
+'
+P•(AIB)·P•(BIC)
+
+[1- P•(BIC)] + P"' (BIA)
+P•(AIB) P•(BIC)
+Related local patterns of inference for interval-valued
+conditional probabilities have been independently
+developed by Guntzer, KieBling and TMne (1991), Thane
+et al. (1991a) and by Heinsohn (1991) in the contexts of
+deductive data bases and of terminological languages
+respectively. Wh il e the above lower bound is still
+optimal when only bounds are known on P(BIA), P(AIB)
+and P(CIB), Thline, Gilntzer and KieBling (1991b) have
+recently pointed out that the above upper bound can be
+improved when only lower and upper bounds on the
+probabilities are available in the syllogism. This is
+basically due to the fact that the third and fourth tenns are
+linearly increasing with respect to P(BIA) while the
+second term is linearly decreasing in P(BIA) if P*(CIB) <
+P.(AIB). These authors show that the above upper bound
+becomes optimal provided that we add the following fifth
+term in the above minimum of four terms :
+·
+
+P*(CIB)
+·
+
+(P •(AIB) - P * (CIB))
+
+This fifth term is simply obtained by computing the
+value of P(BIA) that makes the second and third term
+equal. This fifth term does improve the upper bound if
+and only if P•(AIB) > P*(CIB), and moreover the interval
+[P•(BIA),P*(BIA)] contains the quantity
+�(BIC) · P.(AIB)
+�(BIC) ·�(AlB) + P*(CIB)
+
+·
+
+(1- �(BIC))
+
+The local inference approach proposed in Amarger et al.
+(1991b) also takes advantage of an extended form of
+Bayes rule expressed in tenns of conditional probabilities
+only, namely
+
+=
+
+k-1
+
+P(Ak1A1) fi
+
+i=l
+
+P(AjiAi+l)
+P(Ai+tiAi)
+
+(with all involved quantities positive), from which useful
+inequalities are obtained in the case where only lower and
+upper bounds are available.
+The constraint propagation method which is used is the
+following : recursively apply the quantified syllogism to
+generate upper and lower boWJds of missing probabilities.
+This step is performed until the probability intervals can
+no longer be improved. Then recursively apply the
+extended Bayes rule to improve the bounds thus
+generated, and continue the whole procedure until no
+improvement takes place. This constraint propagation
+method can somet imes give bounds as tight as the best
+ones computed by a global optimization method based on
+linear programming (see Amarger et al., 1991b).
+4
+4.1
+
+p * (BIA). p * (CIB)
+
+P * (CIB) + P>�<(BIC)
+
+VA1,... ,Ak, P(A11Ak)
+
+THE QUALITATIVE QUANTIFIED
+SYLLOGISM
+COMPUTATION OF THE
+QUALITATIVE TABLE
+
+In this section we will focus on the qualitative
+counterpart of the quantified syllogism inference pattern,
+recalled in the preceding section. We use the following
+notations, where Qi are linguistic labels.
+Ql A's are B's; Q2 B's are A's
+Q3 C's are B's ; Q4 B's are C's
+QS A's are C's; Q6 C's are A's
+This inference rule is interesting from the point of view
+of commonsense reasoning since it offers a precise model
+of chaining uncertain "if... then ..." statements expressed
+by means of imprecise quantifiers or conditional
+probabilities. In the following we build the qualitative
+functions (Q-fWictions) corresponding to that pattern, i.e.
+we build a table giving qualitative values for Q5 and Q6
+for any combi na ti on of possible qualitative values for
+Ql, Q2, Q3 and Q4.
+The process of building the Q-functions is perfonned
+according to the following steps :
+1. Consider a linguistic scale of linguistic quantifiers
+together with a suitable partition of the unit interval
+[0,1] that represents them. In what follows we will
+use the partition gp defined above with parameters a =
+0.2, and b = 0.4, that is, (0,0.2] = Almost none ;
+[0.2, 0.4] =Few; [0.4,0.6] ;; About half; [0.6,0.8] =
+Most; [0.8,1) =Almost all.
+2. Consider all possible combinations of these linguistic
+values for P(BIA), P(AIB), P(BIC) and P(CIB).
+3. For each of such combinations, compute the lower
+and upper bounds of P(CJA) (and P(AIC)) using the
+numerical expression of the pattern given in Section
+
+A Symbolic Approach to Reasoning with Linguistic Quantifiers
+
+3. For example if Q1 = Most, Q2 =Almost all, Q3 =
+About half, Q4 = Almost all, then :
+P*(BIA) = 0.8
+P*(AIB) = 1
+P*(BIC) = 0.6
+P*(CIB) = 1
+which gives
+P*(CIA) = 1
+P*(AIC) 1
+
+P.(BIA) =0.6
+P•(AIB) = 0.8
+P•(BIC) = 0.4
+P•(CIB) = 0.8
+P•(CIA) =0.45
+P•(AIC) = 0.3.
+
+=
+
+4. These results are then approximated by means of the
+most specific element of the universe of description U
+(see Figure 1) which contains them. So, the interval
+[0.45, 1] for P(CIA) is approximated to the larger
+interval [0.4, 1], that is, the resulting Q5 is set to
+[About-half, All]. In the same way, Q6 is
+approximated to [Few, All].ln this way, we have
+partially defined the qualitative functions QS and Q6,
+i.e. defined as functions
+Q5, Q6 : fP
+
+X
+
+fP
+
+X
+
+fP
+
+X
+
+fP -----> U.
+
+5 . Finally, the complete definition of the qualitative
+functions Q5, Q6 : U x U x U x U ------> U can be
+easily derived from the above partially defined ones by
+simply applying them on the upper and lower bounds
+(which are elements of ;?) of the non-elementary
+elements of U, and then taking the convex hull. For
+instance:
+QS([Most, All], All, [None, All], Almost-all) =
+= convex_hull_of(QS(Most, All, None, Almost-all),
+Q5(All, All, None, Almost-all), QS(Most, All, All,
+Almost-all), Q5(All, All, All, Almost-all) )
+= convex_hull_of([About-half, All], Almost-all,
+[About-half, Most], Almost-all) = [About-half, All]
+:
+
+Note that in the above procedure, the
+qualitative calculation table for the quantified syllogism
+is computed by using the approximation step only at the
+end of the computation. Another approach one may think
+of would be to have precomputed tables for product and
+quotient, and to use them in the calculation of the
+bounds. However this latter approach would not be
+satisfactory because it yields too imprecise results.
+Remark
+
+4. 2
+
+THE 5-QUANTIFIER CASE
+
+In this section we analy se the results obtained on the
+most elementary type of qualitative scale of linguistic
+quantifiers, i.e. (none, few, about half, most, all) where
+few is of the form [E,a] for some positive, infinitesimal
+value E, a is some number in (0, 1/2), about half is
+interpreted as [a, 1 -a], and most is [1 -a, 1-E] .
+Note that the name "about half' is indeed short for
+"neither few nor most, but in between", since the interval
+[a, 1- a] may be quite imprecise.
+Table 1 gives the complete results when a = 0.3 ; the
+table is sorted by putting together the 4-tuples (Q1 Q2
+Q3 Q4) that lead to the same value of QS. A first remark
+
+is that in many situations when none of the quantifiers
+mean "all", no information is obtained on P(CIA). This
+is especially true when both P(AIB) and P(BIA) take
+small qualitative values. Some lines of the table may
+look surprising. For instance we see that nothing can be
+inferred from the four statements
+"all A's are B's"; "most B's are A's"
+"all C's are B's"; "about half of the B's are C's".
+Especially, the lower bound P•(CIA) =0 is attained in
+this case if pessimistic interpretations of "most" and
+"about half' are chosen, say 70% and 30% respectively.
+P(BIA)
+
+P(AIB)
+
+P(CIB)
+
+P(CIA)
+
+none
+
+none
+
+[none,most]
+
+[none,all]
+
+[none,all]
+
+few
+
+few
+
+[few,most]
+
+{few,most]
+
+few
+
+half
+
+[few,half]
+
+{few,most]
+
+few
+
+most
+
+[few,halfl
+
+half
+
+[half,all]
+
+most
+
+[few,most]
+
+half
+
+[half,all)
+
+[few,half]
+
+[few,most]
+
+[few,most]
+[few,most]
+
+P(BJC)
+
+all
+
+[few,half]
+
+aU
+
+all
+
+most
+
+aU
+
+half
+
+few
+
+[few,aU)
+
+none
+
+none
+
+few
+
+half
+
+most
+
+most
+
+[few,half]
+
+most
+
+few
+
+few
+
+most
+
+[few,half]
+
+all
+
+[few,most]
+
+most
+
+most
+
+aU
+
+half
+
+few
+
+half
+
+most
+
+[few,half]
+
+few
+
+most
+
+half
+
+few
+
+most
+
+most
+
+half
+
+half
+
+[few,half]
+
+all
+
+[few,most]
+
+half
+
+[few,all]
+
+none
+
+none
+
+most
+
+[few,all]
+
+few
+-
+
+few
+
+[few,half]
+
+all
+
+[few,most]
+
+few
+
+most
+
+most
+
+few
+[few,half]
+
+few
+
+[most,all]
+
+few
+
+most
+
+all
+
+half
+
+most
+
+all
+
+few
+
+most
+
+[few,all]
+
+none
+
+none
+
+none
+
+none
+
+all
+
+[few,all]
+
+[few,all]
+
+none
+
+few
+
+few
+
+none
+most
+
+all
+
+few
+
+[few,all]
+
+[few,half]
+
+all
+
+[few,half]
+
+most
+
+[few,half]
+
+most
+
+half
+
+most
+
+most
+
+most
+
+few
+
+half
+
+most
+
+all
+
+few
+
+all
+
+few
+
+all
+
+few
+
+all
+
+half
+
+most
+
+all
+
+[half,most]
+
+half
+
+all
+
+[few,half]
+few
+
+few
+
+half
+
+all
+
+most
+
+most
+
+most
+
+all
+
+[few,most]
+
+half
+
+few
+
+[most,all]
+
+most
+
+[most,all]
+
+half
+
+half
+
+all
+
+most
+
+all
+
+half
+
+most
+
+half
+
+all
+
+[non e,half]
+
+[none,few]
+
+(none,none]
+[few,all]
+
+[few,most]
+
+[few,most]
+
+half
+
+few
+
+[none, most]
+
+half
+
+few
+
+all
+
+[half,most)
+
+half
+
+all
+
+most
+
+all
+
+[few,most)
+
+few
+
+most
+
+all
+
+all
+
+half
+
+[few,half]
+
+77
+
+78
+
+D ub ois , Prade, Godo, and Lopez de Mantaras
+
+few
+
+[few,all)
+
+all
+
+few
+
+most
+
+all
+
+all
+most
+
+half
+
+few
+
+most
+
+[few,half]
+
+all
+
+few
+
+few
+
+all
+
+all
+
+all
+[most,all]
+
+[half,most]
+few
+
+all
+
+[few,all]
+
+few
+
+all
+
+few
+half
+
+all
+
+most
+all
+
+all
+
+half
+
+[few,all)
+
+[few,most]
+
+all
+
+most
+
+[few,most]
+
+most
+
+all
+
+most
+
+most
+
+most
+
+all
+
+most
+
+all
+
+most
+
+most
+
+all
+
+[few all]
+
+most
+
+half
+all
+
+[few,all]
+all
+
+[few,all)
+
+half
+
+most
+
+[few,all)
+
+[few,most]
+
+most
+all
+
+[few,all]
+all
+
+[few,all]
+
+most
+
+[few,all]
+
+[few,all)
+
+all
+
+all
+
+all
+
+all
+
+P•(CIA)::::max O,l-
+
+all
+
+all
+
+all
+
+[half,all]
+
+[half,most]
+[half,half)
+[most,all]
+[most,most]
+fall ,all]
+
+The case P(BIA)
+'all' and P(BIC) = 'all' represents a
+typical case of statistical inference, when, knowing the
+probability P(CIB), and considering some individual in
+class B, one tries to say something about its probability
+of being a C. Namely B represents a population, C a
+subclass of this population for which the proportion or
+probability P(CIB) is known. For instance B represents
+the inhabitants of some city and C the proportion of
+individuals in that population that are older than 60. Now
+take an individual xo in B. There are several ways of
+=
+
+a
+
+)
+
+( �)
+
+; P"'(CI A)=min l.
+
+itself. Let us consider the situation where P(CIB) > 1/2.
+If the degree of typicality t :5 P(CIB) = a then the
+probability P(CIA) is no longer upper bounded, but can
+be lower than P(CIB) as well. When the typicality t is
+low enough, that is t :5 min(P(CIB), 1 - P(CIB)) nothing
+can be inferred on P(CIA). It corresponds to the case when
+A and C could be disjoint subsets of B. This
+phenomenon explains the presence of rows of Table I
+where despite the high values of some of the probabilities
+the results of the chaining is very imprecise.
+
+S
+
+ROBUS TNES S
+
+=
+
+=
+
+·
+
+few
+few
+few
+
+half
+
+most
+
+is
+
+viewed as having nothing special). The problem is then:
+knowing P(CIB) what is the probability that xo belongs
+
+to C ? This problem can be solved by computing P(CIA)
+where A is a maximal subclass of B, of which xo is a
+typical element.
+
+This problem corresponds to all rows of Table 1 where
+P(BIA)
+1 and P(BIC) 1. It can be checked that P(CIA)
+can be much more imprecise than P(CIB), since it can be
+[none, all] (i.e."unknown") in several cases.
+=
+
+This phenomenon can be precisely studied in an
+analytical way, letting P(CIB) = a, and P(AIB) = t.
+Parameter t can be called a typicality index of set A with
+respect to B. It expresses the probability that selecting at
+random an individual in B, it lies in A, i.e. it is "like
+xo"· The commonsense saying that statistics should be
+cautiously used when making decisions about individual
+situations can be given a precise form thanks to the
+quantified syllogism. When P(AIB) = t, P(BIA) = 1,
+P(CIB)=a, P(BIC)= 1, we get the following results on
+
+few
+[few, half]
+
+?
+
+?
+
+[few, half]
+
+the choice of the value of a. Namely half
+� (0, a] only if
+
+a 2: d, where d
+
+xo
+
+most
+
+few
+
+The question mark '?' indicates some ambiguity due to
+
+xo"·
+
+particular as nobody is like him) to B itself (if
+
+half
+
+few
+
+few
+
+(1 - a )2]
+
+maximal subset of B containing individuals "just like
+Note that A can range from [xo} (if xo is so
+
+ANALYSIS
+
+Table 1 is obtained for a specific value of the threshold a
+between "few" and "half'. A legitimate question is
+whether such results are still valid for other values of the
+threshold. Let us start with qualitative tables for product
+and quotient, with "few"
+(O,a], "most"= [1 -a, I),
+"half'
+[a, I- a]. The product table is defined as
+None Q= None, All · Q= Q, and
+
+considering xo according to its peculiarities. Let A be the
+
+P(CIA):
+
+�
+
+=
+
+Table 1: Compactedtabl e of th e quantifiedsyllogism for
+the 5 element Partition ('half means 'about half)
+
+=
+
+1
+
+The only case when P(CIA) can only be equal to P(CIB)
+is when t
+1, i.e. when the reference class of xo is B
+
+few
+
+[most,all]
+
+(
+
+[few,few]
+
+3
+
+(1 - a )2
+
+- ..[5
+
+•
+
+half= [a2,
+
+::s; a, which requires
+
+"" 0.382 . In that case
+2
+half * half= few and most • most = [(I - a )2, I) ex.
+[a, I) when a > d, so that most * most= [few, most].
+The latter equality does not sound natural. On the
+contrary if a < d, then half * half = [few, half1 ;
+most • most:::: [half, most]. From a commonsense point
+of view, it is not very unnatural to require that "few" may
+mean a proportion less than .3 or so. Again "half' is here
+short for "neither few nor most but in-between". Hence it
+is clear that the product of qualitative probabilities is
+almost independent of the choice of the threshold a in
+(0, I/2). It fits the intuition and is completely threshold­
+independent for "a" small enough. The same problem
+can be solved for the (bounded) quotient, and it leads to
+the following almost-robust table
+
+I
+none
+few
+half
+most
+all
+
+none
+[none, all)
+all
+all
+all
+all
+
+few
+none
+[none, all]
+all
+all
+all
+
+half
+none
+[few, all)
+[half, all]
+all
+all
+
+most
+all
+none
+none
+[few, half) few
+half
+[half, all]
+most
+most
+all
+all
+
+A Symbolic Approach to Reasoning with linguistic Quantifiers
+
+The terms half/half and few/most are given for a< d.
+Only these terms change if a is larger. Note that the
+subdiagonal part of the table has been truncated to 1 .
+In order t o study the robustness o f the quantified
+syllogism table, several runs of the program that generate
+this table have been done, with a varying between 0.25
+and .38. Only a few lines of the qualitative table change
+(nine over 625 ""s4 distinct 4-tuples of quantifiers for
+
+.
+
+0 25� a �.35). In order to get a better insight, it is
+interesting to consider a significant subpart of the table,
+where quantifiers are either "few" or "most", i.e. when
+P(AIB), P(BIA), P(CIB), P(BIC) are close to 0 or close to
+1. In order to let the p arameter a appear we shall use the
+following notation
+P(AIB) Vo (a) which means P(AIB) �a
+P(AIB) V 1 (a) which means P(AlB) �a.
+Then by applying the optimal bounds on P(CIA) as
+described in Section 3 on the 16 = 42 4-tuples of
+extreme quantifiers, potential instability of the results
+was obtained for the 6 following cases only :
+P(BIA)
+Vrf,a.)
+
+P(AIB)
+VJ(I-a)
+
+P(BIC)
+Vt(l-a)
+
+P(CIB)
+Vrf..a.)
+
+Vrf,a.)
+
+Vt(l-a.)
+
+Vt(l-a)
+
+Vt(l-a)
+
+Vt(l-a)
+
+Vt(l-a)
+
+VrJ..a.)
+
+Vrf..a)
+
+Vt(l-o:)
+
+Vt(l-o:)
+
+VrJ.a)
+
+Vt(l-a)
+
+VJ(l-o:)
+
+VJ(I-o:)
+
+Vt(l-a)
+
+Vrf..a.)
+
+Vt(l-a)
+
+Vt(l-a)
+
+Vt(l-a)
+
+Vt(l-a)
+
+P(CIA)
+VrJ.a/-/(1-a)l)
+Vo((a.z/(1-a)l)+a.)
+Vo(2a.)
+VJ(l-2a.)
+2 2
+Vo(a/((1-a) +a ))
+VJ(I-2a.)
+
+most
+most
+most
+
+most
+most
+most
+
+few
+most
+most
+
+most
+few
+most
+
+[half, all]
+[none, half]
+[half, all]
+
+When the quantifier "(about) half' is involved in the
+inference pattern, the resulting quantifiers P(CIA) may get
+more precise (e.g. [few, all] becomes [half, all] when a
+becomes smaller). But the table obtained for a = 0.3
+remains correct but not optimally precise .
+
+6
+
+A QUALITATIVE ANALYS IS OF
+ADAMS' INFERENCE RULES
+
+Adams (1975) has proposed a probabilistic inference
+system based on the three inference rules :
+triangularity :
+Bayes rule:
+disjunction :
+
+A � B, A � C � (A " B)� C
+A � B, (A " B) � C � A � C
+A � C, B � C � (A v B) � C
+
+which are sound when A � B is understood as the
+probability P(BIA) � I - £ where e is arbitrarily small.
+These rules are used in Pearl (1988) to build a
+probabilistic inference-like default logic. It is interesting
+to consider finistic semantics for these rules in
+relationship with the linguistic probability scale. In this
+respect A� B will be interpreted as "most A's are B's".
+First it is easy to verify that triangularity and Bayes rule
+axioms can be expressed in terms of the quantified
+syllogism, of which they are special cases, noticing that
+
+P(BIA)
+
+=
+
+P(AnBIA).
+
+Triangularity : P{A n BIA) = most ; P(AIA n B)
+P(CIA) = most; compute P(CIA n B);
+
+=
+
+1 ;
+
+Bayes rule : P(AIA n B) = 1 ; P(A n BIA) = most ;
+= most ; compute P(CIA) .
+
+It is easy to verify that for a s; 1/3
+
+P(CIA n B)
+
+a2
+�a
+--�2;;( 1 - a)
+
+Taking 'most'= [1 - a, 1), we easily get the lower bound
+on P(CIA n B) and P(CIA) in each case by using the
+quantified syllogism
+
+2a
+
+s;
+
+as;1-2a
+
+1- a
+
+� + a2
+
+(1-a)
+
+$ 1-a (since
+
+�
+
+(1- a) +a 2
+
+(
+
+P(CIA n B) � max 0,1� 2a).
+
+These inequalities guarantee that whatever the v alue of
+a $ 1/3 , the value of P(CIA), as shown in Table 2
+remains within a given range (e.g. (0, a], (0, 1 -a], [a,
+1)) corresponding to a symbolic label, even if there is a
+degradation of the result which is less specific than Vo(a)
+or V 1( 1 - a) (except in the first line of Table 2). Hence
+we get the following robust computation table for the
+quantified syllogism (we only give here the 4-tuples that
+lead to an informative output) :
+
+few
+few
+few
+most
+
+few
+most
+few
+most
+few
+
+few
+most
+most
+few
+
+[none, most]
+few
+(few, all]
+[few, half]
+[none, half]
+
+P.(AnBI A)
+
+)
+
+=
+
+l- 2a
+1-a
+
+P(CIA) � P*(BIA) P*(CIA n B) = (I -a)2.
+·
+
+There is again a degradation of the lower bounds.
+However these lower bounds are again greater than a
+when a$ d.
+The third axiom pertains to another kind of inference that
+does not directly relate to the quantified syllogism. In
+Amarger et al. (1991a) the following identity was
+obtained:
+
+P(CIA)
+P(CIAuB)
+
+most
+most
+most
+most
+most
+
+1- P.(CIA)
+
++
+
+P(BI A)
+
+P(CI B)
+
+P(CIA n B)
+
+P(AIB)
+1
+
+P(BIA)
+
++
+
+1
+
+P(AIB)
+
+-1
+
+Hence a lower bound to P(CIA u B) is obtained when
+n B) = 1. When P(CIA) � 1-a, P(CIB) � I - a
+(both express "most"), we get
+
+P(CIA
+
+79
+
+80
+
+Dubois, Prade, Godo, and Lopez de Mantaras
+
+P(CJA u B)
+
+�
+
+K(1
+
+-
+
+a) - 1
+
+OP * (AIB)old
+
+K-1
+1
+
+1
+
+� 2. The right-hand
++
+P(AJB)
+P(BJA)
+term of the inequality is increasing with K. Hence the
+lower bound for P(CJAuB) � 2(1 - a) - I = 1 - 2a.
+More generally P(CJAuB) � 1 - a- a' when P(CJA) �
+1 - a, P(CIB) � 1 - a'. On the whole, we have found
+finistic counterparts of Adams' axioms that enable to
+quantify how inaccurate we are when we apply these
+axioms for commonsense reasoning with high
+probabilities.
+where K =
+
+The three axioms can be summarized as
+A
+
+�
+
+a
+
+�
+
+B,A
+
+a
+
+A� B, An B
+A
+
+�
+
+a
+
+a
+
+-
+
+�
+
+C �A
+
+C�AuB
+
+�
+
+�
+
+-
+
+2a
+
+7
+
+)]
+
+k�l
+Ili= Q P•(Ai+JIAi)
+l
+
+since this operation must be done for all cycles one
+might look for the counterpart of a longest path
+algorithm, here with qualitative values. But this is
+tricky if we want to compute quotients only at the
+end of the shortest path procedure, and keep separate
+the products of terms along cycles. The maximum
+operation (Q1/Q2) v (S 1/S2 ) should be directly
+expressed as an operation v' between pairs (QJ,Q2)
+and (S 1 ,S 2) that furnishes a new pair of qualitative
+values. Moreover, longest path algorithms make an
+extensive use of the distributivity of the addition
+over the maximum. Here we would require a property
+such as
+
+C
+
+In the case of the generalized Bayes theorem (GBT),
+described in Section 3, we cannot use the same method as
+we did in Section 4 with the quantified syllogism rule
+because here the number of arguments, i.e. the length of
+the involved cycle, is variable. This prevents us from
+having the qualitative inference pattern defined by a table.
+Then the only possibility left is to replace in the GBT
+expression the product and quotient operations by
+qualitative ones defined on the universe of description U.
+These more basic qualitative operations can be stored in
+tables.
+
+1
+rr!<A·1+1
+1
+- OP * (A·I
+
+ii)
+
+C
+
+THE GENERALIZED BAYES
+THEOREM
+
+·
+
+for a given cycle, find a proper ordering for the
+computation. Especially, it is not obvious that
+(Xl·X2) I (X3-X4) (computing products first) is equal
+to (Xt/X2) · (X3/X4) (computing quotients first).
+Because of the truncation effect of the quotient table,
+it seems better to compute products before quotients.
+
+B reads P(BIA) � 1
+a. In terms of
+a
+linguistic proportions, those rules can be "Written
+changing a into "most" and interpreting the resulting
+conditional probabilities as "more than few" in the three
+cases, provided that a < 1/3. These rules enable
+probabilistic reasoning to be performed as a qualitative
+non-monotonic logic, but where the validity of
+conclusions can be numerically assessed.
+
+where A
+
+QP * (BIA)
+
+i)
+
+-a-4C
+
+- a--.2�>
+2-a--
+
+[
+
+A and v denote the min and max operations in the sense
+of the certainty ordering. But the computation of these
+quantities raises several problems
+
+1-a
+
+�
+
+C.B
+
+C �An B
+
+A
+
+Xl
+
+v
+
+Xz
+
+(
+
+X3 · X4
+X s · X6
+
+)
+
+=
+
+X1
+
+·
+
+X3
+
+X I · X4
+
+v
+
+X2 · Xs
+
+X2 · X6
+
+It is not clear that this property holds in the
+qualitative algebra.
+But the basic question is whether this constraint
+propagation rule, which proved useful in the quantitative
+case leads to really improve qualitative probability
+bounds. This can be precisely studied on the 5 quantifier
+case of Section 4.2.
+The smallest expression to be computed with non­
+extreme probabilities is of the form (Ql Q2 Q3)!(Q4
+Qs) with Qi E {few, half, most}. It is easy to check from
+the product and quotient tables that
+·
+
+i)
+ii)
+
+Q 1 Q2 E
+most]}
+·
+
+0 1 Q2
+above
+·
+
+·
+
+·
+
+·
+
+{few, [few, most], [few, half], [half,
+03 can only belong to the same set as
+
+Given a cyle (At, ... ,Ak, At) with AI =A, Ak B the
+qualitative probability QP(AIB), known to lie in the
+interval [QP,.(AIB)0ld• QP*(AIB)otdl should be improved
+by letting
+
+iii) the only case where a quotient can be significantly
+informative is when the operands are [few, most],
+[half, most] and [half, half] since few/most= [few,
+half] and half/half= [half, all] = half/most.
+
+Q P*(AIB)new
+
+As a consequence (QJ Q2 · 0 3)/(0 4 · Qs) can give
+[few, all] at the very best. This is when Q1 0 2 Q3 =
+[few, half] and 04 Qs = [half, most]. This is not likely
+to be very useful for improving probability bounds. In
+the 7-quantifier case, the best informative result can be
+
+=
+
+QP•(AIB)old
+QP * (AIB)new
+
+·
+
+=
+
+v
+
+[
+
+=
+
+n"!c_.=-t Q P•(AiiA i+I)
+
+-\ ..
+Q P•(BIA) -��-=.!.
+
+;
+..;...:_
+____;
+_____:_
+
+Il i=1 QP * (Ai+tiAi)
+
+l
+
+·
+
+·
+
+·
+
+A Symbolic Approach to Reasoning with Linguistic Quantifiers
+
+shown
+
+to be
+
+Q1 02 Q3
+Q4 Q 5
+·
+
+·
+
+·
+
+8
+
+[half,
+
+_
+
+all)
+
+corresponding to when
+
+[half, most]
+
+[most, al- all)
+
+[half, most]
+
+[most, at- all]
+
+��--�.�d
+
+.
+
+linguistic partition of the unit interval, can be recursively
+applied to any set of linguistic quantified statements of
+the form Q A(s are Bi's which form a probabilistic
+
+network. It is then possible to generate new statements of
+that kind, and to improve precision for the ones that were
+originally stated. Let us consider the following qualitative
+counterpart of a 5-predicate example of Amarger et al.
+(199la, b):
+
+•
+
+•
+
+•
+
+•
+
+•
+
+•
+•
+
+•
+
+•
+•
+
+•
+
+Most to almost all students are sportsmen (Q
+[most,
+al-all]
+Almost all students are young (Q = al-all)
+Half of the sportsmen are students (Q "' half)
+Almost all sportsmen are single (Q = al-all)
+At least almost all sportsmen are young (Q = [al-all,
+all])
+At least most singles are sportsmen (Q "' [most, all])
+Most singles are young (Q = most)
+Almost no singles have children (Q = al-none)
+Few young people are students (Q =few)
+Almost all young people are sportsmen (Q"' al-all)
+At most almost no young people have children (Q =
+[none, al-none]
+At most almost no people who have children are single
+(Q [none, al-none])
+At most almost no people who have children are young
+(Q [none, al-none))
+=
+
+=
+
+•
+
+=
+
+These statements are but examples and must not be
+examined as to their actual truthworthiness.
+Let us consider a 7-element partition as follows
+partition: (0, 0.2, 0.4, 0.6, 0.8, 1)
+� (none, al-none, few, half, most, al-all, all}.
+=
+
+The quantified syllogism rule is run until no
+improvement of the quantifiers, nor new statements can
+be generated. The following results were obtained :
+•
+
+•
+
+•
+
+At least few students are single (Q = [few, all])
+Not more than few sportsmen have children (Q =[none,
+few])
+From almost-none to half singles are students (Q = [at­
+none, half]).
+
+Let us consider now a 9-element partition as follows
+partition: (0, 0. 1 0.2, 0.4, 0.6, 0.8, 0.9,
+,
+
+;;>
+
+=
+
+•
+
+•
+
+S YMBOLIC CONSTRAINT
+PROPAGATION
+
+The quantified syllogism rule, as precomputed for a given
+
+•
+
+•
+•
+
+1)
+
+(none, al-none, v-few, few, half, most, v-many,
+al-all, all)
+
+where v =few stands for very-few ([0,1, 0.2)) and v-many
+stand for very many ([0.8, 0.9)). Using th e same input
+data, more results are obtained:
+
+At least half of the students are single (Q = [half, all))
+Not more than half of the students have children (Q =
+[none, half])
+Not more than very few sportsmen have children (Q =
+[none, v-few])
+Most to very many singles are sportsmen (Q = [most,
+v-many]).
+
+These results are consistent but strong e r than thos e
+obtained with the ?-element partition. It is interesting to
+compare them with the results of the numerical procedure
+that directly handles interval probabilities given below
+under the form of incidence matrices giving
+P(<column>kroW>):
+
+iltj:J_ut data
+
+student
+
+sp_ort
+
+_young
+
+children
+
+.ro.7oo.o.9oo1
+[0.400,0.600] [1.000,1.000
+sport
+si'!_gle
+[0.000,1.000] _10.700,0.900
+_y_oung J0.250,0.35Ql _10.800,0.900
+children _[0.000,1.0001 [0.000,1.0001
+student
+
+input data
+student
+sport
+si'!_gle
+young
+children
+
+jl.OOO, 1.0001
+
+sin.11;le
+
+[0.000,1.0001
+[0.800,0.8501
+n .ooo.1.ooo1
+[0.900,1.000]
+[0.000,0.0501
+
+[0.850,0.9501 .[0.000,1.000)
+[0.900,1.000] [O.OOO,l.OOQl
+_[0.600,0.800� _10.050,0.80Ql
+[1.000,1.000] [0.000,0.050]
+J0.000,0.05Ql _ll.OOO,l.OOOJ
+
+Inputdata
+saturated
+network
+
+student
+
+[1.000,1.000]
+_10.400,0.400�
+single
+[0.222,0.366]
+young
+[0.350,0.350]
+children _10.000,0.099]_
+student
+
+SJl.Ort
+
+saturated
+
+y oung
+
+student
+
+[0.850,0.8501
+[0.900,0.958]
+_10.800,0.8001
+[1.000,1.000]
+[0.000,0.0441
+
+network
+
+sport
+sin_gle
+young
+children
+
+sport
+
+single
+
+[0.900,0.9001
+_[1.000,1.0001
+.[0.700,0.7001
+[0.834,0.8881
+[0.000,0.127]
+
+[0.607 ,1.000]
+[0.850,0.850]
+r1.ooo.1.ooo1
+[0.900,0.9001
+[0.000,0.050]
+
+children
+
+[0.000,0.271
+[0.000,0.154
+_10.050,0.100
+[0.000,0.050
+[1.000,1.000
+
+Probabilitiesafter constraintpropagation
+The main difference between the numerical and the
+symbolic results appears on the last row. The symbolic
+inference approach was not able to deduce that almost
+nobody having children is a student, and very few are
+sportsmen. Note that we have tried to develop a
+qualitative version of the generalized Bayes rule using
+longest path algorithms and the product and quotient
+tables of computation. However no improvement of the
+results has been observed. More work is to be done along
+that line.
+
+81
+
+82
+
+Dubois, Prade, Godo, and Lopez de Mantaras
+
+9 C ONCLUDING REMARKS
+We have shown in this paper that a qualitative calculus
+for the probabilistic scale 'none', 'few', 'from few to
+most', 'most', 'all' can be developed in agreement with a
+numerical interpretation of probabilities, provided that the
+intended numerical meaning of 'few' is less than 33 % in
+any case and the one of 'most' is more than 66 %. These
+thresholds are quite in agreement with commonsense
+which seems to disagree that "most A's are B's" if less
+than 70 % of A's are B's, or that "few A's and B's'' when
+there are more than 30 % of A's which are B's. However
+it does not mean that humans are currently able to
+provide the correct (in the sense of probability calculus)
+qualitative values given by the rules derived in this paper.
+It is well known (e.g. Kahneman, Slavic and Tversky,
+1 980) that humans are often in trouble not only for
+correctly assessing probabilities, but also to make
+accurrate inference from them.
+One might wonder whether fuzzy intervals are useful or
+not in the modeling of linguistic quantifiers. Clearly the
+use of precise thresholds to delimit the extensions of
+"few", "half', "most" has something arbitrary. However
+since the linguistic computation tables obtained here are
+partially independent of the choice of the threshold, it
+turns out that using fuzzy partitions instead of non-fuzzy
+ones would not make much difference here, especially if a
+fuzzy partition is viewed as an imprecise specification of
+the thresholds between the meanings of the basic terms.
+Nevertheless fuzzy intervals remain useful in the scope of
+feeding numbers in probabilistic networks, from the
+knowledge of linguistic values, rather than reasoning
+with linguistic values. Indeed, when looking for the
+numerical interpretation of linguistic quantifiers, fuzzy
+intervals look like a more faithful model than crisp ones.
+But then the constraint propagation algorithms must be
+adapted to handle fuzzy upper and lower probabilities in
+the numerical setting. Applying fuzzy arithmetic to the
+quantified syllogism rule (as done by Dubois and Prade
+( 1988)) appears to be in total contrast with defining
+linguistic counterparts of numerical constraint
+propagation rules, as done here.
+Acknowledgments : This work is partially supported
+by the ESPRIT-Basic Research project n°3085, DRUMS.
+
+
